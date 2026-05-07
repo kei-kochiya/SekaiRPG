@@ -10,6 +10,7 @@ func _init():
 	res = 20
 	spd = 100
 	type = "Cool"
+	is_character = true
 	
 	skills = [
 		{"name": "Metal Cut", "method": "metal_cut", "cooldown_turns": 1},

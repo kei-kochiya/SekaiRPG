@@ -10,6 +10,7 @@ func _init():
 	res = 15
 	spd = 125
 	type = "Mysterious"
+	is_character = true
 	
 	skills = [
 		{"name": "Shadow Strike", "method": "shadow_strike", "cooldown_turns": 1},

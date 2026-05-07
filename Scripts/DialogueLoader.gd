@@ -13,22 +13,41 @@ func _ready() -> void:
 	_load_json()
 
 func _load_json() -> void:
-	var f := FileAccess.open("res://Data/dialogue.json", FileAccess.READ)
+	var path = "res://Data/"
+	var dir = DirAccess.open(path)
+	if not dir:
+		push_error("DialogueLoader: cannot open " + path)
+		return
+		
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+	while file_name != "":
+		if not dir.current_is_dir() and file_name.ends_with(".json"):
+			_load_single_file(path + file_name)
+		file_name = dir.get_next()
+
+func _load_single_file(file_path: String) -> void:
+	var f := FileAccess.open(file_path, FileAccess.READ)
 	if f == null:
-		push_error("DialogueLoader: cannot open res://Data/dialogue.json — error %d" % FileAccess.get_open_error())
+		push_error("DialogueLoader: cannot open " + file_path)
 		return
 	var text := f.get_as_text()
 	f.close()
 
 	var parsed: Variant = JSON.parse_string(text)
 	if parsed == null:
-		push_error("DialogueLoader: JSON parse failed")
+		push_error("DialogueLoader: JSON parse failed in " + file_path)
 		return
 	if not parsed is Dictionary:
-		push_error("DialogueLoader: JSON root is not a Dictionary")
+		push_error("DialogueLoader: JSON root in " + file_path + " is not a Dictionary")
 		return
 
-	_data = parsed as Dictionary
+	# Merge into _data
+	var new_data: Dictionary = parsed as Dictionary
+	for key in new_data:
+		_data[key] = new_data[key]
+	
+	print("DialogueLoader: Loaded ", file_path)
 
 ## Return the dialogue array for a given key (e.g. "prologue_phase0").
 ## Each element is a dict compatible with DialogueManager:

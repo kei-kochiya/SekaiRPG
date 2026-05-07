@@ -1,0 +1,33 @@
+{
+  "harbor_ena_ready": [
+    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Sẵn sàng chưa Ichika? Bến cảng không phải nơi để dạo chơi đâu." }
+  ],
+  "harbor_arrival": [
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Nơi này... có vẻ canh gác rất nghiêm ngặt." },
+    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Đúng vậy. Có hai cách để vào trong." },
+    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Một là xông thẳng vào cửa chính, nhưng sẽ phải đối đầu với đám lính canh đông đúc." },
+    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Hai là đi đường vòng phía sau. Ít lính hơn, nhưng có lẽ tên đội trưởng sẽ ở đó." }
+  ],
+  "harbor_boss_intro": [
+    { "type": "dialogue", "speaker": "right", "name": "Đội Trưởng", "color": "#aa4444", "text": "Lũ chuột nhắt Nightcord... Dám bén mảng đến tận đây sao?" },
+    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Chậc, bị phát hiện rồi. Ichika, cẩn thận, tên này không giống lũ tép riu ở kho hàng đâu!" }
+  ],
+  "harbor_boss_mid_fight": [
+    { "type": "dialogue", "speaker": "right", "name": "Đội Trưởng", "color": "#aa4444", "text": "Yếu ớt! Chỉ thế này mà đòi thám thính sao?" },
+    { "type": "action", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "*Thở dốc* Chết tiệt... hắn mạnh quá..." }
+  ],
+  "harbor_mafuyu_reinforcement": [
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Ta đã bảo là chỉ thám thính thôi mà? Hai đứa thật là..." },
+    { "type": "dialogue", "speaker": "left", "name": "Ena", "color": "#b86028", "text": "Mafuyu! Chị đến đúng lúc lắm!" },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Lùi lại đi. Để chị kết thúc chuyện này." }
+  ],
+  "harbor_honami_arrival": [
+    { "type": "dialogue", "speaker": "right", "name": "Honami", "color": "#ffaa88", "text": "Đội trưởng, để tôi giúp ông một tay. Không thể để họ đi dễ dàng thế được." },
+    { "type": "dialogue", "speaker": "right", "name": "Honami", "color": "#ffaa88", "text": "Đừng lo, vết thương của ông sẽ lành ngay thôi." },
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Lại thêm một người nữa sao? Cô ta trông không giống kẻ xấu..." }
+  ],
+  "harbor_victory": [
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Kết thúc rồi. Chúng ta rút lui thôi trước khi quân tiếp viện của chúng kéo đến." },
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Vâng... Cảm ơn chị, Mafuyu." }
+  ]
+}

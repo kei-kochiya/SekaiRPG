@@ -104,6 +104,14 @@ func build(player_team: Array, enemy_team: Array):
 	command_menu.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	root.add_child(command_menu)
 	
+	# --- Floating Text Overlay ---
+	overlay = Control.new()
+	overlay.name = "FloatingTextOverlay"
+	overlay.add_to_group("ui_overlay")
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(overlay)
+	
 	# --- Result label (hidden until battle ends) ---
 	result_label = Label.new()
 	result_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

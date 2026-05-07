@@ -21,6 +21,7 @@ GameManager="*res://Scripts/GameManager.gd"
 DialogueManager="*res://UI/DialogueManager.gd"
 DialogueLoader="*res://Scripts/DialogueLoader.gd"
 ScreenFade="*res://UI/ScreenFade.gd"
+UpgradeUI="*res://UI/UpgradeUI.tscn"
 
 [display]
 

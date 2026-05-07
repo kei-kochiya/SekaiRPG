@@ -10,6 +10,7 @@ func _init():
 	res = 12
 	spd = 115
 	type = "Happy"
+	is_character = true
 	
 	skills = [
 		{"name": "Brush Stroke", "method": "brush_stroke", "cooldown_turns": 1},

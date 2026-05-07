@@ -10,6 +10,7 @@ func _init():
 	res = 8
 	spd = 125
 	type = "Cute"
+	is_character = true
 	
 	skills = [
 		{"name": "Ribbon Bind", "method": "ribbon_bind", "cooldown_turns": 1},

@@ -17,6 +17,7 @@ signal damage_received(amount: int, damage_type: String)
 @export var type: String = "None"
 @export var skill_points: int = 0
 @export var level: int = 1
+@export var is_character: bool = false
 @export var current_exp: int = 0
 @export var next_level_exp: int = 100
 

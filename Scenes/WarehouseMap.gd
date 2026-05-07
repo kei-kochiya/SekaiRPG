@@ -1,7 +1,6 @@
 extends Node2D
 
 func _ready():
-	
 	var player = OverworldPlayer.new()
 	player.name = "OverworldPlayer"
 	if GameManager.last_player_position == Vector2.ZERO:
@@ -12,43 +11,20 @@ func _ready():
 	
 	# Check Win Condition
 	if GameManager.warehouse_wave > 5:
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_clear"))
-		
-		# Return to base trigger
-		var transition_zone = InteractableZone.new()
-		transition_zone.prompt_text = "Press ENTER to Return to Base"
-		transition_zone.position = Vector2(300, 300)
-		var col = CollisionShape2D.new()
-		var rect = RectangleShape2D.new()
-		rect.size = Vector2(150, 150)
-		col.shape = rect
-		transition_zone.add_child(col)
-		var vis = ColorRect.new()
-		vis.size = Vector2(150, 150)
-		vis.position = Vector2(-75, -75)
-		vis.color = Color(0.2, 0.8, 0.2, 0.4)
-		transition_zone.add_child(vis)
-		add_child(transition_zone)
-		
-		transition_zone.interacted.connect(func():
-			GameManager.store_map_state("res://Scenes/BaseMap.tscn", Vector2.ZERO)
-			get_tree().change_scene_to_file("res://Scenes/BaseMap.tscn")
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_clear"), func():
+			_return_to_base_with_fade()
 		)
 		return
 	
 	# Spawn dialogue triggers (Ensure it only plays ONCE per wave start)
-	# enemies_remaining_in_wave = 5 means the wave JUST started
-	var alive_enemies = 5 - (GameManager.enemies_defeated % 5)
+	if GameManager.warehouse_wave == 1 and GameManager.enemies_defeated == 0:
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave1_start"))
+	elif GameManager.warehouse_wave == 3 and (GameManager.enemies_defeated % 5 == 0):
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave3_start"))
+	elif GameManager.warehouse_wave == 5 and (GameManager.enemies_defeated % 5 == 0):
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave5_start"))
 	
-	if alive_enemies == 5:
-		if GameManager.warehouse_wave == 1 and GameManager.enemies_defeated == 0:
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave1_start"))
-		elif GameManager.warehouse_wave == 3:
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave3_start"))
-		elif GameManager.warehouse_wave == 5:
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave5_start"))
-	
-	# Determine fixed spawn locations so they don't jump around randomly every reload
+	# Determine fixed spawn locations
 	var spawn_points = [
 		Vector2(1000, 500),
 		Vector2(1400, 1200),
@@ -57,17 +33,24 @@ func _ready():
 		Vector2(1500, 600)
 	]
 	
-	for i in range(alive_enemies):
-		_create_enemy_zone(spawn_points[i])
+	# Spawn ONE enemy zone representing the current wave
+	if GameManager.warehouse_wave >= 1 and GameManager.warehouse_wave <= 5:
+		_create_enemy_zone(spawn_points[GameManager.warehouse_wave - 1])
+
+func _return_to_base_with_fade():
+	await ScreenFade.fade_out(1.5)
+	GameManager.store_map_state("res://Scenes/BaseMap.tscn", Vector2.ZERO)
+	get_tree().change_scene_to_file("res://Scenes/BaseMap.tscn")
 
 func _create_enemy_zone(pos: Vector2):
 	var root = Node2D.new()
 	root.position = pos
+	root.add_to_group("objectives")
 	
 	var vis = ColorRect.new()
 	vis.size = Vector2(32, 48)
 	vis.position = Vector2(-16, -48)
-	vis.color = Color(0.8, 0.2, 0.2) # Generic enemy red
+	vis.color = Color(0.8, 0.2, 0.2) 
 	root.add_child(vis)
 	
 	var static_body = StaticBody2D.new()

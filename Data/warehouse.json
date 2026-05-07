@@ -1,0 +1,18 @@
+{
+  "warehouse_wave1_start": [
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Tôi phát hiện nhóm đầu tiên." },
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Tiếp cận. Không để tên nào thoát." }
+  ],
+  "warehouse_wave3_start": [
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Thêm quân tiếp viện đến rồi. Cẩn thận nhé, Ichika." },
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Tôi hiểu." }
+  ],
+  "warehouse_wave5_start": [
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Đây là đợt cuối! Không được lơi lỏng!" },
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Haaah!" }
+  ],
+  "warehouse_clear": [
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "25 mục tiêu đã bị tiêu diệt. Vũ khí đã được thu giữ." },
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Nhiệm vụ hoàn thành. Rút lui thôi." }
+  ]
+}

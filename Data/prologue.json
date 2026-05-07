@@ -1,0 +1,29 @@
+{
+  "prologue_phase0": [
+    { "type": "narrator", "text": "Ichika là một cô bé bình thường như mọi người." },
+    { "type": "narrator", "text": "Thích ngủ nướng, ham nghe nhạc, có sở thích chơi guitar." },
+    { "type": "narrator", "text": "Cho đến khi, vận mệnh bắt cô phải đi theo con đường tăm tối nhất." },
+    { "type": "dialogue", "speaker": "right", "name": "Tên Đầu Sỏ", "color": "#cc3322", "text": "Con bé trông cũng ngon nghẻ phết, tụi tao xơi trước rồi cắt cổ mày gửi xác về cho bố mẹ khóc tang nhé." },
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Đừng hòng đụng vào tao." },
+    { "type": "action", "speaker": "right", "name": "Tên Đầu Sỏ", "color": "#cc3322", "text": "*Tát Ichika một cái." },
+    { "type": "dialogue", "speaker": "right", "name": "Tên Đầu Sỏ", "color": "#cc3322", "text": "Nhìn cho kỹ vào, đây là cái giá của sự ngoan cố đấy cô em." },
+    { "type": "action", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "*Vớ lấy thanh kiếm." },
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Tao đã nghĩ, chúng mày phải khôn ngoan hơn thế này nhiều." }
+  ],
+  "prologue_phase1_intro": [
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Tôi đến nơi rồi. Báo cáo cho thấy bọn bắt cóc có 3 người." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Tình hình hiện tại: Không xác định. Kết luận: Không xác định được tình trạng con tin." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "À tôi thấy rồi. Cô bé an toàn. Không thấy dấu vết của các vết thương sâu. Có lẽ chỉ bị xây xát nhẹ. Nhưng mà…" },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Này ông Hoshino, tôi mượn con gái ông nhé. Tiền vụ hôm nay không cần trả." },
+    { "type": "narrator", "text": "…" },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Giao dịch thành công. Cảm ơn ông đã hợp tác." }
+  ],
+  "prologue_phase1_recruit": [
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Em... em vừa giết người..." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Nhóc làm tốt lắm, kỹ năng bẩm sinh điêu luyện đấy." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Đứng lên đi, phải rời khỏi đây trước khi bọn chúng tới." },
+    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Nhưng mà… chị là ai? Và đi đâu mới được chứ…?" },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Là người mà bố nhóc cử đến dọn dẹp nơi này. Nhưng có lẽ không cần nữa." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Còn bây giờ, chúng ta đi thôi, về nhà mới của nhóc." }
+  ]
+}

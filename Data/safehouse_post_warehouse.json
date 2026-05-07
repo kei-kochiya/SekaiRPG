@@ -1,0 +1,13 @@
+{
+  "upgrade_tutorial": [
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Ichika, sau các trận chiến vừa rồi, chị thấy em đã tiến bộ rất nhiều." },
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Đừng quên sử dụng điểm kỹ năng (SP) để nâng cấp các chỉ số cơ bản của mình nhé." },
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Hãy tập trung vào những gì em thấy cần thiết nhất. Chị cũng sẽ tự nâng cấp cho mình." }
+  ],
+  "harbor_mission_assignment": [
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Ichika, nhiệm vụ tại kho hàng làm tốt lắm. Nhưng chúng ta chưa thể nghỉ ngơi." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Có thông tin về một lô hàng mờ ám đang được vận chuyển tại bến cảng phía Đông." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Ena, chị muốn em dẫn Ichika đi thám thính tình hình. Nhớ kỹ, chỉ thám thính, không được manh động." },
+    { "type": "dialogue", "speaker": "left", "name": "Ena", "color": "#b86028", "text": "Rõ rồi. Đi thôi nhóc, đừng để chị phải chờ." }
+  ]
+}

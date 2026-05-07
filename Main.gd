@@ -12,57 +12,19 @@ var battle_over: bool = false
 var hud: BattleHUD
 var shaker: ScreenShake
 
+var is_harbor_boss_fight: bool = false
+var harbor_boss_phase: int = 0 # 0: Start, 1: Fighting, 2: Reinforcements arrived
+var is_scripting: bool = false # Pause battle end checks during sequences
+
 func _ready():
-	# --- Setup teams ---
-	var ichika = Ichika.new()
-	var mafuyu = Mafuyu.new()
-	var ena = Ena.new()
-	var kanade = Kanade.new()
-	LevelManager.set_initial_level(kanade, 5)
+	# --- Setup teams and context ---
+	var data = BattleInitializer.setup_battle(self)
+	player_team = data["player_team"]
+	enemy_team = data["enemy_team"]
+	is_harbor_boss_fight = data["is_harbor_boss"]
 	
-	if GameManager.prologue_phase == 0:
-		# Prologue: Ichika vs 3 generic Kidnappers
-		player_team = [ichika]
-		enemy_team = []
-		for i in range(3):
-			var k = Entity.new()
-			k.entity_name = "Kidnapper " + str(i+1)
-			k.max_hp = 80
-			k.current_hp = 80
-			k.atk = 40
-			k.defense = 20
-			k.spd = 80
-			k.type = "None"
-			k.skills = [{"name": "Shank", "method": "basic_attack", "cooldown_turns": 1}]
-			enemy_team.append(k)
-	else:
-		if GameManager.current_map_file == "res://Scenes/WarehouseMap.tscn":
-			player_team = [ichika, kanade]
-			enemy_team = []
-			for i in range(5):
-				var e = Entity.new()
-				e.entity_name = "Target " + str(i+1)
-				e.max_hp = 100
-				e.current_hp = 100
-				e.atk = 45
-				e.defense = 25
-				e.spd = 90 + i * 2
-				e.type = "None"
-				enemy_team.append(e)
-		else:
-			# Standard testing fallback layout if ever loaded directly
-			player_team = [ichika, mafuyu]
-			enemy_team = [ena, kanade]
-		
 	all_entities = player_team + enemy_team
-	
-	# --- Setup context and initial cooldowns ---
-	for e in player_team:
-		e.allies = player_team
-		e.enemies = enemy_team
-	for e in enemy_team:
-		e.allies = enemy_team
-		e.enemies = player_team
+	_refresh_team_context()
 		
 	for e in all_entities:
 		for s in e.skills:
@@ -73,111 +35,41 @@ func _ready():
 	hud = BattleHUD.new()
 	add_child(hud)
 	hud.build(player_team, enemy_team)
-	
-	# Tell the gauge which names are player-side
-	var player_names: Array[String] = []
-	for e in player_team:
-		player_names.append(e.entity_name)
-	hud.action_gauge.set_player_names(player_names)
+	_update_gauge_player_names()
 	
 	# --- Screen shake node ---
 	shaker = ScreenShake.new()
 	add_child(shaker)
 	
-	# --- Wire died signals to clean timeline ---
 	for entity in all_entities:
 		entity.died.connect(_on_entity_died.bind(entity))
 	
 	# --- Start battle ---
-	run_battle()
+	if is_harbor_boss_fight:
+		HarborBattleScript.run_intro(self, func(): run_battle())
+	else:
+		run_battle()
 
-func _build_tutorial_panel() -> PanelContainer:
-	var panel := PanelContainer.new()
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.05, 0.05, 0.1, 0.96)
-	style.border_color = Color(0.4, 0.6, 0.9)
-	style.set_border_width_all(2)
-	style.corner_radius_top_left    = 6
-	style.corner_radius_top_right   = 6
-	style.corner_radius_bottom_left  = 6
-	style.corner_radius_bottom_right = 6
-	style.set_content_margin_all(28)
-	panel.add_theme_stylebox_override("panel", style)
+func _refresh_team_context():
+	for e in player_team:
+		e.allies = player_team
+		e.enemies = enemy_team
+	for e in enemy_team:
+		e.allies = enemy_team
+		e.enemies = player_team
 
-	var canvas := CanvasLayer.new()
-	canvas.layer = 90
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left   = -320
-	panel.offset_right  =  320
-	panel.offset_top    = -220
-	panel.offset_bottom =  220
+func _update_gauge_player_names():
+	var p_names: Array[String] = []
+	for p in player_team:
+		p_names.append(p.entity_name)
+	hud.action_gauge.set_player_names(p_names)
 
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-	canvas.add_child(panel)
-	add_child(canvas)
-	return panel
+# ===========================================================================
+# Tutorial
+# ===========================================================================
 
-func _show_tutorial_step(vbox: VBoxContainer, title: String, body: String) -> void:
-	# Clear previous content
-	for c in vbox.get_children():
-		c.queue_free()
-	await get_tree().process_frame
-
-	var lbl_title := Label.new()
-	lbl_title.text = title
-	lbl_title.add_theme_color_override("font_color", Color(0.5, 0.8, 1.0))
-	lbl_title.add_theme_font_size_override("font_size", 20)
-	vbox.add_child(lbl_title)
-
-	var sep := HSeparator.new()
-	vbox.add_child(sep)
-
-	var lbl_body := RichTextLabel.new()
-	lbl_body.bbcode_enabled = true
-	lbl_body.text = body
-	lbl_body.fit_content = true
-	lbl_body.add_theme_font_size_override("normal_font_size", 17)
-	vbox.add_child(lbl_body)
-
-	var hint := Label.new()
-	hint.text = "[ Nhấn ENTER để tiếp tục ]"
-	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	hint.add_theme_font_size_override("font_size", 13)
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	vbox.add_child(hint)
-
-	await get_tree().create_timer(0.3).timeout
-	await _wait_for_accept()
-
-func _wait_for_accept() -> void:
-	while not Input.is_action_just_pressed("ui_accept"):
-		await get_tree().process_frame
-
-func _run_tutorial() -> void:
-	GameManager.is_tutorial = false   # Only show once
-
-	var panel := _build_tutorial_panel()
-	var vbox  := panel.get_child(0) as VBoxContainer
-
-	var steps := [
-		["⚔️  Hướng dẫn chiến đấu (1/5)",
-		 "Chào mừng đến với màn hình chiến đấu lượt theo lượt!\n\nBạn điều khiển [color=#4a9e9e]Ichika[/color]. Mỗi nhân vật hành động theo thứ tự dựa trên [color=#ffdd77]chỉ số Tốc độ (SPD)[/color]."],
-		["📊  Thanh hành động (2/5)",
-		 "[color=#ffdd77]Action Gauge[/color] ở góc màn hình hiển thị thứ tự lượt của tất cả nhân vật.\n\n• Màu [color=#88ccff]xanh[/color] = đồng đội\n• Màu [color=#ff7777]đỏ[/color] = kẻ địch"],
-		["🗡️  Lệnh tấn công (3/5)",
-		 "Khi đến lượt bạn, [color=#aaffaa]menu lệnh[/color] sẽ hiện ra.\n\n• [color=#ffffff]Attack[/color] — Đòn thường, không hồi chiêu.\n• [color=#ffaaff]Skill[/color] — Kỹ năng đặc biệt, có thể có hồi chiêu."],
-		["💀  Kỹ năng: Shadow Blade (4/5)",
-		 "[color=#cc88ff]Shadow Blade[/color] là kỹ năng chủ lực của Ichika.\n\nGây sát thương cao và hút máu một phần. Chỉ dùng được [color=#ffdd77]1 lần mỗi trận[/color]. Dùng đúng lúc!"],
-		["✅  Sẵn sàng chiến đấu (5/5)",
-		 "Chọn lệnh rồi chọn mục tiêu để hành động.\n\nHãy tiêu diệt tất cả kẻ địch để [color=#aaffaa]chiến thắng[/color]. Nếu toàn bộ đồng đội bị hạ, bạn [color=#ff7777]thua[/color].\n\nChúc may mắn, [color=#4a9e9e]Ichika[/color]!"]
-	]
-
-	for step in steps:
-		await _show_tutorial_step(vbox, step[0], step[1])
-
-	panel.get_parent().queue_free()   # Remove the CanvasLayer+panel
+func _show_tutorial():
+	await BattleTutorial.run_tutorial(self)
 
 # ===========================================================================
 # Battle Loop (coroutine)
@@ -249,11 +141,26 @@ func run_battle():
 	# Transition back to Overworld
 	await get_tree().create_timer(2.0).timeout
 	var is_victory = TargetingManager.get_alive_targets(enemy_team).is_empty()
+	var enemy_count = enemy_team.size()
 	
+	if is_victory:
+		# Award EXP to survivors
+		for p in player_team:
+			LevelManager.gain_exp(p, 50)
+		
+		if GameManager.current_map_file == "res://Scenes/HarborMap.tscn" and GameManager.harbor_route == "guards":
+			GameManager.guards_defeated = true
+			
 	if is_victory and GameManager.prologue_phase == 0:
 		GameManager.prologue_phase = 1
-		
-	GameManager.finish_battle(is_victory)
+	
+	if is_victory and is_harbor_boss_fight:
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_victory"), func():
+			GameManager.harbor_mission_done = true
+			GameManager.finish_battle(is_victory, enemy_count)
+		)
+	else:
+		GameManager.finish_battle(is_victory, enemy_count)
 
 # ===========================================================================
 # Player Turn
@@ -262,7 +169,7 @@ func run_battle():
 func _player_turn(actor: Entity):
 	# Show tutorial before the very first player action
 	if GameManager.is_tutorial:
-		await _run_tutorial()
+		await _show_tutorial()
 
 	hud.command_menu.show_for(actor, enemy_team)
 	var result = await hud.command_menu.command_chosen
@@ -277,7 +184,7 @@ func _player_turn(actor: Entity):
 func _ai_turn(actor: Entity):
 	await get_tree().create_timer(0.5).timeout   # "thinking" pause
 	
-	var target = AIManager.pick_target(actor, player_team)
+	var target = AIManager.pick_target(actor, player_team, timeline)
 	if target == null:
 		return
 	
@@ -355,12 +262,19 @@ func _on_entity_died(entity: Entity):
 	_purge_dead_from_timeline(entity.entity_name)
 
 func _check_battle_end() -> bool:
+	if is_scripting: return false
+	
 	if TargetingManager.get_alive_targets(enemy_team).is_empty():
 		hud.show_result("VICTORY", Color(0.3, 1.0, 0.5))
 		battle_over = true
 		print("=== CHIẾN THẮNG ===")
 		return true
+	
 	if TargetingManager.get_alive_targets(player_team).is_empty():
+		if is_harbor_boss_fight and harbor_boss_phase == 1:
+			HarborBattleScript.handle_loss(self)
+			return false # Keep loop running, phase will change
+		
 		hud.show_result("DEFEAT", Color(1.0, 0.3, 0.3))
 		battle_over = true
 		print("=== THẤT BẠI ===")

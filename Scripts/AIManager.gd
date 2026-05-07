@@ -16,29 +16,54 @@ const WEIGHT_NOT_EFFECTIVE   = 1   # x0.8  — ít nhưng vẫn có khả năng
 # enemy_team: Array chứa các Entity phe địch
 # Trả về Entity được chọn, hoặc null nếu phe địch đã bị xóa sổ
 # -------------------------------------------------------------------------
-static func pick_target(attacker: Entity, enemy_team: Array) -> Entity:
+static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) -> Entity:
 	var alive_targets = TargetingManager.get_alive_targets(enemy_team)
 	if alive_targets.is_empty():
 		return null
 
-	# Xây dựng pool có trọng số
-	var weighted_pool: Array = []
+	var target_scores: Array = []
+	
 	for target in alive_targets:
+		var score = 10.0 # Base weight
+		
+		# 1. Type Advantage (Strongest weight)
 		var mult = TypeChart.get_multiplier(attacker.type, target.type)
-		var weight = WEIGHT_NEUTRAL
 		if mult >= 1.25:
-			weight = WEIGHT_SUPER_EFFECTIVE
+			score += 20.0
 		elif mult <= 0.8:
-			weight = WEIGHT_NOT_EFFECTIVE
+			score -= 5.0
+			
+		# 2. SPD Priority (Targets faster units to disrupt them)
+		score += target.spd * 0.05
+		
+		# 3. Timeline Proximity (Target unit whose turn is coming soon)
+		var turn_idx = _find_first_turn_index(target.entity_name, timeline)
+		if turn_idx >= 0:
+			# If turn is in next 5 slots, add priority
+			score += max(0, (10 - turn_idx) * 2.0)
+		
+		# 4. Random variance
+		score += randf_range(0, 5.0)
+		
+		target_scores.append({"target": target, "score": max(1.0, score)})
 
-		# Thêm target vào pool số lần bằng trọng số
+	# Create weighted pool for selection
+	var weighted_pool: Array = []
+	for entry in target_scores:
+		var weight = int(entry.score)
 		for _i in range(weight):
-			weighted_pool.append(target)
+			weighted_pool.append(entry.target)
 
 	if weighted_pool.is_empty():
 		return alive_targets[0]
 
 	return weighted_pool[randi() % weighted_pool.size()]
+
+static func _find_first_turn_index(entity_name: String, timeline: Array) -> int:
+	for i in range(timeline.size()):
+		if timeline[i]["name"] == entity_name:
+			return i
+	return -1
 
 # -------------------------------------------------------------------------
 # Tiện ích: Trả về mô tả debug để log ra console

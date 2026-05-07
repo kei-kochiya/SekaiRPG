@@ -7,19 +7,26 @@ const SPEED = 250.0
 var character_color: Color = Color(0.29, 0.62, 0.62) # Default: Ichika blue
 
 var _marker: Polygon2D
+var _objective_arrow: Polygon2D
 var _last_dir: Vector2 = Vector2.ZERO
 
 func _ready():
 	collision_layer = 1
 	collision_mask = 3
 	
-	# Polygon2D for the arrow/dot
+	# Player representation
 	_marker = Polygon2D.new()
 	_marker.color = character_color
 	add_child(_marker)
-	
-	# Start as dot
 	_draw_dot()
+	
+	# Objective indicator arrow
+	_objective_arrow = Polygon2D.new()
+	_objective_arrow.color = Color(1.0, 0.9, 0.2, 0.8) # Golden yellow
+	_objective_arrow.polygon = PackedVector2Array([
+		Vector2(8, 0), Vector2(0, -5), Vector2(0, 5)
+	])
+	add_child(_objective_arrow)
 	
 	# Physics hitbox
 	var shape = CollisionShape2D.new()
@@ -34,6 +41,30 @@ func _ready():
 	
 	if GameManager.last_player_position != Vector2.ZERO:
 		global_position = GameManager.last_player_position
+
+func _process(_delta):
+	_update_objective_arrow()
+
+func _update_objective_arrow():
+	var objectives = get_tree().get_nodes_in_group("objectives")
+	if objectives.is_empty():
+		_objective_arrow.visible = false
+		return
+	
+	_objective_arrow.visible = true
+	var closest: Node2D = objectives[0]
+	var min_dist = global_position.distance_squared_to(closest.global_position)
+	
+	for obj in objectives:
+		if not obj is Node2D: continue
+		var d = global_position.distance_squared_to(obj.global_position)
+		if d < min_dist:
+			min_dist = d
+			closest = obj
+	
+	var dir = (closest.global_position - global_position).normalized()
+	_objective_arrow.rotation = dir.angle()
+	_objective_arrow.position = dir * 40.0 # Orbit around player
 
 func _physics_process(_delta):
 	if GameManager.is_in_dialogue:

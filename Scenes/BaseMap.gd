@@ -22,10 +22,34 @@ func _ready() -> void:
 	# ── Entry logic ─────────────────────────────
 	if GameManager.prologue_phase >= 1 and not GameManager.safehouse_intro_done:
 		_play_safehouse_intro()
+	elif GameManager.warehouse_wave > 5:
+		if not GameManager.upgrade_tutorial_done:
+			_play_upgrade_tutorial()
+		elif not GameManager.harbor_mission_unlocked:
+			_play_harbor_assignment()
 	elif not GameManager.intro_quest_done:
 		_refresh_quest_label()
 	else:
 		_quest_label.visible = false
+
+func _play_upgrade_tutorial():
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("upgrade_tutorial"), func():
+		_open_upgrade_menu()
+		GameManager.upgrade_tutorial_done = true
+	)
+
+func _open_upgrade_menu():
+	var p1 = Ichika.new()
+	LevelManager.set_initial_level(p1, 3)
+	var p2 = Kanade.new()
+	LevelManager.set_initial_level(p2, 3)
+	
+	UpgradeUI.show_ui([p1, p2])
+
+func _play_harbor_assignment() -> void:
+	await ScreenFade.fade_in(0.8)
+	GameManager.harbor_mission_unlocked = true
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_mission_assignment"))
 
 # ─────────────────────────────────────────────
 #  SAFEHOUSE INTRO  (first time entering after prologue)
@@ -141,9 +165,11 @@ func _quest_phase_interact(npc_name: String) -> void:
 		DialogueManager.play_dialogue(DialogueLoader.get_lines(key + "_repeat"))
 
 func _free_roam_interact(npc_name: String) -> void:
-	var opts: Array = ["Xin chào.", "Hỏi thêm về " + npc_name + "."]
+	var opts: Array = ["Xin chào.", "Hỏi thêm về " + npc_name + ".", "Nâng cấp chỉ số."]
 	if npc_name == "Kanade":
 		opts.append("Nhận nhiệm vụ tiếp theo.")
+	if npc_name == "Ena" and GameManager.harbor_mission_unlocked and not GameManager.harbor_mission_done:
+		opts.append("Đến bến cảng (Nhiệm vụ).")
 
 	DialogueManager.show_choice(opts)
 	var idx: int = await DialogueManager.choice_made
@@ -156,7 +182,12 @@ func _free_roam_interact(npc_name: String) -> void:
 			DialogueManager.play_dialogue(
 				DialogueLoader.get_lines("npc_info_" + npc_name.to_lower()))
 		2:
-			_start_warehouse_mission()
+			_open_upgrade_menu()
+		3:
+			if npc_name == "Kanade":
+				_start_warehouse_mission()
+			elif npc_name == "Ena":
+				_start_harbor_mission()
 
 func _check_quest_complete() -> void:
 	for n in QUEST_NPCS:
@@ -167,8 +198,15 @@ func _check_quest_complete() -> void:
 
 func _start_warehouse_mission() -> void:
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("kanade_mission"), func():
+		GameManager.reset_mission_stats()
 		GameManager.store_map_state("res://Scenes/WarehouseMap.tscn", Vector2.ZERO)
 		get_tree().change_scene_to_file("res://Scenes/WarehouseMap.tscn")
+	)
+
+func _start_harbor_mission() -> void:
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_ena_ready"), func():
+		GameManager.store_map_state("res://Scenes/HarborMap.tscn", Vector2.ZERO)
+		get_tree().change_scene_to_file("res://Scenes/HarborMap.tscn")
 	)
 
 # ─────────────────────────────────────────────

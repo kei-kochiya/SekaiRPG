@@ -45,23 +45,46 @@ func _build_ui():
 	vbox.add_theme_constant_override("separation", 4)
 	add_child(vbox)
 	
-	# -- Header: Name + Level --
+	# -- Header: Portrait + Name + Level --
 	var header = HBoxContainer.new()
+	header.add_theme_constant_override("separation", 10)
 	vbox.add_child(header)
+	
+	# Portrait thumbnail
+	var portrait_container = PanelContainer.new()
+	portrait_container.custom_minimum_size = Vector2(42, 42)
+	var ps_p = StyleBoxFlat.new()
+	ps_p.bg_color = Color(0, 0, 0, 0.5)
+	ps_p.set_border_width_all(1)
+	ps_p.border_color = Color(0.3, 0.3, 0.3)
+	portrait_container.add_theme_stylebox_override("panel", ps_p)
+	header.add_child(portrait_container)
+	
+	var portrait = TextureRect.new()
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	var p_path = "res://Art/Portraits/%s.png" % entity.entity_name.to_lower()
+	if ResourceLoader.exists(p_path):
+		portrait.texture = load(p_path)
+	portrait_container.add_child(portrait)
+	
+	var name_vbox = VBoxContainer.new()
+	name_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_vbox.add_theme_constant_override("separation", 0)
+	header.add_child(name_vbox)
 	
 	name_label = Label.new()
 	name_label.text = entity.entity_name.to_upper()
 	name_label.add_theme_color_override("font_color",
 		PLAYER_NAME_COLOR if is_player else ENEMY_NAME_COLOR)
 	name_label.add_theme_font_size_override("font_size", 14)
-	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	header.add_child(name_label)
+	name_vbox.add_child(name_label)
 	
 	level_label = Label.new()
 	level_label.text = "Lv.%d" % entity.level
 	level_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
-	level_label.add_theme_font_size_override("font_size", 12)
-	header.add_child(level_label)
+	level_label.add_theme_font_size_override("font_size", 11)
+	name_vbox.add_child(level_label)
 	
 	# -- HP Bar --
 	hp_bar = ProgressBar.new()
@@ -185,4 +208,9 @@ func _on_status_changed(statuses: Array):
 func _on_damage_received(amount: int, damage_type: String):
 	# Spawn floating text near the top-center of this card
 	var spawn_pos = global_position + Vector2(size.x / 2 - 20, -10)
-	FloatingText.spawn(get_tree().root, amount, damage_type, spawn_pos)
+	
+	var parent = get_tree().get_first_node_in_group("ui_overlay")
+	if not parent:
+		parent = get_tree().root
+		
+	FloatingText.spawn(parent, amount, damage_type, spawn_pos)
