@@ -3,12 +3,12 @@ class_name Mafuyu
 
 func _init():
 	entity_name = "Mafuyu"
-	max_hp = 250
-	current_hp = 250
-	atk = 130
-	defense = 80
-	res = 15
-	spd = 125
+	max_hp = 450
+	current_hp = 450
+	atk = 250
+	defense = 135
+	res = 20
+	spd = 150
 	type = "Mysterious"
 	is_character = true
 	

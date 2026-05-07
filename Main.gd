@@ -15,6 +15,7 @@ var shaker: ScreenShake
 var is_harbor_boss_fight: bool = false
 var harbor_boss_phase: int = 0 # 0: Start, 1: Fighting, 2: Reinforcements arrived
 var is_scripting: bool = false # Pause battle end checks during sequences
+var turns_in_phase: int = 0
 
 func _ready():
 	# --- Setup teams and context ---
@@ -99,6 +100,15 @@ func run_battle():
 		if actor == null or actor.current_hp <= 0:
 			continue
 		
+		turns_in_phase += 1
+		
+		# Scripted check
+		if is_harbor_boss_fight:
+			HarborBattleScript.check_transitions(self)
+			if is_scripting: # If a transition started, wait
+				await get_tree().create_timer(0.5).timeout
+				continue
+		
 		print("--- Lượt của: ", actor.entity_name, " ---")
 		
 		# Show turn indicator
@@ -140,7 +150,13 @@ func run_battle():
 	
 	# Transition back to Overworld
 	await get_tree().create_timer(2.0).timeout
+	
 	var is_victory = TargetingManager.get_alive_targets(enemy_team).is_empty()
+	if is_harbor_boss_fight:
+		var boss = _get_entity("Đội Trưởng")
+		if boss == null or boss.current_hp <= 0:
+			is_victory = true
+	
 	var enemy_count = enemy_team.size()
 	
 	if is_victory:
@@ -264,7 +280,13 @@ func _on_entity_died(entity: Entity):
 func _check_battle_end() -> bool:
 	if is_scripting: return false
 	
-	if TargetingManager.get_alive_targets(enemy_team).is_empty():
+	var is_boss_dead = false
+	if is_harbor_boss_fight:
+		var boss = _get_entity("Đội Trưởng")
+		if boss == null or boss.current_hp <= 0:
+			is_boss_dead = true
+	
+	if (not is_harbor_boss_fight and TargetingManager.get_alive_targets(enemy_team).is_empty()) or is_boss_dead:
 		hud.show_result("VICTORY", Color(0.3, 1.0, 0.5))
 		battle_over = true
 		print("=== CHIẾN THẮNG ===")

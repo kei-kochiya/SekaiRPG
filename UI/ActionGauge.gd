@@ -4,8 +4,8 @@ class_name ActionGauge
 ## Vertical timeline showing the next N turns.
 ## Player entries are teal, enemy entries are orange-red.
 
-const PLAYER_COLOR = Color(0.29, 0.62, 0.62)
-const ENEMY_COLOR  = Color(0.72, 0.38, 0.16)
+const PLAYER_COLOR = Color(0.0, 0.8, 0.8)
+const ENEMY_COLOR  = Color(1.0, 0.3, 0.3)
 const BG_COLOR     = Color(0.08, 0.08, 0.08, 0.85)
 
 var player_names: Array[String] = []
@@ -18,6 +18,7 @@ func set_player_names(names: Array[String]):
 	player_names = names
 
 func refresh(timeline: Array):
+	# print("[ActionGauge] Player names: ", player_names)
 	# Clear old entries
 	for c in get_children():
 		c.queue_free()
@@ -38,6 +39,7 @@ func refresh(timeline: Array):
 	for i in range(timeline.size()):
 		var entry_name = timeline[i]["name"]
 		var is_player = player_names.has(entry_name)
+		# print(" - Entry: ", entry_name, " in ", player_names, " ? ", is_player)
 		
 		var row = HBoxContainer.new()
 		row.add_theme_constant_override("separation", 6)
