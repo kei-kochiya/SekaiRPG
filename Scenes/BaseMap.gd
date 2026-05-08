@@ -11,8 +11,15 @@ const NPC_DEFS := {
 const QUEST_NPCS := ["Mafuyu", "Ena", "Kanade", "Mizuki"]
 
 var _quest_label: Label   # HUD hint for the intro quest
+var _lighting: CanvasModulate
 
 func _ready() -> void:
+	# ── Lighting ────────────────────────────────
+	_lighting = CanvasModulate.new()
+	add_child(_lighting)
+	_lighting.color = Color.WHITE
+
+	ScreenFade.fade_in(0.8)
 	# ── Background ──────────────────────────────
 	_spawn_npcs()
 	_spawn_player()
@@ -22,32 +29,32 @@ func _ready() -> void:
 	# ── Entry logic ─────────────────────────────
 	if GameManager.prologue_phase >= 1 and not GameManager.safehouse_intro_done:
 		_play_safehouse_intro()
-	elif GameManager.warehouse_wave > 5:
-		if not GameManager.upgrade_tutorial_done:
-			_play_upgrade_tutorial()
-		elif not GameManager.harbor_mission_unlocked:
-			_play_harbor_assignment()
+	elif GameManager.warehouse_wave > 5 and not GameManager.harbor_mission_unlocked:
+		_play_post_warehouse_sequence()
 	elif not GameManager.intro_quest_done:
 		_refresh_quest_label()
 	else:
 		_quest_label.visible = false
 
-func _play_upgrade_tutorial():
-	DialogueManager.play_dialogue(DialogueLoader.get_lines("upgrade_tutorial"), func():
-		_open_upgrade_menu()
-		GameManager.upgrade_tutorial_done = true
+func _play_post_warehouse_sequence():
+	# 1. Night/Rest
+	_lighting.color = Color(0.4, 0.4, 0.6) # Dim blueish night light
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_rest"), func():
+		# 2. Fade to next day
+		await ScreenFade.fade_out(1.5)
+		await get_tree().create_timer(1.0).timeout
+		
+		# 3. Morning
+		_lighting.color = Color.WHITE # Reset lighting
+		await ScreenFade.fade_in(1.0)
+		
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_morning"), func():
+			# 4. Mission Assignment
+			_play_harbor_assignment()
+		)
 	)
 
-func _open_upgrade_menu():
-	var p1 = Ichika.new()
-	LevelManager.set_initial_level(p1, 3)
-	var p2 = Kanade.new()
-	LevelManager.set_initial_level(p2, 3)
-	
-	UpgradeUI.show_ui([p1, p2])
-
 func _play_harbor_assignment() -> void:
-	await ScreenFade.fade_in(0.8)
 	GameManager.harbor_mission_unlocked = true
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_mission_assignment"))
 
@@ -65,27 +72,38 @@ func _play_safehouse_intro() -> void:
 # ─────────────────────────────────────────────
 #  QUEST HUD  — "Hãy nói chuyện với…"
 # ─────────────────────────────────────────────
+var _quest_panel: PanelContainer
+
 func _build_quest_hud() -> void:
 	var canvas := CanvasLayer.new()
 	canvas.layer = 10
 	add_child(canvas)
 
+	_quest_panel = PanelContainer.new()
+	_quest_panel.position = Vector2(20, 20)
+	canvas.add_child(_quest_panel)
+	
+	var sb = StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0.6)
+	sb.border_width_left = 4
+	sb.border_color = Color(0.4, 0.7, 1.0) # Blue accent
+	sb.set_content_margin_all(10)
+	_quest_panel.add_theme_stylebox_override("panel", sb)
+
 	_quest_label = Label.new()
-	_quest_label.add_theme_font_size_override("font_size", 14)
-	_quest_label.add_theme_color_override("font_color", Color(0.85, 0.85, 1.0))
-	_quest_label.position = Vector2(20, 20)
-	canvas.add_child(_quest_label)
+	_quest_label.add_theme_font_size_override("font_size", 16)
+	_quest_panel.add_child(_quest_label)
 
 func _refresh_quest_label() -> void:
 	if GameManager.intro_quest_done:
-		_quest_label.visible = false
+		_quest_panel.visible = false
 		return
 	var remaining: Array = []
 	for n in QUEST_NPCS:
 		if n not in GameManager.npcs_greeted:
 			remaining.append(n)
-	_quest_label.text = "Nhiệm vụ: Làm quen với mọi người\nCòn lại: " + ", ".join(remaining)
-	_quest_label.visible = true
+	_quest_label.text = "MỤC TIÊU: Làm quen với mọi người\nCòn lại: " + ", ".join(remaining)
+	_quest_panel.visible = true
 
 # ─────────────────────────────────────────────
 #  NPC SPAWNING
@@ -189,6 +207,11 @@ func _free_roam_interact(npc_name: String) -> void:
 			elif npc_name == "Ena":
 				_start_harbor_mission()
 
+func _open_upgrade_menu():
+	var p1 = GameManager.get_party_member("Ichika")
+	var p2 = GameManager.get_party_member("Kanade")
+	UpgradeUI.show_ui([p1, p2])
+
 func _check_quest_complete() -> void:
 	for n in QUEST_NPCS:
 		if n not in GameManager.npcs_greeted:
@@ -198,13 +221,19 @@ func _check_quest_complete() -> void:
 
 func _start_warehouse_mission() -> void:
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("kanade_mission"), func():
-		GameManager.reset_mission_stats()
-		GameManager.store_map_state("res://Scenes/WarehouseMap.tscn", Vector2.ZERO)
-		get_tree().change_scene_to_file("res://Scenes/WarehouseMap.tscn")
+		_go_to_warehouse()
 	)
+
+func _go_to_warehouse():
+	await ScreenFade.fade_out(1.0)
+	GameManager.reset_mission_stats()
+	GameManager.store_map_state("res://Scenes/WarehouseMap.tscn", Vector2.ZERO)
+	get_tree().change_scene_to_file("res://Scenes/WarehouseMap.tscn")
 
 func _start_harbor_mission() -> void:
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_ena_ready"), func():
+		GameManager.harbor_wave = 1
+		GameManager.harbor_route = ""
 		GameManager.store_map_state("res://Scenes/HarborMap.tscn", Vector2.ZERO)
 		get_tree().change_scene_to_file("res://Scenes/HarborMap.tscn")
 	)
@@ -238,6 +267,5 @@ func _spawn_warehouse_transition() -> void:
 	tz.add_child(vis)
 	add_child(tz)
 	tz.interacted.connect(func():
-		GameManager.store_map_state("res://Scenes/WarehouseMap.tscn", Vector2.ZERO)
-		get_tree().change_scene_to_file("res://Scenes/WarehouseMap.tscn")
+		_go_to_warehouse()
 	)

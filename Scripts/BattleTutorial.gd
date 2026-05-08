@@ -59,6 +59,8 @@ static func _build_tutorial_panel(main: Node) -> PanelContainer:
 	var panel = PanelContainer.new()
 	panel.custom_minimum_size = Vector2(500, 300)
 	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	canvas.add_child(panel)
 	
 	var sb = StyleBoxFlat.new()

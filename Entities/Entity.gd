@@ -6,6 +6,7 @@ signal died()
 signal cooldown_updated(skill_name: String, turns_left: int)
 signal status_changed(statuses: Array)
 signal damage_received(amount: int, damage_type: String)
+signal level_changed(new_level: int)
 
 @export var entity_name: String = "Unknown"
 @export var max_hp: int = 100

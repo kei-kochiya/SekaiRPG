@@ -71,19 +71,24 @@ func _build_dialogue_layer() -> void:
 
 	# Portraits
 	left_portrait = TextureRect.new()
-	left_portrait.custom_minimum_size = Vector2(100, 160)
-	left_portrait.size = Vector2(100, 160)
-	left_portrait.position = Vector2(120, 170)
-	left_portrait.pivot_offset = Vector2(50, 160)
-	left_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	left_portrait.custom_minimum_size = Vector2(256, 256)
+	left_portrait.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	left_portrait.offset_left   = 80
+	left_portrait.offset_top    = -456 # 256 (height) + 200 (box height)
+	left_portrait.pivot_offset  = Vector2(128, 256)
+	left_portrait.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
+	left_portrait.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 	_dialogue_layer.add_child(left_portrait)
 
 	right_portrait = TextureRect.new()
-	right_portrait.custom_minimum_size = Vector2(100, 160)
-	right_portrait.size = Vector2(100, 160)
-	right_portrait.position = Vector2(900, 170)
-	right_portrait.pivot_offset = Vector2(50, 160)
-	right_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	right_portrait.custom_minimum_size = Vector2(256, 256)
+	right_portrait.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	right_portrait.offset_right  = -80
+	right_portrait.offset_left   = -336 # -80 - 256
+	right_portrait.offset_top    = -456
+	right_portrait.pivot_offset  = Vector2(128, 256)
+	right_portrait.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
+	right_portrait.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 	_dialogue_layer.add_child(right_portrait)
 
 	# Text box
@@ -134,8 +139,13 @@ func _build_dialogue_layer() -> void:
 
 # ── Public API ─────────────────────────────────────────────────────────────
 func play_dialogue(lines: Array, on_complete: Callable = Callable()) -> void:
-	if active:
+	if active or lines.is_empty():
+		if lines.is_empty():
+			print("[DialogueManager] WARNING: Attempted to play empty dialogue!")
+			if on_complete.is_valid(): on_complete.call()
 		return
+	
+	_clear_portraits()
 	current_dialogue = lines
 	_callback = on_complete
 	index = 0
@@ -152,6 +162,8 @@ func show_choice(options: Array) -> void:
 	_dialogue_layer.visible = true
 	_choice_panel.visible = true
 	_in_choice = true
+	GameManager.start_dialogue()
+	_clear_portraits()
 
 	# Clear old buttons
 	for c in _choice_vbox.get_children():
@@ -182,13 +194,15 @@ func show_choice(options: Array) -> void:
 		_choice_vbox.add_child(btn)
 
 	# Focus first option for keyboard nav
-	_choice_vbox.get_child(0).grab_focus()
+	if _choice_vbox.get_child_count() > 0:
+		_choice_vbox.get_child(0).grab_focus()
 
 func _on_choice_selected(idx: int) -> void:
 	_choice_panel.visible = false
 	_in_choice = false
 	# Hide whole overlay if nothing else is active
 	if not active:
+		_clear_portraits()
 		visible = false
 		GameManager.end_dialogue()
 	choice_made.emit(idx)
@@ -209,12 +223,21 @@ func _end_dialogue() -> void:
 	visible = false
 	_dialogue_layer.visible = false
 	_narrator_layer.visible = false
+	_clear_portraits()
 	await get_tree().process_frame
 	GameManager.end_dialogue()
 	if _callback.is_valid():
 		_callback.call()
 
 # ── Rendering ──────────────────────────────────────────────────────────────
+func _clear_portraits():
+	left_portrait.texture = null
+	right_portrait.texture = null
+	left_portrait.modulate = Color.WHITE
+	right_portrait.modulate = Color.WHITE
+	left_portrait.scale = Vector2.ONE
+	right_portrait.scale = Vector2.ONE
+
 func _show_current_line() -> void:
 	var line: Dictionary = current_dialogue[index]
 	var kind:     String = line.get("type",    "dialogue")
@@ -251,9 +274,14 @@ func _show_dialogue(speaker: String, name_tag: String, color: Color, text: Strin
 	var tex: Texture2D = null
 	if ResourceLoader.exists(portrait_path):
 		tex = load(portrait_path) as Texture2D
+	
 	if speaker == "left":
+		# If this character was on the right, clear the right
+		if right_portrait.texture == tex: right_portrait.texture = null
 		left_portrait.texture = tex
 	else:
+		# If this character was on the left, clear the left
+		if left_portrait.texture == tex: left_portrait.texture = null
 		right_portrait.texture = tex
 
 	var tw := create_tween()

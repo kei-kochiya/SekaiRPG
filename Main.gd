@@ -100,14 +100,15 @@ func run_battle():
 		if actor == null or actor.current_hp <= 0:
 			continue
 		
-		turns_in_phase += 1
-		
 		# Scripted check
 		if is_harbor_boss_fight:
 			HarborBattleScript.check_transitions(self)
 			if is_scripting: # If a transition started, wait
 				await get_tree().create_timer(0.5).timeout
 				continue
+		
+		# Only increment turn count if we are actually starting a real turn
+		turns_in_phase += 1
 		
 		print("--- Lượt của: ", actor.entity_name, " ---")
 		
@@ -139,6 +140,9 @@ func run_battle():
 		# Update gauge after action (dead entities removed by _on_entity_died)
 		_update_gauge_display()
 		
+		if is_harbor_boss_fight:
+			HarborBattleScript.check_transitions(self)
+		
 		if _check_battle_end():
 			break
 		
@@ -151,7 +155,7 @@ func run_battle():
 	# Transition back to Overworld
 	await get_tree().create_timer(2.0).timeout
 	
-	var is_victory = TargetingManager.get_alive_targets(enemy_team).is_empty()
+	var is_victory = AIManager.get_alive_targets(enemy_team).is_empty()
 	if is_harbor_boss_fight:
 		var boss = _get_entity("Đội Trưởng")
 		if boss == null or boss.current_hp <= 0:
@@ -160,10 +164,6 @@ func run_battle():
 	var enemy_count = enemy_team.size()
 	
 	if is_victory:
-		# Award EXP to survivors
-		for p in player_team:
-			LevelManager.gain_exp(p, 50)
-		
 		if GameManager.current_map_file == "res://Scenes/HarborMap.tscn" and GameManager.harbor_route == "guards":
 			GameManager.guards_defeated = true
 			
@@ -251,7 +251,7 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 
 # Full regeneration — only called when queue is empty or at battle start
 func _regenerate_timeline():
-	var alive = TargetingManager.get_alive_targets(all_entities)
+	var alive = AIManager.get_alive_targets(all_entities)
 	timeline = TurnCalculator.get_timeline(alive, 20)
 	_update_gauge_display()
 
@@ -276,6 +276,18 @@ func _get_entity(e_name: String) -> Entity:
 func _on_entity_died(entity: Entity):
 	print(">>> ", entity.entity_name, " đã bị hạ gục! <<<")
 	_purge_dead_from_timeline(entity.entity_name)
+	
+	# Shared EXP Distribution when an enemy dies
+	if not entity.is_character:
+		var exp_reward = LevelManager.get_exp_reward(entity.level)
+		print("[BATTLE] Cả đội nhận được ", exp_reward, " EXP từ ", entity.entity_name)
+		for p in player_team:
+			# Give EXP even to dead members? User said "cả team (party lúc đó) nhận được luôn"
+			# Usually RPGs give to everyone active. I'll give to all in player_team.
+			LevelManager.gain_exp(p, exp_reward)
+	
+	if is_harbor_boss_fight:
+		HarborBattleScript.check_transitions(self)
 
 func _check_battle_end() -> bool:
 	if is_scripting: return false
@@ -283,16 +295,24 @@ func _check_battle_end() -> bool:
 	var is_boss_dead = false
 	if is_harbor_boss_fight:
 		var boss = _get_entity("Đội Trưởng")
-		if boss == null or boss.current_hp <= 0:
-			is_boss_dead = true
+		var dead = (boss == null or boss.current_hp <= 0)
+		
+		if dead:
+			if harbor_boss_phase < 3:
+				# Force transition if it somehow didn't trigger yet
+				HarborBattleScript.check_transitions(self)
+				return false
+			else:
+				# In phase 3, Honami is immortal, only boss death matters
+				is_boss_dead = true
 	
-	if (not is_harbor_boss_fight and TargetingManager.get_alive_targets(enemy_team).is_empty()) or is_boss_dead:
+	if (not is_harbor_boss_fight and AIManager.get_alive_targets(enemy_team).is_empty()) or is_boss_dead:
 		hud.show_result("VICTORY", Color(0.3, 1.0, 0.5))
 		battle_over = true
 		print("=== CHIẾN THẮNG ===")
 		return true
 	
-	if TargetingManager.get_alive_targets(player_team).is_empty():
+	if AIManager.get_alive_targets(player_team).is_empty():
 		if is_harbor_boss_fight and harbor_boss_phase == 1:
 			HarborBattleScript.handle_loss(self)
 			return false # Keep loop running, phase will change

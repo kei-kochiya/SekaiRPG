@@ -30,6 +30,8 @@ func _build_ui():
 	var panel = PanelContainer.new()
 	panel.custom_minimum_size = Vector2(600, 400)
 	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	
 	var sb = StyleBoxFlat.new()
 	sb.bg_color = BG_COLOR

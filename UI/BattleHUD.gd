@@ -15,7 +15,11 @@ var result_label: Label
 func build(player_team: Array, enemy_team: Array):
 	layer = 10
 	
-	# --- Full-screen root anchor ---
+	# Clear old UI if rebuilding (reinforcements)
+	for child in get_children():
+		child.queue_free()
+	player_cards.clear()
+	enemy_cards.clear()
 	var root = Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE

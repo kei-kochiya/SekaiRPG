@@ -158,8 +158,12 @@ func _connect_signals():
 	entity.cooldown_updated.connect(_on_cooldown_updated)
 	entity.status_changed.connect(_on_status_changed)
 	entity.damage_received.connect(_on_damage_received)
+	entity.level_changed.connect(_on_level_changed)
 
 # ---- Signal handlers ----
+
+func _on_level_changed(new_level: int):
+	level_label.text = "Lv.%d" % new_level
 
 func _refresh_hp_text():
 	hp_label.text = "%d / %d" % [entity.current_hp, entity.max_hp]

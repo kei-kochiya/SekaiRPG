@@ -15,9 +15,31 @@ var npcs_greeted: Array = []          # filled by BaseMap as player meets each N
 var intro_quest_done: bool = false    # true once all 4 NPCs have been greeted
 var harbor_mission_unlocked: bool = false
 var harbor_mission_done: bool = false
+var harbor_intro_done: bool = false
 var upgrade_tutorial_done: bool = false
 var harbor_route: String = "" # "guards" or "boss"
 var guards_defeated: bool = false
+var harbor_wave: int = 1
+var harbor_guards_defeated: int = 0
+
+var party: Dictionary = {}
+
+func _ready():
+	party["Ichika"] = Ichika.new()
+	party["Kanade"] = Kanade.new()
+	party["Mafuyu"] = Mafuyu.new()
+	party["Ena"]    = Ena.new()
+	party["Mizuki"] = Mizuki.new()
+	
+	# Set initial levels per user request
+	LevelManager.set_initial_level(party["Ichika"], 1)
+	LevelManager.set_initial_level(party["Kanade"], 5)
+	LevelManager.set_initial_level(party["Mafuyu"], 8)
+	LevelManager.set_initial_level(party["Ena"],    8)
+	LevelManager.set_initial_level(party["Mizuki"], 10)
+
+func get_party_member(m_name: String) -> Entity:
+	return party.get(m_name)
 
 
 func start_dialogue():
@@ -39,8 +61,11 @@ func trigger_battle():
 func finish_battle(victory: bool, count: int = 1):
 	if victory:
 		enemies_defeated += count
-		# Every 5 enemies defeated = wave clear
-		if enemies_defeated % 5 == 0:
+		# Warehouse specific progression
+		if current_map_file == "res://Scenes/WarehouseMap.tscn":
 			warehouse_wave += 1
+		# Harbor specific progression
+		if current_map_file == "res://Scenes/HarborMap.tscn":
+			harbor_wave += 1
 			
 	get_tree().change_scene_to_file(current_map_file)

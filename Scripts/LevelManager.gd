@@ -4,6 +4,10 @@ class_name LevelManager
 const SOFT_CAP_LEVEL = 50
 const MAX_LEVEL = 100
 
+static func get_exp_reward(enemy_level: int) -> int:
+	# Base 40 + 20 per level. (e.g. Lv 5 = 140 EXP)
+	return 40 + (enemy_level * 20)
+
 # Hàm nhận EXP sau trận đấu
 static func gain_exp(entity: Entity, amount: int):
 	if entity.level >= MAX_LEVEL:
@@ -44,6 +48,8 @@ static func process_level_up(entity: Entity):
 	entity.spd = min(entity.spd, entity.stat_caps.get("spd", 9999))
 
 	entity.current_hp = entity.max_hp
+	entity.hp_changed.emit(entity.current_hp, entity.max_hp)
+	entity.level_changed.emit(entity.level)
 	
 	var exp_curve = 1.2
 	if entity.level >= SOFT_CAP_LEVEL:

@@ -1,6 +1,7 @@
 extends Node2D
 
 func _ready():
+	ScreenFade.fade_in(0.8)
 	var player = OverworldPlayer.new()
 	player.name = "OverworldPlayer"
 	if GameManager.last_player_position == Vector2.ZERO:
@@ -18,11 +19,15 @@ func _ready():
 	
 	# Spawn dialogue triggers (Ensure it only plays ONCE per wave start)
 	if GameManager.warehouse_wave == 1 and GameManager.enemies_defeated == 0:
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave1_start"))
+		var intro = DialogueLoader.get_lines("warehouse_wave1_intro")
+		var start = DialogueLoader.get_lines("warehouse_wave1_start")
+		DialogueManager.play_dialogue(intro + start)
 	elif GameManager.warehouse_wave == 3 and (GameManager.enemies_defeated % 5 == 0):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave3_start"))
 	elif GameManager.warehouse_wave == 5 and (GameManager.enemies_defeated % 5 == 0):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave5_start"))
+	
+	_build_mission_hud()
 	
 	# Determine fixed spawn locations
 	var spawn_points = [
@@ -80,3 +85,23 @@ func _create_enemy_zone(pos: Vector2):
 	)
 	
 	add_child(root)
+
+func _build_mission_hud():
+	var canvas = CanvasLayer.new()
+	add_child(canvas)
+	
+	var panel = PanelContainer.new()
+	panel.position = Vector2(20, 20)
+	canvas.add_child(panel)
+	
+	var sb = StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0.6)
+	sb.border_width_left = 4
+	sb.border_color = Color(1.0, 0.9, 0.2) # Gold/Yellow accent
+	sb.set_content_margin_all(10)
+	panel.add_theme_stylebox_override("panel", sb)
+	
+	var label = Label.new()
+	label.add_theme_font_size_override("font_size", 16)
+	label.text = "MỤC TIÊU: Dọn dẹp kho hàng\nTiến độ: Wave " + str(GameManager.warehouse_wave) + " / 5"
+	panel.add_child(label)

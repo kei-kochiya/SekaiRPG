@@ -1,13 +1,149 @@
 {
-  "upgrade_tutorial": [
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Ichika, sau các trận chiến vừa rồi, chị thấy em đã tiến bộ rất nhiều." },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Đừng quên sử dụng điểm kỹ năng (SP) để nâng cấp các chỉ số cơ bản của mình nhé." },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Hãy tập trung vào những gì em thấy cần thiết nhất. Chị cũng sẽ tự nâng cấp cho mình." }
+  "post_warehouse_rest": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Hai cô làm tốt lắm. Bây giờ thì nghỉ ngơi đi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Hình như trong căn cứ còn phòng trống đấy, kế bên phòng chị. Để chị dọn dẹp giúp em nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ em cảm ơn ạ."
+    }
+  ],
+  "post_warehouse_morning": [
+    {
+      "type": "narrator",
+      "text": "Sáng hôm sau"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Trời ơi cái báng súng bằng sợi carbon này mướt rượt luôn, đám quân đội lần này chơi lớn phết!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Khoan đã, cái quái gì kẹt dưới đáy thùng thế này?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Á á á! Lục bạc nguyên khối phiên bản giới hạn!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Điếc hết cả tai rồi bà nội, làm như chưa thấy súng bao giờ ấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Im đi, mày thì biết cái quái gì về nghệ thuật cơ khí!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ồn ào quá Ena."
+    }
   ],
   "harbor_mission_assignment": [
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Ichika, nhiệm vụ tại kho hàng làm tốt lắm. Nhưng chúng ta chưa thể nghỉ ngơi." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Có thông tin về một lô hàng mờ ám đang được vận chuyển tại bến cảng phía Đông." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Ena, chị muốn em dẫn Ichika đi thám thính tình hình. Nhớ kỹ, chỉ thám thính, không được manh động." },
-    { "type": "dialogue", "speaker": "left", "name": "Ena", "color": "#b86028", "text": "Rõ rồi. Đi thôi nhóc, đừng để chị phải chờ." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Khai thác được thông tin bãi đáp tiếp theo của bọn buôn lậu là cảng số 4. Chỗ đó cũng quanh quẩn gần đây thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ena, cô ra đó thám thính giúp tôi đi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Tuân lệnh sếp! Đang ngứa tay muốn test thử em cưng này xem lực giật thế nào đây."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Dắt Ichika theo cùng. Và cất cái súng đó đi. Tôi chỉ muốn thám thính thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Hả? Lại phải làm bảo mẫu cho lính mới à? Và ý cô là sao khi bảo tôi cất súng đi chứ???"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ...?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Nhìn cái mặt nghệt ra như ngỗng ỉa kia kìa, làm ơn đừng có kéo chân bà đi dọn rác nhé."
+    },
+    {
+      "type": "narrator",
+      "text": "Vừa nói, Ena vừa cho Ichika chút nước và đồ ăn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ăn đi cho đỡ bủn rủn, lát nữa nôn thốc nôn tháo ra xe tôi thì nát bét cái sọ đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Cái miệng độc địa này giấu một sự quan tâm vụng về ghê.)"
+    }
   ]
 }

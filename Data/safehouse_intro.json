@@ -1,96 +1,472 @@
 {
   "safehouse_intro": [
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Trời đất, cô nhặt đâu ra con nhóc bê bết máu me thế này?" },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Không phải chuyện của cô đâu." },
-    { "type": "narrator", "text": "…" },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Mọi người tập trung lại đây." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Đây là Hoshino Ichika, con gái của một ông trùm có tiếng. Tôi nhìn thấy ưng mắt nên dẫn con bé về, đã được quý ngài cho phép. Bây giờ em là thành viên mới của Nightcord chúng ta." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Trời đất, cô nhặt đâu ra con nhóc bê bết máu me thế này?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Không phải chuyện của cô đâu."
+    },
+    {
+      "type": "narrator",
+      "text": "…"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Mọi người tập trung lại đây."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Đây là Hoshino Ichika, con gái của một ông trùm có tiếng. Tôi thấy ưng mắt nên dẫn em về, đã được quý ngài cho phép. Bây giờ em là thành viên mới của Nightcord chúng ta."
+    }
   ],
   "safehouse_meet_mafuyu": [
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Em muốn cảm ơn chị đã cứu em." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Không cần thiết đâu. Đây là giao dịch mà. Cố gắng đừng để chị thất vọng đấy." }
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em muốn cảm ơn chị đã cứu em."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Không cần thiết đâu. Đây là giao dịch mà. Cố gắng đừng để chị thất vọng đấy."
+    }
   ],
   "safehouse_meet_mafuyu_repeat": [
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Có gì cần không, nhóc?" },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Không. Em chỉ chào chị thôi." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Ừ." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Có gì cần không, nhóc?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Không. Em chỉ chào chị thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ừ."
+    }
   ],
   "safehouse_meet_ena": [
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Hm? Nhóc tới chào chị à? Cũng lịch sự đấy." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Ichika ạ. Mong được chị chỉ giáo" },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Ừ. Shinonome Ena. Cứ gọi là Ena." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Hm? Nhóc tới chào chị à? Cũng lịch sự đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Ichika ạ. Mong được chị chỉ giáo."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ừ. Shinonome Ena. Cứ gọi là Ena."
+    }
   ],
   "safehouse_meet_ena_repeat": [
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Nhóc lại chơi à?" },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Dạ vâng. Em muốn tìm hiểu thêm về chị." },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Ừ thì... chị cũng không có gì để che giấu cả. Nhưng mà để sau nhé." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Nhóc lại chơi à?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ vâng. Em muốn tìm hiểu thêm về chị."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ừ thì... chị cũng không có gì để che giấu cả. Nhưng mà để sau nhé."
+    }
   ],
   "safehouse_meet_kanade": [
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "...Nhóc muốn gì? Chị đang ăn dở ly mì rồi." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Em là Ichika. Người mới." },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Yoisaki Kanade. Cẩn thận không lại làm mình bị thương đấy nhé." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "...Nhóc muốn gì? Chị đang ăn dở ly mì rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em là Ichika. Người mới."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Yoisaki Kanade. Cẩn thận không lại làm mình bị thương đấy nhé."
+    }
   ],
   "safehouse_meet_kanade_repeat": [
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Đến đây tìm chị à?" },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Dạ không. Em chỉ đi vòng vòng thôi." },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Ừ, lo mà ăn uống đầy đủ vào nhé. Đừng để bị thương. À, tiện thể lấy hộ chị thêm ít mì với." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Đến đây tìm chị à?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ không. Em chỉ đi vòng vòng thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Ừ, lo mà ăn uống đầy đủ vào nhé. Đừng để bị thương. À, tiện thể lấy hộ chị thêm ít mì với."
+    }
   ],
   "safehouse_meet_mizuki": [
-    { "type": "dialogue", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Ooh, cậu tìm tớ à? Dễ thương ghê!" },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Hoshino Ichika. Vui được làm quen với cậu." },
-    { "type": "dialogue", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Ôi dào, khách sáo gì chớ. Mizuki Akiyama, nhớ kĩ đấy nhé." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Ooh, cậu tìm tớ à? Dễ thương ghê!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Hoshino Ichika. Vui được làm quen với cậu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Ôi dào, khách sáo gì chớ. Mizuki Akiyama, nhớ kĩ đấy nhé."
+    }
   ],
   "safehouse_meet_mizuki_repeat": [
-    { "type": "dialogue", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Nè Ichika-chan, lại đây chơi với tớ nè!" },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Xin lỗi nhé, tớ đang bận chút." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Nè Ichika-chan, lại đây chơi với tớ nè!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Xin lỗi nhé, tớ đang bận chút."
+    }
   ],
   "quest_intro_complete": [
-    { "type": "narrator", "text": "Ichika đã làm quen với tất cả mọi người." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "...Tôi chính thức là một trong số họ rồi sao." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Vậy thì, bắt đầu thôi." }
+    {
+      "type": "narrator",
+      "text": "Ichika đã làm quen với tất cả mọi người."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "...Mình chính thức là một trong số họ rồi sao."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Có vẻ như, rời khỏi tổ chức này không dễ dàng gì."
+    }
   ],
-  "npc_hello_mafuyu": [ { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Nhớ tập làm quen dần với mọi người đi nhé." } ],
-  "npc_hello_ena": [ { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Muốn đánh đấm gì không? Chị đây không nể nang gì đâu nhé." } ],
-  "npc_hello_kanade": [ { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Em rảnh không? Lấy giúp chị thêm ly mì nữa với." } ],
-  "npc_hello_mizuki": [ { "type": "dialogue", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Chào lính mới, rảnh rỗi tớ sẽ hóa trang cho cậu thành idol giới trẻ đi quẩy luôn." } ],
+  "npc_hello_mafuyu": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Nhớ tập làm quen dần với mọi người đi nhé."
+    }
+  ],
+  "npc_hello_ena": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Muốn đánh đấm gì không? Chị đây không nể nang gì đâu nhé."
+    }
+  ],
+  "npc_hello_kanade": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Em rảnh không? Lấy giúp chị thêm ly mì nữa với."
+    }
+  ],
+  "npc_hello_mizuki": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Chào lính mới, rảnh rỗi tớ sẽ hóa trang cho cậu thành idol giới trẻ đi quẩy luôn."
+    }
+  ],
   "npc_info_mafuyu": [
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Chị... thực ra làm gì ở đây vậy?" },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Chị là ai á? Giờ cũng chả quan trọng mấy. Em thật sự muốn biết sao?" },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Chó săn của Bộ Quốc phòng Nhật Bản." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Chính phủ đích thân chọn chị cùng bốn kẻ khác thành lập ra Nightcord để dọn dẹp những thứ rác rưởi ngoài kia." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Chị nắm quyền điều hành tổ chức từ ngày đầu tiên cho tới tận bây giờ." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Đồng nghiệp lúc đó, bây giờ chết sạch cả rồi. Nhưng... ít nhất chị cũng đang làm một điều có ý nghĩa..." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Chị Mafuyu..." }
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị... thực ra làm gì ở đây vậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chị là ai á? Giờ cũng chả quan trọng mấy. Em thật sự muốn biết sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chó săn của Bộ Quốc phòng Nhật Bản."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chính phủ đích thân chọn chị cùng bốn kẻ khác thành lập ra Nightcord để dọn dẹp những thứ rác rưởi ngoài kia."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chị nắm quyền điều hành tổ chức từ ngày đầu tiên cho tới tận bây giờ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Đồng nghiệp lúc đó, bây giờ chết sạch cả rồi. Nhưng... ít nhất chị cũng đang làm một điều có ý nghĩa..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Mafuyu..."
+    }
   ],
   "npc_info_ena": [
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Chị Ena... sao chị lại ở đây vậy?" },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "À, chuyện đó hả? Chị bị một thằng khách hàng nào đó của Nightcord nhắm đến. Không hiểu lý do." },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Tên tay sai của hắn tìm đến xưởng vẽ của chị. Lúc đó trong tay chị chỉ có cọ vẽ." },
-    { "type": "action", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Chả buồn nghĩ, chị xiên hắn luôn. Cũng mạnh, đáng tiếc là chị đang tập trung vẽ nên chả để tâm mấy." },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Mafuyu nghe tin, bảo 'thái độ ngông cuồng không biết hối hận' hợp mắt bả, rồi mời chị về. Thế là chị vào thay vị trí của thằng xấu số kia." }
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Ena... sao chị lại ở đây vậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "À, chuyện đó hả? Chị bị một thằng khách hàng nào đó của Nightcord nhắm đến. Không hiểu lý do."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Tên tay sai của hắn tìm đến xưởng vẽ của chị. Lúc đó trong tay chị chỉ có cọ vẽ."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Chả buồn nghĩ, chị xiên hắn luôn. Cũng mạnh, đáng tiếc là chị đang tập trung vẽ nên chả để tâm mấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Mafuyu nghe tin, bảo 'thái độ ngông cuồng không biết hối hận' hợp mắt bả, rồi mời chị về. Thế là chị vào thay vị trí của thằng xấu số kia."
+    }
   ],
   "npc_info_kanade": [
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Chị... trước đây làm gì vậy?" },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Giáo viên mầm non. Trông bọn nhóc cả ngày." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Rồi sao chị lại vào đây được?" },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Hôm đó có tai nạn trên sân thượng. Mấy thanh sắt rơi xuống chỗ bọn nhóc đang chơi. Chị không kịp nghĩ, dùng từ trường bẻ cong đường bay của chúng lại." },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Bọn nhóc an toàn. Nhưng chị bị lộ. Mafuyu đang dự giờ hôm đó, nên đến trước bọn buôn người kịp. Thế là chị ở đây." },
-    { "type": "narrator", "text": "…" },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Mì ly ở đây vẫn ngon. Đó là điều duy nhất chị không hối hận." }
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị... trước đây làm gì vậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Giáo viên mầm non. Trông bọn nhóc cả ngày."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Rồi sao chị lại vào đây được?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Hôm đó có tai nạn trên sân thượng. Mấy thanh sắt rơi xuống chỗ bọn nhóc đang chơi. Chị không kịp nghĩ, dùng từ trường bẻ cong đường bay của chúng lại."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Bọn nhóc an toàn. Nhưng chị bị lộ. Mafuyu đang dự giờ hôm đó, nên đến trước bọn buôn người kịp. Thế là chị ở đây."
+    },
+    {
+      "type": "narrator",
+      "text": "…"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Mì ly ở đây vẫn ngon. Đó là điều duy nhất chị không hối hận."
+    }
   ],
   "npc_info_mizuki": [
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Mizuki từ đâu đến vậy?" },
-    { "type": "dialogue", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Hahaha~ Từ dưới đáy xã hội thôi. Mấy khu ổ chuột tồi tàn nhất thành phố." },
-    { "type": "dialogue", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Tớ trộm tiền tiêu vặt, hóa trang thành bất kỳ ai để qua mắt bọn chúng. Chỉ trong chớp mắt thôi." },
-    { "type": "action", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Một viên xúc xắc đỏ xuất hiện, nhảy múa lơ lửng trên không trung." },
-    { "type": "action", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Hỉ tay vào viên xúc xắc." },
-    { "type": "dialogue", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Thứ đó là vũ khí đặc biệt của tớ. Gieo trúng mặt nào là tự động biến hình thành món đồ chơi tương ứng." },
-    { "type": "dialogue", "speaker": "right", "name": "Mizuki", "color": "#da99cc", "text": "Mafuyu tự mình đến chiêu mộ tớ. Chắc bả thấy tớ có tiềm năng~" }
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Mizuki từ đâu đến vậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Hahaha~ Từ dưới đáy xã hội thôi. Mấy khu ổ chuột tồi tàn nhất thành phố."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Tớ trộm tiền tiêu vặt, hóa trang thành bất kỳ ai để qua mắt bọn chúng. Chỉ trong chớp mắt thôi."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Một viên xúc xắc đỏ xuất hiện, nhảy múa lơ lửng trên không trung."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Thứ này là vũ khí đặc biệt của tớ. Gieo trúng mặt nào là tự động biến hình thành món đồ chơi tương ứng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#da99cc",
+      "text": "Mafuyu tự mình đến chiêu mộ tớ. Chắc bả thấy tớ có tiềm năng~"
+    }
   ],
   "kanade_mission": [
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Ichika. Chị đã xem qua dữ liệu chiến đấu của em." },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Chúng ta có một nhiệm vụ thu hồi ở kho cảng. 25 mục tiêu đang bảo vệ vũ khí bất hợp pháp." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Em sẵn sàng. Em sẽ yểm trợ cho chị." },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Tốt. Xuất phát thôi." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Ichika. Chị đã xem qua dữ liệu chiến đấu của em."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Chúng ta có một nhiệm vụ thu hồi ở kho cảng. 25 mục tiêu đang bảo vệ vũ khí bất hợp pháp."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em sẵn sàng. Em sẽ yểm trợ cho chị."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Tốt. Xuất phát thôi."
+    }
   ]
 }

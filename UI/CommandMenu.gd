@@ -92,7 +92,7 @@ func _show_targets():
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	target_container.add_child(header)
 	
-	var alive = TargetingManager.get_alive_targets(enemy_team)
+	var alive = AIManager.get_alive_targets(enemy_team)
 	for enemy in alive:
 		var label = "%s  HP %d/%d" % [enemy.entity_name, enemy.current_hp, enemy.max_hp]
 		var btn = _make_btn(label, "", true)

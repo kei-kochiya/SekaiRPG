@@ -1,18 +1,77 @@
 {
+  "warehouse_wave1_intro": [
+    {
+      "type": "narrator",
+      "text": "Khu vực Kho hàng - Đội Ichika & Kanade"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Bắt đầu tiệc thôi. 25 tên tất cả, đừng cản trở chị đấy nhé."
+    }
+  ],
   "warehouse_wave1_start": [
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Tôi phát hiện nhóm đầu tiên." },
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Tiếp cận. Không để tên nào thoát." }
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em phát hiện nhóm đầu tiên."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Khá lắm. Đừng để bọn chúng trốn thoát."
+    }
   ],
   "warehouse_wave3_start": [
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Thêm quân tiếp viện đến rồi. Cẩn thận nhé, Ichika." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Tôi hiểu." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Quân tiếp viện đến rồi. Cẩn thận nhé, Ichika."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Vâng."
+    }
   ],
   "warehouse_wave5_start": [
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Đây là đợt cuối! Không được lơi lỏng!" },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Haaah!" }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Có vẻ là vắng hơn rồi đấy. Cố gắng đừng gục trước chị nhé!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Haaah!"
+    }
   ],
   "warehouse_clear": [
-    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "25 mục tiêu đã bị tiêu diệt. Vũ khí đã được thu giữ." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Nhiệm vụ hoàn thành. Rút lui thôi." }
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Còn 1 con chuột nhắt nữa. Để chị moi thông tin từ hắn." },
+    { "type": "narrator", "text": "..." },
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Khai ra mạng lưới của mày nhanh, tôi không đủ kiên nhẫn đứng nghe tiếng heo chọc tiết đâu." },
+    { "type": "dialogue", "speaker": "left", "name": "Tên kia", "color": "#888888", "text": "Tao nói... tao nói hết, hàng này của băng Yakuza khu Tây dạt về... bãi đáp tiếp theo là cảng số bốn..." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "(Qua bộ đàm) Tôi nghe đủ rồi." },
+    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Tôi vừa gọi người bên quân đội đến thu dọn bãi chiến trường này và hốt trọn đống vũ khí kia rồi. Chúng ta sẽ được chia chác vài món đồ chơi từ lô hàng đó. Xong việc rồi thì hai cô về đi." },
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Rõ thưa sếp." },
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Đi về nào nhóc." },
+    { "type": "narrator", "text": "Ichika lẳng lặng bước ra khỏi kho hàng trước." },
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Người ta nói tôi là thiên thần, tiếc thay, tôi là ác quỷ trước khi tôi có thể là thiên thần." },
+    { "type": "narrator", "text": "Kanade sử dụng năng lực từ trường, một tiếng 'vút' xé gió vang lên. Cây đinh sắt cắm phập xuyên qua sọ tên lính còn sót lại." },
+    { "type": "dialogue", "speaker": "right", "name": "Kanade", "color": "#ccccdd", "text": "Đi thong thả nhé." }
   ]
 }

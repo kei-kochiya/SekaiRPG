@@ -3,67 +3,70 @@ extends Node2D
 func _ready():
 	_spawn_player()
 	_spawn_interactables()
-	# Brief delay to let fade-in finish or start
-	await get_tree().create_timer(0.5).timeout
-	_play_intro()
+	
+	if not GameManager.harbor_intro_done:
+		# Brief delay to let fade-in finish
+		await get_tree().create_timer(0.5).timeout
+		_play_intro()
 
 func _play_intro():
+	GameManager.harbor_intro_done = true
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_arrival"))
 
 func _spawn_interactables():
-	# Front Gate (Guards)
-	if not GameManager.guards_defeated:
-		var gate = InteractableZone.new()
-		gate.prompt_text = "Tấn công cửa chính (Lính canh)"
-		gate.position = Vector2(800, 300)
-		var col1 = CollisionShape2D.new()
-		var shape1 = CircleShape2D.new()
-		shape1.radius = 100
-		col1.shape = shape1
-		gate.add_child(col1)
-		
-		# Visual for gate
-		var vis1 = ColorRect.new()
-		vis1.size = Vector2(40, 100)
-		vis1.position = Vector2(-20, -50)
-		vis1.color = Color(0.6, 0.2, 0.2)
-		gate.add_child(vis1)
-		
-		gate.interacted.connect(func():
-			GameManager.harbor_route = "guards"
-			GameManager.store_map_state("res://Scenes/HarborMap.tscn", get_node("OverworldPlayer").global_position)
-			GameManager.trigger_battle()
-		)
-		add_child(gate)
-		gate.add_to_group("objectives")
+	# Front Gate Route: 3 Waves
+	if GameManager.harbor_route == "guards" or GameManager.harbor_route == "":
+		if GameManager.harbor_wave <= 3:
+			var wave_positions = [
+				Vector2(400, 350), # Wave 1
+				Vector2(700, 350), # Wave 2
+				Vector2(1000, 350) # Wave 3
+			]
+			_create_trigger(wave_positions[GameManager.harbor_wave - 1], "Đội Tuần Tra (Wave " + str(GameManager.harbor_wave) + ")", "guards")
+		else:
+			_create_trigger(Vector2(1400, 350), "Đội Trưởng (BOSS)", "guards")
 	
-	# Back Door (Boss)
-	var back = InteractableZone.new()
-	back.prompt_text = "Lẻn ra cửa sau (Trực tiếp gặp Boss)"
-	back.position = Vector2(1200, 800)
-	var col2 = CollisionShape2D.new()
-	var shape2 = CircleShape2D.new()
-	shape2.radius = 100
-	col2.shape = shape2
-	back.add_child(col2)
+	# Back Door Route: Direct to Boss
+	if GameManager.harbor_route == "boss" or GameManager.harbor_route == "":
+		_create_trigger(Vector2(600, 800), "Đường Vòng (BOSS)", "boss")
+
+func _create_trigger(pos: Vector2, label: String, route: String):
+	var root = Node2D.new()
+	root.position = pos
 	
-	# Visual for back door
-	var vis2 = ColorRect.new()
-	vis2.size = Vector2(60, 60)
-	vis2.position = Vector2(-30, -30)
-	vis2.color = Color(0.2, 0.2, 0.6)
-	back.add_child(vis2)
+	var vis = ColorRect.new()
+	vis.size = Vector2(32, 48)
+	vis.position = Vector2(-16, -48)
+	vis.color = Color(0.8, 0.2, 0.2) if route == "guards" else Color(0.2, 0.2, 0.8)
+	root.add_child(vis)
 	
-	back.interacted.connect(func():
-		GameManager.harbor_route = "boss"
+	var lbl = Label.new()
+	lbl.text = label
+	lbl.position = Vector2(-40, -70)
+	root.add_child(lbl)
+	
+	var zone = InteractableZone.new()
+	zone.prompt_text = "Nhấn ENTER để chiến đấu"
+	var col = CollisionShape2D.new()
+	var shape = CircleShape2D.new()
+	shape.radius = 60
+	col.shape = shape
+	zone.add_child(col)
+	root.add_child(zone)
+	
+	zone.interacted.connect(func():
+		GameManager.harbor_route = route
 		GameManager.store_map_state("res://Scenes/HarborMap.tscn", get_node("OverworldPlayer").global_position)
 		GameManager.trigger_battle()
 	)
-	add_child(back)
-	back.add_to_group("objectives")
+	
+	add_child(root)
 
 func _spawn_player():
 	var p = OverworldPlayer.new()
 	p.name = "OverworldPlayer"
-	p.position = Vector2(100, 300)
+	if GameManager.last_player_position == Vector2.ZERO:
+		p.position = Vector2(100, 350)
+	else:
+		p.position = GameManager.last_player_position
 	add_child(p)
