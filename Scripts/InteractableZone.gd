@@ -45,14 +45,15 @@ func _on_body_exited(body):
 		is_player_inside = false
 		prompt_label.visible = false
 
+func _unhandled_input(event: InputEvent) -> void:
+	if is_player_inside and event.is_action_pressed("ui_accept"):
+		if not GameManager.is_in_dialogue:
+			get_viewport().set_input_as_handled()
+			interacted.emit()
+
 func _process(_delta):
 	# Hide prompt if dialogue or UI is active
 	if GameManager.is_in_dialogue:
 		prompt_label.visible = false
 	elif is_player_inside:
 		prompt_label.visible = true
-
-	# If player is in zone, dialogue isn't playing, and presses Accept
-	if is_player_inside and Input.is_action_just_pressed("ui_accept"):
-		if not GameManager.is_in_dialogue:
-			interacted.emit()

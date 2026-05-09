@@ -2,10 +2,42 @@ extends Control
 
 func _ready():
 	_apply_kenney_styles()
+	
+	# Check for existing save
+	if GameManager.has_save():
+		var continue_btn = Button.new()
+		continue_btn.text = "Tiếp tục"
+		continue_btn.name = "ContinueBtn"
+		$CenterContainer/VBoxContainer.add_child(continue_btn)
+		$CenterContainer/VBoxContainer.move_child(continue_btn, 1) # Put it after title/banner
+		_style_button(continue_btn)
+		continue_btn.pressed.connect(_on_continue)
+	
 	$CenterContainer/VBoxContainer/NewGameBtn.pressed.connect(_on_new_game)
 	$CenterContainer/VBoxContainer/SandboxBtn.pressed.connect(_on_sandbox)
 	$CenterContainer/VBoxContainer/ExitBtn.pressed.connect(_on_exit)
 	ScreenFade.fade_in(1.0)
+
+func _style_button(btn: Button):
+	var ns = StyleBoxTexture.new()
+	ns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+	ns.texture_margin_left = 10
+	ns.texture_margin_right = 10
+	ns.texture_margin_top = 10
+	ns.texture_margin_bottom = 14
+	btn.add_theme_stylebox_override("normal", ns)
+	
+	var hs = StyleBoxTexture.new()
+	hs.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg")
+	hs.texture_margin_left = 10
+	hs.texture_margin_right = 10
+	hs.texture_margin_top = 10
+	hs.texture_margin_bottom = 14
+	btn.add_theme_stylebox_override("hover", hs)
+	btn.add_theme_stylebox_override("focus", hs)
+	
+	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+	btn.add_theme_color_override("font_hover_color", Color(0.1, 0.1, 0.1))
 
 func _apply_kenney_styles():
 	# Title Background using NinePatchRect for better stretching
@@ -33,29 +65,15 @@ func _apply_kenney_styles():
 	title.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
 
 	for btn in [$CenterContainer/VBoxContainer/NewGameBtn, $CenterContainer/VBoxContainer/SandboxBtn, $CenterContainer/VBoxContainer/ExitBtn]:
-		var ns = StyleBoxTexture.new()
-		ns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
-		ns.texture_margin_left = 10
-		ns.texture_margin_right = 10
-		ns.texture_margin_top = 10
-		ns.texture_margin_bottom = 14
-		btn.add_theme_stylebox_override("normal", ns)
-		
-		var hs = StyleBoxTexture.new()
-		hs.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg")
-		hs.texture_margin_left = 10
-		hs.texture_margin_right = 10
-		hs.texture_margin_top = 10
-		hs.texture_margin_bottom = 14
-		btn.add_theme_stylebox_override("hover", hs)
-		
-		btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
-		btn.add_theme_color_override("font_hover_color", Color(0.1, 0.1, 0.1))
+		_style_button(btn)
+
+func _on_continue():
+	await ScreenFade.fade_out(0.5)
+	GameManager.load_game()
 
 func _on_new_game():
 	await ScreenFade.fade_out(1.0)
-	# Reset GameManager state if necessary (simple enough for now)
-	GameManager.is_sandbox = false
+	GameManager.reset_game()
 	get_tree().change_scene_to_file("res://Scenes/PrologueMap.tscn")
 
 func _on_sandbox():

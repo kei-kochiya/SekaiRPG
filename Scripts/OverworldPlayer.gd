@@ -7,7 +7,7 @@ const SPEED = 250.0
 var character_color: Color = Color(0.29, 0.62, 0.62) # Default: Ichika blue
 
 var _marker: Polygon2D
-var _objective_arrow: Polygon2D
+var _objective_arrow: Sprite2D
 var _last_dir: Vector2 = Vector2.ZERO
 
 func _ready():
@@ -21,11 +21,10 @@ func _ready():
 	_draw_dot()
 	
 	# Objective indicator arrow
-	_objective_arrow = Polygon2D.new()
-	_objective_arrow.color = Color(1.0, 0.9, 0.2, 0.8) # Golden yellow
-	_objective_arrow.polygon = PackedVector2Array([
-		Vector2(8, 0), Vector2(0, -5), Vector2(0, 5)
-	])
+	_objective_arrow = Sprite2D.new()
+	_objective_arrow.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/minimap_arrow_c.svg")
+	_objective_arrow.modulate = Color(1.0, 0.9, 0.2, 0.9)
+	_objective_arrow.scale = Vector2(0.4, 0.4)
 	add_child(_objective_arrow)
 	
 	# Physics hitbox

@@ -20,11 +20,14 @@ func _ready():
 # ─────────────────────────────────────────────
 
 func _build_map():
-	# 1. Warehouse Floor (Center of the map)
-	# Grid: 6 to 14 wide, 6 to 12 deep
-	for x in range(6, 15):
-		for y in range(6, 13):
+	# 0. Large Ground Background
+	# Covers a wide area so it's not a black void
+	for x in range(-30, 30):
+		for y in range(-30, 30):
 			_place_tile("floor.png", Vector2(x, y), false)
+
+	# 1. Warehouse Floor (Already covered by ground, but we can re-place or skip)
+	# Keeping this loop as reference for walls logic if needed.
 	
 	# 2. Warehouse Walls
 	for x in range(6, 15):

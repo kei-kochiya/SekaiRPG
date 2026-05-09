@@ -13,6 +13,7 @@ config_version=5
 config/name="PJSK_RPG"
 run/main_scene="res://Scenes/StartMenu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="uid://bubsa2phqp7kb"
 
 [autoload]
 
@@ -21,11 +22,21 @@ DialogueManager="*res://UI/DialogueManager.gd"
 DialogueLoader="*res://Scripts/DialogueLoader.gd"
 ScreenFade="*res://UI/ScreenFade.gd"
 UpgradeUI="*res://UI/UpgradeUI.tscn"
+PauseMenu="*res://UI/PauseMenu.gd"
+MobileControls="*res://UI/MobileControls.gd"
 
 [display]
 
+window/size/viewport_width=1152
+window/size/viewport_height=648
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 window/stretch/scale_mode="integer"
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+pointing/emulate_mouse_from_touch=true
 
 [physics]
 
@@ -35,3 +46,4 @@ window/stretch/scale_mode="integer"
 
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
+textures/vram_compression/import_etc2_astc=true

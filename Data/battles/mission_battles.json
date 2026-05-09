@@ -1,0 +1,27 @@
+{
+  "prologue": {
+    "player_party": ["Ichika"],
+    "enemy_type": "kidnapper",
+    "enemy_count": 3,
+    "level_val": 1
+  },
+  "warehouse": {
+    "player_party": ["Ichika", "Kanade"],
+    "enemy_type": "target",
+    "enemy_count": 5,
+    "level_key": "warehouse_wave"
+  },
+  "harbor_guards": {
+    "player_party": ["Ichika", "Ena"],
+    "enemy_type": "guard",
+    "enemy_count": 4,
+    "level_key": "harbor_guards"
+  },
+  "harbor_boss": {
+    "player_party": ["Ichika", "Ena"],
+    "enemy_type": "harbor_boss",
+    "enemy_count": 1,
+    "level_val": 8,
+    "is_harbor_boss": true
+  }
+}

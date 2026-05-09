@@ -1,19 +1,27 @@
 extends Node
 class_name BattleInitializer
 
-## Handles team setup and entity initialization for different battle contexts.
+## Data-driven Battle Initializer.
+## Loads configurations from res://Data/battles/ and sets up teams.
+
+static var enemy_types: Dictionary = {}
+static var mission_battles: Dictionary = {}
+
+static func _ensure_data_loaded():
+	if enemy_types.is_empty():
+		enemy_types = _load_json("res://Data/battles/enemy_types.json")
+	if mission_battles.is_empty():
+		mission_battles = _load_json("res://Data/battles/mission_battles.json")
+
+static func _load_json(path: String) -> Dictionary:
+	var f := FileAccess.open(path, FileAccess.READ)
+	if not f: return {}
+	var d = JSON.parse_string(f.get_as_text())
+	f.close()
+	return d if d is Dictionary else {}
 
 static func setup_battle(_main: Node) -> Dictionary:
-	var ichika = GameManager.get_party_member("Ichika")
-	var mafuyu = GameManager.get_party_member("Mafuyu")
-	var ena    = GameManager.get_party_member("Ena")
-	var kanade = GameManager.get_party_member("Kanade")
-	
-	var player_team = []
-	var enemy_team = []
-	var is_harbor_boss = false
-
-	var current_map = GameManager.current_map_file
+	_ensure_data_loaded()
 	
 	if GameManager.is_sandbox:
 		return {
@@ -23,50 +31,85 @@ static func setup_battle(_main: Node) -> Dictionary:
 		}
 	
 	if GameManager.is_training_mode:
-		var training_data = _setup_training_battle()
-		player_team = training_data["player_team"]
-		enemy_team = training_data["enemy_team"]
-		is_harbor_boss = false
-	elif current_map == "res://Scenes/HarborMap.tscn":
+		return _setup_training_battle()
+	
+	var current_map = GameManager.current_map_file
+	var battle_key = ""
+	
+	# Map File -> Battle Key mapping
+	if current_map == "res://Scenes/HarborMap.tscn":
 		if GameManager.harbor_route == "boss" or GameManager.harbor_wave > 3:
-			is_harbor_boss = true
-			player_team = [ichika, ena]
-			var boss = _create_boss("Đội Trưởng", 3500, 240, 130, 110, "Hard")
-			LevelManager.set_initial_level(boss, 8)
-			enemy_team = [boss]
+			battle_key = "harbor_boss"
 		else:
-			player_team = [ichika, ena]
-			var wave_lv = 5 + GameManager.harbor_wave 
-			enemy_team = _create_guards(4, wave_lv)
-			
+			battle_key = "harbor_guards"
 	elif current_map == "res://Scenes/WarehouseMap.tscn":
-		player_team = [ichika, kanade]
-		var wave_lv = clamp(GameManager.warehouse_wave, 1, 5)
-		enemy_team = _create_targets(5, wave_lv)
-		
+		battle_key = "warehouse"
 	elif GameManager.prologue_phase == 0:
-		player_team = [ichika]
-		enemy_team = _create_kidnappers(3, 1)
-		
-	else:
-		# Fallback - ensure no unintended matches occur
-		print("[BattleInitializer] WARNING: Undefined battle context. Returning empty teams.")
-		player_team = []
-		enemy_team = []
-		
-	# Health Recovery Policy (Applied to ALL modes including training)
-	for p in player_team:
+		battle_key = "prologue"
+	
+	if mission_battles.has(battle_key):
+		return _setup_mission_battle(mission_battles[battle_key])
+	
+	# Fallback
+	print("[BattleInitializer] WARNING: No battle config for ", current_map)
+	return {"player_team": [], "enemy_team": [], "is_harbor_boss": false}
+
+static func _setup_mission_battle(cfg: Dictionary) -> Dictionary:
+	var p_team = []
+	for p_name in cfg.get("player_party", []):
+		var p = GameManager.get_party_member(p_name)
+		if p: p_team.append(p)
+	
+	# Determine Level
+	var lv = 1
+	if cfg.has("level_val"):
+		lv = cfg["level_val"]
+	elif cfg.has("level_key"):
+		var key = cfg["level_key"]
+		if key == "warehouse_wave":
+			lv = clamp(GameManager.warehouse_wave, 1, 5)
+		elif key == "harbor_guards":
+			lv = 5 + GameManager.harbor_wave
+	
+	var e_type = cfg.get("enemy_type", "")
+	var count = cfg.get("enemy_count", 1)
+	var enemies = _create_entities_from_type(e_type, count, lv)
+	
+	# Recovery policy
+	for p in p_team:
 		var min_hp = int(p.max_hp * 0.5)
-		if p.current_hp < min_hp:
-			p.current_hp = min_hp
+		if p.current_hp < min_hp: p.current_hp = min_hp
 
 	return {
-		"player_team": player_team,
-		"enemy_team": enemy_team,
-		"is_harbor_boss": is_harbor_boss
+		"player_team": p_team,
+		"enemy_team": enemies,
+		"is_harbor_boss": cfg.get("is_harbor_boss", false)
 	}
 
+static func _create_entities_from_type(type_id: String, count: int, lv: int) -> Array:
+	var team = []
+	var data = enemy_types.get(type_id, {})
+	if data.is_empty(): return []
+	
+	for i in range(count):
+		var e = Entity.new()
+		e.entity_name = data.get("name", "Unknown")
+		if count > 1: e.entity_name += " " + str(i + 1)
+		
+		e.max_hp = data.get("hp", 100)
+		e.current_hp = e.max_hp
+		e.atk = data.get("atk", 10)
+		e.defense = data.get("def", 10)
+		e.spd = data.get("spd", 10)
+		e.type = data.get("type", "None")
+		e.skills = data.get("skills", [])
+		
+		LevelManager.set_initial_level(e, lv)
+		team.append(e)
+	return team
+
 static func _setup_training_battle() -> Dictionary:
+	_ensure_data_loaded()
 	var player_team = []
 	var base_lv = 1
 	for p_name in GameManager.training_participants:
@@ -76,40 +119,29 @@ static func _setup_training_battle() -> Dictionary:
 			base_lv = max(base_lv, p.level)
 	
 	var enemies = []
-	var max_lv = 1
 	var target_lv = clamp(base_lv + randi_range(-3, 3), 1, 100)
-	max_lv = target_lv
 	
-	# 70% chance for Characters, 30% chance for Monsters
 	if randf() < 0.7:
 		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika"]
 		var candidates = []
 		for name in pool:
 			if name not in GameManager.training_participants and name not in GameManager.training_used_opponents:
 				candidates.append(name)
-		
 		candidates.shuffle()
 		
-		# Decide 1 or 2 enemies
 		var count = 1 if (randf() < 0.5 or candidates.size() < 2) else 2
-		
 		if count == 2:
-			# If 2 enemies, NO Mafuyu allowed
-			var no_mafuyu_pool = []
-			for c in candidates:
-				if c != "Mafuyu": no_mafuyu_pool.append(c)
-			
-			if no_mafuyu_pool.size() >= 2:
-				no_mafuyu_pool.shuffle()
+			var no_mafuyu = candidates.filter(func(n): return n != "Mafuyu")
+			if no_mafuyu.size() >= 2:
+				no_mafuyu.shuffle()
 				for i in range(2):
-					var e_name = no_mafuyu_pool.pop_back()
+					var e_name = no_mafuyu.pop_back()
 					GameManager.training_used_opponents.append(e_name)
 					var enemy = GameManager.get_party_member(e_name).duplicate(7)
 					LevelManager.set_initial_level(enemy, target_lv)
 					enemies.append(enemy)
-			else:
-				count = 1
-				
+			else: count = 1
+		
 		if count == 1 and not candidates.is_empty():
 			var e_name = candidates.pop_back()
 			GameManager.training_used_opponents.append(e_name)
@@ -117,72 +149,15 @@ static func _setup_training_battle() -> Dictionary:
 			LevelManager.set_initial_level(enemy, target_lv)
 			enemies.append(enemy)
 	
-	# Fallback to monsters if no characters selected or 30% chance hit
 	if enemies.is_empty():
-		enemies = _create_targets(5, target_lv)
-		for e in enemies:
-			e.entity_name = "Training Bot " + e.entity_name.split(" ")[1]
+		enemies = _create_entities_from_type("target", 5, target_lv)
+		for e in enemies: e.entity_name = "Training Bot " + e.entity_name.split(" ")[1]
 
-	GameManager.last_battle_max_lv = max_lv
-	return {
-		"player_team": player_team,
-		"enemy_team": enemies
-	}
+	GameManager.last_battle_max_lv = target_lv
+	
+	# Recovery policy for training
+	for p in player_team:
+		var min_hp = int(p.max_hp * 0.5)
+		if p.current_hp < min_hp: p.current_hp = min_hp
 
-static func _create_boss(p_name: String, hp: int, atk: int, def: int, spd: int, type: String) -> Entity:
-	var boss = Entity.new()
-	boss.entity_name = p_name
-	boss.max_hp = hp
-	boss.current_hp = hp
-	boss.atk = atk
-	boss.defense = def
-	boss.spd = spd
-	boss.type = type
-	boss.skills = [{"name": "Execution", "method": "basic_attack", "cooldown_turns": 1}]
-	return boss
-
-static func _create_guards(count: int, lv: int) -> Array:
-	var team = []
-	for i in range(count):
-		var g = Entity.new()
-		g.entity_name = "Lính Cảng " + str(i+1)
-		g.max_hp = 250
-		g.current_hp = 250
-		g.atk = 75
-		g.defense = 40
-		g.spd = 95
-		g.type = "Hard"
-		LevelManager.set_initial_level(g, lv)
-		team.append(g)
-	return team
-
-static func _create_kidnappers(count: int, lv: int) -> Array:
-	var team = []
-	for i in range(count):
-		var k = Entity.new()
-		k.entity_name = "Kidnapper " + str(i+1)
-		k.max_hp = 80
-		k.current_hp = 80
-		k.atk = 40
-		k.defense = 20
-		k.spd = 80
-		k.type = "None"
-		k.skills = [{"name": "Shank", "method": "basic_attack", "cooldown_turns": 1}]
-		LevelManager.set_initial_level(k, lv)
-		team.append(k)
-	return team
-
-static func _create_targets(count: int, lv: int) -> Array:
-	var team = []
-	for i in range(count):
-		var e = Entity.new()
-		e.entity_name = "Target " + str(i+1)
-		e.max_hp = 100
-		e.current_hp = 100
-		e.atk = 45
-		e.defense = 25
-		e.spd = 90 + i * 2
-		e.type = "None"
-		LevelManager.set_initial_level(e, lv)
-		team.append(e)
-	return team
+	return {"player_team": player_team, "enemy_team": enemies}

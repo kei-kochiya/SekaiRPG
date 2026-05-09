@@ -13,7 +13,7 @@ func _ready() -> void:
 	_load_json()
 
 func _load_json() -> void:
-	var path = "res://Data/"
+	var path = "res://Data/storyline/"
 	var dir = DirAccess.open(path)
 	if not dir:
 		push_error("DialogueLoader: cannot open " + path)
