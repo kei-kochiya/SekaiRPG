@@ -53,49 +53,54 @@ func build(player_team: Array, enemy_team: Array):
 	scroll.add_child(action_gauge)
 	
 	# --- Top area: Character Cards ---
-	# Player cards: Top Left with space for popups
-	var player_row = GridContainer.new()
-	player_row.columns = 2
-	player_row.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	player_row.position = Vector2(160, 80) # Offset from left and top
-	player_row.offset_bottom = 130
-	player_row.add_theme_constant_override("h_separation", 20)
-	player_row.add_theme_constant_override("v_separation", 20)
-	root.add_child(player_row)
+	# Player cards: Left Column
+	var player_col = VBoxContainer.new()
+	player_col.name = "PlayerColumn"
+	player_col.position = Vector2(200, 80)
+	player_col.add_theme_constant_override("separation", 10)
+	root.add_child(player_col)
 	
 	for entity in player_team:
 		var card = CharacterCard.new()
 		card.setup(entity, true)
-		player_row.add_child(card)
+		player_col.add_child(card)
 		player_cards[entity.entity_name] = card
 	
-	# Enemy cards: Top Right with space for popups
-	var enemy_row = GridContainer.new()
-	enemy_row.columns = 3
-	enemy_row.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	enemy_row.position = Vector2(-20, 80) # Base offset
-	enemy_row.offset_right = -20
-	enemy_row.offset_bottom = 130
-	enemy_row.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	enemy_row.add_theme_constant_override("h_separation", 20)
-	enemy_row.add_theme_constant_override("v_separation", 20)
-	root.add_child(enemy_row)
+	# Enemy cards: Right Column
+	var enemy_col = VBoxContainer.new()
+	enemy_col.name = "EnemyColumn"
+	enemy_col.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	enemy_col.position = Vector2(-300, 80)
+	enemy_col.add_theme_constant_override("separation", 10)
+	root.add_child(enemy_col)
 	
 	for entity in enemy_team:
 		var card = CharacterCard.new()
 		card.setup(entity, false)
-		enemy_row.add_child(card)
+		enemy_col.add_child(card)
 		enemy_cards[entity.entity_name] = card
 	
 	# --- Turn indicator (above command menu) ---
 	turn_label = Label.new()
 	turn_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	turn_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	turn_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	turn_label.offset_top = -280
-	turn_label.offset_bottom = -260
+	turn_label.offset_top = -320
+	turn_label.offset_bottom = -240
+	turn_label.offset_left = -150
+	turn_label.offset_right = 150
 	turn_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	turn_label.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	turn_label.add_theme_font_size_override("font_size", 18)
+	
+	var tb = StyleBoxTexture.new()
+	tb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/banner_modern.svg")
+	tb.texture_margin_left = 20
+	tb.texture_margin_right = 20
+	tb.texture_margin_top = 20
+	tb.texture_margin_bottom = 20
+	turn_label.add_theme_stylebox_override("normal", tb)
+	
 	turn_label.visible = false
 	root.add_child(turn_label)
 	
@@ -121,12 +126,25 @@ func build(player_team: Array, enemy_team: Array):
 	result_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	result_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	result_label.set_anchors_preset(Control.PRESET_CENTER)
+	result_label.offset_left = -200
+	result_label.offset_right = 200
+	result_label.offset_top = -50
+	result_label.offset_bottom = 50
 	result_label.add_theme_font_size_override("font_size", 36)
+	
+	var rb = StyleBoxTexture.new()
+	rb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/banner_hanging.svg")
+	rb.texture_margin_left = 32
+	rb.texture_margin_right = 32
+	rb.texture_margin_top = 32
+	rb.texture_margin_bottom = 32
+	result_label.add_theme_stylebox_override("normal", rb)
+	
 	result_label.visible = false
 	root.add_child(result_label)
 
 func show_turn_indicator(entity_name: String, is_player: bool):
-	var color = Color(0.29, 0.62, 0.62) if is_player else Color(0.72, 0.38, 0.16)
+	var color = Color(0.1, 0.2, 0.2) if is_player else Color(0.2, 0.1, 0.05)
 	turn_label.text = "%s'S TURN" % entity_name.to_upper()
 	turn_label.add_theme_color_override("font_color", color)
 	turn_label.visible = true

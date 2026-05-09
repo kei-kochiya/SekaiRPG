@@ -1,172 +1,181 @@
 extends Node2D
 
-# NPC definitions — position and color only
-const NPC_DEFS := {
-	"Mafuyu": {"pos": Vector2(100, 100), "color": Color(0.4,  0.3,  0.5)},
-	"Ena":    {"pos": Vector2(500, 150), "color": Color(0.72, 0.38, 0.16)},
-	"Kanade": {"pos": Vector2(300, 400), "color": Color(0.8,  0.8,  0.9)},
-	"Mizuki": {"pos": Vector2(700, 300), "color": Color(0.85, 0.65, 0.8)},
+const TILE_SIZE = 32
+const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
+
+const NPC_COLORS := {
+	"Mafuyu": Color(0.4,  0.3,  0.5),
+	"Ena":    Color(0.72, 0.38, 0.16),
+	"Kanade": Color(0.8,  0.8,  0.9),
+	"Mizuki": Color(0.85, 0.65, 0.8),
 }
 
 const QUEST_NPCS := ["Mafuyu", "Ena", "Kanade", "Mizuki"]
 
-var _quest_label: Label   # HUD hint for the intro quest
-var _lighting: CanvasModulate
-
-func _ready() -> void:
-	# ── Lighting ────────────────────────────────
-	_lighting = CanvasModulate.new()
-	add_child(_lighting)
-	_lighting.color = Color.WHITE
-
-	ScreenFade.fade_in(0.8)
-	# ── Background ──────────────────────────────
-	_spawn_npcs()
-	_spawn_player()
-	_spawn_warehouse_transition()
-	_build_quest_hud()
-
-	# ── Entry logic ─────────────────────────────
-	if GameManager.prologue_phase >= 1 and not GameManager.safehouse_intro_done:
-		_play_safehouse_intro()
-	elif GameManager.warehouse_wave > 5 and not GameManager.harbor_mission_unlocked:
-		_play_post_warehouse_sequence()
-	elif not GameManager.intro_quest_done:
-		_refresh_quest_label()
-	else:
-		_quest_label.visible = false
-
-func _play_post_warehouse_sequence():
-	# 1. Night/Rest
-	_lighting.color = Color(0.4, 0.4, 0.6) # Dim blueish night light
-	DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_rest"), func():
-		# 2. Fade to next day
-		await ScreenFade.fade_out(1.5)
-		await get_tree().create_timer(1.0).timeout
-		
-		# 3. Morning
-		_lighting.color = Color.WHITE # Reset lighting
-		await ScreenFade.fade_in(1.0)
-		
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_morning"), func():
-			# 4. Mission Assignment
-			_play_harbor_assignment()
-		)
-	)
-
-func _play_harbor_assignment() -> void:
-	GameManager.harbor_mission_unlocked = true
-	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_mission_assignment"))
-
-# ─────────────────────────────────────────────
-#  SAFEHOUSE INTRO  (first time entering after prologue)
-# ─────────────────────────────────────────────
-func _play_safehouse_intro() -> void:
-	await ScreenFade.fade_in(0.8)
-	await get_tree().create_timer(0.4).timeout
-	GameManager.safehouse_intro_done = true
-	DialogueManager.play_dialogue(DialogueLoader.get_lines("safehouse_intro"), func():
-		_refresh_quest_label()
-	)
-
-# ─────────────────────────────────────────────
-#  QUEST HUD  — "Hãy nói chuyện với…"
-# ─────────────────────────────────────────────
+var _quest_label: Label
 var _quest_panel: PanelContainer
 
-func _build_quest_hud() -> void:
-	var canvas := CanvasLayer.new()
-	canvas.layer = 10
-	add_child(canvas)
-
-	_quest_panel = PanelContainer.new()
-	_quest_panel.position = Vector2(20, 20)
-	canvas.add_child(_quest_panel)
+func _ready() -> void:
+	ScreenFade.fade_in(0.8)
 	
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0, 0, 0.6)
-	sb.border_width_left = 4
-	sb.border_color = Color(0.4, 0.7, 1.0) # Blue accent
-	sb.set_content_margin_all(10)
-	_quest_panel.add_theme_stylebox_override("panel", sb)
+	_build_map()
+	_spawn_npcs()
+	_spawn_player()
+	_spawn_transitions()
+	_build_quest_hud()
 
-	_quest_label = Label.new()
-	_quest_label.add_theme_font_size_override("font_size", 16)
-	_quest_panel.add_child(_quest_label)
+	if not GameManager.safehouse_intro_done:
+		_play_safehouse_intro()
+	else:
+		_refresh_quest_label()
 
-func _refresh_quest_label() -> void:
-	if GameManager.intro_quest_done:
-		_quest_panel.visible = false
-		return
-	var remaining: Array = []
-	for n in QUEST_NPCS:
-		if n not in GameManager.npcs_greeted:
-			remaining.append(n)
-	_quest_label.text = "MỤC TIÊU: Làm quen với mọi người\nCòn lại: " + ", ".join(remaining)
-	_quest_panel.visible = true
+# ─────────────────────────────────────────────
+#  MAP CONSTRUCTION
+# ─────────────────────────────────────────────
+
+func _build_map():
+	# 1. Floors
+	_fill_floor(5, 2, 43, 20)
+	
+	# 2. Rooms
+	_draw_room_walls(5, 2, 43, 10)   # Rest Area
+	_draw_room_walls(5, 10, 17, 20)  # Office
+	_draw_room_walls(17, 10, 31, 20) # Hall
+	_draw_room_walls(31, 10, 43, 20) # Dining
+	
+	# 3. Openings
+	_remove_wall_at(Vector2(17, 15))
+	_remove_wall_at(Vector2(31, 15))
+	
+	# 4. Doors
+	_remove_wall_at(Vector2(24, 10))
+	_place_tile("door_1.png", Vector2(24, 10), false)
+	_remove_wall_at(Vector2(24, 20))
+	_place_tile("door_1.png", Vector2(24, 20), false)
+	
+	# 5. Room Labels
+	_add_room_label("Khu Nghỉ Ngơi", Vector2(24, 4))
+	_add_room_label("Phòng Mafuyu", Vector2(11, 12))
+	_add_room_label("Sảnh Chính", Vector2(24, 12))
+	_add_room_label("Phòng Ăn", Vector2(37, 12))
+	
+	# 6. Decor
+	_place_tile("dining_table.png", Vector2(37, 15), true)
+	_place_tile("dining_seat.png", Vector2(36, 15), false)
+	_place_tile("dining_seat.png", Vector2(38, 15), false)
+
+func _fill_floor(x1, y1, x2, y2):
+	for x in range(x1, x2 + 1):
+		for y in range(y1, y2 + 1):
+			_place_tile("floor.png", Vector2(x, y), false)
+
+func _draw_room_walls(x1, y1, x2, y2):
+	for x in range(x1, x2 + 1):
+		_place_tile("horizontal_wall.png", Vector2(x, y1), true)
+		_place_tile("horizontal_wall.png", Vector2(x, y2), true)
+	for y in range(y1, y2 + 1):
+		_place_tile("left_vertical_wall.png", Vector2(x1, y), true)
+		_place_tile("right_vertical_wall.png", Vector2(x2, y), true)
+	_place_tile("top_left_wall.png", Vector2(x1, y1), true)
+	_place_tile("top_right_wall.png", Vector2(x2, y1), true)
+	_place_tile("bottom_left_wall.png", Vector2(x1, y2), true)
+	_place_tile("bottom_right_wall.png", Vector2(x2, y2), true)
+
+func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
+	var tile_pos = grid_pos * TILE_SIZE
+	var sprite = Sprite2D.new()
+	sprite.texture = load(ASSET_ROOT + file)
+	sprite.scale = Vector2(4, 4)
+	sprite.position = tile_pos
+	add_child(sprite)
+	if has_collision:
+		var body = StaticBody2D.new()
+		body.position = tile_pos
+		body.name = "Body_" + str(grid_pos.x) + "_" + str(grid_pos.y)
+		var col = CollisionShape2D.new()
+		var shape = RectangleShape2D.new()
+		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
+		col.shape = shape
+		body.add_child(col)
+		add_child(body)
+
+func _remove_wall_at(grid_pos: Vector2):
+	var target_pos = grid_pos * TILE_SIZE
+	for child in get_children():
+		if child is Node2D:
+			if child.position.distance_to(target_pos) < 1.0:
+				child.queue_free()
+	_place_tile("floor.png", grid_pos, false)
+
+func _add_room_label(text: String, grid_pos: Vector2):
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.4))
+	lbl.position = grid_pos * TILE_SIZE - Vector2(40, 0)
+	add_child(lbl)
 
 # ─────────────────────────────────────────────
 #  NPC SPAWNING
 # ─────────────────────────────────────────────
+
 func _spawn_npcs() -> void:
-	for npc_name: String in NPC_DEFS:
-		var def: Dictionary = NPC_DEFS[npc_name]
-		_create_npc(npc_name, def["pos"], def["color"])
+	var positions := {
+		"Mafuyu": Vector2(20 * TILE_SIZE, 13 * TILE_SIZE),
+		"Kanade": Vector2(24 * TILE_SIZE, 15 * TILE_SIZE),
+		"Ena":    Vector2(28 * TILE_SIZE, 13 * TILE_SIZE),
+		"Mizuki": Vector2(24 * TILE_SIZE, 12 * TILE_SIZE),
+	}
+	for npc_name in positions:
+		_create_npc(npc_name, positions[npc_name], NPC_COLORS[npc_name])
 
 func _create_npc(npc_name: String, pos: Vector2, color: Color) -> void:
 	var root := Node2D.new()
 	root.position = pos
-
 	var vis := ColorRect.new()
-	vis.size = Vector2(32, 48)
-	vis.position = Vector2(-16, -48)
+	vis.size = Vector2(16, 24)
+	vis.position = Vector2(-8, -24)
 	vis.color = color
 	root.add_child(vis)
-
 	var lbl := Label.new()
 	lbl.text = npc_name
 	lbl.add_theme_color_override("font_color", color)
 	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.position = Vector2(-20, -64)
+	lbl.position = Vector2(-20, -40)
 	root.add_child(lbl)
-
 	var sb := StaticBody2D.new()
 	sb.collision_layer = 2
 	var col := CollisionShape2D.new()
 	var shape := RectangleShape2D.new()
-	shape.size = Vector2(32, 16)
+	shape.size = Vector2(16, 16)
 	col.shape = shape
 	col.position = Vector2(0, -8)
 	sb.add_child(col)
 	root.add_child(sb)
-
 	var zone := InteractableZone.new()
 	zone.prompt_text = "Nói chuyện với " + npc_name
 	var zc := CollisionShape2D.new()
 	var zs := CircleShape2D.new()
-	zs.radius = 60
+	zs.radius = 40
 	zc.shape = zs
 	zone.add_child(zc)
 	root.add_child(zone)
-
 	zone.interacted.connect(func():
 		_handle_npc_interaction(npc_name)
 	)
-
 	add_child(root)
 
 # ─────────────────────────────────────────────
 #  INTERACTION LOGIC
 # ─────────────────────────────────────────────
 func _handle_npc_interaction(npc_name: String) -> void:
-	if GameManager.is_in_dialogue:
-		return
-	# Block interaction before the intro cutscene finishes
-	if GameManager.prologue_phase >= 1 and not GameManager.safehouse_intro_done:
-		return
-
+	if GameManager.is_in_dialogue: return
+	if GameManager.prologue_phase >= 1 and not GameManager.safehouse_intro_done: return
+	
 	if not GameManager.intro_quest_done:
 		_quest_phase_interact(npc_name)
+	elif not GameManager.warehouse_mission_accepted:
+		_mission_briefing_interact(npc_name)
 	else:
 		_free_roam_interact(npc_name)
 
@@ -179,64 +188,71 @@ func _quest_phase_interact(npc_name: String) -> void:
 			_check_quest_complete()
 		)
 	else:
-		# Already greeted — short repeat
 		DialogueManager.play_dialogue(DialogueLoader.get_lines(key + "_repeat"))
 
-func _free_roam_interact(npc_name: String) -> void:
-	var opts: Array = ["Xin chào.", "Hỏi thêm về " + npc_name + ".", "Nâng cấp chỉ số."]
+func _mission_briefing_interact(npc_name: String) -> void:
 	if npc_name == "Kanade":
-		opts.append("Nhận nhiệm vụ tiếp theo.")
-	if npc_name == "Ena" and GameManager.harbor_mission_unlocked and not GameManager.harbor_mission_done:
-		opts.append("Đến bến cảng (Nhiệm vụ).")
+		_start_warehouse_mission_sequence()
+	else:
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
 
+func _free_roam_interact(npc_name: String) -> void:
+	var opts: Array = ["Xin chào.", "Hỏi thêm về " + npc_name + "."]
 	DialogueManager.show_choice(opts)
 	var idx: int = await DialogueManager.choice_made
-
 	match idx:
-		0:
-			DialogueManager.play_dialogue(
-				DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
-		1:
-			DialogueManager.play_dialogue(
-				DialogueLoader.get_lines("npc_info_" + npc_name.to_lower()))
-		2:
-			_open_upgrade_menu()
-		3:
-			if npc_name == "Kanade":
-				_start_warehouse_mission()
-			elif npc_name == "Ena":
-				_start_harbor_mission()
-
-func _open_upgrade_menu():
-	var p1 = GameManager.get_party_member("Ichika")
-	var p2 = GameManager.get_party_member("Kanade")
-	UpgradeUI.show_ui([p1, p2])
+		0: DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
+		1: DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_info_" + npc_name.to_lower()))
 
 func _check_quest_complete() -> void:
 	for n in QUEST_NPCS:
-		if n not in GameManager.npcs_greeted:
-			return
+		if n not in GameManager.npcs_greeted: return
 	GameManager.intro_quest_done = true
-	DialogueManager.play_dialogue(DialogueLoader.get_lines("quest_intro_complete"))
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("quest_intro_complete"), func():
+		_refresh_quest_label()
+	)
 
-func _start_warehouse_mission() -> void:
+func _start_warehouse_mission_sequence() -> void:
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("kanade_mission"), func():
-		_go_to_warehouse()
+		GameManager.warehouse_mission_accepted = true
+		_refresh_quest_label()
 	)
 
-func _go_to_warehouse():
-	await ScreenFade.fade_out(1.0)
-	GameManager.reset_mission_stats()
-	GameManager.store_map_state("res://Scenes/WarehouseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Scenes/WarehouseMap.tscn")
+# ─────────────────────────────────────────────
+#  QUEST HUD
+# ─────────────────────────────────────────────
+func _build_quest_hud() -> void:
+	var canvas := CanvasLayer.new()
+	canvas.layer = 10
+	add_child(canvas)
+	_quest_panel = PanelContainer.new()
+	_quest_panel.position = Vector2(20, 20)
+	canvas.add_child(_quest_panel)
+	var sb = StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0.6)
+	sb.border_width_left = 4
+	sb.border_color = Color(0.4, 0.7, 1.0)
+	sb.set_content_margin_all(10)
+	_quest_panel.add_theme_stylebox_override("panel", sb)
+	_quest_label = Label.new()
+	_quest_label.add_theme_font_size_override("font_size", 16)
+	_quest_panel.add_child(_quest_label)
+	_refresh_quest_label()
 
-func _start_harbor_mission() -> void:
-	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_ena_ready"), func():
-		GameManager.harbor_wave = 1
-		GameManager.harbor_route = ""
-		GameManager.store_map_state("res://Scenes/HarborMap.tscn", Vector2.ZERO)
-		get_tree().change_scene_to_file("res://Scenes/HarborMap.tscn")
-	)
+func _refresh_quest_label() -> void:
+	if not _quest_label: return
+	
+	if not GameManager.intro_quest_done:
+		var remaining: Array = []
+		for n in QUEST_NPCS:
+			if n not in GameManager.npcs_greeted: remaining.append(n)
+		_quest_label.text = "MỤC TIÊU: Làm quen với mọi người\nCòn lại: " + ", ".join(remaining)
+	elif not GameManager.warehouse_mission_accepted:
+		_quest_label.text = "MỤC TIÊU: Nói chuyện với Kanade để nhận nhiệm vụ"
+	else:
+		_quest_label.text = "MỤC TIÊU: Rời khỏi nhà để bắt đầu nhiệm vụ\n(Có thể nói chuyện thêm với mọi người)"
+	
+	_quest_panel.visible = true
 
 # ─────────────────────────────────────────────
 #  PLAYER & SCENE HELPERS
@@ -244,28 +260,36 @@ func _start_harbor_mission() -> void:
 func _spawn_player() -> void:
 	var player := OverworldPlayer.new()
 	player.name = "OverworldPlayer"
-	player.position = Vector2(200, 200) if GameManager.last_player_position == Vector2.ZERO \
+	player.position = Vector2(24 * TILE_SIZE, 18 * TILE_SIZE) if GameManager.last_player_position == Vector2.ZERO \
 		else GameManager.last_player_position
 	add_child(player)
 
-func _spawn_warehouse_transition() -> void:
-	# Only show after intro quest is complete
-	if not GameManager.intro_quest_done:
-		return
-	var tz := InteractableZone.new()
-	tz.prompt_text = "Đến kho hàng"
-	tz.position = Vector2(800, 800)
-	var col := CollisionShape2D.new()
-	var rect := RectangleShape2D.new()
-	rect.size = Vector2(100, 100)
-	col.shape = rect
-	tz.add_child(col)
-	var vis := ColorRect.new()
-	vis.size = Vector2(100, 100)
-	vis.position = Vector2(-50, -50)
-	vis.color = Color(1, 1, 0, 0.3)
-	tz.add_child(vis)
-	add_child(tz)
-	tz.interacted.connect(func():
-		_go_to_warehouse()
+func _spawn_transitions() -> void:
+	var exit := InteractableZone.new()
+	exit.prompt_text = "Rời khỏi nhà"
+	exit.position = Vector2(24 * TILE_SIZE, 21 * TILE_SIZE)
+	var ecol := CollisionShape2D.new()
+	var erect := RectangleShape2D.new()
+	erect.size = Vector2(64, 32)
+	ecol.shape = erect
+	exit.add_child(ecol)
+	add_child(exit)
+	exit.interacted.connect(func():
+		if GameManager.warehouse_mission_accepted:
+			await ScreenFade.fade_out(1.0)
+			GameManager.reset_mission_stats()
+			GameManager.store_map_state("res://Scenes/WarehouseMap.tscn", Vector2.ZERO)
+			get_tree().change_scene_to_file("res://Scenes/WarehouseMap.tscn")
+		else:
+			# Fix crash by using correct dictionary format
+			DialogueManager.play_dialogue([{
+				"text": "Bên ngoài hiện tại quá nguy hiểm. Hãy nói chuyện với mọi người trước.",
+				"type": "narrator"
+			}])
+	)
+
+func _play_safehouse_intro() -> void:
+	GameManager.safehouse_intro_done = true
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("safehouse_intro"), func():
+		_refresh_quest_label()
 	)

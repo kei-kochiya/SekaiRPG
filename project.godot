@@ -11,9 +11,8 @@ config_version=5
 [application]
 
 config/name="PJSK_RPG"
-run/main_scene="res://Scenes/PrologueMap.tscn"
+run/main_scene="res://Scenes/StartMenu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
 
 [autoload]
 

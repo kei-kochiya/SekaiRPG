@@ -1,6 +1,7 @@
 extends Node2D
 
 func _ready():
+	ScreenFade.fade_in(0.8)
 	_spawn_player()
 	_spawn_interactables()
 	

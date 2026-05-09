@@ -13,7 +13,7 @@ static func handle_turn_start(entity: Entity) -> bool:
 	for status in entity.active_statuses:
 		match status["type"]:
 			"Bleed":
-				var dmg = int(entity.current_hp * 0.1)
+				var dmg = int(entity.current_hp * 0.2)
 				entity.take_damage(dmg, "dot")
 			"Poison":
 				var pct = status.get("percent", 0.1)

@@ -49,6 +49,34 @@ static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) ->
 
 	return weighted_pool.pick_random() if not weighted_pool.is_empty() else alive_targets.pick_random()
 
+static func pick_action(actor: Entity, enemies: Array, allies: Array, timeline: Array) -> Dictionary:
+	# 1. Check for usable skills
+	var usable_skills = []
+	for skill in actor.skills:
+		if actor.can_use_skill(skill["method"]):
+			usable_skills.append(skill)
+	
+	# AI Skill usage logic: 50% chance to use a skill if any are ready
+	if not usable_skills.is_empty() and randf() < 0.5:
+		var skill = usable_skills.pick_random()
+		var target_type = skill.get("target", "enemy")
+		var target = null
+		
+		match target_type:
+			"enemy", "all_enemies":
+				target = pick_target(actor, enemies, timeline)
+			"ally", "all_allies":
+				target = pick_target(actor, allies, timeline) # Heuristic works for healing too
+			"self":
+				target = actor
+		
+		if target != null:
+			return {"action": skill["method"], "target": target}
+	
+	# 2. Fallback to basic attack
+	var final_target = pick_target(actor, enemies, timeline)
+	return {"action": "attack", "target": final_target}
+
 static func _find_first_turn_index(entity_name: String, timeline: Array) -> int:
 	for i in range(timeline.size()):
 		if timeline[i]["name"] == entity_name:

@@ -13,9 +13,9 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Metal Cut", "method": "metal_cut", "cooldown_turns": 1},
-		{"name": "Bleeding Edge", "method": "bleeding_edge", "cooldown_turns": 2},
-		{"name": "Shadow Blade", "method": "shadow_blade", "initial_cooldown": 5, "once_per_battle": true},
+		{"name": "Metal Cut", "method": "metal_cut", "cooldown_turns": 1, "target": "enemy"},
+		{"name": "Bleeding Edge", "method": "bleeding_edge", "cooldown_turns": 2, "target": "enemy"},
+		{"name": "Shadow Blade", "method": "shadow_blade", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy"},
 	]
 
 # Override: Shadow Blade blocked when HP <= 1

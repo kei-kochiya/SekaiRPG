@@ -31,13 +31,14 @@ func setup(e: Entity, player: bool):
 	_connect_signals()
 
 func _build_ui():
-	# Panel style
-	var ps = StyleBoxFlat.new()
-	ps.bg_color = PANEL_BG
-	ps.border_color = BORDER_COLOR
-	ps.set_border_width_all(1)
-	ps.set_corner_radius_all(4)
-	ps.set_content_margin_all(8)
+	# Panel style using Kenney panel_brown
+	var ps = StyleBoxTexture.new()
+	ps.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_brown.svg")
+	ps.texture_margin_left = 12
+	ps.texture_margin_right = 12
+	ps.texture_margin_top = 12
+	ps.texture_margin_bottom = 12
+	ps.set_content_margin_all(12)
 	add_theme_stylebox_override("panel", ps)
 	custom_minimum_size = Vector2(200, 0)
 	
@@ -50,13 +51,15 @@ func _build_ui():
 	header.add_theme_constant_override("separation", 10)
 	vbox.add_child(header)
 	
-	# Portrait thumbnail
+	# Portrait thumbnail using Kenney round_brown
 	var portrait_container = PanelContainer.new()
-	portrait_container.custom_minimum_size = Vector2(42, 42)
-	var ps_p = StyleBoxFlat.new()
-	ps_p.bg_color = Color(0, 0, 0, 0.5)
-	ps_p.set_border_width_all(1)
-	ps_p.border_color = Color(0.3, 0.3, 0.3)
+	portrait_container.custom_minimum_size = Vector2(48, 48)
+	var ps_p = StyleBoxTexture.new()
+	ps_p.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/round_brown.svg")
+	ps_p.texture_margin_left = 10
+	ps_p.texture_margin_right = 10
+	ps_p.texture_margin_top = 10
+	ps_p.texture_margin_bottom = 10
 	portrait_container.add_theme_stylebox_override("panel", ps_p)
 	header.add_child(portrait_container)
 	
@@ -93,14 +96,20 @@ func _build_ui():
 	hp_bar.max_value = entity.max_hp
 	hp_bar.value = entity.current_hp
 	
-	var fill = StyleBoxFlat.new()
-	fill.bg_color = HP_FILL_COLOR
-	fill.set_corner_radius_all(2)
+	var fill = StyleBoxTexture.new()
+	fill.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/progress_green.svg")
+	fill.texture_margin_left = 6
+	fill.texture_margin_right = 6
+	fill.texture_margin_top = 6
+	fill.texture_margin_bottom = 6
 	hp_bar.add_theme_stylebox_override("fill", fill)
 	
-	var bg = StyleBoxFlat.new()
-	bg.bg_color = HP_BG_COLOR
-	bg.set_corner_radius_all(2)
+	var bg = StyleBoxTexture.new()
+	bg.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/progress_transparent.svg")
+	bg.texture_margin_left = 6
+	bg.texture_margin_right = 6
+	bg.texture_margin_top = 6
+	bg.texture_margin_bottom = 6
 	hp_bar.add_theme_stylebox_override("background", bg)
 	vbox.add_child(hp_bar)
 	

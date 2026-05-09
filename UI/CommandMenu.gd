@@ -18,12 +18,13 @@ func _ready():
 	_build_shell()
 
 func _build_shell():
-	var ps = StyleBoxFlat.new()
-	ps.bg_color = Color(0.08, 0.08, 0.08, 0.95)
-	ps.border_color = Color(0.25, 0.25, 0.25)
-	ps.set_border_width_all(1)
-	ps.set_corner_radius_all(6)
-	ps.set_content_margin_all(12)
+	var ps = StyleBoxTexture.new()
+	ps.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_brown.svg")
+	ps.texture_margin_left = 12
+	ps.texture_margin_right = 12
+	ps.texture_margin_top = 12
+	ps.texture_margin_bottom = 12
+	ps.set_content_margin_all(16)
 	add_theme_stylebox_override("panel", ps)
 	
 	var root = VBoxContainer.new()
@@ -79,9 +80,26 @@ func show_for(entity: Entity, enemies: Array):
 func _on_action_picked(action_name: String):
 	chosen_action = action_name
 	action_container.visible = false
-	_show_targets()
+	
+	# Check target type
+	var target_type = "enemy" # default
+	if action_name != "attack":
+		for s in current_entity.skills:
+			if s["method"] == action_name:
+				target_type = s.get("target", "enemy")
+				break
+	
+	if target_type == "all_allies" or target_type == "all_enemies":
+		# AoE skills don't need target selection, just pick first one as dummy (logic handles all)
+		visible = false
+		command_chosen.emit(chosen_action, current_entity) # Entity logic will use allies/enemies arrays
+	elif target_type == "self":
+		visible = false
+		command_chosen.emit(chosen_action, current_entity)
+	else:
+		_show_targets(target_type)
 
-func _show_targets():
+func _show_targets(target_type: String = "enemy"):
 	_clear(target_container)
 	target_container.visible = true
 	
@@ -92,11 +110,12 @@ func _show_targets():
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	target_container.add_child(header)
 	
-	var alive = AIManager.get_alive_targets(enemy_team)
-	for enemy in alive:
-		var label = "%s  HP %d/%d" % [enemy.entity_name, enemy.current_hp, enemy.max_hp]
+	var team = enemy_team if target_type == "enemy" else current_entity.allies
+	var alive = AIManager.get_alive_targets(team)
+	for member in alive:
+		var label = "%s  HP %d/%d" % [member.entity_name, member.current_hp, member.max_hp]
 		var btn = _make_btn(label, "", true)
-		btn.pressed.connect(_on_target_picked.bind(enemy))
+		btn.pressed.connect(_on_target_picked.bind(member))
 		target_container.add_child(btn)
 
 func _on_target_picked(target: Entity):
@@ -110,38 +129,50 @@ func _make_btn(label: String, action_name: String, enabled: bool) -> Button:
 	btn.custom_minimum_size = Vector2(220, 32)
 	
 	# Normal
-	var ns = StyleBoxFlat.new()
-	ns.bg_color = Color(0.15, 0.15, 0.15) if enabled else Color(0.08, 0.08, 0.08)
-	ns.set_corner_radius_all(3)
-	ns.set_content_margin_all(4)
+	var ns = StyleBoxTexture.new()
+	ns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+	ns.texture_margin_left = 10
+	ns.texture_margin_right = 10
+	ns.texture_margin_top = 10
+	ns.texture_margin_bottom = 14 # 3D effect margin
+	ns.set_content_margin_all(6)
 	btn.add_theme_stylebox_override("normal", ns)
 	
 	# Hover
-	var hs = StyleBoxFlat.new()
-	hs.bg_color = Color(0.25, 0.22, 0.15)
-	hs.set_corner_radius_all(3)
-	hs.set_content_margin_all(4)
+	var hs = StyleBoxTexture.new()
+	hs.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg")
+	hs.texture_margin_left = 10
+	hs.texture_margin_right = 10
+	hs.texture_margin_top = 10
+	hs.texture_margin_bottom = 14
+	hs.set_content_margin_all(6)
 	btn.add_theme_stylebox_override("hover", hs)
 	
 	# Pressed
-	var prs = StyleBoxFlat.new()
-	prs.bg_color = Color(0.3, 0.25, 0.1)
-	prs.set_corner_radius_all(3)
-	prs.set_content_margin_all(4)
+	var prs = StyleBoxTexture.new()
+	prs.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_red.svg")
+	prs.texture_margin_left = 10
+	prs.texture_margin_right = 10
+	prs.texture_margin_top = 14
+	prs.texture_margin_bottom = 10
+	prs.set_content_margin_all(6)
 	btn.add_theme_stylebox_override("pressed", prs)
 	
 	# Disabled
-	var ds = StyleBoxFlat.new()
-	ds.bg_color = Color(0.08, 0.08, 0.08)
-	ds.set_corner_radius_all(3)
-	ds.set_content_margin_all(4)
+	var ds = StyleBoxTexture.new()
+	ds.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg")
+	ds.texture_margin_left = 10
+	ds.texture_margin_right = 10
+	ds.texture_margin_top = 10
+	ds.texture_margin_bottom = 14
+	ds.modulate_color = Color(0.5, 0.5, 0.5, 0.6)
+	ds.set_content_margin_all(6)
 	btn.add_theme_stylebox_override("disabled", ds)
 	
-	btn.add_theme_color_override("font_color",
-		Color(0.8, 0.75, 0.6) if enabled else Color(0.3, 0.3, 0.3))
-	btn.add_theme_color_override("font_hover_color", Color(1.0, 0.9, 0.7))
-	btn.add_theme_color_override("font_disabled_color", Color(0.3, 0.3, 0.3))
-	btn.add_theme_font_size_override("font_size", 13)
+	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+	btn.add_theme_color_override("font_hover_color", Color(0.1, 0.1, 0.1))
+	btn.add_theme_color_override("font_disabled_color", Color(0.4, 0.4, 0.4))
+	btn.add_theme_font_size_override("font_size", 14)
 	
 	# Connect action pick (target buttons connect separately)
 	if action_name != "":

@@ -13,9 +13,9 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Resonance", "method": "resonance", "cooldown_turns": 1},
-		{"name": "Soundless Voice", "method": "soundless_voice", "cooldown_turns": 2},
-		{"name": "Salvation Song", "method": "salvation_song", "initial_cooldown": 5, "once_per_battle": true},
+		{"name": "Resonance", "method": "resonance", "cooldown_turns": 1, "target": "enemy"},
+		{"name": "Soundless Voice", "method": "soundless_voice", "cooldown_turns": 2, "target": "enemy"},
+		{"name": "Salvation Song", "method": "salvation_song", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy"},
 	]
 
 func resonance(target: Entity):

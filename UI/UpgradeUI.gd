@@ -24,6 +24,7 @@ func show_ui(chars: Array[Entity]):
 	characters = chars
 	selected_index = 0
 	visible = true
+	GameManager.start_dialogue() # Block movement
 	_refresh_all()
 
 func _build_ui():
@@ -33,15 +34,21 @@ func _build_ui():
 	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = BG_COLOR
-	sb.border_width_left = 2
-	sb.border_width_top = 2
-	sb.border_width_right = 2
-	sb.border_width_bottom = 2
-	sb.border_color = THEME_COLOR
-	sb.set_corner_radius_all(8)
+	var sb = StyleBoxTexture.new()
+	sb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_border_brown.svg")
+	sb.texture_margin_left = 32
+	sb.texture_margin_right = 32
+	sb.texture_margin_top = 32
+	sb.texture_margin_bottom = 32
+	sb.set_content_margin_all(24)
 	panel.add_theme_stylebox_override("panel", sb)
+	
+	var bg = ColorRect.new()
+	bg.color = Color(0.1, 0.08, 0.05, 1.0)
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.show_behind_parent = true
+	panel.add_child(bg)
+	
 	add_child(panel)
 	
 	var main_hbox = HBoxContainer.new()
@@ -95,6 +102,7 @@ func _build_ui():
 	close_btn.size_flags_horizontal = Control.SIZE_SHRINK_END
 	close_btn.pressed.connect(func(): 
 		visible = false
+		GameManager.end_dialogue() # Allow movement
 		closed.emit()
 	)
 	right_vbox.add_child(Control.new()) # spacer
@@ -107,17 +115,24 @@ func _refresh_all():
 		var btn = Button.new()
 		btn.text = characters[i].entity_name
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		if i == selected_index:
-			btn.modulate = Color(1.5, 1.5, 1.5)
+		var ns = StyleBoxTexture.new()
+		ns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+		ns.texture_margin_left = 10
+		ns.texture_margin_right = 10
+		ns.texture_margin_top = 10
+		ns.texture_margin_bottom = 14
+		btn.add_theme_stylebox_override("normal", ns)
+		
+		btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
 		btn.pressed.connect(func():
 			selected_index = i
 			_refresh_all()
 		)
 		char_list.add_child(btn)
 	
-	var char = characters[selected_index]
-	char_name_label.text = char.entity_name.to_upper() + " - Lv." + str(char.level)
-	sp_label.text = "Skill Points: " + str(char.skill_points)
+	var entity = characters[selected_index]
+	char_name_label.text = entity.entity_name.to_upper() + " - Lv." + str(entity.level)
+	sp_label.text = "Skill Points: " + str(entity.skill_points)
 	
 	# Refresh stats
 	for c in stat_vbox.get_children(): c.queue_free()
@@ -140,15 +155,23 @@ func _refresh_all():
 		row.add_child(name_lbl)
 		
 		var val_lbl = Label.new()
-		val_lbl.text = str(char.get(stat))
+		val_lbl.text = str(entity.get(stat))
 		val_lbl.custom_minimum_size = Vector2(60, 0)
 		row.add_child(val_lbl)
 		
 		var plus_btn = Button.new()
 		plus_btn.text = " + "
-		plus_btn.disabled = char.skill_points < UpgradeManager.UPGRADE_COST
+		var pns = StyleBoxTexture.new()
+		pns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+		pns.texture_margin_left = 6
+		pns.texture_margin_right = 6
+		pns.texture_margin_top = 6
+		pns.texture_margin_bottom = 10
+		plus_btn.add_theme_stylebox_override("normal", pns)
+		plus_btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+		
 		plus_btn.pressed.connect(func():
-			if UpgradeManager.upgrade_stat(char, stat):
+			if UpgradeManager.upgrade_stat(entity, stat):
 				_refresh_all()
 		)
 		row.add_child(plus_btn)

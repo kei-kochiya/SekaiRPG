@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ch0doskqyme5p"]
+
+[ext_resource type="Script" uid="uid://dbhe1f6wsiqqn" path="res://Scenes/TrainingWarehouseMap.gd" id="1_script"]
+
+[node name="TrainingWarehouseMap" type="Node2D" unique_id=1063558834]
+script = ExtResource("1_script")

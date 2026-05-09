@@ -52,10 +52,12 @@ func refresh(timeline: Array):
 		num.custom_minimum_size = Vector2(22, 0)
 		row.add_child(num)
 		
-		# Colored square (portrait placeholder)
-		var icon = ColorRect.new()
-		icon.custom_minimum_size = Vector2(14, 14)
-		icon.color = PLAYER_COLOR if is_player else ENEMY_COLOR
+		# Colored icon (Kenney round_grey)
+		var icon = TextureRect.new()
+		icon.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/round_grey.svg")
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.custom_minimum_size = Vector2(16, 16)
+		icon.modulate = PLAYER_COLOR if is_player else ENEMY_COLOR
 		row.add_child(icon)
 		
 		# Name

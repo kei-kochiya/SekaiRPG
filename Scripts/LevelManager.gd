@@ -47,7 +47,8 @@ static func process_level_up(entity: Entity):
 	entity.defense = min(entity.defense, entity.stat_caps.get("defense", 9999))
 	entity.spd = min(entity.spd, entity.stat_caps.get("spd", 9999))
 
-	entity.current_hp = entity.max_hp
+	if entity.current_hp > 0:
+		entity.current_hp = entity.max_hp
 	entity.hp_changed.emit(entity.current_hp, entity.max_hp)
 	entity.level_changed.emit(entity.level)
 	

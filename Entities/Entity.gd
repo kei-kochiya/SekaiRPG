@@ -3,9 +3,11 @@ class_name Entity
 
 signal hp_changed(new_hp: int, max_hp: int)
 signal died()
+@warning_ignore("unused_signal")
 signal cooldown_updated(skill_name: String, turns_left: int)
 signal status_changed(statuses: Array)
 signal damage_received(amount: int, damage_type: String)
+@warning_ignore("unused_signal")
 signal level_changed(new_level: int)
 
 @export var entity_name: String = "Unknown"
@@ -54,6 +56,7 @@ func take_damage(amount: int, damage_type: String = "physical") -> bool:
 	return false
 
 func heal(amount: int):
+	if current_hp <= 0: return
 	var actual = min(amount, max_hp - current_hp)
 	if actual > 0:
 		current_hp += actual

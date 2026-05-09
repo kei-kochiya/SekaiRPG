@@ -13,9 +13,9 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Shadow Strike", "method": "shadow_strike", "cooldown_turns": 1},
-		{"name": "Empty Words", "method": "empty_words", "cooldown_turns": 2},
-		{"name": "Lost World", "method": "lost_world", "initial_cooldown": 5, "once_per_battle": true},
+		{"name": "Shadow Strike", "method": "shadow_strike", "cooldown_turns": 1, "target": "enemy"},
+		{"name": "Empty Words", "method": "empty_words", "cooldown_turns": 2, "target": "enemy"},
+		{"name": "Lost World", "method": "lost_world", "initial_cooldown": 5, "once_per_battle": true, "target": "all_enemies"},
 	]
 
 # 1. Shadow Strike: Generic damage
@@ -31,11 +31,12 @@ func empty_words(target: Entity):
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
-# 3. Lost World: Ultimate
-func lost_world(target: Entity):
+# 3. Lost World: Ultimate (AoE)
+func lost_world(_target: Entity):
 	print(entity_name, " kéo tất cả vào [Lost World]!")
-	var multiplier = TypeChart.get_multiplier(self.type, target.type)
-	var massive_dmg = int(self.atk * 2.5 * multiplier)
-	
-	target.take_damage(massive_dmg, "pure")
-	target.add_status({"type": "Bleed", "duration": 4})
+	for e in enemies:
+		if e.current_hp > 0:
+			var multiplier = TypeChart.get_multiplier(self.type, e.type)
+			var massive_dmg = int(self.atk * 2.5 * multiplier)
+			e.take_damage(massive_dmg, "pure")
+			e.add_status({"type": "Bleed", "duration": 4})

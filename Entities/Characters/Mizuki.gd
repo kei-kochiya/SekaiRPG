@@ -13,9 +13,9 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Ribbon Bind", "method": "ribbon_bind", "cooldown_turns": 1},
-		{"name": "Bitter Secret", "method": "bitter_secret", "cooldown_turns": 2},
-		{"name": "Lonely Marionette", "method": "lonely_marionette", "initial_cooldown": 5, "once_per_battle": true},
+		{"name": "Ribbon Bind", "method": "ribbon_bind", "cooldown_turns": 1, "target": "enemy"},
+		{"name": "Bitter Secret", "method": "bitter_secret", "cooldown_turns": 2, "target": "enemy"},
+		{"name": "Lonely Marionette", "method": "lonely_marionette", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy"},
 	]
 
 func ribbon_bind(target: Entity):

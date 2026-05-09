@@ -50,8 +50,12 @@ func _build_narrator_layer() -> void:
 	_narrator_panel.offset_right  =  480
 	_narrator_panel.offset_top    = -54
 	_narrator_panel.offset_bottom =  54
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0, 0, 0, 0.82)
+	var s := StyleBoxTexture.new()
+	s.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_brown_dark.svg")
+	s.texture_margin_left = 12
+	s.texture_margin_right = 12
+	s.texture_margin_top = 12
+	s.texture_margin_bottom = 12
 	s.set_content_margin_all(20)
 	_narrator_panel.add_theme_stylebox_override("panel", s)
 	_narrator_layer.add_child(_narrator_panel)
@@ -98,10 +102,12 @@ func _build_dialogue_layer() -> void:
 	panel.offset_bottom = -30
 	panel.offset_left   =  100
 	panel.offset_right  = -100
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.1, 0.1, 0.1, 0.95)
-	style.border_color = Color(0.3, 0.3, 0.3)
-	style.set_border_width_all(2)
+	var style := StyleBoxTexture.new()
+	style.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_brown.svg")
+	style.texture_margin_left = 12
+	style.texture_margin_right = 12
+	style.texture_margin_top = 12
+	style.texture_margin_bottom = 12
 	style.set_content_margin_all(25)
 	panel.add_theme_stylebox_override("panel", style)
 	_dialogue_layer.add_child(panel)
@@ -109,6 +115,7 @@ func _build_dialogue_layer() -> void:
 	rich_text = RichTextLabel.new()
 	rich_text.bbcode_enabled = true
 	rich_text.add_theme_font_size_override("normal_font_size", 20)
+	rich_text.add_theme_color_override("default_color", Color(0.15, 0.08, 0.05))
 	panel.add_child(rich_text)
 
 	# ── Choice panel (sits above the text box) ──
@@ -118,14 +125,12 @@ func _build_dialogue_layer() -> void:
 	_choice_panel.offset_bottom = -215
 	_choice_panel.offset_left   =  200
 	_choice_panel.offset_right  = -200
-	var cs := StyleBoxFlat.new()
-	cs.bg_color = Color(0.08, 0.08, 0.14, 0.97)
-	cs.border_color = Color(0.4, 0.5, 0.8)
-	cs.set_border_width_all(2)
-	cs.corner_radius_top_left     = 6
-	cs.corner_radius_top_right    = 6
-	cs.corner_radius_bottom_left  = 6
-	cs.corner_radius_bottom_right = 6
+	var cs := StyleBoxTexture.new()
+	cs.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_border_brown.svg")
+	cs.texture_margin_left = 32
+	cs.texture_margin_right = 32
+	cs.texture_margin_top = 32
+	cs.texture_margin_bottom = 32
 	cs.set_content_margin_all(16)
 	_choice_panel.add_theme_stylebox_override("panel", cs)
 
@@ -174,21 +179,27 @@ func show_choice(options: Array) -> void:
 		var btn := Button.new()
 		btn.text = options[i]
 		btn.flat = false
-		var bs := StyleBoxFlat.new()
-		bs.bg_color = Color(0.12, 0.12, 0.22)
-		bs.border_color = Color(0.35, 0.45, 0.75)
-		bs.set_border_width_all(1)
+		var bs := StyleBoxTexture.new()
+		bs.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+		bs.texture_margin_left = 10
+		bs.texture_margin_right = 10
+		bs.texture_margin_top = 10
+		bs.texture_margin_bottom = 14
 		bs.set_content_margin_all(10)
-		bs.corner_radius_top_left     = 4
-		bs.corner_radius_top_right    = 4
-		bs.corner_radius_bottom_left  = 4
-		bs.corner_radius_bottom_right = 4
 		btn.add_theme_stylebox_override("normal", bs)
-		var bh := bs.duplicate() as StyleBoxFlat
-		bh.bg_color = Color(0.22, 0.28, 0.55)
+		
+		var bh := StyleBoxTexture.new()
+		bh.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg")
+		bh.texture_margin_left = 10
+		bh.texture_margin_right = 10
+		bh.texture_margin_top = 10
+		bh.texture_margin_bottom = 14
+		bh.set_content_margin_all(10)
 		btn.add_theme_stylebox_override("hover", bh)
 		btn.add_theme_stylebox_override("focus", bh)
-		btn.add_theme_color_override("font_color", Color(0.9, 0.9, 1.0))
+		
+		btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+		btn.add_theme_color_override("font_hover_color", Color(0, 0, 0))
 		btn.add_theme_font_size_override("font_size", 17)
 		btn.pressed.connect(_on_choice_selected.bind(i))
 		_choice_vbox.add_child(btn)

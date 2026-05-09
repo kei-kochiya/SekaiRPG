@@ -13,9 +13,9 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Brush Stroke", "method": "brush_stroke", "cooldown_turns": 1},
-		{"name": "Toxic Criticism", "method": "toxic_criticism", "cooldown_turns": 2},
-		{"name": "Masterpiece", "method": "masterpiece", "initial_cooldown": 5, "once_per_battle": true},
+		{"name": "Brush Stroke", "method": "brush_stroke", "cooldown_turns": 1, "target": "enemy"},
+		{"name": "Toxic Criticism", "method": "toxic_criticism", "cooldown_turns": 2, "target": "enemy"},
+		{"name": "Masterpiece", "method": "masterpiece", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy"},
 	]
 
 func brush_stroke(target: Entity):

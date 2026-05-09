@@ -3,7 +3,7 @@ class_name BattleInitializer
 
 ## Handles team setup and entity initialization for different battle contexts.
 
-static func setup_battle(main: Node) -> Dictionary:
+static func setup_battle(_main: Node) -> Dictionary:
 	var ichika = GameManager.get_party_member("Ichika")
 	var mafuyu = GameManager.get_party_member("Mafuyu")
 	var ena    = GameManager.get_party_member("Ena")
@@ -15,7 +15,19 @@ static func setup_battle(main: Node) -> Dictionary:
 
 	var current_map = GameManager.current_map_file
 	
-	if current_map == "res://Scenes/HarborMap.tscn":
+	if GameManager.is_sandbox:
+		return {
+			"player_team": GameManager.sandbox_player_team,
+			"enemy_team": GameManager.sandbox_enemy_team,
+			"is_harbor_boss": false
+		}
+	
+	if GameManager.is_training_mode:
+		var training_data = _setup_training_battle()
+		player_team = training_data["player_team"]
+		enemy_team = training_data["enemy_team"]
+		is_harbor_boss = false
+	elif current_map == "res://Scenes/HarborMap.tscn":
 		if GameManager.harbor_route == "boss" or GameManager.harbor_wave > 3:
 			is_harbor_boss = true
 			player_team = [ichika, ena]
@@ -24,7 +36,7 @@ static func setup_battle(main: Node) -> Dictionary:
 			enemy_team = [boss]
 		else:
 			player_team = [ichika, ena]
-			var wave_lv = 5 + GameManager.harbor_wave # Wave 1:6, 2:7, 3:8
+			var wave_lv = 5 + GameManager.harbor_wave 
 			enemy_team = _create_guards(4, wave_lv)
 			
 	elif current_map == "res://Scenes/WarehouseMap.tscn":
@@ -37,16 +49,16 @@ static func setup_battle(main: Node) -> Dictionary:
 		enemy_team = _create_kidnappers(3, 1)
 		
 	else:
-		# Fallback
-		player_team = [ichika, mafuyu]
-		enemy_team = [ena, kanade]
+		# Fallback - ensure no unintended matches occur
+		print("[BattleInitializer] WARNING: Undefined battle context. Returning empty teams.")
+		player_team = []
+		enemy_team = []
 		
-	# Health Recovery Policy: If < 50% or dead, restore to 50%
+	# Health Recovery Policy (Applied to ALL modes including training)
 	for p in player_team:
 		var min_hp = int(p.max_hp * 0.5)
 		if p.current_hp < min_hp:
 			p.current_hp = min_hp
-			print("[BattleInitializer] ", p.entity_name, " hồi phục tối thiểu 50% máu.")
 
 	return {
 		"player_team": player_team,
@@ -54,9 +66,72 @@ static func setup_battle(main: Node) -> Dictionary:
 		"is_harbor_boss": is_harbor_boss
 	}
 
-static func _create_boss(name: String, hp: int, atk: int, def: int, spd: int, type: String) -> Entity:
+static func _setup_training_battle() -> Dictionary:
+	var player_team = []
+	var base_lv = 1
+	for p_name in GameManager.training_participants:
+		var p = GameManager.get_party_member(p_name)
+		if p:
+			player_team.append(p)
+			base_lv = max(base_lv, p.level)
+	
+	var enemies = []
+	var max_lv = 1
+	var target_lv = clamp(base_lv + randi_range(-3, 3), 1, 100)
+	max_lv = target_lv
+	
+	# 70% chance for Characters, 30% chance for Monsters
+	if randf() < 0.7:
+		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika"]
+		var candidates = []
+		for name in pool:
+			if name not in GameManager.training_participants and name not in GameManager.training_used_opponents:
+				candidates.append(name)
+		
+		candidates.shuffle()
+		
+		# Decide 1 or 2 enemies
+		var count = 1 if (randf() < 0.5 or candidates.size() < 2) else 2
+		
+		if count == 2:
+			# If 2 enemies, NO Mafuyu allowed
+			var no_mafuyu_pool = []
+			for c in candidates:
+				if c != "Mafuyu": no_mafuyu_pool.append(c)
+			
+			if no_mafuyu_pool.size() >= 2:
+				no_mafuyu_pool.shuffle()
+				for i in range(2):
+					var e_name = no_mafuyu_pool.pop_back()
+					GameManager.training_used_opponents.append(e_name)
+					var enemy = GameManager.get_party_member(e_name).duplicate(7)
+					LevelManager.set_initial_level(enemy, target_lv)
+					enemies.append(enemy)
+			else:
+				count = 1
+				
+		if count == 1 and not candidates.is_empty():
+			var e_name = candidates.pop_back()
+			GameManager.training_used_opponents.append(e_name)
+			var enemy = GameManager.get_party_member(e_name).duplicate(7)
+			LevelManager.set_initial_level(enemy, target_lv)
+			enemies.append(enemy)
+	
+	# Fallback to monsters if no characters selected or 30% chance hit
+	if enemies.is_empty():
+		enemies = _create_targets(5, target_lv)
+		for e in enemies:
+			e.entity_name = "Training Bot " + e.entity_name.split(" ")[1]
+
+	GameManager.last_battle_max_lv = max_lv
+	return {
+		"player_team": player_team,
+		"enemy_team": enemies
+	}
+
+static func _create_boss(p_name: String, hp: int, atk: int, def: int, spd: int, type: String) -> Entity:
 	var boss = Entity.new()
-	boss.entity_name = name
+	boss.entity_name = p_name
 	boss.max_hp = hp
 	boss.current_hp = hp
 	boss.atk = atk

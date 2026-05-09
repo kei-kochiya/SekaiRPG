@@ -60,7 +60,7 @@ static func _revive_boss_p1(main: Node):
 	main.is_scripting = true
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_boss_revive_p1"), func():
 		boss.current_hp = int(boss.max_hp * 0.5)
-		main.hud.update_entities(main.player_team, main.enemy_team)
+		_sync_battle_state(main)
 		main.is_scripting = false
 	)
 
@@ -73,6 +73,7 @@ static func _trigger_phase_3(main: Node):
 	
 	# --- IMMEDIATE STATE UPDATE for Phase 3 ---
 	var honami = Honami.new()
+	honami.is_harbor = true
 	var boss = main._get_entity("Đội Trưởng")
 	var ichika = GameManager.get_party_member("Ichika")
 	var ena = GameManager.get_party_member("Ena")

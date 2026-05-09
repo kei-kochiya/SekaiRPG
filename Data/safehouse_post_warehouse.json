@@ -115,7 +115,7 @@
     },
     {
       "type": "dialogue",
-      "speaker": "left",
+      "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
       "text": "Dạ...?"
@@ -140,10 +140,107 @@
     },
     {
       "type": "dialogue",
-      "speaker": "left",
+      "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
       "text": "(Cái miệng độc địa này giấu một sự quan tâm vụng về ghê.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em.. sẵn sàng rồi ạ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Tốt. Đi thôi."
+    }
+  ],
+  "kanade_upgrade_intro": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Này Ichika, lại đây chị bảo."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Sau hôm qua, chắc em cũng đã thấy mình còn nhiều điều phải học lắm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nếu em muốn nâng chỉ số, hãy đến nói chuyện với chị nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Bây giờ, chị cũng phải tự luyện tập thêm đây."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Tự luyện tập thêm sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Ừm. Em có thể nói chuyện với Mafuyu về chuyện đó."
+    }
+  ],
+  "mafuyu_training_intro": [
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Không biết là, em có thể luyện tập thêm không nhỉ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Được chứ. Tôi có thể bố trí cho em một vài nhóm để em tập mỗi lần."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Đừng gắng sức quá. Khi nào đi cứ bảo tôi là được."
+    }
+  ],
+  "mafuyu_training_limit": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Nghỉ ngơi đi nhóc. Tập nhiều quá không tốt đâu."
     }
   ]
 }

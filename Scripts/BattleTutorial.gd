@@ -7,7 +7,11 @@ static func run_tutorial(main: Node):
 	GameManager.is_tutorial = false   # Only show once
 
 	var panel = _build_tutorial_panel(main)
-	var vbox = panel.get_child(0) as VBoxContainer
+	var vbox: VBoxContainer
+	for child in panel.get_children():
+		if child is VBoxContainer:
+			vbox = child
+			break
 
 	var steps = [
 		["⚔️  Hướng dẫn chiến đấu (1/5)",
@@ -27,7 +31,7 @@ static func run_tutorial(main: Node):
 
 	panel.get_parent().queue_free()
 
-static func _show_tutorial_step(main: Node, vbox: VBoxContainer, title: String, content: String):
+static func _show_tutorial_step(_main: Node, vbox: VBoxContainer, title: String, content: String):
 	# Clear previous
 	for child in vbox.get_children():
 		child.queue_free()
@@ -42,11 +46,22 @@ static func _show_tutorial_step(main: Node, vbox: VBoxContainer, title: String, 
 	c_lbl.text = content
 	c_lbl.fit_content = true
 	c_lbl.custom_minimum_size = Vector2(400, 150)
+	c_lbl.add_theme_color_override("default_color", Color(0.95, 0.9, 0.8))
 	vbox.add_child(c_lbl)
 	
 	var btn = Button.new()
 	btn.text = " TIẾP THEO "
 	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	
+	var bns = StyleBoxTexture.new()
+	bns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+	bns.texture_margin_left = 10
+	bns.texture_margin_right = 10
+	bns.texture_margin_top = 10
+	bns.texture_margin_bottom = 14
+	btn.add_theme_stylebox_override("normal", bns)
+	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+	
 	vbox.add_child(btn)
 	
 	await btn.pressed
@@ -63,10 +78,18 @@ static func _build_tutorial_panel(main: Node) -> PanelContainer:
 	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	canvas.add_child(panel)
 	
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(0.1, 0.1, 0.15, 0.95)
-	sb.border_width_left = 4
-	sb.border_color = Color(0.3, 0.6, 0.8)
+	var bg = ColorRect.new()
+	bg.color = Color(0.1, 0.08, 0.05, 1.0) # Solid dark brown
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	panel.add_child(bg)
+
+	var sb = StyleBoxTexture.new()
+	sb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_border_brown.svg")
+	sb.texture_margin_left = 32
+	sb.texture_margin_right = 32
+	sb.texture_margin_top = 32
+	sb.texture_margin_bottom = 32
+	sb.set_content_margin_all(24)
 	panel.add_theme_stylebox_override("panel", sb)
 	
 	var vbox = VBoxContainer.new()

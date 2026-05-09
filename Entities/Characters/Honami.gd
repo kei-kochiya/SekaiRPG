@@ -1,5 +1,6 @@
 extends Entity
 class_name Honami
+@export var is_harbor: bool = false
 
 func _init():
 	entity_name = "Honami"
@@ -13,15 +14,17 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Gentle Strike", "method": "gentle_strike", "cooldown_turns": 1},
-		{"name": "Cleansing Breeze", "method": "cleansing_breeze", "cooldown_turns": 2},
-		{"name": "Healing Harmony", "method": "healing_harmony", "cooldown_turns": 3},
+		{"name": "Gentle Strike", "method": "gentle_strike", "cooldown_turns": 1, "target": "enemy"},
+		{"name": "Cleansing Breeze", "method": "cleansing_breeze", "cooldown_turns": 2, "target": "ally"},
+		{"name": "Healing Harmony", "method": "healing_harmony", "cooldown_turns": 3, "target": "all_allies"},
 	]
 
 # Honami is invincible in this scripted encounter
 func take_damage(amount: int, damage_type: String = "physical") -> bool:
-	damage_received.emit(0, damage_type)
-	return false
+	if is_harbor:
+		damage_received.emit(0, damage_type)
+		return false
+	return super.take_damage(amount, damage_type)
 
 func gentle_strike(target: Entity):
 	print(entity_name, " sử dụng [Gentle Strike]!")

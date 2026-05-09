@@ -18,6 +18,7 @@ var is_scripting: bool = false # Pause battle end checks during sequences
 var turns_in_phase: int = 0
 
 func _ready():
+	ScreenFade.fade_in(0.5)
 	# --- Setup teams and context ---
 	var data = BattleInitializer.setup_battle(self)
 	player_team = data["player_team"]
@@ -112,9 +113,10 @@ func run_battle():
 		
 		print("--- Lượt của: ", actor.entity_name, " ---")
 		
-		# Show turn indicator
+		# Show turn indicator (but not during tutorial)
 		var is_player_turn = actor in player_team
-		hud.show_turn_indicator(actor.entity_name, is_player_turn)
+		if not GameManager.is_tutorial:
+			hud.show_turn_indicator(actor.entity_name, is_player_turn)
 		
 		# Update gauge display (show remaining queue, don't regenerate)
 		_update_gauge_display()
@@ -200,13 +202,14 @@ func _player_turn(actor: Entity):
 func _ai_turn(actor: Entity):
 	await get_tree().create_timer(0.5).timeout   # "thinking" pause
 	
-	var target = AIManager.pick_target(actor, player_team, timeline)
+	var decision = AIManager.pick_action(actor, actor.enemies, actor.allies, timeline)
+	var action: String = decision["action"]
+	var target: Entity = decision["target"]
+	
 	if target == null:
 		return
 	
-	print(actor.entity_name, " (AI) tấn công ", target.entity_name)
-	var dmg = DamageCalculator.calculate_damage(actor, target)
-	target.take_damage(dmg)
+	_execute_action(actor, action, target)
 
 # ===========================================================================
 # Execute Action
