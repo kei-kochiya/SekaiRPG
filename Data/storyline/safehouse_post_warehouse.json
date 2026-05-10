@@ -71,7 +71,7 @@
     },
     {
       "type": "dialogue",
-      "speaker": "right",
+      "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
       "text": "Ồn ào quá Ena."
@@ -94,7 +94,7 @@
     },
     {
       "type": "dialogue",
-      "speaker": "right",
+      "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
       "text": "Tuân lệnh sếp! Đang ngứa tay muốn test thử em cưng này xem lực giật thế nào đây."

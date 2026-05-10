@@ -1,11 +1,18 @@
 extends Entity
 class_name Mafuyu
 
+"""
+Mafuyu: Nhân vật hệ Mysterious, sở hữu chỉ số toàn diện và sát thương diện rộng (AoE).
+
+Lối chơi của Mafuyu tập trung vào việc duy trì sát thương duy trì thông qua 
+hiệu ứng Chảy máu (Bleed) và dọn dẹp kẻ địch bằng các đòn đánh diện rộng mạnh mẽ.
+"""
+
 func _init():
 	entity_name = "Mafuyu"
-	max_hp = 450
-	current_hp = 450
-	atk = 250
+	max_hp = 500
+	current_hp = 500
+	atk = 300
 	defense = 135
 	res = 20
 	spd = 150
@@ -13,27 +20,50 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Shadow Strike", "method": "shadow_strike", "cooldown_turns": 1, "target": "enemy"},
-		{"name": "Empty Words", "method": "empty_words", "cooldown_turns": 2, "target": "enemy"},
-		{"name": "Lost World", "method": "lost_world", "initial_cooldown": 5, "once_per_battle": true, "target": "all_enemies"},
+		{"name": "Nhát Chém Bóng Tối", "method": "shadow_strike", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh lên một mục tiêu.\nTỷ lệ: 150% ATK."},
+		{"name": "Lời Nói Trống Rỗng", "method": "empty_words", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Chảy máu (Bleed) trong 3 lượt.\nTỷ lệ: 100% ATK."},
+		{"name": "Thế Giới Đã Mất", "method": "lost_world", "initial_cooldown": 5, "once_per_battle": true, "target": "all_enemies", "details": "Sát thương AoE xuyên thấu (Pure DMG) và gây Chảy máu diện rộng trong 4 lượt.\nTỷ lệ: 250% ATK."},
 	]
 
-# 1. Shadow Strike: Generic damage
 func shadow_strike(target: Entity):
-	print(entity_name, " sử dụng [Shadow Strike]!")
-	var dmg = DamageCalculator.calculate_damage(self, target)
-	target.take_damage(dmg)
+	"""
+	[Nhát Chém Bóng Tối]: Tấn công đơn mục tiêu mạnh.
 
-# 2. Empty Words: Effect based (Bleed)
+	Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
+
+	Args:
+		target (Entity): Mục tiêu chịu đòn.
+	"""
+	print(entity_name, " sử dụng [Nhát Chém Bóng Tối]!")
+	var raw_dmg = DamageCalculator.calculate_damage(self , target)
+	var scaled_dmg = int(raw_dmg * 1.5)
+	target.take_damage(scaled_dmg)
+
 func empty_words(target: Entity):
-	print(entity_name, " mấp máy [Empty Words]...")
-	var dmg = DamageCalculator.calculate_damage(self, target)
+	"""
+	[Lời Nói Trống Rỗng]: Tấn công và gây hiệu ứng xấu.
+
+	Gây sát thương vật lý và áp dụng trạng thái Chảy máu (Bleed) trong 3 lượt.
+
+	Args:
+		target (Entity): Mục tiêu chịu đòn.
+	"""
+	print(entity_name, " mấp máy [Lời Nói Trống Rỗng]...")
+	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
-# 3. Lost World: Ultimate (AoE)
 func lost_world(_target: Entity):
-	print(entity_name, " kéo tất cả vào [Lost World]!")
+	"""
+	[Thế Giới Đã Mất]: Tuyệt kỹ diện rộng (AoE) của Mafuyu.
+
+	Gây sát thương thuần (Pure Damage) lên toàn bộ kẻ địch (250% ATK) 
+	và áp dụng trạng thái Chảy máu (Bleed) diện rộng trong 4 lượt.
+
+	Args:
+		_target (Entity): Tham số không sử dụng (kỹ năng tác động toàn đội địch).
+	"""
+	print(entity_name, " kéo tất cả vào [Thế Giới Đã Mất]!")
 	for e in enemies:
 		if e.current_hp > 0:
 			var multiplier = TypeChart.get_multiplier(self.type, e.type)

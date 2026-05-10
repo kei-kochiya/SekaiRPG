@@ -1,3 +1,15 @@
-# Godot 4+ specific ignores
+# Godot-specific ignores
 .godot/
 /android/
+/build/
+*.tmp
+*.import
+
+# Asset zips
+Assets/*.zip
+
+# User specific
+.vscode/
+.idea/
+*.swp
+*.bak

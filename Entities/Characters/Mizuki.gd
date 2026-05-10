@@ -1,11 +1,18 @@
 extends Entity
 class_name Mizuki
 
+"""
+Mizuki: Nhân vật hệ Cute, chuyên về khống chế và sát thương duy trì (Poison).
+
+Lối chơi của Mizuki tập trung vào việc áp dụng các hiệu ứng bất lợi lên kẻ địch 
+thông qua độc tố và các đòn tấn công tinh tế.
+"""
+
 func _init():
 	entity_name = "Mizuki"
-	max_hp = 170
-	current_hp = 170
-	atk = 120
+	max_hp = 250
+	current_hp = 250
+	atk = 125
 	defense = 60
 	res = 8
 	spd = 125
@@ -13,24 +20,51 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Ribbon Bind", "method": "ribbon_bind", "cooldown_turns": 1, "target": "enemy"},
-		{"name": "Bitter Secret", "method": "bitter_secret", "cooldown_turns": 2, "target": "enemy"},
-		{"name": "Lonely Marionette", "method": "lonely_marionette", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy"},
+		{"name": "Ruy Băng Trói Buộc", "method": "ribbon_bind", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
+		{"name": "Bí Mật Cay Đắng", "method": "bitter_secret", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Trúng độc (Poison) trong 3 lượt.\nTỷ lệ: 100% ATK."},
+		{"name": "Rối Độc Thoại", "method": "lonely_marionette", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương xuyên thấu (Pure DMG) và gây Poison mạnh trong 4 lượt.\nTỷ lệ: 250% ATK."},
 	]
 
 func ribbon_bind(target: Entity):
-	print(entity_name, " trói chặt bằng [Ribbon Bind]!")
-	var dmg = DamageCalculator.calculate_damage(self, target)
-	target.take_damage(dmg)
+	"""
+	[Ruy Băng Trói Buộc]: Tấn công đơn mục tiêu.
+
+	Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
+
+	Args:
+		target (Entity): Mục tiêu chịu đòn.
+	"""
+	print(entity_name, " trói chặt bằng [Ruy Băng Trói Buộc]!")
+	var raw_dmg = DamageCalculator.calculate_damage(self , target)
+	var scaled_dmg = int(raw_dmg * 1.5)
+	target.take_damage(scaled_dmg)
 
 func bitter_secret(target: Entity):
-	print(entity_name, " thì thầm [Bitter Secret]...")
-	var dmg = DamageCalculator.calculate_damage(self, target)
+	"""
+	[Bí Mật Cay Đắng]: Tấn công và gây hiệu ứng xấu.
+
+	Gây sát thương vật lý và áp dụng trạng thái Trúng độc (Poison) 
+	lên mục tiêu trong 3 lượt.
+
+	Args:
+		target (Entity): Mục tiêu chịu đòn.
+	"""
+	print(entity_name, " thì thầm [Bí Mật Cay Đắng]...")
+	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Poison", "duration": 3, "percent": 0.15})
 
 func lonely_marionette(target: Entity):
-	print(entity_name, " giật dây [Lonely Marionette]!")
+	"""
+	[Rối Độc Thoại]: Tuyệt kỹ xuyên thấu của Mizuki.
+
+	Gây sát thương thuần (Pure Damage) bằng 250% ATK và áp dụng 
+	trạng thái Trúng độc (Poison) cực mạnh trong 4 lượt.
+
+	Args:
+		target (Entity): Mục tiêu chịu đòn.
+	"""
+	print(entity_name, " giật dây [Rối Độc Thoại]!")
 	var multiplier = TypeChart.get_multiplier(self.type, target.type)
 	var massive_dmg = int(self.atk * 2.5 * multiplier)
 	

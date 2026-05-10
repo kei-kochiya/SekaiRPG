@@ -1,7 +1,12 @@
 extends Node2D
 
-## BattleManager: drives the turn-based battle loop.
-## Creates teams, builds HUD, runs turns via coroutine with await.
+"""
+BattleManager: Điều phối vòng lặp chiến đấu theo lượt (Turn-based).
+
+Lớp này quản lý việc tạo đội hình, xây dựng giao diện người dùng (HUD), 
+và vận hành dòng chảy của trận đấu thông qua hệ thống Timeline. 
+Sử dụng coroutine (await) để quản lý các hành động bất đồng bộ.
+"""
 
 var player_team: Array = []
 var enemy_team: Array = []
@@ -9,20 +14,30 @@ var all_entities: Array = []
 var timeline: Array = []
 var battle_over: bool = false
 
-var hud: BattleHUD
-var shaker: ScreenShake
+const BattleHUDClass = preload("res://UI/Battle/BattleHUD.gd")
+const ScreenShakeClass = preload("res://UI/Effects/ScreenShake.gd")
+
+var hud: Node
+var shaker: Node
 
 var is_harbor_boss_fight: bool = false
-var harbor_boss_phase: int = 0 # 0: Start, 1: Fighting, 2: Reinforcements arrived
-var is_scripting: bool = false # Pause battle end checks during sequences
+var harbor_boss_phase: int = 0
+var is_scripting: bool = false
 var turns_in_phase: int = 0
 
 func _ready():
+	"""
+	Khởi tạo trạng thái ban đầu của trận đấu.
+	
+	Thiết lập đội hình, context thực thể, giao diện người dùng (HUD), 
+	và bắt đầu dòng chảy trận đấu.
+	"""
 	ScreenFade.fade_in(0.5)
-	# --- Setup teams and context ---
+	
 	var data = BattleInitializer.setup_battle(self)
-	player_team = data["player_team"]
-	enemy_team = data["enemy_team"]
+	
+	player_team = data["player_team"].filter(func(e): return e != null)
+	enemy_team = data["enemy_team"].filter(func(e): return e != null)
 	is_harbor_boss_fight = data["is_harbor_boss"]
 	
 	all_entities = player_team + enemy_team
@@ -33,26 +48,28 @@ func _ready():
 			if s.has("initial_cooldown"):
 				e.cooldowns[s["method"]] = s["initial_cooldown"]
 				
-	# --- Build HUD ---
-	hud = BattleHUD.new()
+	hud = BattleHUDClass.new()
 	add_child(hud)
-	hud.build(player_team, enemy_team)
-	_update_gauge_player_names()
+	hud.setup(player_team, enemy_team)
+	_setup_gauge_teams()
 	
-	# --- Screen shake node ---
-	shaker = ScreenShake.new()
+	shaker = ScreenShakeClass.new()
 	add_child(shaker)
 	
 	for entity in all_entities:
 		entity.died.connect(_on_entity_died.bind(entity))
 	
-	# --- Start battle ---
 	if is_harbor_boss_fight:
 		HarborBattleScript.run_intro(self, func(): run_battle())
 	else:
 		run_battle()
 
 func _refresh_team_context():
+	"""
+	Cập nhật tham chiếu đồng minh và kẻ thù cho từng thực thể.
+	
+	Giúp các thực thể dễ dàng xác định đối tượng để thi triển kỹ năng hoặc AI.
+	"""
 	for e in player_team:
 		e.allies = player_team
 		e.enemies = enemy_team
@@ -60,86 +77,70 @@ func _refresh_team_context():
 		e.allies = enemy_team
 		e.enemies = player_team
 
-func _update_gauge_player_names():
-	var p_names: Array[String] = []
-	for p in player_team:
-		p_names.append(p.entity_name)
-	hud.action_gauge.set_player_names(p_names)
-
-# ===========================================================================
-# Tutorial
-# ===========================================================================
+func _setup_gauge_teams():
+	"""
+	Thiết lập đội hình cho thanh hành động (Action Gauge).
+	"""
+	hud.action_gauge.set_player_team(player_team)
 
 func _show_tutorial():
+	"""
+	Hiển thị hướng dẫn chiến đấu cơ bản.
+	"""
 	await BattleTutorial.run_tutorial(self)
 
-# ===========================================================================
-# Battle Loop (coroutine)
-# ===========================================================================
-
 func run_battle():
-	# Generate initial turn queue (larger pool so we don't run out fast)
+	"""
+	Vận hành vòng lặp chính của trận đấu.
+	
+	Quản lý việc lấy lượt từ Timeline, xử lý hiệu ứng trạng thái, 
+	phân phối EXP, và kiểm tra điều kiện kết thúc trận đấu.
+	"""
 	_regenerate_timeline()
 	
 	print("=== TRẬN CHIẾN BẮT ĐẦU ===")
-	print("Đội Player: ", _names(player_team))
-	print("Đội Enemy:  ", _names(enemy_team))
-	print("")
 	
 	while not battle_over:
-		# Refill timeline when it runs out
 		if timeline.is_empty():
 			_regenerate_timeline()
 			if timeline.is_empty():
 				break
 		
-		# Pop next turn from the queue
 		var turn = timeline.pop_front()
-		var actor = _get_entity(turn["name"])
+		var actor = turn["entity"]
 		
-		# Skip dead or missing actors
 		if actor == null or actor.current_hp <= 0:
 			continue
 		
-		# Scripted check
 		if is_harbor_boss_fight:
 			HarborBattleScript.check_transitions(self)
-			if is_scripting: # If a transition started, wait
+			if is_scripting:
 				await get_tree().create_timer(0.5).timeout
 				continue
 		
-		# Only increment turn count if we are actually starting a real turn
 		turns_in_phase += 1
 		
-		print("--- Lượt của: ", actor.entity_name, " ---")
-		
-		# Show turn indicator (but not during tutorial)
 		var is_player_turn = actor in player_team
 		if not GameManager.is_tutorial:
-			hud.show_turn_indicator(actor.entity_name, is_player_turn)
+			hud.show_turn_indicator(actor)
 		
-		# Update gauge display (show remaining queue, don't regenerate)
 		_update_gauge_display()
 		
-		# Process status effects at turn start
 		var can_act = ProcessStatus.handle_turn_start(actor)
 		CooldownManager.process_cooldowns(actor)
 		
 		if not can_act:
-			print(actor.entity_name, " bị bỏ qua lượt!")
 			await get_tree().create_timer(0.8).timeout
 			continue
 		
 		if _check_battle_end():
 			break
 		
-		# --- Player turn or AI turn ---
 		if is_player_turn:
 			await _player_turn(actor)
 		else:
 			await _ai_turn(actor)
 		
-		# Update gauge after action (dead entities removed by _on_entity_died)
 		_update_gauge_display()
 		
 		if is_harbor_boss_fight:
@@ -148,13 +149,8 @@ func run_battle():
 		if _check_battle_end():
 			break
 		
-		# Brief pause between turns
 		await get_tree().create_timer(0.4).timeout
 	
-	# Hide turn indicator when battle ends
-	hud.hide_turn_indicator()
-	
-	# Transition back to Overworld
 	await get_tree().create_timer(2.0).timeout
 	
 	var is_victory = AIManager.get_alive_targets(enemy_team).is_empty()
@@ -180,12 +176,13 @@ func run_battle():
 	else:
 		GameManager.finish_battle(is_victory, enemy_count)
 
-# ===========================================================================
-# Player Turn
-# ===========================================================================
-
 func _player_turn(actor: Entity):
-	# Show tutorial before the very first player action
+	"""
+	Xử lý lượt đi của người chơi.
+	
+	Args:
+		actor (Entity): Thực thể phe ta đang thực hiện lượt.
+	"""
 	if GameManager.is_tutorial:
 		await _show_tutorial()
 
@@ -195,12 +192,14 @@ func _player_turn(actor: Entity):
 	var target: Entity = result[1]
 	_execute_action(actor, action, target)
 
-# ===========================================================================
-# AI Turn
-# ===========================================================================
-
 func _ai_turn(actor: Entity):
-	await get_tree().create_timer(0.5).timeout   # "thinking" pause
+	"""
+	Xử lý lượt đi của AI đối thủ.
+	
+	Args:
+		actor (Entity): Thực thể phe địch đang thực hiện lượt.
+	"""
+	await get_tree().create_timer(0.5).timeout
 	
 	var decision = AIManager.pick_action(actor, actor.enemies, actor.allies, timeline)
 	var action: String = decision["action"]
@@ -211,18 +210,20 @@ func _ai_turn(actor: Entity):
 	
 	_execute_action(actor, action, target)
 
-# ===========================================================================
-# Execute Action
-# ===========================================================================
-
 func _execute_action(actor: Entity, action: String, target: Entity):
+	"""
+	Thi triển hành động (tấn công hoặc kỹ năng) từ một thực thể lên mục tiêu.
+	
+	Args:
+		actor (Entity): Thực thể thực hiện hành động.
+		action (String): Tên kỹ năng hoặc phương thức hành động.
+		target (Entity): Thực thể chịu tác động.
+	"""
 	if action == "attack":
-		print(actor.entity_name, " đánh thường vào ", target.entity_name)
 		var dmg = DamageCalculator.calculate_damage(actor, target)
 		target.take_damage(dmg)
 		return
 	
-	# Skill execution
 	if actor.has_method(action):
 		var cd_turns = 0
 		var once_per_battle = false
@@ -241,58 +242,75 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 		elif cd_turns > 0:
 			CooldownManager.set_cooldown(actor, action, cd_turns)
 		
-		# Hitstop + shake for Shadow Blade
 		if is_shadow_blade and actor.current_hp > 0:
 			await shaker.hitstop(0.1)
 			shaker.shake(8.0, 0.3)
 	else:
 		print("[Warning] ", actor.entity_name, " không có skill: ", action)
 
-# ===========================================================================
-# Timeline Management
-# ===========================================================================
-
-# Full regeneration — only called when queue is empty or at battle start
 func _regenerate_timeline():
+	"""
+	Tái tạo lại danh sách thứ tự lượt đi (Timeline).
+	"""
 	var alive = AIManager.get_alive_targets(all_entities)
 	timeline = TurnCalculator.get_timeline(alive, 20)
 	_update_gauge_display()
 
-# Display-only update — shows remaining queue in the ActionGauge without regenerating
 func _update_gauge_display():
+	"""
+	Cập nhật hiển thị của thanh hành động (Action Gauge).
+	"""
 	hud.action_gauge.refresh(timeline.slice(0, 10))
 
-# Remove a dead entity's turns from the queue
-func _purge_dead_from_timeline(dead_name: String):
-	timeline = TurnCalculator.remove_dead_from_timeline(timeline, dead_name)
-
-# ===========================================================================
-# Helpers
-# ===========================================================================
+func _purge_dead_from_timeline(dead_entity: Entity):
+	"""
+	Loại bỏ các lượt dự kiến của một thực thể đã bị hạ gục.
+	
+	Args:
+		dead_entity (Entity): Thực thể cần loại bỏ khỏi timeline.
+	"""
+	timeline = TurnCalculator.remove_dead_from_timeline(timeline, dead_entity)
 
 func _get_entity(e_name: String) -> Entity:
+	"""
+	Tìm kiếm thực thể trong trận đấu theo tên.
+	
+	Args:
+		e_name (String): Tên thực thể cần tìm.
+		
+	Returns:
+		Entity: Đối tượng thực thể nếu tìm thấy, ngược lại trả về null.
+	"""
 	for entity in all_entities:
 		if entity.entity_name == e_name:
 			return entity
 	return null
 
 func _on_entity_died(entity: Entity):
-	print(">>> ", entity.entity_name, " đã bị hạ gục! <<<")
-	_purge_dead_from_timeline(entity.entity_name)
+	"""
+	Xử lý sự kiện khi một thực thể bị hạ gục.
 	
-	# Shared EXP Distribution when an enemy dies
+	Args:
+		entity (Entity): Thực thể vừa bị hạ gục.
+	"""
+	print(">>> ", entity.entity_name, " đã bị hạ gục! <<<")
+	_purge_dead_from_timeline(entity)
+	
 	if not entity.is_character:
 		var exp_reward = LevelManager.get_exp_reward(entity.level)
-		print("[BATTLE] Cả đội nhận được ", exp_reward, " EXP từ ", entity.entity_name)
 		for p in player_team:
-			# Give EXP even to dead members? User said "cả team (party lúc đó) nhận được luôn"
-			# Usually RPGs give to everyone active. I'll give to all in player_team.
 			LevelManager.gain_exp(p, exp_reward)
 	
 	if is_harbor_boss_fight:
 		HarborBattleScript.check_transitions(self)
 
 func _check_battle_end() -> bool:
+	"""
+	Kiểm tra điều kiện kết thúc trận đấu (Thắng/Thua).
+	
+	Returns:
+		bool: True nếu trận đấu kết thúc, False nếu tiếp tục.
+	"""
 	if is_scripting: return false
 	
 	var is_boss_dead = false
@@ -302,31 +320,36 @@ func _check_battle_end() -> bool:
 		
 		if dead:
 			if harbor_boss_phase < 3:
-				# Force transition if it somehow didn't trigger yet
 				HarborBattleScript.check_transitions(self)
 				return false
 			else:
-				# In phase 3, Honami is immortal, only boss death matters
 				is_boss_dead = true
 	
 	if (not is_harbor_boss_fight and AIManager.get_alive_targets(enemy_team).is_empty()) or is_boss_dead:
-		hud.show_result("VICTORY", Color(0.3, 1.0, 0.5))
+		hud.show_victory()
 		battle_over = true
-		print("=== CHIẾN THẮNG ===")
 		return true
 	
 	if AIManager.get_alive_targets(player_team).is_empty():
 		if is_harbor_boss_fight and harbor_boss_phase == 1:
 			HarborBattleScript.handle_loss(self)
-			return false # Keep loop running, phase will change
+			return false
 		
-		hud.show_result("DEFEAT", Color(1.0, 0.3, 0.3))
+		hud.show_defeat()
 		battle_over = true
-		print("=== THẤT BẠI ===")
 		return true
 	return false
 
 func _names(team: Array) -> String:
+	"""
+	Chuyển đổi danh sách thực thể thành chuỗi tên (dùng cho debug).
+	
+	Args:
+		team (Array): Danh sách các thực thể.
+		
+	Returns:
+		String: Chuỗi tên các thực thể cách nhau bởi dấu phẩy.
+	"""
 	var n = []
 	for e in team:
 		n.append(e.entity_name)

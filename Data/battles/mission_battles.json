@@ -7,7 +7,7 @@
   },
   "warehouse": {
     "player_party": ["Ichika", "Kanade"],
-    "enemy_type": "target",
+    "enemy_type": "warehouse_worker",
     "enemy_count": 5,
     "level_key": "warehouse_wave"
   },

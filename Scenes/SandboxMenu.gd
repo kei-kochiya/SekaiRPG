@@ -4,7 +4,7 @@ var selected_players: Array = []
 var selected_enemies: Array = []
 
 var available_chars = ["Ichika", "Kanade", "Mafuyu", "Ena", "Mizuki", "Honami"]
-var available_monsters = ["Lính Cảng", "Kidnapper", "Target", "Đội Trưởng (BOSS)"]
+var available_monsters = ["Lính Cảng", "Kidnapper", "Target", "Nhân Viên Kho", "Đội Trưởng (BOSS)"]
 
 func _ready():
 	_build_lists()
@@ -164,6 +164,9 @@ func _create_sandbox_entity(e_name: String) -> Entity:
 			t.entity_name = "Target"
 			t.max_hp = 100; t.current_hp = 100; t.atk = 45; t.defense = 25; t.spd = 90; t.type = "None"
 			return t
+		"Nhân Viên Kho":
+			var w = WarehouseWorker.new()
+			return w
 		"Đội Trưởng (BOSS)":
 			var b = Entity.new()
 			b.entity_name = "Đội Trưởng"
