@@ -2,6 +2,8 @@ extends Control
 
 var selected_players: Array = []
 var selected_enemies: Array = []
+var player_lv_spin: SpinBox
+var enemy_lv_spin: SpinBox
 
 var available_chars = ["Ichika", "Kanade", "Mafuyu", "Ena", "Mizuki", "Honami"]
 var available_monsters = ["Lính Cảng", "Kidnapper", "Target", "Nhân Viên Kho", "Đội Trưởng (BOSS)"]
@@ -34,8 +36,28 @@ func _build_lists():
 		btn.toggled.connect(_on_player_toggled.bind(c_name))
 		$HBox/PlayerSide/Scroll/CharList.add_child(btn)
 	
+	var pl_box = HBoxContainer.new()
+	var pl_lbl = Label.new()
+	pl_lbl.text = "Level Phe Ta: "
+	pl_box.add_child(pl_lbl)
+	player_lv_spin = SpinBox.new()
+	player_lv_spin.min_value = 1; player_lv_spin.max_value = 100; player_lv_spin.value = 10
+	pl_box.add_child(player_lv_spin)
+	$HBox/PlayerSide.add_child(pl_box)
+	$HBox/PlayerSide.move_child(pl_box, 2)
+	
 	# Enemy list (Characters + Monsters)
 	var all_enemies = available_chars + available_monsters
+	
+	var el_box = HBoxContainer.new()
+	var el_lbl = Label.new()
+	el_lbl.text = "Level Phe Địch: "
+	el_box.add_child(el_lbl)
+	enemy_lv_spin = SpinBox.new()
+	enemy_lv_spin.min_value = 1; enemy_lv_spin.max_value = 100; enemy_lv_spin.value = 10
+	el_box.add_child(enemy_lv_spin)
+	$HBox/EnemySide.add_child(el_box)
+	$HBox/EnemySide.move_child(el_box, 2)
 	for e_name in all_enemies:
 		var row = HBoxContainer.new()
 		var lbl = Label.new()
@@ -103,11 +125,10 @@ func _on_upgrade():
 		return
 	
 	var entities: Array[Entity] = []
+	var target_lv = int(player_lv_spin.value)
 	for p_name in selected_players:
 		var p = GameManager.get_party_member(p_name)
-		# For Sandbox, ensure they are at least Level 10
-		if p.level < 10:
-			LevelManager.set_initial_level(p, 10)
+		LevelManager.set_initial_level(p, target_lv)
 		entities.append(p)
 	
 	UpgradeUI.show_ui(entities)
@@ -121,15 +142,17 @@ func _on_start():
 	GameManager.sandbox_enemy_team.clear()
 	
 	# Setup Players
+	var p_lv = int(player_lv_spin.value)
 	for p_name in selected_players:
 		var p = GameManager.get_party_member(p_name)
-		LevelManager.set_initial_level(p, 10)
+		LevelManager.set_initial_level(p, p_lv)
 		GameManager.sandbox_player_team.append(p)
 	
 	# Setup Enemies
+	var e_lv = int(enemy_lv_spin.value)
 	for e_name in selected_enemies:
 		var enemy = _create_sandbox_entity(e_name)
-		LevelManager.set_initial_level(enemy, 10)
+		LevelManager.set_initial_level(enemy, e_lv)
 		GameManager.sandbox_enemy_team.append(enemy)
 	
 	await ScreenFade.fade_out(0.5)

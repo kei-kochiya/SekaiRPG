@@ -23,7 +23,7 @@ static func get_exp_reward(enemy_level: int) -> int:
 	Returns:
 		int: Tổng lượng EXP nhận được.
 	"""
-	return 40 + (enemy_level * 20)
+	return enemy_level * 75
 
 static func gain_exp(entity: Entity, amount: int):
 	"""
@@ -69,13 +69,16 @@ static func process_level_up(entity: Entity):
 		entity.skill_points += 2
 	
 	var growth_rate = 0.05
+	var spd_growth = 0.03
+	
 	if entity.level > SOFT_CAP_LEVEL:
 		growth_rate = 0.02 
+		spd_growth = 0.01
 		
 	entity.max_hp += int(entity.max_hp * growth_rate)
 	entity.atk += int(entity.atk * growth_rate)
 	entity.defense += int(entity.defense * growth_rate)
-	entity.spd += int(entity.spd * growth_rate)
+	entity.spd += int(entity.spd * spd_growth)
 
 	entity.max_hp = min(entity.max_hp, entity.stat_caps.get("max_hp", 9999))
 	entity.atk = min(entity.atk, entity.stat_caps.get("atk", 9999))
@@ -111,8 +114,8 @@ static func set_initial_level(entity: Entity, target_level: int):
 		return
 		
 	if target_level <= 1: 
+		entity.skill_points = target_level * (3 if entity.is_character else 2)
 		if not entity.is_character:
-			entity.skill_points = target_level * 2
 			_auto_upgrade_monster(entity)
 		return
 	
@@ -122,8 +125,8 @@ static func set_initial_level(entity: Entity, target_level: int):
 	for i in range(levels_to_gain):
 		process_level_up(entity)
 	
+	entity.skill_points = target_level * (3 if entity.is_character else 2)
 	if not entity.is_character:
-		entity.skill_points = target_level * 2
 		_auto_upgrade_monster(entity)
 		
 	entity.current_exp = 0

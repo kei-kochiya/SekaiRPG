@@ -43,10 +43,10 @@ var skills: Array = []
 var active_statuses: Array = []
 var cooldowns: Dictionary = {}
 var stat_caps: Dictionary = {
-	"max_hp": 2000,
-	"atk": 500,
-	"defense": 300,
-	"spd": 250
+	"max_hp": 30000,
+	"atk": 15000,
+	"defense": 8000,
+	"spd": 2000
 }
 
 # ── Phương thức chiến đấu cốt lõi ───────────────────────────────────────────

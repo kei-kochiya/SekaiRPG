@@ -114,7 +114,7 @@ func _build_ui():
 	var close_btn = Button.new()
 	close_btn.text = " ĐÓNG "
 	close_btn.size_flags_horizontal = Control.SIZE_SHRINK_END
-	close_btn.pressed.connect(func(): 
+	close_btn.pressed.connect(func():
 		visible = false
 		GameManager.end_dialogue()
 		closed.emit()
@@ -174,20 +174,34 @@ func _refresh_all():
 		val_lbl.custom_minimum_size = Vector2(60, 0)
 		row.add_child(val_lbl)
 		
-		var plus_btn = Button.new()
-		plus_btn.text = " + "
-		var pns = StyleBoxTexture.new()
-		pns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
-		pns.texture_margin_left = 6; pns.texture_margin_right = 6
-		pns.texture_margin_top = 6; pns.texture_margin_bottom = 10
-		plus_btn.add_theme_stylebox_override("normal", pns)
-		plus_btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+		# Nút nâng cấp
+		var btn_container = HBoxContainer.new()
+		btn_container.add_theme_constant_override("separation", 4)
+		row.add_child(btn_container)
 		
-		plus_btn.pressed.connect(func():
-			if UpgradeManager.upgrade_stat(entity, stat):
-				_refresh_all()
-		)
-		row.add_child(plus_btn)
+		# Hàm tạo nút helper
+		var create_up_btn = func(label: String, count: int):
+			var b = Button.new()
+			b.text = label
+			var bns = StyleBoxTexture.new()
+			bns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+			bns.texture_margin_left = 6; bns.texture_margin_right = 6
+			bns.texture_margin_top = 6; bns.texture_margin_bottom = 10
+			b.add_theme_stylebox_override("normal", bns)
+			b.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+			b.add_theme_font_size_override("font_size", 11)
+			b.pressed.connect(func():
+				if count == 1:
+					if UpgradeManager.upgrade_stat(entity, stat): _refresh_all()
+				else:
+					if UpgradeManager.bulk_upgrade(entity, stat, count) > 0: _refresh_all()
+			)
+			return b
+			
+		btn_container.add_child(create_up_btn.call("+1", 1))
+		btn_container.add_child(create_up_btn.call("+10", 10))
+		btn_container.add_child(create_up_btn.call("+25", 25))
+		btn_container.add_child(create_up_btn.call("MAX", 999))
 		
 		var inc_lbl = Label.new()
 		inc_lbl.text = "(+%d)" % UpgradeManager.UPGRADE_AMOUNTS[stat]

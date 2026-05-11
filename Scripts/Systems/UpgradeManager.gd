@@ -62,3 +62,24 @@ static func upgrade_stat(entity: Entity, stat_name: String) -> bool:
 		entity.current_hp = min(entity.current_hp + actual_increment, entity.max_hp)
 		
 	return true
+
+
+static func bulk_upgrade(entity: Entity, stat_name: String, count: int) -> int:
+	"""
+	Thực hiện nâng cấp hàng loạt một chỉ số.
+	
+	Args:
+		entity (Entity): Thực thể cần nâng cấp.
+		stat_name (String): Tên chỉ số.
+		count (int): Số lần muốn nâng (999 để nâng tối đa có thể).
+		
+	Returns:
+		int: Số lần đã nâng cấp thành công.
+	"""
+	var upgrades_done = 0
+	for i in range(count):
+		if upgrade_stat(entity, stat_name):
+			upgrades_done += 1
+		else:
+			break
+	return upgrades_done
