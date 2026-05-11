@@ -37,11 +37,7 @@ func _ready():
 	_init_party()
 
 func _init_party():
-	"""
-	Khởi tạo các đối tượng nhân vật chính trong đội hình mặc định.
-	
-	Thiết lập các thuộc tính cơ bản và cấp độ khởi đầu cho từng thành viên.
-	"""
+	# Khởi tạo các đối tượng nhân vật chính và cấp độ ban đầu cho đội hình.
 	party["Ichika"] = Ichika.new()
 	party["Kanade"] = Kanade.new()
 	party["Mafuyu"] = Mafuyu.new()
@@ -76,26 +72,11 @@ var harbor_route: String:
 	set(v): story.harbor_route = v
 
 func set_flag(id: String, value: Variant):
-	"""
-	Ghi đè một cờ trạng thái (flag) trong hệ thống StoryState.
-	
-	Args:
-		id (String): Tên định danh của cờ.
-		value (Variant): Giá trị cần lưu (thường là bool, int hoặc String).
-	"""
+	# Ghi đè một cờ trạng thái (flag) trong hệ thống StoryState.
 	story.set_flag(id, value)
 
 func get_flag(id: String, default: Variant = false) -> Variant:
-	"""
-	Lấy giá trị của một cờ trạng thái từ StoryState.
-	
-	Args:
-		id (String): Tên định danh của cờ.
-		default (Variant): Giá trị mặc định nếu không tìm thấy cờ.
-		
-	Returns:
-		Variant: Giá trị hiện tại của cờ hoặc giá trị mặc định.
-	"""
+	# Lấy giá trị của một cờ trạng thái từ StoryState.
 	return story.get_flag(id, default)
 
 var prologue_phase: int: 
@@ -157,23 +138,15 @@ var harbor_mizuki_snack_done: bool:
 # ── Logic Điều khiển ───────────────────────────────────────────────────────
 
 func get_party_member(m_name: String) -> Entity:
-	"""
-	Lấy đối tượng thành viên đội hình theo tên.
-	
-	Args:
-		m_name (String): Tên nhân vật (ví dụ: 'Ichika').
-		
-	Returns:
-		Entity: Đối tượng thực thể nhân vật hoặc null nếu không tồn tại.
-	"""
+	# Lấy đối tượng thành viên đội hình theo tên.
 	return party.get(m_name)
 
 func start_dialogue():
-	"""Bắt đầu trạng thái hội thoại, tạm dừng các hành động Overworld."""
+	# Bắt đầu trạng thái hội thoại.
 	is_in_dialogue = true
 
 func end_dialogue():
-	"""Kết thúc trạng thái hội thoại."""
+	# Kết thúc trạng thái hội thoại.
 	is_in_dialogue = false
 
 # ── Hệ thống Save/Load ─────────────────────────────────────────────────────
@@ -182,10 +155,8 @@ const SAVE_PATH = "user://sekai_save.json"
 
 func save_game():
 	"""
-	Lưu toàn bộ trạng thái trò chơi hiện tại vào file JSON.
-	
-	Dữ liệu bao gồm: Bản đồ hiện tại, vị trí người chơi, các cờ cốt truyện 
-	và chỉ số chi tiết của toàn bộ thành viên trong đội hình.
+	Hàm này thực hiện lưu toàn bộ dữ liệu game (map, vị trí, story, party) vào file.
+	- Return: Không có.
 	"""
 	var save_data = {
 		"current_map": current_map_file,
@@ -211,13 +182,8 @@ func save_game():
 
 func load_game() -> bool:
 	"""
-	Tải dữ liệu từ file save và khôi phục trạng thái trò chơi.
-	
-	Giải mã JSON, khôi phục story flags và cập nhật lại chỉ số thực thể. 
-	Sau đó chuyển cảnh đến bản đồ đã lưu.
-	
-	Returns:
-		bool: True nếu nạp dữ liệu thành công, False nếu file lỗi hoặc không tồn tại.
+	Hàm này thực hiện nạp dữ liệu từ file save và khôi phục trạng thái game.
+	- Return: True nếu nạp thành công, ngược lại False (bool).
 	"""
 	if not FileAccess.file_exists(SAVE_PATH): return false
 	
@@ -254,39 +220,36 @@ func load_game() -> bool:
 	return true
 
 func has_save() -> bool:
-	"""Kiểm tra sự tồn tại của file save."""
+	# Kiểm tra sự tồn tại của file save.
 	return FileAccess.file_exists(SAVE_PATH)
 
 func reset_game():
-	"""
-	Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới (New Game).
-	"""
+	# Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới.
 	story.reset()
 	last_player_position = Vector2.ZERO
 	current_map_file = "res://Scenes/PrologueMap.tscn"
 	_init_party()
 
 func store_map_state(map_path: String, player_pos: Vector2):
-	"""Ghi nhớ bản đồ và vị trí hiện tại của người chơi."""
+	# Ghi nhớ bản đồ và vị trí hiện tại của người chơi.
 	current_map_file = map_path
 	last_player_position = player_pos
 
 func reset_mission_stats():
-	"""Đặt lại bộ đếm kẻ địch bị hạ gục (dùng cho nhiệm vụ)."""
+	# Đặt lại bộ đếm kẻ địch bị hạ gục.
 	story.enemies_defeated = 0
 
 func trigger_battle():
-	"""Chuyển cảnh đến màn hình chiến đấu."""
+	# Chuyển cảnh đến màn hình chiến đấu.
 	AudioManager.play_music("battle")
 	get_tree().change_scene_to_file("res://Scenes/BattleScene.tscn")
 
 func finish_battle(victory: bool, count: int = 1):
 	"""
-	Xử lý các logic hậu chiến (EXP, Story Flags, chuyển cảnh về Map).
-	
-	Args:
-		victory (bool): Trạng thái thắng/thua của trận đấu.
-		count (int): Số lượng kẻ địch đã hạ gục để cập nhật bộ đếm.
+	Hàm này xử lý các logic sau trận đấu như phân phối EXP và cập nhật cốt truyện.
+	- victory: Thắng hay thua (bool).
+	- count: Số lượng địch bị hạ (int).
+	- Return: Không có.
 	"""
 	if is_sandbox:
 		get_tree().change_scene_to_file("res://Scenes/SandboxMenu.tscn")

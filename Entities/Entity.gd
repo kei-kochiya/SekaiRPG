@@ -53,14 +53,10 @@ var stat_caps: Dictionary = {
 
 func take_damage(amount: int, damage_type: String = "physical") -> bool:
 	"""
-	Xử lý logic khi thực thể nhận sát thương từ các nguồn.
-
-	Args:
-		amount (int): Lượng sát thương nhận vào.
-		damage_type (String): Loại sát thương (ví dụ: 'physical', 'pure', 'dot').
-
-	Returns:
-		bool: True nếu thực thể bị hạ gục (HP về 0), ngược lại False.
+	Xử lý việc thực thể nhận sát thương và kiểm tra còn sống.
+	- amount: Lượng sát thương nhận vào (int).
+	- damage_type: Loại sát thương (String - 'physical', 'pure', 'dot').
+	- Return: True nếu thực thể chết (HP = 0), ngược lại False (bool).
 	"""
 	current_hp -= amount
 	current_hp = clamp(current_hp, 0, max_hp)
@@ -75,13 +71,9 @@ func take_damage(amount: int, damage_type: String = "physical") -> bool:
 
 func heal(amount: int):
 	"""
-	Hồi phục máu cho thực thể. 
-
-	Hàm này đảm bảo không hồi máu vượt quá max_hp và chỉ có tác dụng 
-	khi thực thể còn sống.
-
-	Args:
-		amount (int): Lượng máu muốn hồi phục.
+	Hồi phục HP cho thực thể nếu còn sống.
+	- amount: Lượng máu hồi phục (int).
+	- Return: Không có.
 	"""
 	if current_hp <= 0: return
 	var actual = min(amount, max_hp - current_hp)
@@ -94,36 +86,67 @@ func heal(amount: int):
 
 func add_status(status: Dictionary):
 	"""
-	Áp dụng một hiệu ứng trạng thái mới lên thực thể.
-
-	Args:
-		status (Dictionary): Chứa thông tin hiệu ứng (type, duration, percent...).
+	Thêm hiệu ứng trạng thái mới và xử lý logic cộng dồn/ghi đè.
+	- status: Dictionary chứa thông tin hiệu ứng (type, duration...).
+	- Return: Không có.
 	"""
+	var type_name = status.get("type", "Unknown")
+	
+	if type_name == "Poison":
+		for s in active_statuses:
+			if s["type"] == "Poison":
+				s["duration"] = status["duration"]
+				status_changed.emit(active_statuses.duplicate())
+				return
+	
+	if type_name == "Bleed":
+		var bleed_count = get_status_count("Bleed")
+		if bleed_count >= 5:
+			# Tìm stack có duration thấp nhất để thay thế hoặc đơn giản là không thêm
+			# Ở đây ta chọn không thêm nếu đã đạt tối đa 5 stack
+			return
+			
 	active_statuses.append(status)
 	status_changed.emit(active_statuses.duplicate())
 
 func remove_statuses(to_remove: Array):
-	"""
-	Loại bỏ danh sách các hiệu ứng trạng thái khỏi thực thể.
-
-	Args:
-		to_remove (Array): Danh sách các Dictionary hiệu ứng cần loại bỏ.
-	"""
+	# Xóa danh sách các hiệu ứng trạng thái khỏi thực thể.
 	for s in to_remove:
 		active_statuses.erase(s)
 	if not to_remove.is_empty():
 		status_changed.emit(active_statuses.duplicate())
 
+func get_status_count(type_name: String) -> int:
+	# Trả về số lượng stack hiện có của một loại trạng thái.
+	var count = 0
+	for s in active_statuses:
+		if s["type"] == type_name:
+			count += 1
+	return count
+
+func remove_all_status_type(type_name: String):
+	# Xóa sạch toàn bộ các stack của một loại trạng thái cụ thể.
+	var to_remove = []
+	for s in active_statuses:
+		if s["type"] == type_name:
+			to_remove.append(s)
+	remove_statuses(to_remove)
+
+func clear_all_debuffs():
+	# Thanh tẩy toàn bộ các hiệu ứng xấu (Bleed, Poison, Stun).
+	var debuffs = ["Bleed", "Poison", "Stun"]
+	var to_remove = []
+	for s in active_statuses:
+		if s["type"] in debuffs:
+			to_remove.append(s)
+	remove_statuses(to_remove)
+
 # ── Kiểm tra khả năng sử dụng kỹ năng ───────────────────────────────────────
 
 func can_use_skill(skill_name: String) -> bool:
 	"""
-	Kiểm tra xem một kỹ năng cụ thể có đang trong thời gian hồi chiêu hay không.
-
-	Args:
-		skill_name (String): Tên định danh (method) của kỹ năng cần kiểm tra.
-
-	Returns:
-		bool: True nếu kỹ năng sẵn sàng sử dụng, ngược lại False.
+	Kiểm tra kỹ năng có sẵn sàng để sử dụng hay không.
+	- skill_name: Tên kỹ năng cần kiểm tra (String).
+	- Return: True nếu dùng được, ngược lại False (bool).
 	"""
-	return CooldownManager.is_skill_ready(self, skill_name)
+	return CooldownManager.is_skill_ready(self , skill_name)

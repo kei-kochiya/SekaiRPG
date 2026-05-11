@@ -13,31 +13,19 @@ const BASE_VALUE = 10000.0
 
 static func get_action_value(spd: int) -> float:
 	"""
-	Tính toán Action Value cơ bản dựa trên chỉ số tốc độ.
-	
-	Args:
-		spd (int): Chỉ số tốc độ (SPD) của thực thể.
-		
-	Returns:
-		float: Giá trị Action Value. Số càng thấp thì lượt đến càng nhanh.
+	Hàm này tính toán Action Value (AV) dựa trên chỉ số tốc độ (SPD).
+	- spd: Chỉ số tốc độ của thực thể (int).
+	- Return: Giá trị AV (float). Số càng thấp lượt đến càng nhanh.
 	"""
 	if spd <= 0: return 10000.0
 	return BASE_VALUE / spd
 
 static func get_timeline(entities: Array, depth: int = 20) -> Array:
 	"""
-	Tạo danh sách dòng thời gian các lượt đánh sắp tới.
-	
-	Sử dụng thuật toán tích lũy AV để dự đoán thứ tự. Nếu hai thực thể có 
-	cùng tick thời gian, instance_id sẽ được dùng làm tiêu chí phụ để đảm bảo 
-	thứ tự không bị thay đổi ngẫu nhiên.
-	
-	Args:
-		entities (Array): Danh sách các thực thể đang tham chiến.
-		depth (int): Số lượng lượt dự báo tối đa cần trả về.
-		
-	Returns:
-		Array: Mảng các Dictionary chứa 'entity' và 'tick'.
+	Hàm này tạo ra danh sách dự báo các lượt đánh trong tương lai.
+	- entities: Danh sách các thực thể đang tham chiến (Array).
+	- depth: Số lượng lượt cần dự báo (int).
+	- Return: Mảng chứa thông tin thực thể và thời điểm đến lượt (Array).
 	"""
 	if entities.is_empty(): return []
 		
@@ -61,14 +49,10 @@ static func get_timeline(entities: Array, depth: int = 20) -> Array:
 
 static func remove_dead_from_timeline(timeline: Array, dead_entity: Entity) -> Array:
 	"""
-	Loại bỏ toàn bộ các lượt dự kiến của một thực thể vừa bị hạ gục.
-	
-	Args:
-		timeline (Array): Danh sách timeline hiện tại.
-		dead_entity (Entity): Thực thể cần loại bỏ.
-		
-	Returns:
-		Array: Danh sách timeline mới đã được lọc sạch.
+	Hàm này lọc bỏ các lượt của một thực thể đã bị hạ gục khỏi dòng thời gian.
+	- timeline: Danh sách lượt hiện tại (Array).
+	- dead_entity: Thực thể vừa chết (Entity).
+	- Return: Danh sách lượt mới sau khi lọc (Array).
 	"""
 	var updated_timeline = []
 	for turn in timeline:

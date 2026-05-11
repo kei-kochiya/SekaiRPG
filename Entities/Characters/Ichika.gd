@@ -2,7 +2,7 @@ extends Entity
 class_name Ichika
 
 """
-Ichika: Nhân vật hệ Cool, thiên hướng sát thương vật lý mạnh và kỹ năng tự tổn hại.
+Ichika: Nhân vật hệ Pure, thiên hướng sát thương vật lý mạnh và kỹ năng tự tổn hại.
 
 Lối chơi của Ichika tập trung vào việc gây sát thương lớn và áp dụng hiệu ứng 
 Chảy máu (Bleed). Tuyệt kỹ của cô có khả năng bỏ qua phòng thủ nhưng đổi lại 
@@ -10,6 +10,7 @@ bằng việc tiêu tốn sinh lực của bản thân.
 """
 
 func _init():
+	# Khởi tạo chỉ số cơ bản cho Ichika.
 	entity_name = "Ichika"
 	max_hp = 175
 	current_hp = 175
@@ -17,81 +18,59 @@ func _init():
 	defense = 80
 	res = 20
 	spd = 100
-	type = "Cool"
+	type = "Pure"
 	is_character = true
 	
 	skills = [
-		{"name": "Chém Kim Loại", "method": "metal_cut", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh lên một mục tiêu.\nTỷ lệ: 150% ATK."},
-		{"name": "Lưỡi Đao Rỉ Máu", "method": "bleeding_edge", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và áp dụng trạng thái Chảy máu (Bleed) trong 3 lượt.\nTỷ lệ: 100% ATK."},
-		{"name": "Ảnh Sát", "method": "shadow_blade", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương bỏ qua phòng thủ (Pure DMG).\nTiêu tốn 15% HP hiện tại. Tỷ lệ: 300% ATK."},
+		{"name": "Xuyên Tâm Kích", "method": "piercing_chord", "cooldown_turns": 2, "target": "enemy", "details": "Lướt nhanh và đâm xuyên mục tiêu. Gây DMG và 1 stack Bleed."},
+		{"name": "Âm Vang Đồng Điệu", "method": "resonant_edge", "cooldown_turns": 3, "target": "self", "details": "Tăng 40 SPD và cập nhật thứ tự hành động."},
+		{"name": "Ảnh Sát", "method": "shadow_strike", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Chém chí mạng. Kích nổ tất cả stack Bleed để gây thêm Sát thương chuẩn (True Damage)."},
 	]
 
 func can_use_skill(skill_name: String) -> bool:
+	# Kiểm tra điều kiện thời gian hồi chiêu của kỹ năng.
+	return CooldownManager.is_skill_ready(self , skill_name)
+
+func piercing_chord(target: Entity):
 	"""
-	Kiểm tra điều kiện đặc biệt để sử dụng kỹ năng của Ichika.
-
-	Ngoài thời gian hồi chiêu, kỹ năng [Ảnh Sát] yêu cầu Ichika phải 
-	còn nhiều hơn 1 HP để kích hoạt.
-
-	Args:
-		skill_name (String): Tên định danh kỹ năng.
-
-	Returns:
-		bool: True nếu đủ điều kiện sử dụng, ngược lại False.
+	Kỹ năng tấn công đơn mục tiêu và gây hiệu ứng Chảy máu.
+	- target: Thực thể nhận đòn (Entity).
+	- Return: Không có.
 	"""
-	if not CooldownManager.is_skill_ready(self , skill_name):
-		return false
-	if skill_name == "shadow_blade" and current_hp <= 1:
-		return false
-	return true
-
-func metal_cut(target: Entity):
-	"""
-	[Chém Kim Loại]: Kỹ năng tấn công đơn mục tiêu mạnh.
-
-	Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
-	print(entity_name, " sử dụng [Chém Kim Loại]!")
-	var raw_dmg = DamageCalculator.calculate_damage(self , target)
-	var scaled_dmg = int(raw_dmg * 1.5)
-	target.take_damage(scaled_dmg)
-
-func bleeding_edge(target: Entity):
-	"""
-	[Lưỡi Đao Rỉ Máu]: Tấn công và gây hiệu ứng xấu.
-
-	Gây sát thương vật lý và áp dụng trạng thái Chảy máu (Bleed) 
-	lên mục tiêu trong 3 lượt.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
-	print(entity_name, " sử dụng [Lưỡi Đao Rỉ Máu]!")
+	print(entity_name, " sử dụng [Xuyên Tâm Kích] lên ", target.entity_name)
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
-func shadow_blade(target: Entity):
-	"""
-	[Ảnh Sát]: Tuyệt kỹ cực hạn của Ichika.
+func resonant_edge(_target: Entity):
+	# Tăng chỉ số Tốc độ (SPD) cho bản thân.
+	print(entity_name, " kích hoạt [Âm Vang Đồng Điệu]! Tăng tốc độ.")
+	self.spd += 40
+	self.spd = min(self.spd, stat_caps["spd"])
 
-	Giải phóng đòn tấn công cực mạnh gây sát thương thuần (Pure Damage) 
-	bằng 300% ATK, bỏ qua DEF và RES. Đổi lại, Ichika tự gây sát thương 
-	lên bản thân bằng 35% HP hiện tại (không gây chết người).
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
+func shadow_strike(target: Entity):
 	"""
-	if current_hp <= 1:
-		return
+	Tuyệt kỹ gây sát thương lớn, kích nổ Bleed và tiêu tốn HP bản thân.
+	- target: Thực thể nhận đòn (Entity).
+	- Return: Không có.
+	"""
+	print(entity_name, " tung chiêu [Ảnh Sát] vào ", target.entity_name, "!")
 	
-	print(entity_name, " giải phóng [Ảnh Sát] cực hạn!")
-	var massive_dmg = self.atk * 3
-	var self_dmg = int(self.current_hp * 0.35)
-	self_dmg = min(self_dmg, current_hp - 1)
+	var base_dmg = DamageCalculator.calculate_damage(self , target)
+	var crit_dmg = int(base_dmg * 2.0)
+	target.take_damage(crit_dmg)
 	
-	target.take_damage(massive_dmg, "pure")
-	self.take_damage(self_dmg, "pure")
+	var bleed_count = target.get_status_count("Bleed")
+	if bleed_count > 0:
+		var detonate_dmg = int(target.max_hp * 0.15 * bleed_count)
+		print("Kích nổ ", bleed_count, " stack Bleed! Gây ", detonate_dmg, " True Damage.")
+		target.take_damage(detonate_dmg, "pure")
+		target.remove_all_status_type("Bleed")
+	
+	var self_dmg = int(self.max_hp * 0.5)
+	if self.current_hp <= self_dmg:
+		self_dmg = self.current_hp - 1
+	
+	if self_dmg > 0:
+		print(entity_name, " tự gây sát thương lên bản thân: ", self_dmg)
+		self.take_damage(self_dmg, "pure")

@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://djov6oby4wulp"
-valid=false
+path="res://.godot/imported/poison.png-d196a37c1de43b7c4406d8d5b165b45b.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://Art/Icons/poison.png"
+dest_files=["res://.godot/imported/poison.png-d196a37c1de43b7c4406d8d5b165b45b.ctex"]
 
 [params]
 

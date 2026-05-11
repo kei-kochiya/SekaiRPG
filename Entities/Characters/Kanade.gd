@@ -2,7 +2,7 @@ extends Entity
 class_name Kanade
 
 """
-Kanade: Nhân vật hệ Happy, thiên hướng sát thương bùng nổ nhưng phòng thủ thấp.
+Kanade: Nhân vật hệ Cool, thiên hướng sát thương bùng nổ nhưng phòng thủ thấp.
 
 Lối chơi của Kanade tập trung vào việc gây sát thương lớn và khống chế (Stun). 
 Cô có khả năng đặc biệt giúp chuyển hướng một phần sát thương sang đồng minh 
@@ -17,13 +17,13 @@ func _init():
 	defense = 30
 	res = 5
 	spd = 90
-	type = "Happy"
+	type = "Cool"
 	is_character = true
 	
 	skills = [
-		{"name": "Cộng Hưởng", "method": "resonance", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
+		{"name": "Tuyệt Âm Phân Rã", "method": "resonance", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
 		{"name": "Giọng Ca Vô Thanh", "method": "soundless_voice", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và Làm choáng (Stun) trong 1 lượt.\nTỷ lệ: 100% ATK."},
-		{"name": "Khúc Ca Cứu Rỗi", "method": "salvation_song", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương diện rộng xuyên thấu (Pure DMG) và Làm choáng 2 lượt.\nTỷ lệ: 350% ATK."},
+		{"name": "Final Requiem", "method": "salvation_song", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương diện rộng xuyên thấu (Pure DMG) và Làm choáng 2 lượt.\nTỷ lệ: 350% ATK."},
 	]
 
 func resonance(target: Entity):
@@ -35,7 +35,7 @@ func resonance(target: Entity):
 	Args:
 		target (Entity): Mục tiêu chịu đòn.
 	"""
-	print(entity_name, " ngân lên [Cộng Hưởng]!")
+	print(entity_name, " ngân lên [Tuyệt Âm Phân Rã]!")
 	var raw_dmg = DamageCalculator.calculate_damage(self , target)
 	var scaled_dmg = int(raw_dmg * 1.5)
 	target.take_damage(scaled_dmg)
@@ -64,7 +64,7 @@ func salvation_song(target: Entity):
 	Args:
 		target (Entity): Mục tiêu chịu đòn.
 	"""
-	print(entity_name, " cất tiếng hát [Khúc Ca Cứu Rỗi]!")
+	print(entity_name, " bùng nổ với [Final Requiem]!")
 	var multiplier = TypeChart.get_multiplier(self.type, target.type)
 	var massive_dmg = int(self.atk * 3.5 * multiplier)
 	

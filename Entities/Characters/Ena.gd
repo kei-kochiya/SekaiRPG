@@ -20,9 +20,9 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Nét Vẽ Chi Vi", "method": "brush_stroke", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
-		{"name": "Lời Phê Bình Độc Hại", "method": "toxic_criticism", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Trúng độc (Poison) trong 3 lượt.\nTỷ lệ: 100% ATK."},
-		{"name": "Kiệt Tác", "method": "masterpiece", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương xuyên thấu cực lớn, gây Poison và hồi máu cho đồng đội yếu nhất.\nTỷ lệ: 250% ATK (Sát thương) / 150% ATK (Hồi máu)."},
+		{"name": "Nét Cọ Tàn Nhẫn", "method": "brush_stroke", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
+		{"name": "Bức Tranh Độc Đáo", "method": "toxic_criticism", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Trúng độc (Poison) trong 3 lượt.\nTỷ lệ: 100% ATK."},
+		{"name": "Kiệt Tác Dang Dở", "method": "masterpiece", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương xuyên thấu cực lớn, gây Poison và hồi máu cho đồng đội yếu nhất.\nTỷ lệ: 250% ATK (Sát thương) / 150% ATK (Hồi máu)."},
 	]
 
 func brush_stroke(target: Entity):
@@ -34,8 +34,8 @@ func brush_stroke(target: Entity):
 	Args:
 		target (Entity): Mục tiêu chịu đòn.
 	"""
-	print(entity_name, " vung [Nét Vẽ Chi Vi]!")
-	var raw_dmg = DamageCalculator.calculate_damage(self, target)
+	print(entity_name, " vung [Nét Cọ Tàn Nhẫn]!")
+	var raw_dmg = DamageCalculator.calculate_damage(self , target)
 	var scaled_dmg = int(raw_dmg * 1.5)
 	target.take_damage(scaled_dmg)
 
@@ -49,8 +49,8 @@ func toxic_criticism(target: Entity):
 	Args:
 		target (Entity): Mục tiêu chịu đòn.
 	"""
-	print(entity_name, " tung ra [Lời Phê Bình Độc Hại]!")
-	var dmg = DamageCalculator.calculate_damage(self, target)
+	print(entity_name, " tung ra [Bức Tranh Độc Đáo]!")
+	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Poison", "duration": 3, "percent": 0.15})
 
@@ -65,7 +65,7 @@ func masterpiece(target: Entity):
 	Args:
 		target (Entity): Mục tiêu chịu đòn.
 	"""
-	print(entity_name, " hoàn thành [Kiệt Tác]!")
+	print(entity_name, " hoàn thành [Kiệt Tác Dang Dở]!")
 	var multiplier = TypeChart.get_multiplier(self.type, target.type)
 	var massive_dmg = int(self.atk * 2.5 * multiplier)
 	

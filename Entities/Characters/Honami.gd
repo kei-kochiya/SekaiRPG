@@ -13,83 +13,72 @@ Cô sở hữu khả năng hồi phục mạnh mẽ cho cả đơn mục tiêu v
 
 func _init():
 	entity_name = "Honami"
-	max_hp = 400
-	current_hp = 400
-	atk = 110
-	defense = 120
-	res = 40
-	spd = 95
+	max_hp = 600 # HP cao
+	current_hp = 600
+	atk = 90 # DMG thấp
+	defense = 140
+	res = 50
+	spd = 90
 	type = "Pure"
 	is_character = true
 	
 	skills = [
-		{"name": "Nhát Chém Dịu Dàng", "method": "gentle_strike", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
-		{"name": "Làn Gió Thanh Tẩy", "method": "cleansing_breeze", "cooldown_turns": 3, "target": "ally", "details": "Hồi máu cho một đồng đội và xóa bỏ một hiệu ứng xấu ngẫu nhiên.\nTỷ lệ: 100% ATK."},
-		{"name": "Giai Điệu Hồi Phục", "method": "healing_harmony", "cooldown_turns": 4, "target": "all_allies", "details": "Hồi máu cho toàn bộ đồng đội.\nTỷ lệ: 120% ATK."},
+		{"name": "Vệt Cắt Xót Thương", "method": "merciful_cleave", "cooldown_turns": 2, "target": "all_enemies", "details": "Vung vũ khí hình bán nguyệt, gây sát thương AoE lên toàn bộ kẻ địch."},
+		{"name": "Điểm Tựa Vững Chắc", "method": "rearguard_stance", "cooldown_turns": 3, "target": "ally", "details": "Xóa toàn bộ debuff cho bản thân và 1 đồng minh, sau đó hồi máu cho cả hai."},
+		{"name": "Án Tử Bình Yên", "method": "painless_execution", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Đập tan mục tiêu, bỏ qua 50% DEF. Hồi máu toàn đội dựa trên kết quả."},
 	]
 
 func take_damage(amount: int, damage_type: String = "physical") -> bool:
-	"""
-	Xử lý nhận sát thương với cơ chế Bất tử (Invulnerability) theo kịch bản.
-
-	Trong sự kiện tại Cảng (Harbor), Honami sẽ không nhận bất kỳ sát thương nào 
-	để đảm bảo tiến trình kịch bản.
-
-	Args:
-		amount (int): Lượng sát thương gốc.
-		damage_type (String): Loại sát thương.
-
-	Returns:
-		bool: Luôn trả về False nếu đang trong trạng thái bất tử.
-	"""
 	if is_harbor:
 		damage_received.emit(0, damage_type)
 		return false
 	return super.take_damage(amount, damage_type)
 
-func gentle_strike(target: Entity):
+func merciful_cleave(_target: Entity):
 	"""
-	[Nhát Chém Dịu Dàng]: Tấn công đơn mục tiêu cơ bản.
-
-	Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
+	[Vệt Cắt Xót Thương]: Sát thương AoE.
 	"""
-	print(entity_name, " sử dụng [Nhát Chém Dịu Dàng]!")
-	var raw_dmg = DamageCalculator.calculate_damage(self, target)
-	var scaled_dmg = int(raw_dmg * 1.5)
-	target.take_damage(scaled_dmg)
+	print(entity_name, " vung vũ khí: [Vệt Cắt Xót Thương]!")
+	for enemy in enemies:
+		if enemy.current_hp > 0:
+			var dmg = DamageCalculator.calculate_damage(self , enemy)
+			enemy.take_damage(int(dmg * 0.8)) # Giảm chút dmg vì là AoE
 
-func cleansing_breeze(target: Entity):
+func rearguard_stance(target: Entity):
 	"""
-	[Làn Gió Thanh Tẩy]: Hồi phục và thanh tẩy đơn mục tiêu.
-
-	Hồi phục máu tương đương 100% ATK và tự động xóa bỏ một 
-	hiệu ứng trạng thái xấu ngẫu nhiên trên mục tiêu.
-
-	Args:
-		target (Entity): Đồng minh cần hỗ trợ.
+	[Điểm Tựa Vững Chắc]: Xóa debuff và hồi máu.
 	"""
-	print(entity_name, " sử dụng [Làn Gió Thanh Tẩy]!")
-	var heal_amount = int(self.atk * 1.0)
-	target.heal(heal_amount)
+	print(entity_name, " thiết lập [Điểm Tựa Vững Chắc] cho ", target.entity_name)
 	
-	if not target.active_statuses.is_empty():
-		var status = target.active_statuses.pick_random()
-		target.remove_statuses([status])
+	# Xóa debuff cho bản thân và đồng minh
+	self.clear_all_debuffs()
+	target.clear_all_debuffs()
+	
+	# Hồi máu (30% HP tối đa của Honami)
+	var heal_amount = int(self.max_hp * 0.3)
+	self.heal(heal_amount)
+	target.heal(heal_amount)
 
-func healing_harmony(_target: Entity):
+func painless_execution(target: Entity):
 	"""
-	[Giai Điệu Hồi Phục]: Tuyệt kỹ hồi phục diện rộng của Honami.
-
-	Hồi phục máu cho toàn bộ đồng minh còn sống một lượng tương đương 120% ATK.
-
-	Args:
-		_target (Entity): Tham số không sử dụng (tác động toàn đội ta).
+	[Án Tử Bình Yên]: Sát thương xuyên giáp và hồi máu toàn đội.
 	"""
-	print(entity_name, " sử dụng [Giai Điệu Hồi Phục]!")
-	var heal_amount = int(self.atk * 1.2)
-	for ally in allies:
-		if ally.current_hp > 0:
-			ally.heal(heal_amount)
+	print(entity_name, " giáng xuống [Án Tử Bình Yên]!")
+	
+	# Tính toán sát thương bỏ qua 50% DEF
+	var original_def = target.defense
+	target.defense = int(target.defense * 0.5)
+	var dmg = DamageCalculator.calculate_damage(self , target)
+	target.defense = original_def # Trả lại DEF
+	
+	var killed = target.take_damage(dmg)
+	
+	if killed:
+		print("Kẻ địch gục ngã! Hồi 50% HP toàn đội.")
+		for ally in allies:
+			ally.heal(int(self.max_hp * 0.5))
+	else:
+		print("Kẻ địch còn sống. Gây Stun và hồi 25% HP toàn đội.")
+		target.add_status({"type": "Stun", "duration": 1})
+		for ally in allies:
+			ally.heal(int(self.max_hp * 0.25))

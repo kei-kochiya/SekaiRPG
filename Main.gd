@@ -65,11 +65,7 @@ func _ready():
 		run_battle()
 
 func _refresh_team_context():
-	"""
-	Cập nhật tham chiếu đồng minh và kẻ thù cho từng thực thể.
-	
-	Giúp các thực thể dễ dàng xác định đối tượng để thi triển kỹ năng hoặc AI.
-	"""
+	# Cập nhật tham chiếu đồng minh và kẻ thù cho từng thực thể.
 	for e in player_team:
 		e.allies = player_team
 		e.enemies = enemy_team
@@ -78,23 +74,18 @@ func _refresh_team_context():
 		e.enemies = player_team
 
 func _setup_gauge_teams():
-	"""
-	Thiết lập đội hình cho thanh hành động (Action Gauge).
-	"""
+	# Thiết lập đội hình cho thanh hành động (Action Gauge).
 	hud.action_gauge.set_player_team(player_team)
 
 func _show_tutorial():
-	"""
-	Hiển thị hướng dẫn chiến đấu cơ bản.
-	"""
+	# Hiển thị hướng dẫn chiến đấu cơ bản.
 	await BattleTutorial.run_tutorial(self)
 
 func run_battle():
 	"""
-	Vận hành vòng lặp chính của trận đấu.
-	
-	Quản lý việc lấy lượt từ Timeline, xử lý hiệu ứng trạng thái, 
-	phân phối EXP, và kiểm tra điều kiện kết thúc trận đấu.
+	Hàm này vận hành vòng lặp chính của trận đấu cho đến khi kết thúc.
+	- Tham số: Không có.
+	- Return: Không có (Sử dụng await).
 	"""
 	_regenerate_timeline()
 	
@@ -177,12 +168,7 @@ func run_battle():
 		GameManager.finish_battle(is_victory, enemy_count)
 
 func _player_turn(actor: Entity):
-	"""
-	Xử lý lượt đi của người chơi.
-	
-	Args:
-		actor (Entity): Thực thể phe ta đang thực hiện lượt.
-	"""
+	# Xử lý lượt đi của người chơi.
 	if GameManager.is_tutorial:
 		await _show_tutorial()
 
@@ -193,12 +179,7 @@ func _player_turn(actor: Entity):
 	_execute_action(actor, action, target)
 
 func _ai_turn(actor: Entity):
-	"""
-	Xử lý lượt đi của AI đối thủ.
-	
-	Args:
-		actor (Entity): Thực thể phe địch đang thực hiện lượt.
-	"""
+	# Xử lý lượt đi của AI đối thủ.
 	await get_tree().create_timer(0.5).timeout
 	
 	var decision = AIManager.pick_action(actor, actor.enemies, actor.allies, timeline)
@@ -212,12 +193,11 @@ func _ai_turn(actor: Entity):
 
 func _execute_action(actor: Entity, action: String, target: Entity):
 	"""
-	Thi triển hành động (tấn công hoặc kỹ năng) từ một thực thể lên mục tiêu.
-	
-	Args:
-		actor (Entity): Thực thể thực hiện hành động.
-		action (String): Tên kỹ năng hoặc phương thức hành động.
-		target (Entity): Thực thể chịu tác động.
+	Hàm này thực thi hành động tấn công hoặc kỹ năng lên mục tiêu.
+	- actor: Thực thể ra chiêu (Entity).
+	- action: Tên phương thức kỹ năng (String).
+	- target: Thực thể chịu đòn (Entity).
+	- Return: Không có.
 	"""
 	if action == "attack":
 		var dmg = DamageCalculator.calculate_damage(actor, target)
@@ -249,38 +229,21 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 		print("[Warning] ", actor.entity_name, " không có skill: ", action)
 
 func _regenerate_timeline():
-	"""
-	Tái tạo lại danh sách thứ tự lượt đi (Timeline).
-	"""
+	# Tái tạo lại danh sách thứ tự lượt đi (Timeline).
 	var alive = AIManager.get_alive_targets(all_entities)
 	timeline = TurnCalculator.get_timeline(alive, 20)
 	_update_gauge_display()
 
 func _update_gauge_display(current_actor: Entity = null):
-	"""
-	Cập nhật hiển thị của thanh hành động (Action Gauge).
-	"""
+	# Cập nhật hiển thị của thanh hành động (Action Gauge).
 	hud.action_gauge.refresh(timeline.slice(0, 10), current_actor)
 
 func _purge_dead_from_timeline(dead_entity: Entity):
-	"""
-	Loại bỏ các lượt dự kiến của một thực thể đã bị hạ gục.
-	
-	Args:
-		dead_entity (Entity): Thực thể cần loại bỏ khỏi timeline.
-	"""
+	# Loại bỏ các lượt dự kiến của một thực thể đã bị hạ gục.
 	timeline = TurnCalculator.remove_dead_from_timeline(timeline, dead_entity)
 
 func _get_entity(e_name: String) -> Entity:
-	"""
-	Tìm kiếm thực thể trong trận đấu theo tên.
-	
-	Args:
-		e_name (String): Tên thực thể cần tìm.
-		
-	Returns:
-		Entity: Đối tượng thực thể nếu tìm thấy, ngược lại trả về null.
-	"""
+	# Tìm kiếm thực thể trong trận đấu theo tên.
 	for entity in all_entities:
 		if entity.entity_name == e_name:
 			return entity
@@ -288,10 +251,9 @@ func _get_entity(e_name: String) -> Entity:
 
 func _on_entity_died(entity: Entity):
 	"""
-	Xử lý sự kiện khi một thực thể bị hạ gục.
-	
-	Args:
-		entity (Entity): Thực thể vừa bị hạ gục.
+	Hàm xử lý logic khi một thực thể trong trận đấu bị hạ gục.
+	- entity: Thực thể vừa chết (Entity).
+	- Return: Không có.
 	"""
 	print(">>> ", entity.entity_name, " đã bị hạ gục! <<<")
 	_purge_dead_from_timeline(entity)
@@ -306,10 +268,8 @@ func _on_entity_died(entity: Entity):
 
 func _check_battle_end() -> bool:
 	"""
-	Kiểm tra điều kiện kết thúc trận đấu (Thắng/Thua).
-	
-	Returns:
-		bool: True nếu trận đấu kết thúc, False nếu tiếp tục.
+	Hàm kiểm tra xem trận đấu đã kết thúc hay chưa và kết quả thắng/thua.
+	- Return: True nếu trận đấu kết thúc, False nếu tiếp tục (bool).
 	"""
 	if is_scripting: return false
 	
@@ -345,15 +305,7 @@ func _check_battle_end() -> bool:
 	return false
 
 func _names(team: Array) -> String:
-	"""
-	Chuyển đổi danh sách thực thể thành chuỗi tên (dùng cho debug).
-	
-	Args:
-		team (Array): Danh sách các thực thể.
-		
-	Returns:
-		String: Chuỗi tên các thực thể cách nhau bởi dấu phẩy.
-	"""
+	# Chuyển đổi danh sách thực thể thành chuỗi tên (dùng cho debug).
 	var n = []
 	for e in team:
 		n.append(e.entity_name)

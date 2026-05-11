@@ -20,53 +20,62 @@ func _init():
 	is_character = true
 	
 	skills = [
-		{"name": "Nhát Chém Bóng Tối", "method": "shadow_strike", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh lên một mục tiêu.\nTỷ lệ: 150% ATK."},
-		{"name": "Lời Nói Trống Rỗng", "method": "empty_words", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Chảy máu (Bleed) trong 3 lượt.\nTỷ lệ: 100% ATK."},
-		{"name": "Thế Giới Đã Mất", "method": "lost_world", "initial_cooldown": 5, "once_per_battle": true, "target": "all_enemies", "details": "Sát thương AoE xuyên thấu (Pure DMG) và gây Chảy máu diện rộng trong 4 lượt.\nTỷ lệ: 250% ATK."},
+		{"name": "Lưỡi Dao Vô Hồn", "method": "numb_blade", "cooldown_turns": 2, "target": "enemy", "details": "Phóng dao găm từ xa. Gây sát thương và 1 stack Bleed."},
+		{"name": "Vực Thẳm Vô Định", "method": "freezing_void", "cooldown_turns": 3, "target": "all_enemies", "details": "Gây DMG và 2 stack Bleed cho 2 kẻ địch bất kỳ."},
+		{"name": "Lost World", "method": "lost_world", "initial_cooldown": 5, "once_per_battle": true, "target": "all_enemies", "details": "Sát thương scale theo máu đã mất. Nếu có người sống sót, gây 2 stack Bleed cho cả 2 phe."},
 	]
 
-func shadow_strike(target: Entity):
+func numb_blade(target: Entity):
 	"""
-	[Nhát Chém Bóng Tối]: Tấn công đơn mục tiêu mạnh.
-
-	Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
+	[Lưỡi Dao Vô Hồn]: Sát thương đơn và 1 Bleed.
 	"""
-	print(entity_name, " sử dụng [Nhát Chém Bóng Tối]!")
-	var raw_dmg = DamageCalculator.calculate_damage(self , target)
-	var scaled_dmg = int(raw_dmg * 1.5)
-	target.take_damage(scaled_dmg)
-
-func empty_words(target: Entity):
-	"""
-	[Lời Nói Trống Rỗng]: Tấn công và gây hiệu ứng xấu.
-
-	Gây sát thương vật lý và áp dụng trạng thái Chảy máu (Bleed) trong 3 lượt.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
-	print(entity_name, " mấp máy [Lời Nói Trống Rỗng]...")
+	print(entity_name, " phóng [Lưỡi Dao Vô Hồn]!")
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
+func freezing_void(_target: Entity):
+	"""
+	[Vực Thẳm Vô Định]: Tấn công 2 kẻ địch ngẫu nhiên (hoặc 1 kẻ địch 2 lần).
+	"""
+	print(entity_name, " giải phóng [Vực Thẳm Vô Định]!")
+	var alive_enemies = []
+	for e in enemies:
+		if e.current_hp > 0: alive_enemies.append(e)
+	
+	if alive_enemies.is_empty(): return
+	
+	for i in range(2):
+		var target = alive_enemies.pick_random()
+		var dmg = DamageCalculator.calculate_damage(self , target)
+		target.take_damage(int(dmg * 0.7)) # Giảm sát thương mỗi hit
+		target.add_status({"type": "Bleed", "duration": 3})
+
 func lost_world(_target: Entity):
 	"""
-	[Thế Giới Đã Mất]: Tuyệt kỹ diện rộng (AoE) của Mafuyu.
-
-	Gây sát thương thuần (Pure Damage) lên toàn bộ kẻ địch (250% ATK) 
-	và áp dụng trạng thái Chảy máu (Bleed) diện rộng trong 4 lượt.
-
-	Args:
-		_target (Entity): Tham số không sử dụng (kỹ năng tác động toàn đội địch).
+	[Lost World]: Sát thương cực lớn dựa trên HP đã mất.
 	"""
-	print(entity_name, " kéo tất cả vào [Thế Giới Đã Mất]!")
+	print(entity_name, " kích hoạt [Lost World]...")
+	
+	var lost_hp_ratio = 1.0 - (float(current_hp) / max_hp)
+	var dmg_mult = 1.0 + (lost_hp_ratio * 2.0) # Tối đa x3 sát thương khi gần hết máu
+	
 	for e in enemies:
 		if e.current_hp > 0:
-			var multiplier = TypeChart.get_multiplier(self.type, e.type)
-			var massive_dmg = int(self.atk * 2.5 * multiplier)
-			e.take_damage(massive_dmg, "pure")
-			e.add_status({"type": "Bleed", "duration": 4})
+			var base_dmg = DamageCalculator.calculate_damage(self , e)
+			var final_dmg = int(base_dmg * dmg_mult)
+			e.take_damage(final_dmg, "pure")
+	
+	# Kiểm tra xem còn ai sống sót
+	var survivors = false
+	for e in enemies + allies:
+		if e.current_hp > 0:
+			survivors = true
+			break
+	
+	if survivors:
+		print("Vẫn còn kẻ sống sót... Bóng tối lan tỏa (2 Bleed stacks cho tất cả).")
+		for e in enemies + allies:
+			if e.current_hp > 0:
+				e.add_status({"type": "Bleed", "duration": 3})
+				e.add_status({"type": "Bleed", "duration": 3})

@@ -10,15 +10,7 @@ Sử dụng hệ thống Heuristic để đưa ra quyết định tối ưu.
 """
 
 static func get_alive_targets(team: Array) -> Array:
-	"""
-	Lấy danh sách các đơn vị còn sống trong một đội.
-
-	Args:
-		team (Array): Mảng chứa các đối tượng Entity của một phe.
-
-	Returns:
-		Array: Danh sách các Entity có current_hp > 0.
-	"""
+	# Lấy danh sách các đơn vị còn sống trong một đội.
 	var alive_units = []
 	for unit in team:
 		if unit.current_hp > 0:
@@ -27,21 +19,11 @@ static func get_alive_targets(team: Array) -> Array:
 
 static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) -> Entity:
 	"""
-	Chọn một mục tiêu từ đội đối phương dựa trên hệ thống tính điểm (Heuristic).
-
-	Các yếu tố ảnh hưởng đến điểm số bao gồm:
-	- Lợi thế hệ thuộc tính (Type Advantage): Ưu tiên đánh mục tiêu bị khắc chế.
-	- Lượng máu còn lại: Ưu tiên kết liễu mục tiêu có HP < 30%.
-	- Thứ tự lượt: Ưu tiên phá lượt các mục tiêu sắp đến lượt trong top 5.
-	- Biến thiên ngẫu nhiên: Giúp hành vi AI đa dạng hơn.
-
-	Args:
-		attacker (Entity): Thực thể thực hiện hành động.
-		enemy_team (Array): Danh sách các thực thể bên phe đối phương.
-		timeline (Array): Danh sách thứ tự lượt đánh hiện tại.
-
-	Returns:
-		Entity: Mục tiêu được chọn. Trả về null nếu không có mục tiêu hợp lệ.
+	Hàm này chọn mục tiêu tối ưu cho AI dựa trên hệ thống tính điểm Heuristic.
+	- attacker: Thực thể tấn công (Entity).
+	- enemy_team: Danh sách kẻ địch (Array).
+	- timeline: Thứ tự lượt đi hiện tại (Array).
+	- Return: Thực thể mục tiêu được chọn (Entity).
 	"""
 	var alive_targets = get_alive_targets(enemy_team)
 	if alive_targets.is_empty():
@@ -78,22 +60,12 @@ static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) ->
 
 static func pick_action(actor: Entity, enemies: Array, allies: Array, timeline: Array) -> Dictionary:
 	"""
-	Quyết định hành động (tấn công thường hoặc kỹ năng) cho thực thể AI.
-
-	Logic quyết định:
-	- Tìm mục tiêu thông qua pick_target.
-	- Lọc danh sách các kỹ năng có thể sử dụng (không trong CD).
-	- Có 70% xác suất ưu tiên sử dụng kỹ năng nếu có.
-	- Nếu kỹ năng là dạng hỗ trợ đồng đội (ally), AI sẽ chọn mục tiêu từ danh sách allies.
-
-	Args:
-		actor (Entity): Thực thể AI đang quyết định.
-		enemies (Array): Danh sách kẻ địch của AI.
-		allies (Array): Danh sách đồng đội của AI.
-		timeline (Array): Danh sách thứ tự lượt.
-
-	Returns:
-		Dictionary: Chứa thông tin hành động {"action": String, "target": Entity}.
+	Hàm quyết định hành động tiếp theo của AI (Tấn công thường hoặc dùng kỹ năng).
+	- actor: Thực thể AI (Entity).
+	- enemies: Danh sách kẻ địch (Array).
+	- allies: Danh sách đồng minh (Array).
+	- timeline: Dòng thời gian lượt đi (Array).
+	- Return: Dictionary chứa tên hành động và mục tiêu.
 	"""
 	var target = pick_target(actor, enemies, timeline)
 	if target == null:
@@ -118,16 +90,7 @@ static func pick_action(actor: Entity, enemies: Array, allies: Array, timeline: 
 	return {"action": "attack", "target": target}
 
 static func _find_first_turn_index(target: Entity, timeline: Array) -> int:
-	"""
-	Tìm vị trí lượt tiếp theo của một thực thể cụ thể trong dòng thời gian.
-	
-	Args:
-		target (Entity): Thực thể cần tìm.
-		timeline (Array): Danh sách timeline hiện tại.
-		
-	Returns:
-		int: Chỉ số index trong mảng, hoặc -1 nếu không tìm thấy.
-	"""
+	# Tìm vị trí lượt tiếp theo của một thực thể trong timeline.
 	for i in range(timeline.size()):
 		if timeline[i]["entity"] == target:
 			return i

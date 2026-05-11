@@ -3,11 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://juw3adsfk5pb"
-valid=false
+path="res://.godot/imported/bleed.png-10e947daf6c1ff8861c2a37e6116996d.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://Art/Icons/bleed.png"
+dest_files=["res://.godot/imported/bleed.png-10e947daf6c1ff8861c2a37e6116996d.ctex"]
 
 [params]
 

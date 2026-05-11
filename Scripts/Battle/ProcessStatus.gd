@@ -10,19 +10,9 @@ và cập nhật thời hạn (duration) của các hiệu ứng đang có trên
 
 static func handle_turn_start(entity: Entity) -> bool:
 	"""
-	Xử lý toàn bộ hiệu ứng trạng thái khi thực thể bắt đầu lượt đánh.
-
-	Quy trình xử lý các loại trạng thái:
-	- Bleed: Gây sát thương dựa trên 20% máu hiện tại của thực thể.
-	- Poison: Gây sát thương theo % máu tối đa, tỷ lệ này giảm dần sau mỗi lượt.
-	- Stun: Chặn đứng mọi hành động của thực thể trong lượt hiện tại.
-	- Cập nhật thời hạn: Giảm thời hạn (duration) của mọi hiệu ứng và tự động loại bỏ.
-
-	Args:
-		entity (Entity): Thực thể đang bắt đầu lượt và cần kiểm tra trạng thái.
-
-	Returns:
-		bool: True nếu thực thể có thể thực hiện hành động, False nếu bị khống chế (Stun).
+	Hàm này xử lý toàn bộ các hiệu ứng trạng thái (DoT, Stun...) khi thực thể bắt đầu lượt.
+	- entity: Thực thể cần xử lý trạng thái (Entity).
+	- Return: True nếu thực thể có thể hành động, False nếu bị choáng/khống chế (bool).
 	"""
 	if entity == null:
 		return true
@@ -33,16 +23,25 @@ static func handle_turn_start(entity: Entity) -> bool:
 	var can_act = true
 	var statuses_to_remove = []
 	
+	# Xử lý Bleed riêng để tính sát thương gộp từ các stack
+	var bleed_count = entity.get_status_count("Bleed")
+	if bleed_count > 0:
+		var bleed_dmg = int(entity.current_hp * (0.1 * bleed_count))
+		entity.take_damage(bleed_dmg, "dot")
+		print("[ProcessStatus] ", entity.entity_name, " chịu ", bleed_dmg, " sát thương Chảy máu (", bleed_count, " stacks)")
+
 	for status in entity.active_statuses:
 		match status["type"]:
 			"Bleed":
-				var dmg = int(entity.current_hp * 0.2)
-				entity.take_damage(dmg, "dot")
+				pass # Đã xử lý sát thương gộp ở trên
 			"Poison":
 				var pct = status.get("percent", 0.1)
 				var dmg = int(entity.max_hp * pct)
 				entity.take_damage(dmg, "dot")
-				status["percent"] = max(0.01, pct - 0.03)
+				# Poison không còn giảm % sau mỗi lượt theo yêu cầu mới (giữ logic cũ nếu cần, 
+				# nhưng ở đây user bảo 'logic như cũ' và 'không thể stack')
+				# Trong file cũ logic là giảm 3%, mình giữ lại hoặc làm đơn giản hơn.
+				status["percent"] = max(0.01, pct - 0.03) 
 			"Stun":
 				print("[ProcessStatus] ", entity.entity_name, " đang bị Choáng!")
 				can_act = false
