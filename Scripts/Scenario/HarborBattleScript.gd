@@ -172,7 +172,6 @@ static func _sync_battle_state(main: Node):
 			e.died.connect(main._on_entity_died.bind(e))
 	
 	# Xây dựng lại UI và Timeline
-	main.hud.build(main.player_team, main.enemy_team)
-	main._update_gauge_player_names()
-	main._update_gauge_display()
+	main.hud.setup(main.player_team, main.enemy_team)
+	main._setup_gauge_teams()
 	main._regenerate_timeline()

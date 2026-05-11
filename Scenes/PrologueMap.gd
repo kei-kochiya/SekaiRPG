@@ -22,8 +22,8 @@ func _ready():
 func _build_map():
 	# 0. Large Ground Background
 	# Covers a wide area so it's not a black void
-	for x in range(-30, 30):
-		for y in range(-30, 30):
+	for x in range(-35, 35):
+		for y in range(-35, 35):
 			_place_tile("floor.png", Vector2(x, y), false)
 
 	# 1. Warehouse Floor (Already covered by ground, but we can re-place or skip)
@@ -60,7 +60,7 @@ func _build_map():
 
 	# 4. Trees around the warehouse (outside)
 	var tree_spots = [
-		Vector2(2, 3), Vector2(22, 5), Vector2(3, 18), 
+		Vector2(2, 3), Vector2(22, 5), Vector2(3, 18),
 		Vector2(21, 17), Vector2(1, 10), Vector2(12, 20)
 	]
 	for spot in tree_spots:
@@ -90,7 +90,7 @@ func _setup_phase_0():
 	var player = OverworldPlayer.new()
 	player.name = "OverworldPlayer"
 	# Positioned inside the warehouse
-	player.position = Vector2(12 * TILE_SIZE, 10 * TILE_SIZE) 
+	player.position = Vector2(12 * TILE_SIZE, 10 * TILE_SIZE)
 	add_child(player)
 
 	# Kidnappers surrounding Ichika
@@ -206,7 +206,7 @@ func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, line
 func _transition_to_safehouse() -> void:
 	await ScreenFade.fade_out(0.6)
 	await get_tree().create_timer(1.0).timeout
-	GameManager.last_player_position = Vector2.ZERO # Reset pos for safehouse
+	GameManager.last_player_position = Vector2.ZERO
 	GameManager.store_map_state("res://Scenes/BaseMap.tscn", Vector2.ZERO)
 	get_tree().change_scene_to_file("res://Scenes/BaseMap.tscn")
 

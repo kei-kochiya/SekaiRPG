@@ -333,7 +333,7 @@
       "text": "Tên tay sai của hắn tìm đến xưởng vẽ của chị. Lúc đó trong tay chị chỉ có cọ vẽ."
     },
     {
-      "type": "action",
+      "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",

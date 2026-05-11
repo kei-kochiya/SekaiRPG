@@ -15,6 +15,14 @@ func _ready():
 		continue_btn.pressed.connect(_on_continue)
 	
 	$CenterContainer/VBoxContainer/NewGameBtn.pressed.connect(_on_new_game)
+	
+	var save_menu_btn = Button.new()
+	save_menu_btn.text = "LOAD"
+	$CenterContainer/VBoxContainer.add_child(save_menu_btn)
+	$CenterContainer/VBoxContainer.move_child(save_menu_btn, 2)
+	_style_button(save_menu_btn)
+	save_menu_btn.pressed.connect(_on_open_save_menu)
+	
 	$CenterContainer/VBoxContainer/SandboxBtn.pressed.connect(_on_sandbox)
 	$CenterContainer/VBoxContainer/ExitBtn.pressed.connect(_on_exit)
 	ScreenFade.fade_in(1.0)
@@ -80,6 +88,11 @@ func _on_new_game():
 func _on_sandbox():
 	await ScreenFade.fade_out(0.5)
 	get_tree().change_scene_to_file("res://Scenes/SandboxMenu.tscn")
+
+func _on_open_save_menu():
+	var save_scene = load("res://Scenes/SaveLoadMenu.tscn")
+	var menu_instance = save_scene.instantiate()
+	add_child(menu_instance)
 
 func _on_exit():
 	get_tree().quit()

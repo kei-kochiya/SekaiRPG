@@ -41,33 +41,33 @@ func _init_party():
 	party["Ichika"] = Ichika.new()
 	party["Kanade"] = Kanade.new()
 	party["Mafuyu"] = Mafuyu.new()
-	party["Ena"]    = Ena.new()
+	party["Ena"] = Ena.new()
 	party["Mizuki"] = Mizuki.new()
 	party["Honami"] = Honami.new()
 	
 	LevelManager.set_initial_level(party["Ichika"], 1)
 	LevelManager.set_initial_level(party["Kanade"], 5)
-	LevelManager.set_initial_level(party["Mafuyu"], 8)
-	LevelManager.set_initial_level(party["Ena"],    8)
-	LevelManager.set_initial_level(party["Mizuki"], 10)
-	LevelManager.set_initial_level(party["Honami"], 5)
+	LevelManager.set_initial_level(party["Mafuyu"], 25)
+	LevelManager.set_initial_level(party["Ena"], 15)
+	LevelManager.set_initial_level(party["Mizuki"], 25)
+	LevelManager.set_initial_level(party["Honami"], 25)
 
 # ── Proxy Getters/Setters cho StoryState (Đảm bảo tương thích ngược) ───────
-var flags: Dictionary: 
+var flags: Dictionary:
 	get: return story.flags
-var warehouse_wave: int: 
+var warehouse_wave: int:
 	get: return story.warehouse_wave
 	set(v): story.warehouse_wave = v
-var harbor_wave: int: 
+var harbor_wave: int:
 	get: return story.harbor_wave
 	set(v): story.harbor_wave = v
-var enemies_defeated: int: 
+var enemies_defeated: int:
 	get: return story.enemies_defeated
 	set(v): story.enemies_defeated = v
-var harbor_guards_defeated: int: 
+var harbor_guards_defeated: int:
 	get: return story.harbor_guards_defeated
 	set(v): story.harbor_guards_defeated = v
-var harbor_route: String: 
+var harbor_route: String:
 	get: return story.harbor_route
 	set(v): story.harbor_route = v
 
@@ -79,13 +79,13 @@ func get_flag(id: String, default: Variant = false) -> Variant:
 	# Lấy giá trị của một cờ trạng thái từ StoryState.
 	return story.get_flag(id, default)
 
-var prologue_phase: int: 
+var prologue_phase: int:
 	get: return story.get_flag("prologue_phase", 0)
 	set(v): story.set_flag("prologue_phase", v)
-var harbor_mission_done: bool: 
+var harbor_mission_done: bool:
 	get: return story.get_flag("harbor_mission_done", false)
 	set(v): story.set_flag("harbor_mission_done", v)
-var harbor_mission_unlocked: bool: 
+var harbor_mission_unlocked: bool:
 	get: return story.get_flag("harbor_mission_unlocked", false)
 	set(v): story.set_flag("harbor_mission_unlocked", v)
 var intro_quest_done: bool:
@@ -153,9 +153,10 @@ func end_dialogue():
 
 const SAVE_PATH = "user://sekai_save.json"
 
-func save_game():
+func save_game(path: String = SAVE_PATH):
 	"""
-	Hàm này thực hiện lưu toàn bộ dữ liệu game (map, vị trí, story, party) vào file.
+	Hàm này thực hiện lưu toàn bộ dữ liệu game vào một đường dẫn cụ thể.
+	- path: Đường dẫn lưu file (String). Mặc định là SAVE_PATH.
 	- Return: Không có.
 	"""
 	var save_data = {
@@ -172,22 +173,33 @@ func save_game():
 			"atk": e.atk, "defense": e.defense, "spd": e.spd, "max_hp": e.max_hp
 		}
 	
-	var f = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var f = FileAccess.open(path, FileAccess.WRITE)
 	if f == null:
-		print("[GameManager] Lỗi: Không thể lưu file tại ", SAVE_PATH)
+		print("[GameManager] Lỗi: Không thể lưu file tại ", path)
 		return
 	f.store_string(JSON.stringify(save_data))
 	f.close()
-	print("[GameManager] Game đã được lưu.")
+	print("[GameManager] Game đã được lưu tại: ", path)
 
-func load_game() -> bool:
+func get_current_save_path() -> String:
 	"""
-	Hàm này thực hiện nạp dữ liệu từ file save và khôi phục trạng thái game.
+	Trả về đường dẫn save mặc định dựa trên bản đồ hiện tại.
+	Ví dụ: 'user://PrologueMap.json'
+	"""
+	var map_name = current_map_file.get_file().get_basename()
+	return "user://" + map_name + ".json"
+
+func load_game(path: String = SAVE_PATH) -> bool:
+	"""
+	Hàm này thực hiện nạp dữ liệu từ một file save cụ thể.
+	- path: Đường dẫn file cần nạp (String). Mặc định là SAVE_PATH.
 	- Return: True nếu nạp thành công, ngược lại False (bool).
 	"""
-	if not FileAccess.file_exists(SAVE_PATH): return false
+	if not FileAccess.file_exists(path):
+		print("[GameManager] Lỗi: Không tìm thấy file tại ", path)
+		return false
 	
-	var f = FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var f = FileAccess.open(path, FileAccess.READ)
 	var data = JSON.parse_string(f.get_as_text())
 	f.close()
 	
@@ -215,19 +227,38 @@ func load_game() -> bool:
 			e.defense = d.get("defense", e.defense); e.spd = d.get("spd", e.spd)
 			e.max_hp = d.get("max_hp", e.max_hp); e.current_hp = e.max_hp
 	
-	print("[GameManager] Game đã tải thành công.")
+	print("[GameManager] Game đã tải thành công từ: ", path)
 	get_tree().change_scene_to_file(current_map_file)
 	return true
 
-func has_save() -> bool:
-	# Kiểm tra sự tồn tại của file save.
-	return FileAccess.file_exists(SAVE_PATH)
+func has_save(path: String = SAVE_PATH) -> bool:
+	# Kiểm tra sự tồn tại của một file save cụ thể.
+	return FileAccess.file_exists(path)
+
+func get_save_files() -> Array:
+	"""
+	Trả về danh sách tất cả các file save (.json) có trong thư mục user://.
+	Dùng để hiển thị danh sách cho người chơi chọn file để load.
+	"""
+	var saves = []
+	var dir = DirAccess.open("user://")
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir() and file_name.ends_with(".json"):
+				saves.append("user://" + file_name)
+			file_name = dir.get_next()
+	return saves
 
 func reset_game():
 	# Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới.
 	story.reset()
 	last_player_position = Vector2.ZERO
 	current_map_file = "res://Scenes/PrologueMap.tscn"
+	is_sandbox = false
+	is_tutorial = false
+	is_scripted_battle = false
 	_init_party()
 
 func store_map_state(map_path: String, player_pos: Vector2):
@@ -269,7 +300,7 @@ func finish_battle(victory: bool, count: int = 1):
 		for p_name in training_participants:
 			var entity = get_party_member(p_name)
 			if entity: LevelManager.gain_exp(entity, bonus_exp)
-		victory = true 
+		victory = true
 
 	if victory:
 		story.enemies_defeated += count
@@ -281,6 +312,8 @@ func finish_battle(victory: bool, count: int = 1):
 				story.set_flag("harbor_boss_defeated", true)
 			
 	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Scenes/HarborMap.tscn":
+		await get_tree().create_timer(1.5).timeout # Đợi 1.5s để đọc nốt câu cuối
+		await ScreenFade.fade_out(0.8)
 		get_tree().change_scene_to_file("res://Scenes/AlleywayMap.tscn")
 	else:
 		get_tree().change_scene_to_file(current_map_file)

@@ -26,45 +26,27 @@ func _init():
 	]
 
 func brush_stroke(target: Entity):
-	"""
-	[Nét Vẽ Chi Vi]: Tấn công đơn mục tiêu.
-
-	Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
+	# Nét Cọ Toàn Nhẫn
+	# Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
 	print(entity_name, " vung [Nét Cọ Tàn Nhẫn]!")
 	var raw_dmg = DamageCalculator.calculate_damage(self , target)
 	var scaled_dmg = int(raw_dmg * 1.5)
 	target.take_damage(scaled_dmg)
 
 func toxic_criticism(target: Entity):
-	"""
-	[Lời Phê Bình Độc Hại]: Tấn công và gây hiệu ứng xấu.
-
-	Gây sát thương vật lý và áp dụng trạng thái Trúng độc (Poison) 
-	mạnh lên mục tiêu trong 3 lượt.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
+	#Bức Tranh Độc Đáo
+	#Gây sát thương vật lý và áp dụng trạng thái Trúng độc (Poison) 
+	# mạnh lên mục tiêu trong 3 lượt.
 	print(entity_name, " tung ra [Bức Tranh Độc Đáo]!")
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Poison", "duration": 3, "percent": 0.15})
 
 func masterpiece(target: Entity):
-	"""
-	[Kiệt Tác]: Tuyệt kỹ đa năng của Ena.
-
-	Giải phóng một đòn tấn công gây sát thương thuần (Pure Damage) 250% ATK, 
-	áp dụng Poison cực mạnh. Sau đó, Ena tự động tìm và hồi phục cho đồng đội 
-	có lượng máu thấp nhất một lượng máu tương đương 150% ATK.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
+	#Kiệt Tác Dang Dở
+	#Giải phóng một đòn tấn công gây sát thương thuần (Pure Damage) 250% ATK, 
+	#áp dụng Poison cực mạnh. Sau đó, Ena tự động tìm và hồi phục cho đồng đội 
+	#có lượng máu thấp nhất một lượng máu tương đương 150% ATK.
 	print(entity_name, " hoàn thành [Kiệt Tác Dang Dở]!")
 	var multiplier = TypeChart.get_multiplier(self.type, target.type)
 	var massive_dmg = int(self.atk * 2.5 * multiplier)

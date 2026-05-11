@@ -17,7 +17,7 @@ func _init():
 	atk = 150
 	defense = 80
 	res = 20
-	spd = 100
+	spd = 70
 	type = "Pure"
 	is_character = true
 	

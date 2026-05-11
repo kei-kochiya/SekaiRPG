@@ -26,18 +26,16 @@ func _init():
 	]
 
 func numb_blade(target: Entity):
-	"""
-	[Lưỡi Dao Vô Hồn]: Sát thương đơn và 1 Bleed.
-	"""
+	#Lưỡi Dao Vô Hồn
+	#Sát thương đơn và 1 Bleed.
 	print(entity_name, " phóng [Lưỡi Dao Vô Hồn]!")
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
 func freezing_void(_target: Entity):
-	"""
-	[Vực Thẳm Vô Định]: Tấn công 2 kẻ địch ngẫu nhiên (hoặc 1 kẻ địch 2 lần).
-	"""
+	#Vực Thẳm Vô Định
+	#Tấn công 2 kẻ địch ngẫu nhiên (hoặc 1 kẻ địch 2 lần).
 	print(entity_name, " giải phóng [Vực Thẳm Vô Định]!")
 	var alive_enemies = []
 	for e in enemies:
@@ -52,9 +50,8 @@ func freezing_void(_target: Entity):
 		target.add_status({"type": "Bleed", "duration": 3})
 
 func lost_world(_target: Entity):
-	"""
-	[Lost World]: Sát thương cực lớn dựa trên HP đã mất.
-	"""
+	#Lost World
+	#Sát thương cực lớn dựa trên HP đã mất.
 	print(entity_name, " kích hoạt [Lost World]...")
 	
 	var lost_hp_ratio = 1.0 - (float(current_hp) / max_hp)

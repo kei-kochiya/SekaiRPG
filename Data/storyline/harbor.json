@@ -215,7 +215,7 @@
     {
       "type": "action",
       "speaker": "right",
-      "name": "Mafuyu",
+      "name": "Honami",
       "color": "#665588",
       "text": "(Honami đỡ nhát chém bằng chiếc vali của mình)."
     },
@@ -269,6 +269,13 @@
       "name": "Honami",
       "color": "#ffaa88",
       "text": "Hôm nay tới đây thôi nhé, tôi xin phép cáo từ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "... Vể thôi. Phiền phức thật."
     }
   ]
 }

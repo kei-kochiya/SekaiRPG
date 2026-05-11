@@ -186,21 +186,21 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Muốn chiêu mộ tôi, cần làm tốt hơn đấy sếp ạ."
+      "text": "Tôi thà chết còn hơn bị nhốt trong cái lồng mạ vàng kia."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Nhưng mà, con bé tóc xanh kia, mình thấy lạ lắm."
+      "text": "Nhưng mà, con bé tóc xanh kia..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Chắc là sẽ vui lắm đây."
+      "text": "Trông thú vị đấy. Chắc là sẽ có chuyện vui đây."
     }
   ],
   "base_mizuki_snack_p1": [
@@ -249,7 +249,7 @@
     {
       "type": "narrator",
       "name": "Hệ thống",
-      "text": "(Cộng 400 XP cho Ichika và Ena)"
+      "text": "(Cộng 3000 XP cho Ichika và Ena)"
     },
     {
       "type": "narrator",

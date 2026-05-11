@@ -21,7 +21,7 @@
     "player_party": ["Ichika", "Ena"],
     "enemy_type": "harbor_boss",
     "enemy_count": 1,
-    "level_val": 8,
+    "level_val": 25,
     "is_harbor_boss": true
   }
 }

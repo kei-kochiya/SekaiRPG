@@ -59,6 +59,9 @@ func _ready():
 	for entity in all_entities:
 		entity.died.connect(_on_entity_died.bind(entity))
 	
+	if GameManager.is_sandbox:
+		_setup_sandbox_exit_button()
+	
 	if is_harbor_boss_fight:
 		HarborBattleScript.run_intro(self, func(): run_battle())
 	else:
@@ -179,8 +182,8 @@ func _player_turn(actor: Entity):
 	_execute_action(actor, action, target)
 
 func _ai_turn(actor: Entity):
-	# Xử lý lượt đi của AI đối thủ.
-	await get_tree().create_timer(0.5).timeout
+	# Xử lý lượt đi của AI đối thủ (Đã làm chậm để người chơi kịp quan sát).
+	await get_tree().create_timer(1.2).timeout
 	
 	var decision = AIManager.pick_action(actor, actor.enemies, actor.allies, timeline)
 	var action: String = decision["action"]
@@ -227,6 +230,8 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 			shaker.shake(8.0, 0.3)
 	else:
 		print("[Warning] ", actor.entity_name, " không có skill: ", action)
+	
+	_regenerate_timeline()
 
 func _regenerate_timeline():
 	# Tái tạo lại danh sách thứ tự lượt đi (Timeline).
@@ -303,6 +308,33 @@ func _check_battle_end() -> bool:
 		battle_over = true
 		return true
 	return false
+
+func _setup_sandbox_exit_button():
+	# Tạo nút X ở góc phải màn hình để thoát Sandbox
+	var cl = CanvasLayer.new()
+	add_child(cl)
+	
+	# Control node làm vật chứa để dùng anchors
+	var ctrl = Control.new()
+	ctrl.set_anchors_preset(Control.PRESET_FULL_RECT)
+	cl.add_child(ctrl)
+	
+	var btn = TextureButton.new()
+	var tex = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey_close.svg")
+	btn.texture_normal = tex
+	
+	# Đặt vào góc trên bên phải
+	btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	btn.position = Vector2(-70, 20) # Cách lề phải 70px, lề trên 20px
+	btn.scale = Vector2(0.8, 0.8)
+	ctrl.add_child(btn)
+	
+	btn.pressed.connect(func():
+		print("[Sandbox] Kết thúc trận đấu sớm.")
+		GameManager.is_sandbox = false
+		get_tree().change_scene_to_file("res://Scenes/SandboxMenu.tscn")
+	)
 
 func _names(team: Array) -> String:
 	# Chuyển đổi danh sách thực thể thành chuỗi tên (dùng cho debug).

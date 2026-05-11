@@ -90,7 +90,7 @@ static func _setup_mission_battle(cfg: Dictionary) -> Dictionary:
 	var lv = cfg.get("level_val", 1)
 	if cfg.has("level_key"):
 		var key = cfg["level_key"]
-		if key == "warehouse_wave": lv = clamp(GameManager.warehouse_wave, 1, 5)
+		if key == "warehouse_wave": lv = clamp(GameManager.warehouse_wave * 3, 3, 15)
 		elif key == "harbor_guards": lv = 5 + GameManager.harbor_wave
 	
 	var e_type = cfg.get("enemy_type", "")

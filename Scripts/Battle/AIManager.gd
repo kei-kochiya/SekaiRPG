@@ -19,7 +19,7 @@ static func get_alive_targets(team: Array) -> Array:
 
 static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) -> Entity:
 	"""
-	Hàm này chọn mục tiêu tối ưu cho AI dựa trên hệ thống tính điểm Heuristic.
+	Chọn mục tiêu tối ưu cho AI dựa trên hệ thống tính điểm Heuristic.
 	- attacker: Thực thể tấn công (Entity).
 	- enemy_team: Danh sách kẻ địch (Array).
 	- timeline: Thứ tự lượt đi hiện tại (Array).

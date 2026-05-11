@@ -40,34 +40,16 @@ var harbor_guards_defeated: int = 0
 var harbor_route: String = ""
 
 func set_flag(id: String, value: Variant):
-	"""
-	Thiết lập giá trị cho một cờ trạng thái cụ thể.
-	
-	Args:
-		id (String): Tên định danh của cờ (key).
-		value (Variant): Giá trị cần lưu trữ.
-	"""
+	#Thiết lập giá trị cho một cờ trạng thái cụ thể.
 	flags[id] = value
 
 func get_flag(id: String, default: Variant = false) -> Variant:
-	"""
-	Lấy giá trị của một cờ trạng thái từ bộ nhớ.
-	
-	Args:
-		id (String): Tên định danh của cờ cần tìm.
-		default (Variant): Giá trị trả về nếu không tìm thấy ID.
-		
-	Returns:
-		Variant: Giá trị hiện tại của cờ hoặc giá trị mặc định.
-	"""
+	#Lấy giá trị của một cờ trạng thái từ bộ nhớ.
 	return flags.get(id, default)
 
 func reset():
-	"""
-	Khôi phục toàn bộ tiến trình và dữ liệu nhiệm vụ về trạng thái mặc định.
-	
-	Dùng khi người chơi bắt đầu lại từ đầu hoặc reset màn chơi.
-	"""
+	#Khôi phục toàn bộ tiến trình và dữ liệu nhiệm vụ về trạng thái mặc định.
+	#Dùng khi người chơi bắt đầu lại từ đầu hoặc reset màn chơi.
 	for key in flags:
 		if flags[key] is bool: flags[key] = false
 		elif flags[key] is int: flags[key] = 0
@@ -80,14 +62,8 @@ func reset():
 	harbor_route = ""
 
 func serialize() -> Dictionary:
-	"""
-	Chuyển đổi toàn bộ dữ liệu trạng thái sang định dạng Dictionary.
-	
-	Phục vụ cho việc mã hóa JSON trong hệ thống lưu trữ (Save system).
-	
-	Returns:
-		Dictionary: Một bản đồ chứa toàn bộ thông tin story và flags.
-	"""
+	#Chuyển đổi toàn bộ dữ liệu trạng thái sang định dạng Dictionary.
+	#Phục vụ cho việc mã hóa JSON trong hệ thống lưu trữ (Save system).
 	return {
 		"flags": flags,
 		"warehouse_wave": warehouse_wave,
@@ -98,12 +74,7 @@ func serialize() -> Dictionary:
 	}
 
 func deserialize(data: Dictionary):
-	"""
-	Khôi phục trạng thái từ dữ liệu đã được nạp (deserialize).
-	
-	Args:
-		data (Dictionary): Dữ liệu thô từ file save đã được giải mã JSON.
-	"""
+	#Khôi phục trạng thái từ dữ liệu đã được nạp (deserialize).
 	flags = data.get("flags", flags.duplicate())
 	warehouse_wave = data.get("warehouse_wave", 1)
 	harbor_wave = data.get("harbor_wave", 1)

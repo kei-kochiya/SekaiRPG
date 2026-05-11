@@ -4,9 +4,9 @@ const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 const NPC_COLORS := {
-	"Mafuyu": Color(0.4,  0.3,  0.5),
-	"Ena":    Color(0.72, 0.38, 0.16),
-	"Kanade": Color(0.8,  0.8,  0.9),
+	"Mafuyu": Color(0.4, 0.3, 0.5),
+	"Ena": Color(0.72, 0.38, 0.16),
+	"Kanade": Color(0.8, 0.8, 0.9),
 	"Mizuki": Color(0.85, 0.65, 0.8),
 }
 
@@ -128,7 +128,7 @@ func _refresh_quest_label():
 func _spawn_npcs() -> void:
 	var positions := {
 		"Mafuyu": Vector2(24 * TILE_SIZE, 13 * TILE_SIZE),
-		"Ena":    Vector2(27 * TILE_SIZE, 15 * TILE_SIZE),
+		"Ena": Vector2(27 * TILE_SIZE, 15 * TILE_SIZE),
 		"Kanade": Vector2(6 * TILE_SIZE, 4 * TILE_SIZE),
 	}
 	
@@ -198,8 +198,8 @@ func _handle_npc_interaction(npc_name: String):
 			# XP Award
 			var ichika = GameManager.get_party_member("Ichika")
 			var ena = GameManager.get_party_member("Ena")
-			if ichika: LevelManager.gain_exp(ichika, 400)
-			if ena: LevelManager.gain_exp(ena, 400)
+			if ichika: LevelManager.gain_exp(ichika, 3000)
+			if ena: LevelManager.gain_exp(ena, 3000)
 			
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_report_p1"), func():
 				GameManager.is_scripted_battle = true
@@ -217,14 +217,14 @@ func _handle_npc_interaction(npc_name: String):
 			get_tree().change_scene_to_file("res://Scenes/AlleywayMap.tscn")
 		)
 	elif npc_name == "Ichika":
-		DialogueManager.play_dialogue([{
+		DialogueManager.play_dialogue([ {
 			"text": "Tên đội trưởng đó... thực sự rất mạnh.",
 			"type": "dialogue",
 			"name": "Ichika",
 			"color": Color(0.29, 0.62, 0.62)
 		}])
 	else:
-		DialogueManager.play_dialogue([{
+		DialogueManager.play_dialogue([ {
 			"text": "..." if npc_name == "Mafuyu" else "Mọi người mệt rồi, hãy nghỉ ngơi đi.",
 			"type": "dialogue",
 			"name": npc_name,
@@ -245,8 +245,8 @@ func _play_report_p2():
 
 func _build_map():
 	_fill_floor(5, 2, 43, 20)
-	_draw_room_walls(5, 2, 43, 10)   # Rest Area
-	_draw_room_walls(5, 10, 17, 20)  # Office
+	_draw_room_walls(5, 2, 43, 10) # Rest Area
+	_draw_room_walls(5, 10, 17, 20) # Office
 	_draw_room_walls(17, 10, 31, 20) # Hall
 	_draw_room_walls(31, 10, 43, 20) # Dining
 	
