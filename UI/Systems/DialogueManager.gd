@@ -168,7 +168,7 @@ func _on_choice_selected(idx: int):
 func _unhandled_input(event: InputEvent):
 	"""Xử lý phím tắt để chuyển sang câu thoại tiếp theo."""
 	if _in_choice or not active: return
-	if event.is_action_pressed("ui_accept"):
+	if event.is_action_pressed("ui_accept") or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
 		get_viewport().set_input_as_handled()
 		index += 1
 		if index < current_dialogue.size():

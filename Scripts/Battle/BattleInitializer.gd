@@ -123,20 +123,34 @@ static func _create_enemies(type_id: String, count: int, lv: int) -> Array:
 		team.append(e)
 	return team
 
+static var character_classes = {
+	"Ichika": Ichika,
+	"Kanade": Kanade,
+	"Mafuyu": Mafuyu,
+	"Ena": Ena,
+	"Mizuki": Mizuki,
+	"Honami": Honami
+}
+
 static func _setup_training_battle() -> Dictionary:
 	"""
 	Thiết lập trận đấu luyện tập.
 	"""
 	var player_team = []
-	var base_lv = 1
+	var total_lv = 0
+	var p_count = 0
+	
 	for p_name in GameManager.training_participants:
 		var p = GameManager.get_party_member(p_name)
 		if p:
 			player_team.append(p)
-			base_lv = max(base_lv, p.level)
+			total_lv += p.level
+			p_count += 1
+	
+	var mean_lv = int(float(total_lv) / max(p_count, 1))
+	var target_lv = clamp(mean_lv + randi_range(-3, 3), 1, 100)
 	
 	var enemies = []
-	var target_lv = clamp(base_lv + randi_range(-3, 3), 1, 100)
 	
 	# Random chance to fight party members
 	if randf() < 0.7:
@@ -150,9 +164,13 @@ static func _setup_training_battle() -> Dictionary:
 		if not candidates.is_empty():
 			var e_name = candidates.pop_back()
 			GameManager.training_used_opponents.append(e_name)
-			var enemy = GameManager.get_party_member(e_name).duplicate(7)
-			LevelManager.set_initial_level(enemy, target_lv)
-			enemies.append(enemy)
+			
+			# Create a FRESH instance instead of duplicating, to ensure level scaling works
+			var enemy_class = character_classes.get(e_name)
+			if enemy_class:
+				var enemy = enemy_class.new()
+				LevelManager.set_initial_level(enemy, target_lv)
+				enemies.append(enemy)
 	
 	if enemies.is_empty():
 		enemies = _create_enemies("target", 5, target_lv)
@@ -164,4 +182,4 @@ static func _setup_training_battle() -> Dictionary:
 		var min_hp = int(p.max_hp * 0.5)
 		if p.current_hp < min_hp: p.current_hp = min_hp
 
-	return {"player_team": player_team, "enemy_team": enemies}
+	return {"player_team": player_team, "enemy_team": enemies, "is_harbor_boss": false}

@@ -145,7 +145,7 @@ func _create_enemy_npc(pos: Vector2, sprite_file: String):
 	var root = Node2D.new()
 	root.position = pos
 	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/person/" + sprite_file)
+	sprite.texture = load("res://Assets/Person/" + sprite_file)
 	sprite.scale = Vector2(4, 4)
 	sprite.position = Vector2(0, -12)
 	root.add_child(sprite)
@@ -214,7 +214,7 @@ func _create_dead_body(pos: Vector2):
 	var root = Node2D.new()
 	root.position = pos
 	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/person/b_up.png")
+	sprite.texture = load("res://Assets/Person/b_up.png")
 	sprite.scale = Vector2(4, 4)
 	sprite.rotation = PI / 2 # Rotate to look like they are lying down
 	sprite.position = Vector2(0, 0)

@@ -22,6 +22,7 @@ const SkillDetailPopupClass = preload("res://UI/Popups/SkillDetailPopup.gd")
 
 var action_container: VBoxContainer
 var target_container: VBoxContainer
+var title_label: Label
 var _tooltip: PanelContainer
 var _skill_detail_popup: Node
 
@@ -62,11 +63,11 @@ func _build_shell():
 	info_btn.pressed.connect(func(): if current_entity: _skill_detail_popup.display_entity_skills(current_entity))
 	title_row.add_child(info_btn)
 	
-	var title = Label.new()
-	title.text = "LỆNH CHIẾN ĐẤU"
-	title.add_theme_font_size_override("font_size", 12)
-	title.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
-	title_row.add_child(title)
+	title_label = Label.new()
+	title_label.text = "LỆNH CHIẾN ĐẤU"
+	title_label.add_theme_font_size_override("font_size", 12)
+	title_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+	title_row.add_child(title_label)
 	
 	action_container = VBoxContainer.new()
 	action_container.add_theme_constant_override("separation", 4)
@@ -91,6 +92,8 @@ func show_for(entity: Entity, enemies: Array):
 	current_entity = entity
 	enemy_team = enemies
 	chosen_action = ""
+	
+	title_label.text = entity.entity_name.to_upper()
 	
 	_clear(action_container)
 	_clear(target_container)

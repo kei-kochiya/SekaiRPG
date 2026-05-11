@@ -23,14 +23,14 @@ func _init():
 	skills = [
 		{"name": "Chém Kim Loại", "method": "metal_cut", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh lên một mục tiêu.\nTỷ lệ: 150% ATK."},
 		{"name": "Lưỡi Đao Rỉ Máu", "method": "bleeding_edge", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và áp dụng trạng thái Chảy máu (Bleed) trong 3 lượt.\nTỷ lệ: 100% ATK."},
-		{"name": "Ảnh Kiếm", "method": "shadow_blade", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương bỏ qua phòng thủ (Pure DMG).\nTiêu tốn 15% HP hiện tại. Tỷ lệ: 300% ATK."},
+		{"name": "Ảnh Sát", "method": "shadow_blade", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương bỏ qua phòng thủ (Pure DMG).\nTiêu tốn 15% HP hiện tại. Tỷ lệ: 300% ATK."},
 	]
 
 func can_use_skill(skill_name: String) -> bool:
 	"""
 	Kiểm tra điều kiện đặc biệt để sử dụng kỹ năng của Ichika.
 
-	Ngoài thời gian hồi chiêu, kỹ năng [Ảnh Kiếm] yêu cầu Ichika phải 
+	Ngoài thời gian hồi chiêu, kỹ năng [Ảnh Sát] yêu cầu Ichika phải 
 	còn nhiều hơn 1 HP để kích hoạt.
 
 	Args:
@@ -76,11 +76,11 @@ func bleeding_edge(target: Entity):
 
 func shadow_blade(target: Entity):
 	"""
-	[Ảnh Kiếm]: Tuyệt kỹ cực hạn của Ichika.
+	[Ảnh Sát]: Tuyệt kỹ cực hạn của Ichika.
 
 	Giải phóng đòn tấn công cực mạnh gây sát thương thuần (Pure Damage) 
 	bằng 300% ATK, bỏ qua DEF và RES. Đổi lại, Ichika tự gây sát thương 
-	lên bản thân bằng 15% HP hiện tại (không gây chết người).
+	lên bản thân bằng 35% HP hiện tại (không gây chết người).
 
 	Args:
 		target (Entity): Mục tiêu chịu đòn.
@@ -88,9 +88,9 @@ func shadow_blade(target: Entity):
 	if current_hp <= 1:
 		return
 	
-	print(entity_name, " giải phóng [Ảnh Kiếm] cực hạn!")
+	print(entity_name, " giải phóng [Ảnh Sát] cực hạn!")
 	var massive_dmg = self.atk * 3
-	var self_dmg = int(self.current_hp * 0.15)
+	var self_dmg = int(self.current_hp * 0.35)
 	self_dmg = min(self_dmg, current_hp - 1)
 	
 	target.take_damage(massive_dmg, "pure")

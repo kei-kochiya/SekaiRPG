@@ -124,7 +124,7 @@ func run_battle():
 		if not GameManager.is_tutorial:
 			hud.show_turn_indicator(actor)
 		
-		_update_gauge_display()
+		_update_gauge_display(actor)
 		
 		var can_act = ProcessStatus.handle_turn_start(actor)
 		CooldownManager.process_cooldowns(actor)
@@ -141,7 +141,7 @@ func run_battle():
 		else:
 			await _ai_turn(actor)
 		
-		_update_gauge_display()
+		_update_gauge_display(actor)
 		
 		if is_harbor_boss_fight:
 			HarborBattleScript.check_transitions(self)
@@ -256,11 +256,11 @@ func _regenerate_timeline():
 	timeline = TurnCalculator.get_timeline(alive, 20)
 	_update_gauge_display()
 
-func _update_gauge_display():
+func _update_gauge_display(current_actor: Entity = null):
 	"""
 	Cập nhật hiển thị của thanh hành động (Action Gauge).
 	"""
-	hud.action_gauge.refresh(timeline.slice(0, 10))
+	hud.action_gauge.refresh(timeline.slice(0, 10), current_actor)
 
 func _purge_dead_from_timeline(dead_entity: Entity):
 	"""

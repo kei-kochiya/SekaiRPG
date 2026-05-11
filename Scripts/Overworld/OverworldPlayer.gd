@@ -110,6 +110,15 @@ func _physics_process(_delta):
 		return
 		
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	
+	# Thêm hỗ trợ WASD nếu vector mặc định bằng 0
+	if input_dir == Vector2.ZERO:
+		if Input.is_key_pressed(KEY_W): input_dir.y -= 1
+		if Input.is_key_pressed(KEY_S): input_dir.y += 1
+		if Input.is_key_pressed(KEY_A): input_dir.x -= 1
+		if Input.is_key_pressed(KEY_D): input_dir.x += 1
+		input_dir = input_dir.normalized()
+		
 	velocity = input_dir * SPEED
 	move_and_slide()
 	

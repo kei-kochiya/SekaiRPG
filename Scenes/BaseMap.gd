@@ -129,7 +129,7 @@ func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
 func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool):
 	var tile_pos = grid_pos * TILE_SIZE
 	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/indoors/" + file)
+	sprite.texture = load("res://Assets/Indoors/" + file)
 	sprite.scale = Vector2(4, 4)
 	sprite.position = tile_pos
 	add_child(sprite)

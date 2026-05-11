@@ -278,7 +278,7 @@ func finish_battle(victory: bool, count: int = 1):
 		return
 
 	if not victory and is_training_mode:
-		var bonus_exp = int(last_battle_max_lv * 5)
+		var bonus_exp = int(last_battle_max_lv * 10)
 		for p_name in training_participants:
 			var entity = get_party_member(p_name)
 			if entity: LevelManager.gain_exp(entity, bonus_exp)
