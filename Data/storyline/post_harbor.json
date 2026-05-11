@@ -294,7 +294,7 @@
       "text": "Ena-nan vẫn cứ dễ bị lừa như mọi khi nhỉ? Ăn uống mà không thèm đề phòng gì cả."
     }
   ],
-  "base_mizuki_report": [
+  "base_mizuki_report_p1": [
     {
       "type": "dialogue",
       "speaker": "right",
@@ -378,7 +378,9 @@
       "name": "Mafuyu",
       "color": "#665588",
       "text": "Cô chán sống rồi đúng không."
-    },
+    }
+  ],
+  "base_mizuki_report_p2": [
     {
       "type": "dialogue",
       "speaker": "right",

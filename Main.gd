@@ -331,6 +331,10 @@ func _check_battle_end() -> bool:
 		return true
 	
 	if AIManager.get_alive_targets(player_team).is_empty():
+		if GameManager.is_scripted_battle:
+			battle_over = true
+			return true
+			
 		if is_harbor_boss_fight and harbor_boss_phase == 1:
 			HarborBattleScript.handle_loss(self)
 			return false

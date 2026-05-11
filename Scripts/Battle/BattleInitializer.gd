@@ -55,6 +55,9 @@ static func setup_battle(_main: Node) -> Dictionary:
 	
 	if GameManager.is_training_mode:
 		return _setup_training_battle()
+		
+	if GameManager.is_scripted_battle:
+		return _setup_scripted_battle(GameManager.scripted_battle_id)
 	
 	var current_map = GameManager.current_map_file
 	var battle_key = ""
@@ -183,3 +186,22 @@ static func _setup_training_battle() -> Dictionary:
 		if p.current_hp < min_hp: p.current_hp = min_hp
 
 	return {"player_team": player_team, "enemy_team": enemies, "is_harbor_boss": false}
+
+static func _setup_scripted_battle(battle_id: String) -> Dictionary:
+	"""
+	Khởi tạo các trận đấu theo kịch bản cốt truyện.
+	"""
+	if battle_id == "mizuki_vs_mafuyu":
+		var mizuki = GameManager.get_party_member("Mizuki")
+		var mafuyu = Mafuyu.new() # Create a fresh boss version of Mafuyu
+		mafuyu.entity_name = "Mafuyu (BOSS)"
+		
+		# Set Mafuyu to Level 100 to ensure Mizuki loses
+		LevelManager.set_initial_level(mafuyu, 100)
+		
+		return {
+			"player_team": [mizuki],
+			"enemy_team": [mafuyu],
+			"is_harbor_boss": false
+		}
+	return {"player_team": [], "enemy_team": [], "is_harbor_boss": false}

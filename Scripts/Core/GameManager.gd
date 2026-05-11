@@ -25,6 +25,8 @@ var last_battle_max_lv: int = 1
 var is_in_dialogue: bool = false
 var is_tutorial: bool = false
 var is_sandbox: bool = false
+var is_scripted_battle: bool = false
+var scripted_battle_id: String = ""
 var sandbox_player_team: Array = []
 var sandbox_enemy_team: Array = []
 
@@ -138,6 +140,19 @@ var training_ichika_done: bool:
 var training_kanade_done: bool:
 	get: return story.get_flag("training_kanade_done", false)
 	set(v): story.set_flag("training_kanade_done", v)
+var harbor_meeting_p1_done: bool:
+	get: return story.get_flag("harbor_meeting_p1_done", false)
+	set(v): story.set_flag("harbor_meeting_p1_done", v)
+var mafuyu_honami_talked: bool:
+	get: return story.get_flag("mafuyu_honami_talked", false)
+	set(v): story.set_flag("mafuyu_honami_talked", v)
+var mizuki_control_phase: bool:
+	get: return story.get_flag("mizuki_control_phase", false)
+	set(v): story.set_flag("mizuki_control_phase", v)
+var harbor_mizuki_snack_done: bool:
+	get: return story.get_flag("harbor_mizuki_snack_done", false)
+	set(v): story.set_flag("harbor_mizuki_snack_done", v)
+
 
 # ── Logic Điều khiển ───────────────────────────────────────────────────────
 
@@ -275,6 +290,15 @@ func finish_battle(victory: bool, count: int = 1):
 	"""
 	if is_sandbox:
 		get_tree().change_scene_to_file("res://Scenes/SandboxMenu.tscn")
+		return
+
+	if is_scripted_battle:
+		if scripted_battle_id == "mizuki_vs_mafuyu":
+			story.set_flag("mizuki_vs_mafuyu_done", true)
+		
+		is_scripted_battle = false
+		scripted_battle_id = ""
+		get_tree().change_scene_to_file(current_map_file)
 		return
 
 	if not victory and is_training_mode:

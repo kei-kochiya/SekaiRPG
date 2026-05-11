@@ -40,6 +40,11 @@ func _check_story_state():
 	print("[Story] Honami Talked: ", GameManager.story.get_flag("mafuyu_honami_talked"))
 	print("[Story] Snack Done: ", GameManager.story.get_flag("harbor_mizuki_snack_done"))
 		
+	if GameManager.story.get_flag("mizuki_vs_mafuyu_done"):
+		GameManager.story.set_flag("mizuki_vs_mafuyu_done", false)
+		_play_report_p2()
+		return
+
 	if GameManager.story.harbor_wave <= 5:
 		if not GameManager.story.get_flag("harbor_meeting_p1_done"):
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("base_meeting_p1"), func():
@@ -122,14 +127,14 @@ func _refresh_quest_label():
 
 func _spawn_npcs() -> void:
 	var positions := {
-		"Mafuyu": Vector2(24 * TILE_SIZE, 15 * TILE_SIZE),
-		"Ena":    Vector2(25 * TILE_SIZE, 15 * TILE_SIZE),
+		"Mafuyu": Vector2(24 * TILE_SIZE, 13 * TILE_SIZE),
+		"Ena":    Vector2(27 * TILE_SIZE, 15 * TILE_SIZE),
 		"Kanade": Vector2(6 * TILE_SIZE, 4 * TILE_SIZE),
 	}
 	
 	if GameManager.story.get_flag("mizuki_control_phase"):
 		# Mizuki is the player, so spawn Ichika at the table (where player was)
-		positions["Ichika"] = Vector2(23 * TILE_SIZE, 15 * TILE_SIZE)
+		positions["Ichika"] = Vector2(21 * TILE_SIZE, 15 * TILE_SIZE)
 	else:
 		# Normal state: Mizuki is in the kitchen
 		positions["Mizuki"] = Vector2(35 * TILE_SIZE, 13 * TILE_SIZE)
@@ -196,12 +201,10 @@ func _handle_npc_interaction(npc_name: String):
 			if ichika: LevelManager.gain_exp(ichika, 400)
 			if ena: LevelManager.gain_exp(ena, 400)
 			
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_report"), func():
-				GameManager.story.set_flag("mizuki_control_phase", false)
-				GameManager.story.set_flag("harbor_mizuki_snack_done", true)
-				GameManager.story.harbor_wave = 7
-				_refresh_quest_label()
-				# Revert player color maybe? (optional, user didn't ask)
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_report_p1"), func():
+				GameManager.is_scripted_battle = true
+				GameManager.scripted_battle_id = "mizuki_vs_mafuyu"
+				GameManager.trigger_battle()
 			)
 		return
 
@@ -227,6 +230,14 @@ func _handle_npc_interaction(npc_name: String):
 			"name": npc_name,
 			"color": NPC_COLORS[npc_name]
 		}])
+
+func _play_report_p2():
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_report_p2"), func():
+		GameManager.story.set_flag("mizuki_control_phase", false)
+		GameManager.story.set_flag("harbor_mizuki_snack_done", true)
+		GameManager.story.harbor_wave = 7
+		_refresh_quest_label()
+	)
 
 # ─────────────────────────────────────────────
 #  MAP CONSTRUCTION (Structural Clone of BaseMap)

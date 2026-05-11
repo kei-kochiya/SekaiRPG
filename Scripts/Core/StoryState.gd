@@ -24,7 +24,12 @@ var flags: Dictionary = {
 	"upgrade_tutorial_done": false,
 	"guards_defeated": false,
 	"training_ichika_done": false,
-	"training_kanade_done": false
+	"training_kanade_done": false,
+	"harbor_meeting_p1_done": false,
+	"mafuyu_honami_talked": false,
+	"mizuki_control_phase": false,
+	"harbor_mizuki_snack_done": false,
+	"mizuki_vs_mafuyu_done": false
 }
 
 # ── Tiến độ Nhiệm vụ Hiện tại (Volatile/Persistent) ─────────────────────────
