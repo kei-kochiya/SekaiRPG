@@ -27,6 +27,7 @@ func _ready():
 	"""
 	collision_layer = 1
 	collision_mask = 3
+	z_index = 5
 	
 	_marker = Polygon2D.new()
 	_marker.color = character_color

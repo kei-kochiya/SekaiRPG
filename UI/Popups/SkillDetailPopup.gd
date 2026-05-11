@@ -72,3 +72,53 @@ func display_skill(skill: Dictionary):
 	_content_vbox.add_child(details)
 	
 	visible = true
+
+func display_entity_skills(entity: Entity):
+	"""
+	Hiển thị toàn bộ danh sách kỹ năng của một thực thể.
+	"""
+	for c in _content_vbox.get_children():
+		c.queue_free()
+	
+	var header = HBoxContainer.new()
+	_content_vbox.add_child(header)
+	
+	var title = Label.new()
+	title.text = "THÔNG TIN KỸ NĂNG: " + entity.entity_name.to_upper()
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title.add_theme_font_size_override("font_size", 18)
+	header.add_child(title)
+	
+	var close_btn = Button.new()
+	close_btn.icon = load("res://Assets/kenney_ui-pack-adventure/Vector/checkbox_brown_cross.svg")
+	close_btn.flat = true
+	close_btn.pressed.connect(func(): visible = false)
+	header.add_child(close_btn)
+	
+	var scroll = ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_content_vbox.add_child(scroll)
+	
+	var list = VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 20)
+	scroll.add_child(list)
+	
+	for skill in entity.skills:
+		var item = VBoxContainer.new()
+		list.add_child(item)
+		
+		var name_lbl = Label.new()
+		name_lbl.text = "✦ " + skill["name"]
+		name_lbl.add_theme_color_override("font_color", Color(1.0, 0.9, 0.2))
+		name_lbl.add_theme_font_size_override("font_size", 18)
+		item.add_child(name_lbl)
+		
+		var details = Label.new()
+		details.text = skill.get("details", "Không có thông tin chi tiết.")
+		details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		details.add_theme_font_size_override("font_size", 14)
+		item.add_child(details)
+	
+	visible = true

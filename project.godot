@@ -23,6 +23,7 @@ DialogueLoader="*res://Scripts/Systems/DialogueLoader.gd"
 ScreenFade="*res://UI/Effects/ScreenFade.gd"
 UpgradeUI="*res://UI/Systems/UpgradeUI.tscn"
 PauseMenu="*res://UI/Systems/PauseMenu.gd"
+AudioManager="*res://Scripts/Systems/AudioManager.gd"
 
 [display]
 

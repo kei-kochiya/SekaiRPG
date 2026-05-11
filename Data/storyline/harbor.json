@@ -9,12 +9,48 @@
     }
   ],
   "harbor_arrival": [
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Nơi này... có vẻ canh gác rất nghiêm ngặt." },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Đúng vậy. Có hai cách để vào trong." },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Một là xông thẳng vào cửa chính, nhưng sẽ phải đối đầu với đám lính canh đông đúc." },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Hai là đi đường vòng phía sau. Ít lính hơn, nhưng có lẽ tên đội trưởng sẽ ở đó." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Không phải ta đến thám thính thôi sao?" },
-    { "type": "dialogue", "speaker": "right", "name": "Ena", "color": "#b86028", "text": "Ôi dào, nhóc quan tâm cái đó à? Kệ Mafuyu đi. Đi theo chị là theo luật của chị." }
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Nơi này... có vẻ canh gác rất nghiêm ngặt."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đúng vậy. Có hai cách để vào trong."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Một là xông thẳng vào cửa chính, nhưng sẽ phải đối đầu với đám lính canh đông đúc."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Hai là đi đường vòng phía sau. Ít lính hơn, nhưng có lẽ tên đội trưởng sẽ ở đó."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Không phải ta đến thám thính thôi sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ôi dào, nhóc quan tâm cái đó à? Kệ Mafuyu đi. Đi theo chị là theo luật của chị."
+    }
   ],
   "harbor_boss_intro": [
     {
@@ -108,23 +144,131 @@
     }
   ],
   "harbor_victory": [
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Kết thúc rồi." },
-    { "type": "dialogue", "speaker": "left", "name": "Ichika", "color": "#4a9e9e", "text": "Vâng... Cảm ơn chị, Mafuyu." },
-    { "type": "narrator", "text": "..." },
-    { "type": "dialogue", "speaker": "right", "name": "Honami", "color": "#ffaa88", "text": "Vết chém ngọt xớt đi qua tận xương sườn, tim ngừng đập hẳn rồi. Ca này thánh giáng trần cũng không cứu nổi." },
-    { "type": "dialogue", "speaker": "right", "name": "Honami", "color": "#ffaa88", "text": "Thành thật xin lỗi vì không hoàn thành nhiệm vụ bảo vệ ông nhé, khách hàng thân mến." },
-    { "type": "dialogue", "speaker": "left", "name": "Ena", "color": "#b86028", "text": "Con ranh chui từ lỗ nào ra phá đám thế này, muốn chầu diêm vương chung với lão lợn béo đó luôn à!" },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "Lùi lại ngay lập tức." },
-    { "type": "narrator", "text": "..." },
-    { "type": "dialogue", "speaker": "right", "name": "Honami", "color": "#ffaa88", "text": "Ô kìa, ngọn gió độc nào đưa vị sếp lớn của Nightcord đến tận cái xưởng súng rách nát này vậy, cô Asahina Mafuyu?" },
-    { "type": "narrator", "text": "Mafuyu lao vút đi với tốc độ của một vệt sáng đen, mũi dao đâm ngay yết hầu Honami." },
-    { "type": "dialogue", "speaker": "right", "name": "Honami", "color": "#ffaa88", "text": "(Đỡ nhát chém bằng chiếc vali của mình) Này sếp lớn, mới gặp nhau đã vậy rồi. Không vui đâu nhé." },
-    { "type": "narrator", "text": "Lưỡi dao găm của Mafuyu bất ngờ đổi hướng, hội tụ toàn bộ sức mạnh cơ thể giáng xuống một đòn cực mạnh từ trên đỉnh đầu Honami." },
-    { "type": "narrator", "text": "Chiếc vali hợp kim bị mũi dao xẻ toạc làm đôi, kim tiêm và thuốc văng tung tóe ra sàn nhà rỉ sét." },
-    { "type": "narrator", "text": "Honami nhăn mặt cắn răng chịu đựng luồng phản lực khủng khiếp. Toàn bộ cánh tay phải của cô tê rần mất đi cảm giác." },
-    { "type": "dialogue", "speaker": "left", "name": "Ena", "color": "#b86028", "text": "Vãi chưởng, sếp dùng chiêu đó thật kìa!" },
-    { "type": "narrator", "text": "..." },
-    { "type": "dialogue", "speaker": "right", "name": "Mafuyu", "color": "#665588", "text": "..." },
-    { "type": "dialogue", "speaker": "right", "name": "Honami", "color": "#ffaa88", "text": "Hôm nay tới đây thôi nhé, tôi xin phép cáo từ." }
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Kết thúc rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Vâng... Cảm ơn chị, Mafuyu."
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Vết chém ngọt xớt đi qua tận xương sườn, tim ngừng đập hẳn rồi. Ca này thánh giáng trần cũng không cứu nổi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Thành thật xin lỗi vì không hoàn thành nhiệm vụ bảo vệ ông nhé, khách hàng thân mến."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Con ranh chui từ lỗ nào ra phá đám thế này, muốn chầu diêm vương chung với lão lợn béo đó luôn à!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Lùi lại ngay lập tức."
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ô kìa, ngọn gió độc nào đưa vị sếp lớn của Nightcord đến tận cái xưởng súng rách nát này vậy, cô Asahina Mafuyu?"
+    },
+    {
+      "type": "narrator",
+      "text": "Mafuyu lao vút đi với tốc độ của một vệt sáng đen, mũi dao đâm ngay yết hầu Honami."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Nói nhiều quá."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Honami đỡ nhát chém bằng chiếc vali của mình)."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Này sếp lớn, mới gặp nhau đã vậy rồi. Không vui đâu nhé."
+    },
+    {
+      "type": "narrator",
+      "text": "Lưỡi dao găm của Mafuyu bất ngờ đổi hướng, cô dồn toàn lực giáng xuống một đòn cực mạnh từ trên đỉnh đầu Honami."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Đừng tỏ ra là không quen biết."
+    },
+    {
+      "type": "narrator",
+      "text": "Chiếc vali hợp kim bị mũi dao xẻ toạc làm đôi, kim tiêm và thuốc văng tung tóe ra sàn nhà rỉ sét."
+    },
+    {
+      "type": "narrator",
+      "text": "Honami nhăn mặt cắn răng chịu đựng luồng phản lực khủng khiếp. Toàn bộ cánh tay phải của cô tê rần mất đi cảm giác."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Vãi chưởng, sếp dùng chiêu đó thật kìa!"
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Hôm nay tới đây thôi nhé, tôi xin phép cáo từ."
+    }
   ]
 }

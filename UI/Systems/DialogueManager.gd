@@ -49,8 +49,10 @@ func _init_ui():
 
 	_narrator_box = PanelContainer.new()
 	_narrator_box.set_anchors_preset(Control.PRESET_CENTER)
-	_narrator_box.offset_left = -480
-	_narrator_box.offset_right = 480
+	_narrator_box.offset_left = -400
+	_narrator_box.offset_right = 400
+	_narrator_box.offset_top = -40
+	_narrator_box.offset_bottom = 40
 	_narrator_box.add_theme_stylebox_override("panel", _get_style("panel_brown_dark.svg", 12, 20))
 	root.add_child(_narrator_box)
 	
@@ -200,6 +202,7 @@ func _show_current_line():
 		_narrator_label.text = "[center][color=#ddddcc]%s[/color][/center]" % text
 	else:
 		var final_text = "[i]%s[/i]" % text if type == "action" else text
+
 		_text_label.text = "[color=#%s]%s:[/color]\n\n%s" % [color.to_html(false), speaker_name, final_text]
 		_update_portraits(speaker_name, speaker_side)
 

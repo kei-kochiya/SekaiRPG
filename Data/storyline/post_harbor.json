@@ -1,0 +1,404 @@
+{
+  "honami_alleyway": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chà, dính một đòn thôi mà xương cốt rã rời hết cả."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Xé áo làm băng gạc tạm bợ, quấn quanh vết thương rỉ máu)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Quả nhiên là chó săn điên cuồng nhất của Bộ Quốc phòng, sức mạnh áp đảo quá."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Lúc đó cô ta không nương tay thì chắc mình cùng chỗ với ông ta rồi."
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    }
+  ],
+  "base_meeting_p1": [
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Trời đất ơi, nhóc có thấy cái khoảnh khắc sếp gập cổ tay không, tốc độ đó ảo vãi chưởng!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Tôi thề là từ hồi vào Nightcord đến giờ mới thấy sếp xài lại cái chiêu vặn không gian đó, dao găm mà chém nát được cả khối hợp kim nguyên khối, điên rồ thực sự!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ừm."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Cái thế giới ngầm này toàn những kẻ mang sức mạnh quái vật.)"
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Cái bà bác sĩ kia cũng không phải dạng vừa đâu, đỡ được trọn vẹn cú đó mà tay không đứt lìa là mạng lớn lắm rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Là tôi thì, chắc cái đầu này lăn lóc dưới đất từ nhát chém đầu tiên rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ừ..."
+    }
+  ],
+  "mafuyu_honami_info": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Người vừa nãy là Mochizuki Honami."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Một vị bác sĩ tư nhân mang năng lực dị biệt, cực kỳ xuất chúng trong giới ngầm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô ta sẵn sàng phục vụ bất kỳ kẻ nào vung đủ tiền, bỏ qua hoàn toàn xuất thân hay phe phái."
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chỉ cần não chưa nát và tim còn nguyên vẹn, cô ta có thể kéo một cái xác từ dưới mồ sống dậy hoàn toàn khỏe mạnh."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Thật sự có tồn tại loại năng lực cải tử hoàn sinh đó sao.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Nightcord đã gửi thư mời chiêu mộ cô ta vài lần rồi, kết quả thu về chỉ là bặt vô âm tín."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Lúc nãy tôi thu bớt lực rồi, giết một nhân tài y học cỡ đó lãng phí lắm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Vãi, thế mà sếp gọi là nương tay hả?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "..."
+    }
+  ],
+  "honami_alleyway_p2": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chậc, người thì cũng lạnh ngắt rồi, chỗ tiền cọc này mình xin nhận tạm thay cho phí tổn thất cái vali hợp kim vậy."
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Một đơn hàng mới tinh từ bên khu sòng bạc ngầm sao, đêm nay đúng là chạy sô gãy chân rồi."
+    },
+    {
+      "type": "narrator",
+      "name": "Narator",
+      "text": "Cô thở dài, cất điện thoại đi rồi đứng dậy xách cái vali nát bét chui lủi vào màn đêm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Muốn chiêu mộ tôi, cần làm tốt hơn đấy sếp ạ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Nhưng mà, con bé tóc xanh kia, mình thấy lạ lắm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chắc là sẽ vui lắm đây."
+    }
+  ],
+  "base_mizuki_snack_p1": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Mừng mọi người đi săn xả láng trở về, tớ có cất công chuẩn bị chút đồ ăn khuya bồi bổ gân cốt đây!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Tuyệt vời, dạ dày tao đang kêu gào biểu tình từ nãy đến giờ đây này."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Nào Ichika-chan, ăn đi kẻo thịt nguội mất ngon."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "À... dạ vâng. Chúc mọi người ngon miệng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Thịt hôm nay ướp đậm đà phết nhỉ..."
+    },
+    {
+      "type": "narrator",
+      "name": "Hệ thống",
+      "text": "(Cộng 400 XP cho Ichika và Ena)"
+    },
+    {
+      "type": "narrator",
+      "name": "Narator",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ơ kìa sao mắt tao díp lại thế này..."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Buồn ngủ quá, mi mắt mình nặng trĩu rồi.)"
+    },
+    {
+      "type": "narrator",
+      "name": "Narator",
+      "text": "..."
+    }
+  ],
+  "mizuki_trash_talk_ichika": [
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ngủ ngon nhé Ichika-chan. Thế giới này không dịu dàng như vẻ ngoài của cậu đâu."
+    }
+  ],
+  "mizuki_trash_talk_ena": [
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena-nan vẫn cứ dễ bị lừa như mọi khi nhỉ? Ăn uống mà không thèm đề phòng gì cả."
+    }
+  ],
+  "base_mizuki_report": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Thành công rực rỡ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Thuốc ngủ loại này nhẹ đô quá, cô phải tìm thứ gì đó đập mạnh hơn chút đi Mizuki."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Trời đất sếp bị lờn thuốc rồi á, liều lượng đó đủ vật chết một con voi rồi đấy!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Báo cáo tình hình thu thập tin tức tình báo của các băng đảng khác đi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Tuyệt hảo luôn sếp ơi, tớ trà trộn thành công rực rỡ vào vị trí cố vấn chiến lược cho lão đại bên đó rồi nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Toàn bộ kế hoạch giao dịch hàng cấm của bọn chúng tháng tới đã nằm trọn trong cái thẻ nhớ này, tớ ghi âm lại không sót một chữ nào."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": " Làm tốt lắm..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "À thì... lúc tớ chuẩn bị chuồn đi có lỡ làm rớt lớp mặt nạ silicon rồi bị mấy tên gác cửa phát hiện."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Tớ đành tiện tay xài viên xúc xắc dọn dẹp sạch sẽ toàn bộ cái căn cứ đó luôn, chém giết chút xíu cho đỡ lo lộ thông tin nha."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô chán sống rồi đúng không."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Á á á. Sếp tha cho tớ lần này đi mà, tớ hứa lần sau sẽ trốn thoát mượt mà không để lại một giọt máu nào hết!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Dẹp đi, đi ngủ cho khuất mắt tôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Có lẽ thuốc mê bắt đầu ngấm rồi đấy, tôi về phòng ngủ luôn đây."
+    }
+  ]
+}

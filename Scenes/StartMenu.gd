@@ -1,6 +1,7 @@
 extends Control
 
 func _ready():
+	AudioManager.play_music("main_menu")
 	_apply_kenney_styles()
 	
 	# Check for existing save

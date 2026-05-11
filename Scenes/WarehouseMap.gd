@@ -4,6 +4,7 @@ const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
+	AudioManager.play_music("map")
 	ScreenFade.fade_in(0.8)
 	
 	_build_map()
@@ -11,6 +12,7 @@ func _ready():
 	
 	# Check Win Condition
 	if GameManager.warehouse_wave > 5:
+		AudioManager.play_music("after_warehouse")
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_clear"), func():
 			_return_to_base_with_fade()
 		)
@@ -52,11 +54,11 @@ func _create_enemy_zone(pos: Vector2):
 	root.position = pos
 	root.add_to_group("objectives")
 	
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = Color(0.8, 0.2, 0.2) 
-	root.add_child(vis)
+	var sprite = Sprite2D.new()
+	sprite.texture = load("res://Assets/person/c_down.png")
+	sprite.scale = Vector2(4, 4)
+	sprite.position = Vector2(0, -12)
+	root.add_child(sprite)
 	
 	var zone = InteractableZone.new()
 	zone.prompt_text = "Nhấn ENTER để bắt đầu Wave " + str(GameManager.warehouse_wave)

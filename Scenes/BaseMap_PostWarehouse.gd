@@ -29,6 +29,9 @@ func _ready() -> void:
 
 	if not GameManager.harbor_mission_unlocked:
 		_play_post_warehouse_sequence()
+	else:
+		AudioManager.play_music("base")
+		_refresh_quest_label()
 
 # ─────────────────────────────────────────────
 #  MAP CONSTRUCTION
@@ -64,6 +67,32 @@ func _build_map():
 	_place_tile("dining_table.png", Vector2(37, 15), true)
 	_place_tile("dining_seat.png", Vector2(36, 15), false)
 	_place_tile("dining_seat.png", Vector2(38, 15), false)
+	
+	# Mafuyu's Room (Office)
+	_place_indoor_asset("table_1.png", Vector2(13, 13), true)
+	_place_indoor_asset("table_2.png", Vector2(13, 14), true)
+	_place_indoor_asset("table_3.png", Vector2(13, 15), true)
+	_place_indoor_asset("chair_facing_right.png", Vector2(10, 14), false)
+	_place_indoor_asset("office_1.png", Vector2(6, 11), true)
+	_place_indoor_asset("office_2.png", Vector2(7, 11), true)
+	_place_indoor_asset("office_3.png", Vector2(8, 11), true)
+	_place_indoor_asset("plant_decor_1.png", Vector2(6, 18), false)
+	
+	# Sảnh Chính (Meeting Hall)
+	_place_indoor_asset("piano_1.png", Vector2(18, 11), true)
+	_place_indoor_asset("piano_2.png", Vector2(19, 11), true)
+	_place_indoor_asset("plant_decor_2.png", Vector2(30, 11), false)
+	
+	# Khu Nghỉ Ngơi (Rest Area)
+	for y in [4, 6, 8]:
+		_place_indoor_asset("green_bed_facing_right.png", Vector2(6, y), true)
+		_place_indoor_asset("red_bed_facing_left.png", Vector2(42, y), true)
+	_place_indoor_asset("plant_decor_2.png", Vector2(6, 3), false)
+	
+	# Phòng Ăn (Dining Room)
+	for i in range(1, 7):
+		_place_indoor_asset("kitchen_%d.png" % i, Vector2(31 + i, 11), true)
+	_place_indoor_asset("plant_decor_1.png", Vector2(42, 18), false)
 
 func _fill_floor(x1, y1, x2, y2):
 	for x in range(x1, x2 + 1):
@@ -100,6 +129,24 @@ func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
 		body.add_child(col)
 		add_child(body)
 
+func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool):
+	var tile_pos = grid_pos * TILE_SIZE
+	var sprite = Sprite2D.new()
+	sprite.texture = load("res://Assets/indoors/" + file)
+	sprite.scale = Vector2(4, 4)
+	sprite.position = tile_pos
+	add_child(sprite)
+	if has_collision:
+		var body = StaticBody2D.new()
+		body.position = tile_pos
+		body.name = "Indoor_" + file.get_basename() + "_" + str(grid_pos.x) + "_" + str(grid_pos.y)
+		var col = CollisionShape2D.new()
+		var shape = RectangleShape2D.new()
+		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
+		col.shape = shape
+		body.add_child(col)
+		add_child(body)
+
 func _remove_wall_at(grid_pos: Vector2):
 	var target_pos = grid_pos * TILE_SIZE
 	for child in get_children():
@@ -122,7 +169,7 @@ func _add_room_label(text: String, grid_pos: Vector2):
 
 func _spawn_npcs() -> void:
 	var positions := {
-		"Mafuyu": Vector2(11 * TILE_SIZE, 15 * TILE_SIZE),   # Office
+		"Mafuyu": Vector2(10 * TILE_SIZE, 14 * TILE_SIZE),   # Office
 		"Ena":    Vector2(35 * TILE_SIZE, 15 * TILE_SIZE),  # Dining Room
 		"Mizuki": Vector2(39 * TILE_SIZE, 15 * TILE_SIZE),  # Dining Room
 		"Kanade": Vector2(24 * TILE_SIZE, 15 * TILE_SIZE),  # Main Hall
@@ -252,10 +299,12 @@ func _handle_ena_interaction():
 
 func _play_post_warehouse_sequence():
 	_lighting.color = Color(0.4, 0.4, 0.6)
+	AudioManager.play_music("after_warehouse")
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_rest"), func():
 		await ScreenFade.fade_out(1.5)
 		await get_tree().create_timer(1.0).timeout
 		_lighting.color = Color.WHITE
+		AudioManager.play_music("base")
 		await ScreenFade.fade_in(1.0)
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_morning"), func():
 			GameManager.harbor_mission_unlocked = true # This just marks the phase

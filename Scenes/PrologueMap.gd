@@ -30,32 +30,38 @@ func _build_map():
 	# Keeping this loop as reference for walls logic if needed.
 	
 	# 2. Warehouse Walls
-	for x in range(6, 15):
+	var w_x1 = 4
+	var w_x2 = 20
+	var w_y1 = 4
+	var w_y2 = 16
+	var door_x = 12
+
+	for x in range(w_x1, w_x2 + 1):
 		var type = "horizontal_wall.png"
-		if x == 6: type = "top_left_wall.png"
-		elif x == 14: type = "top_right_wall.png"
-		_place_tile(type, Vector2(x, 6), true)
+		if x == w_x1: type = "top_left_wall.png"
+		elif x == w_x2: type = "top_right_wall.png"
+		_place_tile(type, Vector2(x, w_y1), true)
 		
 		# Bottom wall with door
-		if x == 10:
-			_place_tile("door_1.png", Vector2(x, 12), false)
+		if x == door_x:
+			_place_tile("door_1.png", Vector2(x, w_y2), false)
 		else:
 			var b_type = "horizontal_wall.png"
-			if x == 6: b_type = "bottom_left_wall.png"
-			elif x == 14: b_type = "bottom_right_wall.png"
-			_place_tile(b_type, Vector2(x, 12), true)
+			if x == w_x1: b_type = "bottom_left_wall.png"
+			elif x == w_x2: b_type = "bottom_right_wall.png"
+			_place_tile(b_type, Vector2(x, w_y2), true)
 			
-	for y in range(7, 12):
-		_place_tile("left_vertical_wall.png", Vector2(6, y), true)
-		_place_tile("right_vertical_wall.png", Vector2(14, y), true)
+	for y in range(w_y1 + 1, w_y2):
+		_place_tile("left_vertical_wall.png", Vector2(w_x1, y), true)
+		_place_tile("right_vertical_wall.png", Vector2(w_x2, y), true)
 
 	# 3. Decor: Sword near Ichika
-	_place_tile("sword.png", Vector2(9, 9), false)
+	_place_tile("sword.png", Vector2(11, 11), false)
 
 	# 4. Trees around the warehouse (outside)
 	var tree_spots = [
-		Vector2(4, 5), Vector2(16, 7), Vector2(5, 14), 
-		Vector2(15, 13), Vector2(3, 10), Vector2(12, 15)
+		Vector2(2, 3), Vector2(22, 5), Vector2(3, 18), 
+		Vector2(21, 17), Vector2(1, 10), Vector2(12, 20)
 	]
 	for spot in tree_spots:
 		_place_tile("tree.png", spot, true)
@@ -84,16 +90,16 @@ func _setup_phase_0():
 	var player = OverworldPlayer.new()
 	player.name = "OverworldPlayer"
 	# Positioned inside the warehouse
-	player.position = Vector2(10 * TILE_SIZE, 8 * TILE_SIZE) 
+	player.position = Vector2(12 * TILE_SIZE, 10 * TILE_SIZE) 
 	add_child(player)
 
 	# Kidnappers surrounding Ichika
-	_create_enemy_npc(Vector2(9 * TILE_SIZE, 7 * TILE_SIZE), Color(0.8, 0.2, 0.2))
-	_create_enemy_npc(Vector2(11 * TILE_SIZE, 7 * TILE_SIZE), Color(0.8, 0.2, 0.2))
-	_create_enemy_npc(Vector2(10 * TILE_SIZE, 10 * TILE_SIZE), Color(0.8, 0.2, 0.2))
+	_create_enemy_npc(Vector2(11 * TILE_SIZE, 9 * TILE_SIZE), "b_down.png")
+	_create_enemy_npc(Vector2(13 * TILE_SIZE, 9 * TILE_SIZE), "b_down.png")
+	_create_enemy_npc(Vector2(12 * TILE_SIZE, 12 * TILE_SIZE), "b_up.png")
 
 	# Mafuyu visible outside the door
-	_create_visual_npc("Mafuyu", Vector2(10 * TILE_SIZE, 14 * TILE_SIZE), Color(0.4, 0.3, 0.5))
+	_create_visual_npc("Mafuyu", Vector2(12 * TILE_SIZE, 18 * TILE_SIZE), Color(0.4, 0.3, 0.5))
 
 	get_tree().create_timer(0.8).timeout.connect(func():
 		if has_triggered_intro:
@@ -114,18 +120,18 @@ func _setup_phase_1():
 	var player = OverworldPlayer.new()
 	player.name = "OverworldPlayer"
 	# Mafuyu starts outside
-	player.position = Vector2(10 * TILE_SIZE, 15 * TILE_SIZE)
+	player.position = Vector2(12 * TILE_SIZE, 19 * TILE_SIZE)
 	player.character_color = Color(0.4, 0.3, 0.5)
 	add_child(player)
 
 	# Ichika inside, exhausted
-	_create_recruitable_npc("Ichika", Vector2(10 * TILE_SIZE, 8 * TILE_SIZE), Color(0.29, 0.62, 0.62),
+	_create_recruitable_npc("Ichika", Vector2(12 * TILE_SIZE, 10 * TILE_SIZE), Color(0.29, 0.62, 0.62),
 		DialogueLoader.get_lines("prologue_phase1_recruit"))
 
 	# Dead bodies from the fight
-	_create_dead_body(Vector2(9 * TILE_SIZE, 7 * TILE_SIZE))
-	_create_dead_body(Vector2(11 * TILE_SIZE, 7 * TILE_SIZE))
-	_create_dead_body(Vector2(10 * TILE_SIZE, 10 * TILE_SIZE))
+	_create_dead_body(Vector2(11 * TILE_SIZE, 9 * TILE_SIZE))
+	_create_dead_body(Vector2(13 * TILE_SIZE, 9 * TILE_SIZE))
+	_create_dead_body(Vector2(12 * TILE_SIZE, 12 * TILE_SIZE))
 
 	get_tree().create_timer(0.8).timeout.connect(func():
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase1_intro"))
@@ -135,14 +141,15 @@ func _setup_phase_1():
 #  HELPERS
 # ─────────────────────────────────────────────
 
-func _create_enemy_npc(pos: Vector2, color: Color):
+func _create_enemy_npc(pos: Vector2, sprite_file: String):
 	var root = Node2D.new()
 	root.position = pos
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = color
-	root.add_child(vis)
+	var sprite = Sprite2D.new()
+	sprite.texture = load("res://Assets/person/" + sprite_file)
+	sprite.scale = Vector2(4, 4)
+	sprite.position = Vector2(0, -12)
+	root.add_child(sprite)
+	root.z_index = 2
 	add_child(root)
 
 func _create_visual_npc(_npc_name: String, pos: Vector2, color: Color):
@@ -153,6 +160,7 @@ func _create_visual_npc(_npc_name: String, pos: Vector2, color: Color):
 	vis.position = Vector2(-8, -24)
 	vis.color = color
 	root.add_child(vis)
+	root.z_index = 2
 	add_child(root)
 
 func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, lines: Array):
@@ -192,20 +200,24 @@ func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, line
 		)
 	)
 
+	root.z_index = 2
 	add_child(root)
 
 func _transition_to_safehouse() -> void:
 	await ScreenFade.fade_out(0.6)
 	await get_tree().create_timer(1.0).timeout
+	GameManager.last_player_position = Vector2.ZERO # Reset pos for safehouse
 	GameManager.store_map_state("res://Scenes/BaseMap.tscn", Vector2.ZERO)
 	get_tree().change_scene_to_file("res://Scenes/BaseMap.tscn")
 
 func _create_dead_body(pos: Vector2):
 	var root = Node2D.new()
 	root.position = pos
-	var vis = ColorRect.new()
-	vis.size = Vector2(24, 12)
-	vis.position = Vector2(-12, -6)
-	vis.color = Color(0.4, 0.1, 0.1)
-	root.add_child(vis)
+	var sprite = Sprite2D.new()
+	sprite.texture = load("res://Assets/person/b_up.png")
+	sprite.scale = Vector2(4, 4)
+	sprite.rotation = PI / 2 # Rotate to look like they are lying down
+	sprite.position = Vector2(0, 0)
+	root.add_child(sprite)
+	root.z_index = 1
 	add_child(root)

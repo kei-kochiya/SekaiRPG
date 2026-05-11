@@ -102,7 +102,7 @@ func _on_upgrade():
 	if selected_players.is_empty():
 		return
 	
-	var entities = []
+	var entities: Array[Entity] = []
 	for p_name in selected_players:
 		var p = GameManager.get_party_member(p_name)
 		# For Sandbox, ensure they are at least Level 10

@@ -31,7 +31,6 @@ func _ready():
 	"""
 	visible = false
 	_build_shell()
-	_create_tooltip()
 	
 	_skill_detail_popup = SkillDetailPopupClass.new()
 	add_child(_skill_detail_popup)
@@ -49,12 +48,25 @@ func _build_shell():
 	root.add_theme_constant_override("separation", 8)
 	add_child(root)
 	
+	var title_row = HBoxContainer.new()
+	title_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	title_row.add_theme_constant_override("separation", 6)
+	root.add_child(title_row)
+	
+	var info_btn = TextureButton.new()
+	info_btn.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/minimap_icon_exclamation_white.svg")
+	info_btn.ignore_texture_size = true
+	info_btn.custom_minimum_size = Vector2(20, 20)
+	info_btn.flip_v = true
+	info_btn.modulate = Color(0.7, 0.7, 0.7)
+	info_btn.pressed.connect(func(): if current_entity: _skill_detail_popup.display_entity_skills(current_entity))
+	title_row.add_child(info_btn)
+	
 	var title = Label.new()
 	title.text = "LỆNH CHIẾN ĐẤU"
 	title.add_theme_font_size_override("font_size", 12)
 	title.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	root.add_child(title)
+	title_row.add_child(title)
 	
 	action_container = VBoxContainer.new()
 	action_container.add_theme_constant_override("separation", 4)
@@ -65,27 +77,6 @@ func _build_shell():
 	target_container.visible = false
 	root.add_child(target_container)
 
-func _create_tooltip():
-	"""Khởi tạo bảng thông báo nhanh (Tooltip) nổi theo con trỏ chuột."""
-	_tooltip = PanelContainer.new()
-	_tooltip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_tooltip.visible = false
-	_tooltip.top_level = true
-	
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(0.1, 0.1, 0.1, 0.9)
-	sb.set_content_margin_all(10)
-	sb.border_width_left = 3
-	sb.border_color = Color(0.8, 0.6, 0.2)
-	_tooltip.add_theme_stylebox_override("panel", sb)
-	
-	var lbl = Label.new()
-	lbl.name = "Text"
-	lbl.add_theme_font_size_override("font_size", 13)
-	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl.custom_minimum_size = Vector2(200, 0)
-	_tooltip.add_child(lbl)
-	add_child(_tooltip)
 
 # ── API Công khai ──────────────────────────────────────────────────────────
 
@@ -117,29 +108,10 @@ func show_for(entity: Entity, enemies: Array):
 		elif cd > 0: label += " (Hồi: %d)" % cd
 			
 		var btn = _make_btn(label, skill["method"], skill_ready)
-		
-		var info_icon = TextureButton.new()
-		info_icon.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/minimap_icon_exclamation_white.svg")
-		info_icon.custom_minimum_size = Vector2(24, 24)
-		info_icon.flip_v = true 
-		info_icon.position = Vector2(185, 4)
-		info_icon.pressed.connect(func(): _skill_detail_popup.display_skill(skill))
-		btn.add_child(info_icon)
-		
-		btn.mouse_entered.connect(func():
-			_tooltip.get_node("Text").text = skill.get("details", skill["name"])
-			_tooltip.visible = true
-		)
-		btn.mouse_exited.connect(func(): _tooltip.visible = false)
-		
 		action_container.add_child(btn)
 	
 	visible = true
 
-func _process(_delta):
-	"""Cập nhật vị trí của Tooltip bám theo con trỏ chuột."""
-	if _tooltip.visible:
-		_tooltip.global_position = get_viewport().get_mouse_position() + Vector2(20, 0)
 
 # ── Logic Nội bộ ───────────────────────────────────────────────────────────
 
@@ -147,7 +119,6 @@ func _on_action_picked(action_name: String):
 	"""Xử lý sự kiện khi người chơi chọn một hành động cụ thể."""
 	chosen_action = action_name
 	action_container.visible = false
-	_tooltip.visible = false
 	
 	var target_type = "enemy"
 	if action_name != "attack":

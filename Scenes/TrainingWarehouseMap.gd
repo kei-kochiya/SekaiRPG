@@ -6,6 +6,7 @@ const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 var max_waves = 5
 
 func _ready():
+	AudioManager.play_music("map")
 	ScreenFade.fade_in(0.8)
 	
 	if GameManager.training_participants.size() > 1:
@@ -63,11 +64,11 @@ func _create_enemy_zone(pos: Vector2):
 	root.position = pos
 	root.add_to_group("objectives")
 	
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = Color(0.2, 0.8, 0.2) # Green for training targets
-	root.add_child(vis)
+	var sprite = Sprite2D.new()
+	sprite.texture = load("res://Assets/person/c_down.png")
+	sprite.scale = Vector2(4, 4)
+	sprite.position = Vector2(0, -12)
+	root.add_child(sprite)
 	
 	var zone = InteractableZone.new()
 	zone.prompt_text = "Nhấn ENTER để bắt đầu lượt tập (Wave " + str(GameManager.warehouse_wave) + ")"

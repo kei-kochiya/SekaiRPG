@@ -25,6 +25,7 @@ func _ready():
 	"""
 	collision_layer = 0
 	collision_mask = 1 
+	z_index = 10
 	
 	prompt_label = Label.new()
 	prompt_label.text = prompt_text

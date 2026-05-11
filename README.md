@@ -2,7 +2,7 @@
 
 SekaiRPG là một trò chơi nhập vai (RPG) được xây dựng trên nền tảng Godot Engine 4.x, lấy cảm hứng từ các nhân vật trong series *Project Sekai*. Trò chơi kết hợp giữa lối chơi Overworld truyền thống và hệ thống chiến đấu theo lượt (Turn-based) chiều sâu.
 
-## Tính năng
+## Tính năng nổi bật
 
 - **Hệ thống chiến đấu theo lượt**: Sử dụng cơ chế **Action Value (AV)** để tính toán lượt đánh linh hoạt (tương tự Honkai: Star Rail).
 - **Tương khắc thuộc tính**: Hệ thống 5 hệ (**Cool, Happy, Cute, Mysterious, Pure**) tạo tính chiến thuật cao.
