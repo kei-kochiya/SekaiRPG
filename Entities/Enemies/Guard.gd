@@ -22,9 +22,7 @@ func _init():
 	]
 
 func suppress(target: Entity):
-	"""
-	[Trấn Áp]: Tấn công mục tiêu và có 30% tỉ lệ gây Choáng trong 1 lượt.
-	"""
+	# [Trấn Áp]: Tấn công vật lý + 30% tỷ lệ gây Stun 1 lượt.
 	print(entity_name, " sử dụng [Trấn Áp]!")
 	var dmg = DamageCalculator.calculate_damage(self, target)
 	target.take_damage(dmg)

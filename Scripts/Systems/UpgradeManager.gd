@@ -24,18 +24,14 @@ static func upgrade_stat(entity: Entity, stat_name: String) -> bool:
 	"""
 	Thực hiện nâng cấp một chỉ số cụ thể cho thực thể.
 
-	Quy trình kiểm tra bao gồm:
+	Quy trình kiểm tra:
 	- Tính hợp lệ của tên chỉ số (stat_name).
-	- Số lượng điểm Skill Points (SP) hiện có của thực thể.
-	- Giới hạn tối đa (Hard Cap) của chỉ số đó từ dữ liệu Entity.
-	- Tính toán lượng tăng thực tế để không vượt quá giới hạn.
+	- Số lượng điểm Skill Points (SP) hiện có.
+	- Giới hạn tối đa (Hard Cap) của chỉ số từ dữ liệu Entity.
 
-	Args:
-		entity (Entity): Thực thể thực hiện nâng cấp.
-		stat_name (String): Tên thuộc tính cần nâng (ví dụ: 'atk').
-
-	Returns:
-		bool: True nếu nâng cấp thành công, False nếu không đủ SP hoặc đạt giới hạn.
+	- entity: Thực thể thực hiện nâng cấp (Entity).
+	- stat_name: Tên thuộc tính cần nâng, ví dụ: 'atk' (String).
+	- Return: True nếu nâng cấp thành công, False nếu không đủ SP hoặc đạt giới hạn (bool).
 	"""
 	if entity == null:
 		return false
@@ -67,14 +63,11 @@ static func upgrade_stat(entity: Entity, stat_name: String) -> bool:
 static func bulk_upgrade(entity: Entity, stat_name: String, count: int) -> int:
 	"""
 	Thực hiện nâng cấp hàng loạt một chỉ số.
-	
-	Args:
-		entity (Entity): Thực thể cần nâng cấp.
-		stat_name (String): Tên chỉ số.
-		count (int): Số lần muốn nâng (999 để nâng tối đa có thể).
-		
-	Returns:
-		int: Số lần đã nâng cấp thành công.
+
+	- entity: Thực thể cần nâng cấp (Entity).
+	- stat_name: Tên chỉ số (String).
+	- count: Số lần muốn nâng, dùng 999 để nâng tối đa (int).
+	- Return: Số lần nâng cấp đã thực hiện thành công (int).
 	"""
 	var upgrades_done = 0
 	for i in range(count):

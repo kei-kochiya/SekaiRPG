@@ -2,22 +2,20 @@ extends Node
 class_name CooldownManager
 
 """
-CooldownManager: Quản lý thời gian hồi chiêu của các kỹ năng.
+CooldownManager: Quản lý thời gian hồi chiêu (cooldown) của kỹ năng.
 
-Lớp này cung cấp các phương thức để xử lý việc đếm ngược thời gian hồi chiêu
-vào mỗi lượt đánh, kiểm tra trạng thái sẵn sàng của kỹ năng và thiết lập
-thời gian chờ mới sau khi kỹ năng được sử dụng.
+Cung cấp các phương thức để đếm ngược cooldown mỗi lượt, kiểm tra kỹ năng
+đã sẵn sàng chưa, và thiết lập cooldown sau khi sử dụng kỹ năng.
 """
 
 static func process_cooldowns(entity: Entity):
 	"""
-	Giảm thời gian hồi chiêu của tất cả kỹ năng cho một thực thể.
-	
-	Thường được gọi vào đầu mỗi lượt đánh của thực thể để giải phóng 
+	Giảm thời gian hồi chiêu của tất cả kỹ năng xuống 1 lượt.
+
+	Thường được gọi vào đầu lượt của thực thể để giải phóng
 	các kỹ năng đã hết thời gian chờ.
 
-	Args:
-		entity (Entity): Thực thể cần cập nhật thời gian hồi chiêu.
+	- entity: Thực thể cần cập nhật cooldown (Entity).
 	"""
 	if entity == null:
 		return
@@ -30,14 +28,11 @@ static func process_cooldowns(entity: Entity):
 
 static func is_skill_ready(entity: Entity, skill_name: String) -> bool:
 	"""
-	Kiểm tra xem một kỹ năng cụ thể đã sẵn sàng để sử dụng hay chưa.
+	Kiểm tra xem một kỹ năng đã sẵn sàng để sử dụng hay chưa.
 
-	Args:
-		entity (Entity): Thực thể sở hữu kỹ năng.
-		skill_name (String): Tên phương thức (method) của kỹ năng.
-
-	Returns:
-		bool: True nếu thời gian hồi chiêu bằng 0, ngược lại False.
+	- entity: Thực thể sở hữu kỹ năng (Entity).
+	- skill_name: Tên method của kỹ năng cần kiểm tra (String).
+	- Return: True nếu cooldown bằng 0, ngược lại False (bool).
 	"""
 	if entity == null:
 		return false
@@ -47,10 +42,9 @@ static func set_cooldown(entity: Entity, skill_name: String, turns: int):
 	"""
 	Thiết lập thời gian hồi chiêu mới cho một kỹ năng sau khi sử dụng.
 
-	Args:
-		entity (Entity): Thực thể thực hiện kỹ năng.
-		skill_name (String): Tên kỹ năng.
-		turns (int): Số lượt cần chờ (cooldown).
+	- entity: Thực thể thực hiện kỹ năng (Entity).
+	- skill_name: Tên kỹ năng (String).
+	- turns: Số lượt cần chờ (int).
 	"""
 	if entity == null:
 		return

@@ -22,9 +22,7 @@ func _init():
 	]
 
 func execution(target: Entity):
-	"""
-	[Xử Quyết]: Đòn tấn công mạnh bạo gây sát thương vật lý lớn.
-	"""
+	# [Xử Quyết]: Đòn tấn công vật lý đơn mục tiêu.
 	print(entity_name, " tung đòn [Xử Quyết]!")
 	var dmg = DamageCalculator.calculate_damage(self, target)
 	target.take_damage(dmg)

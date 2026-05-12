@@ -26,16 +26,14 @@ func _init():
 	]
 
 func numb_blade(target: Entity):
-	#Lưỡi Dao Vô Hồn
-	#Sát thương đơn và 1 Bleed.
+	# [Lưỡi Dao Vô Hồn]: Đòn đơn vật lý + 1 stack Bleed (3 lượt).
 	print(entity_name, " phóng [Lưỡi Dao Vô Hồn]!")
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
 func freezing_void(_target: Entity):
-	#Vực Thẳm Vô Định
-	#Tấn công 2 kẻ địch ngẫu nhiên (hoặc 1 kẻ địch 2 lần).
+	# [Vực Thẳm Vô Định]: Đánh 2 lần vào kẻ địch ngẫu nhiên, mỗi đòn 70% ATK + 1 Bleed.
 	print(entity_name, " giải phóng [Vực Thẳm Vô Định]!")
 	var alive_enemies = []
 	for e in enemies:
@@ -46,12 +44,11 @@ func freezing_void(_target: Entity):
 	for i in range(2):
 		var target = alive_enemies.pick_random()
 		var dmg = DamageCalculator.calculate_damage(self , target)
-		target.take_damage(int(dmg * 0.7)) # Giảm sát thương mỗi hit
+		target.take_damage(int(dmg * 0.7))
 		target.add_status({"type": "Bleed", "duration": 3})
 
 func lost_world(_target: Entity):
-	#Lost World
-	#Sát thương cực lớn dựa trên HP đã mất.
+	# [Lost World]: Tuyệt kỹ AoE Pure DMG - scale đến x3 khi gần hết máu. Sống sót → 2 Bleed cho tất cả.
 	print(entity_name, " kích hoạt [Lost World]...")
 	
 	var lost_hp_ratio = 1.0 - (float(current_hp) / max_hp)
@@ -63,7 +60,7 @@ func lost_world(_target: Entity):
 			var final_dmg = int(base_dmg * dmg_mult)
 			e.take_damage(final_dmg, "pure")
 	
-	# Kiểm tra xem còn ai sống sót
+	# Nếu còn kẻ sống sót, lan tỏa Bleed cho cả hai phe
 	var survivors = false
 	for e in enemies + allies:
 		if e.current_hp > 0:

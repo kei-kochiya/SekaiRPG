@@ -26,44 +26,21 @@ func _init():
 	]
 
 func ribbon_bind(target: Entity):
-	"""
-	[Ruy Băng Trói Buộc]: Tấn công đơn mục tiêu.
-
-	Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
+	# [Ruy Băng Trói Buộc]: Đòn đơn 150% ATK vật lý.
 	print(entity_name, " trói chặt bằng [Ruy Băng Trói Buộc]!")
 	var raw_dmg = DamageCalculator.calculate_damage(self , target)
 	var scaled_dmg = int(raw_dmg * 1.5)
 	target.take_damage(scaled_dmg)
 
 func bitter_secret(target: Entity):
-	"""
-	[Bí Mật Cay Đắng]: Tấn công và gây hiệu ứng xấu.
-
-	Gây sát thương vật lý và áp dụng trạng thái Trúng độc (Poison) 
-	lên mục tiêu trong 3 lượt.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
+	# [Bí Mật Cay Đắng]: Đòn đơn vật lý + Poison 3 lượt (15% HP/lượt).
 	print(entity_name, " thì thầm [Bí Mật Cay Đắng]...")
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Poison", "duration": 3, "percent": 0.15})
 
 func lonely_marionette(target: Entity):
-	"""
-	[Rối Độc Thoại]: Tuyệt kỹ xuyên thấu của Mizuki.
-
-	Gây sát thương thuần (Pure Damage) bằng 250% ATK và áp dụng 
-	trạng thái Trúng độc (Poison) cực mạnh trong 4 lượt.
-
-	Args:
-		target (Entity): Mục tiêu chịu đòn.
-	"""
+	# [Rối Độc Thoại]: Tuyệt kỹ - Pure DMG 250% ATK + Poison cực mạnh 4 lượt.
 	print(entity_name, " giật dây [Rối Độc Thoại]!")
 	var multiplier = TypeChart.get_multiplier(self.type, target.type)
 	var massive_dmg = int(self.atk * 2.5 * multiplier)

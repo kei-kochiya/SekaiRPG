@@ -26,27 +26,21 @@ func _init():
 	]
 
 func brush_stroke(target: Entity):
-	# Nét Cọ Toàn Nhẫn
-	# Gây sát thương vật lý tương đương 150% lượng sát thương tính toán cơ bản.
+	# [Nét Cọ Tàn Nhẫn]: Đòn đơn 150% ATK vật lý.
 	print(entity_name, " vung [Nét Cọ Tàn Nhẫn]!")
 	var raw_dmg = DamageCalculator.calculate_damage(self , target)
 	var scaled_dmg = int(raw_dmg * 1.5)
 	target.take_damage(scaled_dmg)
 
 func toxic_criticism(target: Entity):
-	#Bức Tranh Độc Đáo
-	#Gây sát thương vật lý và áp dụng trạng thái Trúng độc (Poison) 
-	# mạnh lên mục tiêu trong 3 lượt.
+	# [Bức Tranh Độc Đáo]: Đòn đơn vật lý + Poison 3 lượt (15% HP/lượt).
 	print(entity_name, " tung ra [Bức Tranh Độc Đáo]!")
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Poison", "duration": 3, "percent": 0.15})
 
 func masterpiece(target: Entity):
-	#Kiệt Tác Dang Dở
-	#Giải phóng một đòn tấn công gây sát thương thuần (Pure Damage) 250% ATK, 
-	#áp dụng Poison cực mạnh. Sau đó, Ena tự động tìm và hồi phục cho đồng đội 
-	#có lượng máu thấp nhất một lượng máu tương đương 150% ATK.
+	# [Kiệt Tác Dang Dở]: Tuyệt kỹ - Pure DMG 250% ATK + Poison 4 lượt + hồi máu đồng đội yếu nhất.
 	print(entity_name, " hoàn thành [Kiệt Tác Dang Dở]!")
 	var multiplier = TypeChart.get_multiplier(self.type, target.type)
 	var massive_dmg = int(self.atk * 2.5 * multiplier)
@@ -54,13 +48,14 @@ func masterpiece(target: Entity):
 	target.take_damage(massive_dmg, "pure")
 	target.add_status({"type": "Poison", "duration": 4, "percent": 0.2})
 	
+	# Tìm đồng đội còn sống có HP thấp nhất để hồi máu
 	var lowest_ally = null
 	var lowest_hp = 999999
 	for ally in allies:
 		if ally.current_hp > 0 and ally.current_hp < lowest_hp:
 			lowest_hp = ally.current_hp
 			lowest_ally = ally
-			
+		
 	if lowest_ally != null:
 		var heal_amount = int(self.atk * 1.5)
 		lowest_ally.heal(heal_amount)

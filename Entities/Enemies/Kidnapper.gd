@@ -24,12 +24,7 @@ func _init():
 	]
 
 func basic_attack(target: Entity):
-	"""
-	[Đâm Lén]: Đòn tấn công vật lý cơ bản.
-
-	Args:
-		target (Entity): Mục tiêu bị tấn công.
-	"""
+	# [Đâm Lén]: Tấn công vật lý cơ bản.
 	print(entity_name, " đâm lén!")
 	var dmg = DamageCalculator.calculate_damage(self, target)
 	target.take_damage(dmg)

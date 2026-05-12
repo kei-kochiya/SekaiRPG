@@ -13,9 +13,9 @@ Cô sở hữu khả năng hồi phục mạnh mẽ cho cả đơn mục tiêu v
 
 func _init():
 	entity_name = "Honami"
-	max_hp = 600 # HP cao
+	max_hp = 600
 	current_hp = 600
-	atk = 90 # DMG thấp
+	atk = 90
 	defense = 140
 	res = 50
 	spd = 90
@@ -29,47 +29,36 @@ func _init():
 	]
 
 func take_damage(amount: int, damage_type: String = "physical") -> bool:
+	# Khi is_harbor = true (trong trận Harbor): miễn tổn thương hoàn toàn.
 	if is_harbor:
 		damage_received.emit(0, damage_type)
 		return false
 	return super.take_damage(amount, damage_type)
 
 func merciful_cleave(_target: Entity):
-	"""
-	[Vệt Cắt Xót Thương]: Sát thương AoE.
-	"""
+	# [Vệt Cắt Xót Thương]: AoE 80% ATK cho toàn bộ kẻ địch còn sống.
 	print(entity_name, " vung vũ khí: [Vệt Cắt Xót Thương]!")
 	for enemy in enemies:
 		if enemy.current_hp > 0:
 			var dmg = DamageCalculator.calculate_damage(self , enemy)
-			enemy.take_damage(int(dmg * 0.8)) # Giảm chút dmg vì là AoE
+			enemy.take_damage(int(dmg * 0.8))
 
 func rearguard_stance(target: Entity):
-	"""
-	[Điểm Tựa Vững Chắc]: Xóa debuff và hồi máu.
-	"""
+	# [Điểm Tựa Vững Chắc]: Xóa debuff + hồi 30% max_hp cho bản thân và 1 đồng minh.
 	print(entity_name, " thiết lập [Điểm Tựa Vững Chắc] cho ", target.entity_name)
-	
-	# Xóa debuff cho bản thân và đồng minh
 	self.clear_all_debuffs()
 	target.clear_all_debuffs()
-	
-	# Hồi máu (30% HP tối đa của Honami)
 	var heal_amount = int(self.max_hp * 0.3)
 	self.heal(heal_amount)
 	target.heal(heal_amount)
 
 func painless_execution(target: Entity):
-	"""
-	[Án Tử Bình Yên]: Sát thương xuyên giáp và hồi máu toàn đội.
-	"""
+	# [Án Tử Bình Yên]: Tuyệt kỹ - bỏ qua 50% DEF. Tiêu diệt → hồi 50% HP đội; sống sót → Stun + hồi 25%.
 	print(entity_name, " giáng xuống [Án Tử Bình Yên]!")
-	
-	# Tính toán sát thương bỏ qua 50% DEF
 	var original_def = target.defense
 	target.defense = int(target.defense * 0.5)
 	var dmg = DamageCalculator.calculate_damage(self , target)
-	target.defense = original_def # Trả lại DEF
+	target.defense = original_def
 	
 	var killed = target.take_damage(dmg)
 	

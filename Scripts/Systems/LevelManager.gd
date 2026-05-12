@@ -15,13 +15,10 @@ static func get_exp_reward(enemy_level: int) -> int:
 	"""
 	Tính toán lượng kinh nghiệm (EXP) nhận được dựa trên cấp độ kẻ địch.
 	
-	Công thức: 40 + (enemy_level * 20).
+	Công thức: enemy_level * 75.
 
-	Args:
-		enemy_level (int): Cấp độ của kẻ địch đã bị hạ gục.
-
-	Returns:
-		int: Tổng lượng EXP nhận được.
+	- enemy_level: Cấp độ của kẻ địch đã bị hạ gục (int).
+	- Return: Tổng lượng EXP nhận được (int).
 	"""
 	return enemy_level * 75
 
@@ -29,12 +26,11 @@ static func gain_exp(entity: Entity, amount: int):
 	"""
 	Cấp kinh nghiệm cho một thực thể và kiểm tra điều kiện lên cấp.
 	
-	Nếu EXP tích lũy vượt quá mốc tiếp theo, thực thể sẽ tự động lên cấp 
+	Nếu EXP tích lũy vượt quá mốc tiếp theo, thực thể sẽ tự động lên cấp
 	thông qua process_level_up.
 
-	Args:
-		entity (Entity): Thực thể nhận kinh nghiệm.
-		amount (int): Lượng kinh nghiệm nhận được.
+	- entity: Thực thể nhận kinh nghiệm (Entity).
+	- amount: Lượng kinh nghiệm nhận được (int).
 	"""
 	if entity == null or entity.level >= MAX_LEVEL:
 		return
@@ -53,11 +49,10 @@ static func process_level_up(entity: Entity):
 	- Tăng Skill Points (3 cho Player, 2 cho Quái).
 	- Tăng chỉ số cơ bản (5% growth, giảm còn 2% sau Soft Cap lv 50).
 	- Áp dụng Hard Cap chỉ số từ định nghĩa trong Entity.
-	- Hồi phục đầy HP và cập nhật EXP curve (1.2x hoặc 1.5x sau lv 50).
+	- Hồi phục đầy HP và cập nhật EXP curve (x1.2 hoặc x1.5 sau lv 50).
 	- Tự động nâng cấp chỉ số cho quái vật.
 
-	Args:
-		entity (Entity): Thực thể lên cấp.
+	- entity: Thực thể lên cấp (Entity).
 	"""
 	if entity == null: return
 	
@@ -103,12 +98,11 @@ static func set_initial_level(entity: Entity, target_level: int):
 	"""
 	Thiết lập cấp độ ban đầu cho một thực thể (thường dùng khi spawn).
 
-	Lên cấp hàng loạt cho đến khi đạt target_level và đảm bảo SP 
+	Lên cấp hàng loạt cho đến khi đạt target_level và đảm bảo SP
 	được phân bổ chính xác cho quái vật.
 
-	Args:
-		entity (Entity): Thực thể cần thiết lập.
-		target_level (int): Cấp độ đích muốn đạt tới.
+	- entity: Thực thể cần thiết lập (Entity).
+	- target_level: Cấp độ đích muốn đạt tới (int).
 	"""
 	if entity == null:
 		return
@@ -135,8 +129,7 @@ static func _auto_upgrade_monster(entity: Entity):
 	"""
 	Tự động phân bổ điểm kỹ năng (SP) cho quái vật vào các chỉ số ngẫu nhiên.
 
-	Args:
-		entity (Entity): Thực thể quái vật.
+	- entity: Thực thể quái vật (Entity).
 	"""
 	var stats = UpgradeManager.UPGRADE_AMOUNTS.keys()
 	var attempts = 0

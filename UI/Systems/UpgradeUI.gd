@@ -31,8 +31,7 @@ func show_ui(chars: Array[Entity]):
 	"""
 	Hiển thị giao diện nâng cấp với danh sách nhân vật hiện có.
 
-	Args:
-		chars (Array[Entity]): Danh sách các nhân vật có thể nâng cấp.
+	- chars: Danh sách các nhân vật có thể nâng cấp (Array[Entity]).
 	"""
 	characters = chars
 	selected_index = 0

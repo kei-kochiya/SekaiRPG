@@ -31,9 +31,8 @@ func setup(players: Array, enemies: Array):
 	"""
 	Khởi tạo dữ liệu và xây dựng toàn bộ cây Node giao diện.
 
-	Args:
-		players (Array): Danh sách các thực thể phe người chơi.
-		enemies (Array): Danh sách các thực thể phe đối phương.
+	- players: Danh sách các thực thể phe người chơi (Array).
+	- enemies: Danh sách các thực thể phe đối phương (Array).
 	"""
 	player_team = players
 	enemy_team = enemies

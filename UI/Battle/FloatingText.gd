@@ -47,11 +47,10 @@ static func spawn(parent: Node, amount: int, damage_type: String, pos: Vector2):
 	"""
 	Hàm tĩnh để tạo nhanh một FloatingText tại vị trí chỉ định.
 
-	Args:
-		parent (Node): Node cha (thường là UI Overlay).
-		amount (int): Giá trị con số hiển thị.
-		damage_type (String): Loại sát thương (để xác định màu sắc).
-		pos (Vector2): Vị trí bắt đầu trên màn hình.
+	- parent: Node cha để gắn vào (thường là UI Overlay) (Node).
+	- amount: Giá trị con số hiển thị (int).
+	- damage_type: Loại sát thương để xác định màu sắc (String).
+	- pos: Vị trí bắt đầu trên màn hình (Vector2).
 	"""
 	var ft = FloatingText.new()
 	var prefix = "+" if damage_type == "heal" else "-"

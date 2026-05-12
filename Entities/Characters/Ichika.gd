@@ -32,45 +32,22 @@ func can_use_skill(skill_name: String) -> bool:
 	return CooldownManager.is_skill_ready(self , skill_name)
 
 func piercing_chord(target: Entity):
-	"""
-	Kỹ năng tấn công đơn mục tiêu và gây hiệu ứng Chảy máu.
-	- target: Thực thể nhận đòn (Entity).
-	- Return: Không có.
-	"""
+	# [Xuyên Tâm Kích]: Đòn đơn vật lý + 1 stack Bleed (3 lượt).
 	print(entity_name, " sử dụng [Xuyên Tâm Kích] lên ", target.entity_name)
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
 func resonant_edge(_target: Entity):
-	# Tăng chỉ số Tốc độ (SPD) cho bản thân.
+	# [Âm Vang Đồng Điệu]: Tăng 40 SPD cho bản thân.
 	print(entity_name, " kích hoạt [Âm Vang Đồng Điệu]! Tăng tốc độ.")
 	self.spd += 40
-	self.spd = min(self.spd, stat_caps["spd"])
 
 func shadow_strike(target: Entity):
-	"""
-	Tuyệt kỹ gây sát thương lớn, kích nổ Bleed và tiêu tốn HP bản thân.
-	- target: Thực thể nhận đòn (Entity).
-	- Return: Không có.
-	"""
-	print(entity_name, " tung chiêu [Ảnh Sát] vào ", target.entity_name, "!")
-	
+	# [Ảnh Sát]: Tuyệt kỹ - kích nổ toàn bộ Bleed stacks, gây True Damage theo số stack.
+	print(entity_name, " giáng xuống [Ảnh Sát]!")
+	var bleed_stacks = target.get_status_count("Bleed")
 	var base_dmg = DamageCalculator.calculate_damage(self , target)
-	var crit_dmg = int(base_dmg * 2.0)
-	target.take_damage(crit_dmg)
-	
-	var bleed_count = target.get_status_count("Bleed")
-	if bleed_count > 0:
-		var detonate_dmg = int(target.max_hp * 0.15 * bleed_count)
-		print("Kích nổ ", bleed_count, " stack Bleed! Gây ", detonate_dmg, " True Damage.")
-		target.take_damage(detonate_dmg, "pure")
-		target.remove_all_status_type("Bleed")
-	
-	var self_dmg = int(self.max_hp * 0.5)
-	if self.current_hp <= self_dmg:
-		self_dmg = self.current_hp - 1
-	
-	if self_dmg > 0:
-		print(entity_name, " tự gây sát thương lên bản thân: ", self_dmg)
-		self.take_damage(self_dmg, "pure")
+	var bonus_dmg = bleed_stacks * int(self.atk * 0.5)
+	target.remove_all_status_type("Bleed")
+	target.take_damage(base_dmg + bonus_dmg, "pure")

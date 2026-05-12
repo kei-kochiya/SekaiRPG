@@ -24,9 +24,7 @@ func _init():
 	]
 
 func throw_box(target: Entity):
-	"""
-	[Ném Thùng Hàng]: Tấn công vật lý gây sát thương và có tỷ lệ làm chậm.
-	"""
+	# [Ném Thùng Hàng]: Tấn công vật lý + 30% tỷ lệ gây Slow 2 lượt (giảm 20% SPD).
 	print(entity_name, " ném một thùng hàng nặng vào ", target.entity_name, "!")
 	var dmg = DamageCalculator.calculate_damage(self, target)
 	target.take_damage(dmg)
