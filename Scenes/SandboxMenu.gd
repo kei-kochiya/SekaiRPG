@@ -1,5 +1,12 @@
 extends Control
 
+"""
+SandboxMenu: Menu chế độ Sandbox cho phép tùy chỉnh trận đấu tự do.
+
+Người chơi chọn nhân vật (tối đa 4), kẻ địch (tối đa 5), và cấp độ cho từng phía.
+Có tích hợp UpgradeUI để phân bổ SP trước khi vào trận.
+"""
+
 var selected_players: Array = []
 var selected_enemies: Array = []
 var player_lv_spin: SpinBox

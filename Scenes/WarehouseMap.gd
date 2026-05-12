@@ -1,5 +1,13 @@
 extends Node2D
 
+"""
+WarehouseMap: Bản đồ nhiệm vụ kho hàng (Story Mode).
+
+Ichika và Kanade tiêu diệt 5 wave kẻ địch tuần tự.
+Sửa là cấp độ tăng dần (Lv3 →3 →6 →... →15).
+Hoàn thành chuyển về BaseMap_PostWarehouse.
+"""
+
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
@@ -10,7 +18,7 @@ func _ready():
 	_build_map()
 	_spawn_player()
 	
-	# Check Win Condition
+	# Trường hợp kết thúc: Đã qua wave 5, hiện hội thoại rồi chuyển về Safehouse mới.
 	if GameManager.warehouse_wave > 5:
 		AudioManager.play_music("after_warehouse")
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_clear"), func():
@@ -18,7 +26,7 @@ func _ready():
 		)
 		return
 	
-	# Spawn dialogue triggers
+	# Hội thoại mở đầu theo từng wave quan trọng (wave 1, 3, 5)
 	if GameManager.warehouse_wave == 1 and GameManager.enemies_defeated == 0:
 		var intro = DialogueLoader.get_lines("warehouse_wave1_intro")
 		var start = DialogueLoader.get_lines("warehouse_wave1_start")

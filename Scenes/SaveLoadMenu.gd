@@ -2,7 +2,9 @@ extends Control
 
 """
 SaveLoadMenu: Giao diện quản lý các ô lưu game (Save Slots).
-Tự động liệt kê các file .json trong thư mục user:// và cho phép người chơi Load hoặc Save mới.
+
+Tự động liệt kê các file .json trong thư mục user:// và cho phép người chơi Load hoặc xóa.
+Nút 'Lưu Game Mới' chỉ hiện khi đang trong game (không phải từ Main Menu).
 """
 
 var slot_container: VBoxContainer

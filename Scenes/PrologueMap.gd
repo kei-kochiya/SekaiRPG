@@ -1,5 +1,13 @@
 extends Node2D
 
+"""
+PrologueMap: Scene màn hình mở đầu của game.
+
+Chứa 2 phase:
+- Phase 0: Ichika bị bao vây bởi các kẻ cưỡp, cần chiến đấu. Mafuyu xuất hiện bên ngoài.
+- Phase 1: Mafuyu đã vào sau trận, gặp Ichika đang mệt mỏi. Kết thúc chuyển về BaseMap.
+"""
+
 var has_triggered_intro: bool = false
 var has_triggered_outro: bool = false
 
@@ -10,6 +18,8 @@ func _ready():
 	ScreenFade.fade_in(1.0)
 	_build_map()
 	
+	# Phase 0: Ichika bị vây, dẫn đến trận đầu với kiết tặc.
+	# Phase 1: Sau trận, Mafuyu gặp và tuyển Ichika vào nhóm.
 	if GameManager.prologue_phase == 0:
 		_setup_phase_0()
 	else:

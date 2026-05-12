@@ -1,5 +1,14 @@
 extends Node2D
 
+"""
+BaseMap_PostWarehouse: Safehouse sau khi hoàn thành nhiệm vụ kho hàng.
+
+Các giai đoạn trong BaseMap_PostWarehouse:
+- Lần đầu vào: Diễn ra cảnh nghiỉ ngơi sau nhiệm vụ (post_warehouse_rest), sáng hôm sau mở khóa nhiệm vụ Harbor.
+- Sau khi mở khóa Harbor: Mafuyu dạy lứa thượng võ, Ena giao nhiệm vụ khám phá bến cảng.
+- Thoát ra ngoài sẽ dẫn đến HarborMap nếu đủ điều kiện.
+"""
+
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
@@ -27,6 +36,8 @@ func _ready() -> void:
 	_spawn_transitions()
 	_build_quest_hud()
 
+	# Lần đầu vào sau kho hàng: Chạy cảnh đêm nghiỉ ngơi và rạng sáng mở khóa Harbor.
+	# Sau khi harbor_mission_unlocked: Phñ định hướng qua HUD quest.
 	if not GameManager.harbor_mission_unlocked:
 		_play_post_warehouse_sequence()
 	else:

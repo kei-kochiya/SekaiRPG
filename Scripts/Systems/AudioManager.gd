@@ -1,5 +1,12 @@
 extends Node
 
+"""
+AudioManager: Hệ thống quản lý âm nhạc nền toàn cục (Autoload).
+
+Xử lý việc chuyển đổi giữa các bài nhạc bằng hiệu ứng Fade In/Out.
+Không phát lại nếu bài hiện tại đang được phát (tránh ngắt mạch).
+"""
+
 var _player: AudioStreamPlayer
 var _current_track: String = ""
 

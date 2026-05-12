@@ -1,5 +1,14 @@
 extends Node2D
 
+"""
+BaseMap_PostHarbor: Safehouse sau khi kết thúc nhiệm vụ Harbor.
+
+Các giai đoạn trong BaseMap_PostHarbor:
+- harbor_wave == 5: Phiên hầu chiến, Mafuyu kể về Honami (harbor_meeting_p1).
+- harbor_wave >= 6: Mizuki lấy đồ ăn vặt vào phà chèn gia đoạn (Mizuki Control Phase).
+- harbor_wave == 7+: Sau khi bắt nội gián, tiếp tục định hướng tiếp theo của cốt truyện.
+"""
+
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
@@ -40,6 +49,9 @@ func _check_story_state():
 	print("[Story] Honami Talked: ", GameManager.story.get_flag("mafuyu_honami_talked"))
 	print("[Story] Snack Done: ", GameManager.story.get_flag("harbor_mizuki_snack_done"))
 		
+	# harbor_wave <= 5: Chưa hiện hội thoại gặp mặt nhóm lần 1 (base_meeting_p1)
+	# harbor_wave >= 6, snack chưa done: Kích hoạt Mizuki Control Phase
+	# Trường hợp mizuki_vs_mafuyu_done: Phát Report Part 2 (sau trận kịch bản)
 	if GameManager.story.get_flag("mizuki_vs_mafuyu_done"):
 		GameManager.story.set_flag("mizuki_vs_mafuyu_done", false)
 		_play_report_p2()

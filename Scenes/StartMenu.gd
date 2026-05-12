@@ -1,5 +1,12 @@
 extends Control
 
+"""
+StartMenu: Màn hình tiêu đề chính của game.
+
+Hiển thị các tùy chọn: Tiếp tục (nếu có save), Game Mới, LOAD, Sandbox, Thoát.
+Tự động kiểm tra và thêm nút 'Tiếp tục' nếu tìm thấy file save mặc định.
+"""
+
 func _ready():
 	AudioManager.play_music("main_menu")
 	_apply_kenney_styles()

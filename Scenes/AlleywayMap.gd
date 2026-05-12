@@ -1,5 +1,13 @@
 extends Node2D
 
+"""
+AlleywayMap: Cánh đồng tối - Scene kết thúc nhiệm vụ Harbor.
+
+Honami đợi trong ngõ hẻm ban đêm. Diễn ra monologue kết thúc của cô sau trận Boss.
+Số wave hờn quyết định dùng hội thoại nào (harbor_wave <= 5 hay > 5).
+Kết thúc chuyển về BaseMap_PostHarbor.
+"""
+
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
@@ -27,6 +35,7 @@ func _ready():
 	_spawn_honami()
 	
 	await get_tree().create_timer(1.0).timeout
+	# Phần hội thoại: Honami tự lựa chọn kết thúc khác nhau tùy theo tiến độ câu chuyện.
 	_play_sequence()
 
 func _build_map():
@@ -83,6 +92,8 @@ func _spawn_honami():
 	_map_root.add_child(root)
 
 func _play_sequence():
+	# harbor_wave <= 5: Honami monologue phần 1 (sau trận thắng boss lần đầu)
+	# harbor_wave > 5:  Honami monologue phần 2 (sau của phần harbor tiếp theo)
 	var key = "honami_alleyway"
 	if GameManager.story.harbor_wave > 5:
 		key = "honami_alleyway_p2"

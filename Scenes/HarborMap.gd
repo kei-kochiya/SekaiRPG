@@ -1,5 +1,14 @@
 extends Node2D
 
+"""
+HarborMap: Bản đồ nhiệm vụ Bến Cảng (Harbor) của cốt truyện.
+
+Người chơi (Ichika + Ena) có 2 lựa chọn tiếp cận:
+- Cổng chính: Đánh tuần tự 3 wave lính gác rồi gặp Boss.
+- Đường vòng: Dẫn thẳng tới trận Boss (Captain).
+Sau khi Boss thua, chuyển sang AlleywayMap.
+"""
+
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
@@ -68,7 +77,7 @@ func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
 		add_child(body)
 
 func _spawn_interactables():
-	# Front Gate Route: 3 Waves
+	# --- Cổng chính: 3 wave lính gác tuần tự, sau đó là Boss ---
 	if GameManager.harbor_route == "guards" or GameManager.harbor_route == "":
 		if GameManager.harbor_wave <= 3:
 			var wave_positions = [
@@ -80,7 +89,7 @@ func _spawn_interactables():
 		else:
 			_create_trigger(Vector2(1600, 350), "Đội Trưởng (BOSS)", "guards")
 	
-	# Back Door Route: Direct to Boss
+	# --- Đường vòng: Tiếp cận Boss trực tiếp (bỏ qua lính gác) ---
 	if GameManager.harbor_route == "boss" or GameManager.harbor_route == "":
 		_create_trigger(Vector2(1000, 500), "Đường Vòng (BOSS)", "boss")
 

@@ -1,5 +1,15 @@
 extends Node2D
 
+"""
+BaseMap: Bản đồ màn hình Safehouse chính (trước nhiệm vụ Warehouse).
+
+Các giai đoạn logic trong BaseMap:
+- Lần đầu vào: Chạy hội thoại giới thiệu safehouse (safehouse_intro).
+- Quest 1: Làm quen với Mafuyu, Ena, Kanade, Mizuki.
+- Quest 2: Nhận nhiệm vụ từ Kanade, xuất phát đến kho hàng.
+- Free roam: Sau khi nhận nhiệm vụ, NPC có hội thoại thoải mái.
+"""
+
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
@@ -25,6 +35,8 @@ func _ready() -> void:
 	_spawn_transitions()
 	_build_quest_hud()
 
+	# Lần đầu tiên vào màn: Chạy hội thoại giới thiệu safehouse.
+	# Sau đó: Hiển thị HUD quest và trạng thái hiện tại.
 	if not GameManager.safehouse_intro_done:
 		_play_safehouse_intro()
 	else:
@@ -216,7 +228,7 @@ func _create_npc(npc_name: String, pos: Vector2, color: Color) -> void:
 func _handle_npc_interaction(npc_name: String) -> void:
 	if GameManager.is_in_dialogue: return
 	if GameManager.prologue_phase >= 1 and not GameManager.safehouse_intro_done: return
-	
+	# --- Phân luồng tương tác theo trạng thái quest hiện tại ---
 	if not GameManager.intro_quest_done:
 		_quest_phase_interact(npc_name)
 	elif not GameManager.warehouse_mission_accepted:

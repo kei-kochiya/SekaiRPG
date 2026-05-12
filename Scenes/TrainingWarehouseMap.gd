@@ -1,5 +1,13 @@
 extends Node2D
 
+"""
+TrainingWarehouseMap: Bản đồ chế độ luyện tập tại kho hàng.
+
+Cho phép 1-2 thành viên tham gia luyện tập với số wave tăng theo số người (5 hoặc 10).
+Kẻ địch sinh ngẫu nhiên (có thể là nhân vật trong nhóm hoặc mục tiêu).
+Hoàn thành chuyển về BaseMap_PostWarehouse.
+"""
+
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
