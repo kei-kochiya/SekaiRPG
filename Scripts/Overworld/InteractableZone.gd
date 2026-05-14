@@ -61,6 +61,8 @@ func _on_body_entered(body):
 	if body.name == "OverworldPlayer":
 		is_player_inside = true
 		prompt_label.visible = true
+		if has_node("/root/MobileControls"):
+			get_node("/root/MobileControls").set_interact_visible(true)
 
 func _on_body_exited(body):
 	"""
@@ -72,6 +74,8 @@ func _on_body_exited(body):
 	if body.name == "OverworldPlayer":
 		is_player_inside = false
 		prompt_label.visible = false
+		if has_node("/root/MobileControls"):
+			get_node("/root/MobileControls").set_interact_visible(false)
 
 func _unhandled_input(event: InputEvent) -> void:
 	"""
@@ -95,5 +99,9 @@ func _process(_delta):
 	"""
 	if GameManager.is_in_dialogue:
 		prompt_label.visible = false
+		if has_node("/root/MobileControls"):
+			get_node("/root/MobileControls").set_interact_visible(false)
 	elif is_player_inside:
 		prompt_label.visible = true
+		if has_node("/root/MobileControls"):
+			get_node("/root/MobileControls").set_interact_visible(true)
