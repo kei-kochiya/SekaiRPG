@@ -39,6 +39,10 @@ func play_music(track_name: String, fade_duration: float = 1.0):
 		
 	_current_track = track_name
 	
+	# Đảm bảo nhạc tự động lặp lại (Loop)
+	if new_stream is AudioStreamMP3 or new_stream is AudioStreamWAV:
+		new_stream.loop = true
+	
 	if _player.playing and fade_duration > 0:
 		var tween = create_tween()
 		tween.tween_property(_player, "volume_db", -40, fade_duration)
@@ -61,3 +65,13 @@ func stop_music(fade_duration: float = 1.0):
 		tween.tween_property(_player, "volume_db", -40, fade_duration)
 		await tween.finished
 	_player.stop()
+
+func update_volume(value: float):
+	"""
+	Cập nhật âm lượng tổng (Master) của toàn bộ game.
+	- value: Giá trị từ 0.0 (tắt) đến 1.0 (tối đa).
+	"""
+	var bus_index = AudioServer.get_bus_index("Master")
+	# Chuyển đổi linear sang decibel: 0.0 -> -80dB, 1.0 -> 0dB
+	var db = linear_to_db(max(value, 0.0001))
+	AudioServer.set_bus_volume_db(bus_index, db)

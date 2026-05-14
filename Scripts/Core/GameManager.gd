@@ -30,6 +30,13 @@ var scripted_battle_id: String = ""
 var sandbox_player_team: Array = []
 var sandbox_enemy_team: Array = []
 
+# ── Cài đặt (Settings) ──────────────────────────────────────────────────────
+var battle_speed: float = 1.2 # Giây giữa các lượt AI
+var master_volume: float = 1.0:
+	set(v):
+		master_volume = clamp(v, 0.0, 1.0)
+		if AudioManager: AudioManager.update_volume(master_volume)
+
 # ── Dữ liệu Đội hình (Party) ───────────────────────────────────────────────
 var party: Dictionary = {}
 
@@ -312,7 +319,7 @@ func finish_battle(victory: bool, count: int = 1):
 				story.set_flag("harbor_boss_defeated", true)
 			
 	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Scenes/HarborMap.tscn":
-		await get_tree().create_timer(1.5).timeout # Đợi 1.5s để đọc nốt câu cuối
+		await get_tree().create_timer(1.5, false).timeout # Đợi 1.5s để đọc nốt câu cuối
 		await ScreenFade.fade_out(0.8)
 		get_tree().change_scene_to_file("res://Scenes/AlleywayMap.tscn")
 	else:

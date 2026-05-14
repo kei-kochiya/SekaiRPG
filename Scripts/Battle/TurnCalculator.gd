@@ -23,20 +23,26 @@ static func get_action_value(spd: int) -> float:
 static func get_timeline(entities: Array, depth: int = 20) -> Array:
 	"""
 	Hàm này tạo ra danh sách dự báo các lượt đánh trong tương lai.
-	- entities: Danh sách các thực thể đang tham chiến (Array).
-	- depth: Số lượng lượt cần dự báo (int).
-	- Return: Mảng chứa thông tin thực thể và thời điểm đến lượt (Array).
+	Sử dụng action_gauge để tính toán thời gian thực tế đến lượt tiếp theo.
 	"""
 	if entities.is_empty(): return []
 		
 	var timeline = []
 	
 	for entity in entities:
-		var av = get_action_value(entity.spd)
-		for i in range(1, depth + 1):
+		var spd = max(entity.spd, 1)
+		var current_gauge = entity.action_gauge
+		
+		# AV (Action Value) = (Khoảng cách còn lại) / Tốc độ
+		# Khoảng cách còn lại cho lượt đầu tiên là 10000 - gauge
+		# Nếu gauge > 10000, distance sẽ âm -> ưu tiên cực cao
+		for i in range(depth):
+			var distance = 10000.0 - current_gauge + (i * 10000.0)
+			var av_cost = distance / spd
+			
 			timeline.append({
 				"entity": entity,
-				"tick": av * i
+				"tick": av_cost
 			})
 	
 	timeline.sort_custom(func(a, b):

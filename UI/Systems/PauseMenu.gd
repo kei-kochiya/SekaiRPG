@@ -11,6 +11,7 @@ Menu này hoạt động độc lập với trạng thái Pause của game để
 var _root: Control
 var _panel: PanelContainer
 var _guide_panel: PanelContainer
+var _options_panel: PanelContainer
 
 func _ready():
 	"""
@@ -63,6 +64,7 @@ func _build_ui():
 	vbox.add_child(_create_button("Tiếp tục", _on_resume))
 	vbox.add_child(_create_button("Lưu Game", _on_save))
 	vbox.add_child(_create_button("Hướng dẫn", _on_guide))
+	vbox.add_child(_create_button("Tùy chọn", _on_options))
 	vbox.add_child(_create_button("Thoát ra Menu", _on_quit))
 
 	# --- Bảng Hướng dẫn (Guide Panel) ---
@@ -80,6 +82,21 @@ func _build_ui():
 	gsb.border_color = Color(0.4, 1.0, 0.7)
 	_guide_panel.add_theme_stylebox_override("panel", gsb)
 	_root.add_child(_guide_panel)
+
+	# --- Bảng Tùy chọn (Options Panel) ---
+	_options_panel = PanelContainer.new()
+	_options_panel.set_anchors_preset(Control.PRESET_CENTER)
+	_options_panel.offset_left = -200; _options_panel.offset_right = 200
+	_options_panel.offset_top = -150; _options_panel.offset_bottom = 150
+	_options_panel.visible = false
+	
+	var osb = StyleBoxTexture.new()
+	osb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_grey.svg")
+	osb.texture_margin_left = 12; osb.texture_margin_right = 12
+	osb.texture_margin_top = 12; osb.texture_margin_bottom = 12
+	osb.set_content_margin_all(20)
+	_options_panel.add_theme_stylebox_override("panel", osb)
+	_root.add_child(_options_panel)
 
 func _on_guide():
 	"""
@@ -148,6 +165,71 @@ func _on_guide():
 	
 	_guide_panel.visible = true
 
+func _on_options():
+	"""
+	Xử lý khi mở bảng tùy chọn cài đặt.
+	"""
+	if _options_panel.visible:
+		_options_panel.visible = false
+		return
+		
+	for child in _options_panel.get_children():
+		child.queue_free()
+		
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 20)
+	_options_panel.add_child(vbox)
+	
+	var title = Label.new()
+	title.text = "TÙY CHỌN HỆ THỐNG"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color(0.2, 0.2, 0.2))
+	title.add_theme_font_size_override("font_size", 20)
+	vbox.add_child(title)
+	
+	# --- Fast Battle Option ---
+	var hb_fast = HBoxContainer.new()
+	vbox.add_child(hb_fast)
+	
+	var lbl_fast = Label.new()
+	lbl_fast.text = "Chiến đấu nhanh (Fast Battle)"
+	lbl_fast.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))
+	lbl_fast.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hb_fast.add_child(lbl_fast)
+	
+	var check = CheckButton.new()
+	check.button_pressed = (GameManager.battle_speed < 1.0)
+	check.toggled.connect(func(pressed):
+		GameManager.battle_speed = 0.6 if pressed else 1.2
+	)
+	hb_fast.add_child(check)
+	
+	# --- Volume Option ---
+	var v_vol = VBoxContainer.new()
+	vbox.add_child(v_vol)
+	
+	var lbl_vol = Label.new()
+	lbl_vol.text = "Âm lượng tổng: " + str(int(GameManager.master_volume * 100)) + "%"
+	lbl_vol.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))
+	v_vol.add_child(lbl_vol)
+	
+	var slider = HSlider.new()
+	slider.min_value = 0.0
+	slider.max_value = 1.0
+	slider.step = 0.05
+	slider.value = GameManager.master_volume
+	slider.value_changed.connect(func(val):
+		GameManager.master_volume = val
+		lbl_vol.text = "Âm lượng tổng: " + str(int(val * 100)) + "%"
+	)
+	v_vol.add_child(slider)
+	
+	# --- Close Button ---
+	var close = _create_button("Đóng", func(): _options_panel.visible = false)
+	vbox.add_child(close)
+	
+	_options_panel.visible = true
+
 func _create_button(txt: String, callback: Callable) -> Button:
 	"""
 	Hàm tiện ích tạo các nút Menu với phong cách thống nhất.
@@ -181,8 +263,8 @@ func _input(event):
 	Lắng nghe phím ESC (ui_cancel) để bật/tắt Menu.
 	"""
 	if event.is_action_pressed("ui_cancel"):
-		# Không cho phép mở Menu khi đang trong trận đấu hoặc đang đối thoại
-		if get_tree().current_scene.name != "Main" and not GameManager.is_in_dialogue:
+		# Cho phép mở Menu khi không đang đối thoại
+		if not GameManager.is_in_dialogue:
 			toggle()
 
 func toggle():

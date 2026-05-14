@@ -42,12 +42,26 @@ func _process(_delta):
 	if not _is_mobile: return
 	
 	# Ẩn controls khi đang hội thoại hoặc menu tạm dừng đang mở
-	var should_hide = GameManager.is_in_dialogue or get_tree().paused
-	if should_hide and _root.visible:
+	var is_paused = get_tree().paused
+	var in_dialogue = GameManager.is_in_dialogue
+	var in_battle = get_tree().current_scene.name == "Main"
+	
+	# Toàn bộ UI mobile (bao gồm nút Menu) ẩn khi có hội thoại hoặc đang pause
+	if (in_dialogue or is_paused) and _root.visible:
 		_root.visible = false
-		_reset_joystick() # Đảm bảo không bị kẹt nút di chuyển
-	elif not should_hide and not _root.visible:
+		_reset_joystick()
+	elif not (in_dialogue or is_paused) and not _root.visible:
 		_root.visible = true
+	
+	# Riêng Joystick và nút Interact thì ẩn khi đang trong trận đấu
+	if in_battle:
+		if _joystick_base.visible: 
+			_joystick_base.visible = false
+			_reset_joystick()
+		if _btn_interact.visible: _btn_interact.visible = false
+	else:
+		if not _joystick_base.visible: _joystick_base.visible = true
+		# Nút interact do InteractableZone quản lý nên không ép hiện ở đây
 
 func _check_platform():
 	var os = OS.get_name()
@@ -85,26 +99,46 @@ func _setup_ui():
 	
 	# 2. Nút Menu
 	_btn_menu = TextureButton.new()
-	var menu_tex = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey_lines.svg")
-	if menu_tex: _btn_menu.texture_normal = menu_tex
+	_btn_menu.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
 	_btn_menu.custom_minimum_size = MENU_BUTTON_SIZE
 	_btn_menu.ignore_texture_size = true
-	_btn_menu.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	_btn_menu.position = Vector2(20, 20)
+	_btn_menu.stretch_mode = TextureButton.STRETCH_SCALE
+	
+	# Đặt ở góc trên bên phải
+	_btn_menu.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_btn_menu.offset_left = -110
+	_btn_menu.offset_top = 20
+	_btn_menu.offset_right = -20
+	_btn_menu.offset_bottom = 20 + MENU_BUTTON_SIZE.y
+	
 	_btn_menu.pressed.connect(_on_menu_pressed)
+	
+	# Chữ MENU
+	var menu_lbl = Label.new()
+	menu_lbl.text = "MENU"
+	menu_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	menu_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	menu_lbl.set_anchors_preset(Control.PRESET_FULL_RECT)
+	menu_lbl.add_theme_color_override("font_color", Color(0.15, 0.1, 0.05))
+	menu_lbl.add_theme_font_size_override("font_size", 16)
+	menu_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_btn_menu.add_child(menu_lbl)
+	
 	_root.add_child(_btn_menu)
 	
 	# 3. Nút Tương tác
 	_btn_interact = TextureButton.new()
-	var interact_tex = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey_square.svg")
-	if interact_tex: _btn_interact.texture_normal = interact_tex
+	_btn_interact.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
 	_btn_interact.custom_minimum_size = INTERACT_BUTTON_SIZE
 	_btn_interact.ignore_texture_size = true
-	_btn_interact.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	_btn_interact.stretch_mode = TextureButton.STRETCH_SCALE
 	
 	# Đặt ở góc dưới phải
 	_btn_interact.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_btn_interact.set_begin(Vector2(-180, -180)) 
+	_btn_interact.offset_left = -150
+	_btn_interact.offset_top = -150
+	_btn_interact.offset_right = -50
+	_btn_interact.offset_bottom = -50
 	
 	_btn_interact.visible = false
 	_btn_interact.pressed.connect(_on_interact_pressed)
@@ -114,8 +148,9 @@ func _setup_ui():
 	icon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	icon.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	icon.set_anchors_preset(Control.PRESET_FULL_RECT)
-	icon.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))
-	icon.add_theme_font_size_override("font_size", 16)
+	icon.add_theme_color_override("font_color", Color(0.15, 0.1, 0.05))
+	icon.add_theme_font_size_override("font_size", 18)
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_btn_interact.add_child(icon)
 	
 	_root.add_child(_btn_interact)
@@ -174,10 +209,18 @@ func _on_menu_pressed():
 		PauseMenu.toggle()
 
 func _on_interact_pressed():
-	# Trigger ui_accept
-	Input.action_press("ui_accept")
-	await get_tree().create_timer(0.1).timeout
-	Input.action_release("ui_accept")
+	# Giả lập sự kiện phím Enter (ui_accept) một cách đầy đủ để Android nhận diện tốt hơn
+	var ev = InputEventAction.new()
+	ev.action = "ui_accept"
+	ev.pressed = true
+	Input.parse_input_event(ev)
+	
+	await get_tree().create_timer(0.1, false).timeout
+	
+	var ev_rel = InputEventAction.new()
+	ev_rel.action = "ui_accept"
+	ev_rel.pressed = false
+	Input.parse_input_event(ev_rel)
 
 func set_interact_visible(is_visible: bool):
 	if not _is_mobile: return

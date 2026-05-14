@@ -62,6 +62,12 @@ func _ready():
 	if GameManager.is_sandbox:
 		_setup_sandbox_exit_button()
 	
+	# Prologue Fix: Đảm bảo Ichika luôn đi đầu trong trận đấu hướng dẫn
+	if GameManager.prologue_phase == 0:
+		for p in player_team:
+			if p.entity_name == "Ichika":
+				p.action_gauge = 10000.0
+	
 	if is_harbor_boss_fight:
 		HarborBattleScript.run_intro(self, func(): run_battle())
 	else:
@@ -102,14 +108,23 @@ func run_battle():
 		
 		var turn = timeline.pop_front()
 		var actor = turn["entity"]
+		var av_passed = turn["tick"]
 		
 		if actor == null or actor.current_hp <= 0:
 			continue
+			
+		# Cập nhật thanh hành động cho tất cả thực thể dựa trên thời gian (AV) đã trôi qua
+		for e in all_entities:
+			if e.current_hp > 0:
+				e.action_gauge += e.spd * av_passed
+		
+		# Reset thanh hành động của người vừa đến lượt (về 0 hoặc trừ đi 10000 để giữ phần dư)
+		actor.action_gauge = max(0.0, actor.action_gauge - 10000.0)
 		
 		if is_harbor_boss_fight:
 			HarborBattleScript.check_transitions(self)
 			if is_scripting:
-				await get_tree().create_timer(0.5).timeout
+				await get_tree().create_timer(0.5, false).timeout
 				continue
 		
 		turns_in_phase += 1
@@ -124,7 +139,7 @@ func run_battle():
 		CooldownManager.process_cooldowns(actor)
 		
 		if not can_act:
-			await get_tree().create_timer(0.8).timeout
+			await get_tree().create_timer(0.8, false).timeout
 			continue
 		
 		if _check_battle_end():
@@ -143,9 +158,9 @@ func run_battle():
 		if _check_battle_end():
 			break
 		
-		await get_tree().create_timer(0.4).timeout
+		await get_tree().create_timer(0.4, false).timeout
 	
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.0, false).timeout
 	
 	var is_victory = AIManager.get_alive_targets(enemy_team).is_empty()
 	if is_harbor_boss_fight:
@@ -183,7 +198,7 @@ func _player_turn(actor: Entity):
 
 func _ai_turn(actor: Entity):
 	# Xử lý lượt đi của AI đối thủ (Đã làm chậm để người chơi kịp quan sát).
-	await get_tree().create_timer(1.2).timeout
+	await get_tree().create_timer(GameManager.battle_speed, false).timeout
 	
 	var decision = AIManager.pick_action(actor, actor.enemies, actor.allies, timeline)
 	var action: String = decision["action"]

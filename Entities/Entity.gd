@@ -34,6 +34,9 @@ signal level_changed(new_level: int)
 @export var current_exp: int = 0
 @export var next_level_exp: int = 100
 
+# ── Cơ chế lượt đi ─────────────────────────────────────────────────────────
+var action_gauge: float = 0.0 # Thanh hành động (0 - 10000)
+
 # ── Tham chiếu ngữ cảnh chiến đấu ───────────────────────────────────────────
 var allies: Array = []
 var enemies: Array = []
