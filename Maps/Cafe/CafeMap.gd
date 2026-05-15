@@ -1,5 +1,13 @@
 extends Node2D
 
+"""
+CafeMap: Quản lý bối cảnh và logic sự kiện tại quán Cafe.
+
+Lớp này xây dựng môi trường quán Cafe bằng các Asset đồ họa, điều phối chuỗi hội thoại
+say xỉn của Ena, các lựa chọn rẽ nhánh dẫn đến các trận chiến kịch bản và xử lý
+kết cục sau trận đấu trước khi quay trở lại căn cứ.
+"""
+
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 

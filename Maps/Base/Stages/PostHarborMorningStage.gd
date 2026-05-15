@@ -1,6 +1,14 @@
 extends BaseMapStage
 class_name PostHarborMorningStage
 
+"""
+PostHarborMorningStage: Kịch bản buổi sáng sau khi hoàn thành nhiệm vụ Bến cảng.
+
+Quản lý chuỗi sự kiện thức dậy, các lựa chọn tương tác buổi sáng, trạng thái treo Ena 
+ở sảnh chính, và logic chuyển quyền điều khiển sang Ena khi các điều kiện tương tác 
+hoặc luyện tập được thỏa mãn.
+"""
+
 var _cutscene_active: bool = false
 
 func get_npc_positions() -> Dictionary:
