@@ -12,7 +12,7 @@ giữa các màn chơi và trạng thái trận đấu.
 var story: StoryState = StoryState.new()
 
 # ── Thông tin Bản đồ & Vị trí ──────────────────────────────────────────────
-var current_map_file: String = "res://Scenes/PrologueMap.tscn"
+var current_map_file: String = "res://Maps/Prologue/PrologueMap.tscn"
 var last_player_position: Vector2 = Vector2.ZERO
 
 # ── Trạng thái Luyện tập ────────────────────────────────────────────────────
@@ -212,7 +212,7 @@ func load_game(path: String = SAVE_PATH) -> bool:
 	
 	if not data is Dictionary: return false
 	
-	current_map_file = data.get("current_map", "res://Scenes/BaseMap.tscn")
+	current_map_file = data.get("current_map", "res://Maps/Base/BaseMap.tscn")
 	var pos = data.get("player_pos", {"x": 0, "y": 0})
 	last_player_position = Vector2(pos.x, pos.y)
 	
@@ -262,7 +262,7 @@ func reset_game():
 	# Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới.
 	story.reset()
 	last_player_position = Vector2.ZERO
-	current_map_file = "res://Scenes/PrologueMap.tscn"
+	current_map_file = "res://Maps/Prologue/PrologueMap.tscn"
 	is_sandbox = false
 	is_tutorial = false
 	is_scripted_battle = false
@@ -280,7 +280,7 @@ func reset_mission_stats():
 func trigger_battle():
 	# Chuyển cảnh đến màn hình chiến đấu.
 	AudioManager.play_music("battle")
-	get_tree().change_scene_to_file("res://Scenes/BattleScene.tscn")
+	get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")
 
 func finish_battle(victory: bool, count: int = 1):
 	"""
@@ -290,7 +290,7 @@ func finish_battle(victory: bool, count: int = 1):
 	- Return: Không có.
 	"""
 	if is_sandbox:
-		get_tree().change_scene_to_file("res://Scenes/SandboxMenu.tscn")
+		get_tree().change_scene_to_file("res://Menus/Sandbox/SandboxMenu.tscn")
 		return
 
 	if is_scripted_battle:
@@ -312,15 +312,15 @@ func finish_battle(victory: bool, count: int = 1):
 	if victory:
 		story.enemies_defeated += count
 		if current_map_file.contains("Warehouse"): story.warehouse_wave += 1
-		if current_map_file == "res://Scenes/HarborMap.tscn":
+		if current_map_file == "res://Maps/Harbor/HarborMap.tscn":
 			story.harbor_wave += 1
 			# If the wave was the Boss (either directly or after 3 waves)
 			if story.harbor_wave > 4 or GameManager.harbor_route == "boss":
 				story.set_flag("harbor_boss_defeated", true)
 			
-	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Scenes/HarborMap.tscn":
+	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Maps/Harbor/HarborMap.tscn":
 		await get_tree().create_timer(1.5, false).timeout # Đợi 1.5s để đọc nốt câu cuối
 		await ScreenFade.fade_out(0.8)
-		get_tree().change_scene_to_file("res://Scenes/AlleywayMap.tscn")
+		get_tree().change_scene_to_file("res://Maps/Alleyway/AlleywayMap.tscn")
 	else:
 		get_tree().change_scene_to_file(current_map_file)

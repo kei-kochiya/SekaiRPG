@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://charbor001"]
+
+[ext_resource type="Script" uid="uid://bmd66auuhlo3n" path="res://Maps/Harbor/HarborMap.gd" id="1_harbor"]
+
+[node name="HarborMap" type="Node2D" unique_id=112100973]
+script = ExtResource("1_harbor")
+
+[node name="BG" type="ColorRect" parent="." unique_id=1120289705]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.1, 0.12, 0.15, 1)
+
+[node name="Water" type="ColorRect" parent="." unique_id=236442213]
+offset_top = 400.0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.05, 0.1, 0.2, 1)
+
+[node name="Label" type="Label" parent="." unique_id=1749845892]
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 200.0
+offset_bottom = 66.0
+text = "BẾN CẢNG PHÍA ĐÔNG"

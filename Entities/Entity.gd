@@ -144,6 +144,16 @@ func clear_all_debuffs():
 			to_remove.append(s)
 	remove_statuses(to_remove)
 
+func refresh_status_duration(type_name: String, new_duration: int):
+	"""Cập nhật thời gian tồn tại cho tất cả các stack của một loại trạng thái."""
+	var changed = false
+	for s in active_statuses:
+		if s["type"] == type_name:
+			s["duration"] = new_duration
+			changed = true
+	if changed:
+		status_changed.emit(active_statuses.duplicate())
+
 # ── Kiểm tra khả năng sử dụng kỹ năng ───────────────────────────────────────
 
 func can_use_skill(skill_name: String) -> bool:

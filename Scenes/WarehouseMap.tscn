@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://des3bi1tbc3ex"]
-
-[ext_resource type="Script" uid="uid://c23vunlqw5lbh" path="res://Scenes/WarehouseMap.gd" id="1_xxx"]
-
-[node name="WarehouseMap" type="Node2D" unique_id=182697904]
-script = ExtResource("1_xxx")

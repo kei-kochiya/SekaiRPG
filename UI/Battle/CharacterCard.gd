@@ -203,13 +203,40 @@ func _on_cooldown_updated(skill: String, turns: int):
 		icon.style.bg_color = Color(0.15, 0.15, 0.15)
 
 func _on_status_changed(statuses: Array):
-	"""Cập nhật danh sách các điểm chỉ báo hiệu ứng trạng thái hiện có."""
+	"""Cập nhật hiển thị hiệu ứng trạng thái. Gom nhóm các stack cùng loại thành 1 icon kèm số."""
 	for c in status_row.get_children(): c.queue_free()
+	
+	var counts = {}
 	for s in statuses:
+		var type_name = s.get("type", "Unknown")
+		counts[type_name] = counts.get(type_name, 0) + 1
+		
+	for type_name in counts:
+		var count = counts[type_name]
+		var container = HBoxContainer.new()
+		container.add_theme_constant_override("separation", 2)
+		status_row.add_child(container)
+		
 		var dot = ColorRect.new()
-		dot.custom_minimum_size = Vector2(8, 8)
-		dot.color = Color(0.8, 0.2, 0.2) if s["type"] == "Bleed" else Color(0.2, 0.8, 0.2)
-		status_row.add_child(dot)
+		dot.custom_minimum_size = Vector2(10, 10)
+		
+		# Phân loại màu sắc hiệu ứng
+		var color = Color(0.8, 0.2, 0.2) # Bleed: Đỏ
+		match type_name:
+			"Poison": color = Color(0.2, 0.8, 0.2) # Poison: Xanh lá
+			"Stun":   color = Color(1.0, 0.9, 0.2) # Stun: Vàng (đã đổi từ Xanh)
+			"Slow":   color = Color(0.4, 0.4, 0.8) # Slow: Xanh dương
+			"Buff":   color = Color(0.2, 0.7, 1.0) # Buff: Xanh nhạt
+			
+		dot.color = color
+		container.add_child(dot)
+		
+		if count > 1:
+			var lbl = Label.new()
+			lbl.text = str(count)
+			lbl.add_theme_font_size_override("font_size", 10)
+			lbl.add_theme_color_override("font_color", Color.WHITE)
+			container.add_child(lbl)
 
 func _on_damage_received(amt: int, type: String):
 	"""Kích hoạt hiệu ứng chữ nổi (Floating Text) khi thực thể chịu tác động."""

@@ -20,10 +20,8 @@ const ScreenShakeClass = preload("res://UI/Effects/ScreenShake.gd")
 var hud: Node
 var shaker: Node
 
-var is_harbor_boss_fight: bool = false
-var harbor_boss_phase: int = 0
+var scenario: BattleScenario
 var is_scripting: bool = false
-var turns_in_phase: int = 0
 
 func _ready():
 	"""
@@ -38,7 +36,7 @@ func _ready():
 	
 	player_team = data["player_team"].filter(func(e): return e != null)
 	enemy_team = data["enemy_team"].filter(func(e): return e != null)
-	is_harbor_boss_fight = data["is_harbor_boss"]
+	scenario = data["scenario"]
 	
 	all_entities = player_team + enemy_team
 	_refresh_team_context()
@@ -51,6 +49,7 @@ func _ready():
 	hud = BattleHUDClass.new()
 	add_child(hud)
 	hud.setup(player_team, enemy_team)
+	hud.skip_requested.connect(_on_skip_requested)
 	_setup_gauge_teams()
 	
 	shaker = ScreenShakeClass.new()
@@ -62,14 +61,8 @@ func _ready():
 	if GameManager.is_sandbox:
 		_setup_sandbox_exit_button()
 	
-	# Prologue Fix: Đảm bảo Ichika luôn đi đầu trong trận đấu hướng dẫn
-	if GameManager.prologue_phase == 0:
-		for p in player_team:
-			if p.entity_name == "Ichika":
-				p.action_gauge = 10000.0
-	
-	if is_harbor_boss_fight:
-		HarborBattleScript.run_intro(self, func(): run_battle())
+	if scenario:
+		scenario.on_start(self)
 	else:
 		run_battle()
 
@@ -121,13 +114,11 @@ func run_battle():
 		# Reset thanh hành động của người vừa đến lượt (về 0 hoặc trừ đi 10000 để giữ phần dư)
 		actor.action_gauge = max(0.0, actor.action_gauge - 10000.0)
 		
-		if is_harbor_boss_fight:
-			HarborBattleScript.check_transitions(self)
+		if scenario:
+			scenario.on_turn_start(self, actor)
 			if is_scripting:
 				await get_tree().create_timer(0.5, false).timeout
 				continue
-		
-		turns_in_phase += 1
 		
 		var is_player_turn = actor in player_team
 		if not GameManager.is_tutorial:
@@ -150,10 +141,8 @@ func run_battle():
 		else:
 			await _ai_turn(actor)
 		
-		_update_gauge_display(actor)
-		
-		if is_harbor_boss_fight:
-			HarborBattleScript.check_transitions(self)
+		if scenario:
+			scenario.on_turn_end(self, actor)
 		
 		if _check_battle_end():
 			break
@@ -162,28 +151,8 @@ func run_battle():
 	
 	await get_tree().create_timer(2.0, false).timeout
 	
-	var is_victory = AIManager.get_alive_targets(enemy_team).is_empty()
-	if is_harbor_boss_fight:
-		var boss = _get_entity("Đội Trưởng")
-		if boss == null or boss.current_hp <= 0:
-			is_victory = true
-	
-	var enemy_count = enemy_team.size()
-	
-	if is_victory:
-		if GameManager.current_map_file == "res://Scenes/HarborMap.tscn" and GameManager.harbor_route == "guards":
-			GameManager.guards_defeated = true
-			
-	if is_victory and GameManager.prologue_phase == 0:
-		GameManager.prologue_phase = 1
-	
-	if is_victory and is_harbor_boss_fight:
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_victory"), func():
-			GameManager.harbor_mission_done = true
-			GameManager.finish_battle(is_victory, enemy_count)
-		)
-	else:
-		GameManager.finish_battle(is_victory, enemy_count)
+	var is_victory = scenario.get_victory_status(self)
+	scenario.on_battle_completed(self, is_victory)
 
 func _player_turn(actor: Entity):
 	# Xử lý lượt đi của người chơi.
@@ -192,9 +161,23 @@ func _player_turn(actor: Entity):
 
 	hud.command_menu.show_for(actor, enemy_team)
 	var result = await hud.command_menu.command_chosen
+	if battle_over or result[0] == "cancel": return
 	var action: String = result[0]
 	var target: Entity = result[1]
 	_execute_action(actor, action, target)
+
+func _on_skip_requested():
+	if battle_over: return
+	print("[Skip] Người chơi kích hoạt bỏ qua trận đấu.")
+	battle_over = true
+	
+	if hud.command_menu.visible:
+		hud.command_menu.cancel()
+		
+	for e in enemy_team:
+		if e.current_hp > 0:
+			e.take_damage(99999, "pure")
+	hud.show_victory()
 
 func _ai_turn(actor: Entity):
 	# Xử lý lượt đi của AI đối thủ (Đã làm chậm để người chơi kịp quan sát).
@@ -217,12 +200,12 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 	- target: Thực thể chịu đòn (Entity).
 	- Return: Không có.
 	"""
+	var had_bleed = (target != null and target.get_status_count("Bleed") > 0)
+	
 	if action == "attack":
 		var dmg = DamageCalculator.calculate_damage(actor, target)
 		target.take_damage(dmg)
-		return
-	
-	if actor.has_method(action):
+	elif actor.has_method(action):
 		var cd_turns = 0
 		var once_per_battle = false
 		for s in actor.skills:
@@ -245,6 +228,14 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 			shaker.shake(8.0, 0.3)
 	else:
 		print("[Warning] ", actor.entity_name, " không có skill: ", action)
+	
+	# [Synergy]: Ichika & Mafuyu Bleed refresh
+	# Khi đánh bất kỳ chiêu nào (bao gồm đánh thường, trừ Skill 3) lên ĐỊCH đang có Bleed, tự động reset duration và thêm 1 stack.
+	if actor.entity_name in ["Ichika", "Mafuyu"] and action != "shadow_strike" and action != "lost_world":
+		if target and target in actor.enemies and had_bleed:
+			target.refresh_status_duration("Bleed", 3)
+			target.add_status({"type": "Bleed", "duration": 3})
+			print("[Synergy] ", actor.entity_name, " duy trì và tăng cường vết thương (Bleed refresh +1 stack)!")
 	
 	_regenerate_timeline()
 
@@ -283,45 +274,17 @@ func _on_entity_died(entity: Entity):
 		for p in player_team:
 			LevelManager.gain_exp(p, exp_reward)
 	
-	if is_harbor_boss_fight:
-		HarborBattleScript.check_transitions(self)
+	if scenario:
+		scenario.on_entity_died(self, entity)
 
 func _check_battle_end() -> bool:
 	"""
 	Hàm kiểm tra xem trận đấu đã kết thúc hay chưa và kết quả thắng/thua.
 	- Return: True nếu trận đấu kết thúc, False nếu tiếp tục (bool).
 	"""
-	if is_scripting: return false
+	if scenario:
+		return scenario.check_battle_end(self)
 	
-	var is_boss_dead = false
-	if is_harbor_boss_fight:
-		var boss = _get_entity("Đội Trưởng")
-		var dead = (boss == null or boss.current_hp <= 0)
-		
-		if dead:
-			if harbor_boss_phase < 3:
-				HarborBattleScript.check_transitions(self)
-				return false
-			else:
-				is_boss_dead = true
-	
-	if (not is_harbor_boss_fight and AIManager.get_alive_targets(enemy_team).is_empty()) or is_boss_dead:
-		hud.show_victory()
-		battle_over = true
-		return true
-	
-	if AIManager.get_alive_targets(player_team).is_empty():
-		if GameManager.is_scripted_battle:
-			battle_over = true
-			return true
-			
-		if is_harbor_boss_fight and harbor_boss_phase == 1:
-			HarborBattleScript.handle_loss(self)
-			return false
-		
-		hud.show_defeat()
-		battle_over = true
-		return true
 	return false
 
 func _setup_sandbox_exit_button():
@@ -348,7 +311,7 @@ func _setup_sandbox_exit_button():
 	btn.pressed.connect(func():
 		print("[Sandbox] Kết thúc trận đấu sớm.")
 		GameManager.is_sandbox = false
-		get_tree().change_scene_to_file("res://Scenes/SandboxMenu.tscn")
+		get_tree().change_scene_to_file("res://Menus/Sandbox/SandboxMenu.tscn")
 	)
 
 func _names(team: Array) -> String:

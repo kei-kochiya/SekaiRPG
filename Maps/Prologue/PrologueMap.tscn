@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dnkfbn8qcx180"]
+
+[ext_resource type="Script" uid="uid://bidlk8fx1qndy" path="res://Maps/Prologue/PrologueMap.gd" id="1_xxx"]
+
+[node name="PrologueMap" type="Node2D" unique_id=1046255519]
+script = ExtResource("1_xxx")

@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://045fic73m7iu"]
-
-[ext_resource type="Script" uid="uid://j1gbocingla2" path="res://Scenes/BaseMap_PostWarehouse.gd" id="1_pw"]
-
-[node name="BaseMap_PostWarehouse" type="Node2D" unique_id=878114054]
-script = ExtResource("1_pw")

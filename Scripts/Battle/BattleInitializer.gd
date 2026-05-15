@@ -50,7 +50,7 @@ static func setup_battle(_main: Node) -> Dictionary:
 		return {
 			"player_team": GameManager.sandbox_player_team,
 			"enemy_team": GameManager.sandbox_enemy_team,
-			"is_harbor_boss": false
+			"scenario": DefaultScenario.new()
 		}
 	
 	if GameManager.is_training_mode:
@@ -62,23 +62,23 @@ static func setup_battle(_main: Node) -> Dictionary:
 	var current_map = GameManager.current_map_file
 	var battle_key = ""
 	
-	if current_map == "res://Scenes/HarborMap.tscn":
+	if current_map == "res://Maps/Harbor/HarborMap.tscn":
 		if GameManager.harbor_route == "boss" or GameManager.harbor_wave > 3:
 			battle_key = "harbor_boss"
 		else:
 			battle_key = "harbor_guards"
-	elif current_map == "res://Scenes/WarehouseMap.tscn":
+	elif current_map == "res://Maps/Warehouse/WarehouseMap.tscn":
 		battle_key = "warehouse"
 	elif GameManager.prologue_phase == 0:
 		battle_key = "prologue"
 	
 	if mission_battles.has(battle_key):
-		return _setup_mission_battle(mission_battles[battle_key])
+		return _setup_mission_battle(mission_battles[battle_key], battle_key)
 	
 	print("[BattleInitializer] Cảnh báo: Không tìm thấy cấu hình trận đấu cho bản đồ ", current_map)
-	return {"player_team": [], "enemy_team": [], "is_harbor_boss": false}
+	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}
 
-static func _setup_mission_battle(cfg: Dictionary) -> Dictionary:
+static func _setup_mission_battle(cfg: Dictionary, battle_key: String = "") -> Dictionary:
 	"""
 	Khởi tạo trận đấu dựa trên cấu hình nhiệm vụ.
 	"""
@@ -101,10 +101,16 @@ static func _setup_mission_battle(cfg: Dictionary) -> Dictionary:
 		var min_hp = int(p.max_hp * 0.5)
 		if p.current_hp < min_hp: p.current_hp = min_hp
 
+	var scenario = DefaultScenario.new()
+	if battle_key == "harbor_boss":
+		scenario = HarborBossScenario.new()
+	elif battle_key == "prologue":
+		scenario = PrologueScenario.new()
+
 	return {
 		"player_team": p_team,
 		"enemy_team": enemies,
-		"is_harbor_boss": cfg.get("is_harbor_boss", false)
+		"scenario": scenario
 	}
 
 static func _create_enemies(type_id: String, count: int, lv: int) -> Array:
@@ -185,7 +191,7 @@ static func _setup_training_battle() -> Dictionary:
 		var min_hp = int(p.max_hp * 0.5)
 		if p.current_hp < min_hp: p.current_hp = min_hp
 
-	return {"player_team": player_team, "enemy_team": enemies, "is_harbor_boss": false}
+	return {"player_team": player_team, "enemy_team": enemies, "scenario": DefaultScenario.new()}
 
 static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 	"""
@@ -202,6 +208,6 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 		return {
 			"player_team": [mizuki],
 			"enemy_team": [mafuyu],
-			"is_harbor_boss": false
+			"scenario": ScriptedBattleScenario.new()
 		}
-	return {"player_team": [], "enemy_team": [], "is_harbor_boss": false}
+	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}

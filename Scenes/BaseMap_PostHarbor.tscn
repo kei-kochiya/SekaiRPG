@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://basemap_postharbor"]
-
-[ext_resource type="Script" path="res://Scenes/BaseMap_PostHarbor.gd" id="1_postharbor"]
-
-[node name="BaseMap_PostHarbor" type="Node2D"]
-script = ExtResource("1_postharbor")

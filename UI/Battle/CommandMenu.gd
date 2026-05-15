@@ -115,6 +115,11 @@ func show_for(entity: Entity, enemies: Array):
 	
 	visible = true
 
+func cancel():
+	"""Đóng menu và phát tín hiệu hủy lệnh để tránh treo game khi skip."""
+	visible = false
+	command_chosen.emit("cancel", null)
+
 
 # ── Logic Nội bộ ───────────────────────────────────────────────────────────
 

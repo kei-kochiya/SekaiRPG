@@ -297,4 +297,4 @@ func _on_quit():
 	"""
 	visible = false
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://Scenes/StartMenu.tscn")
+	get_tree().change_scene_to_file("res://Menus/Start/StartMenu.tscn")

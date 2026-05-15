@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bcjf2saiao8bi"]
+
+[ext_resource type="Script" uid="uid://w67446sjtmkh" path="res://Maps/Alleyway/AlleywayMap.gd" id="1_alleyway"]
+
+[node name="AlleywayMap" type="Node2D" unique_id=1220326655]
+script = ExtResource("1_alleyway")

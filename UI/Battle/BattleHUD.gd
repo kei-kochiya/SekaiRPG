@@ -19,6 +19,8 @@ const CharacterCardClass = preload("res://UI/Battle/CharacterCard.gd")
 const CommandMenuClass = preload("res://UI/Battle/CommandMenu.gd")
 const EntityDetailPanelClass = preload("res://UI/Popups/EntityDetailPanel.gd")
 
+signal skip_requested()
+
 var card_container: VBoxContainer
 var enemy_container: VBoxContainer
 var action_gauge: Node
@@ -83,6 +85,16 @@ func _build_ui():
 	command_menu.grow_vertical = Control.GROW_DIRECTION_BOTH
 	command_menu.offset_top = 350
 	add_child(command_menu)
+	
+	# Nút Skip Battle (Chỉ hiện cho các trận không phải kịch bản/boss/hướng dẫn)
+	if not GameManager.is_scripted_battle and not GameManager.is_tutorial:
+		var skip_btn = Button.new()
+		skip_btn.text = "⏭ BỎ QUA TRẬN ĐẤU"
+		skip_btn.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+		skip_btn.offset_top = -60
+		skip_btn.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		skip_btn.pressed.connect(func(): skip_requested.emit())
+		add_child(skip_btn)
 	
 	var info_btn = Button.new()
 	info_btn.text = "📊 CHI TIẾT"
