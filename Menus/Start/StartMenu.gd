@@ -32,6 +32,7 @@ func _ready():
 	
 	$CenterContainer/VBoxContainer/SandboxBtn.pressed.connect(_on_sandbox)
 	$CenterContainer/VBoxContainer/ExitBtn.pressed.connect(_on_exit)
+	
 	ScreenFade.fade_in(1.0)
 
 func _style_button(btn: Button):

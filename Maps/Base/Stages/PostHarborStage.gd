@@ -18,13 +18,7 @@ func on_stage_start():
 	# Hiệu ứng ánh sáng buổi chiều ấm áp
 	var lighting = CanvasModulate.new()
 	map.add_child(lighting)
-	lighting.color = Color(0.8, 0.55, 0.35) # Màu cam vàng hổ phách
-	
-	# Thêm bụi nắng (Chill particles)
-	EnvironmentEffects.create_dust_particles(map, Color(1, 0.8, 0.4, 0.3))
-	
-	# Thêm Vignette nhẹ để tập trung vào nhân vật
-	EnvironmentEffects.add_vignette(map, 0.25)
+	lighting.color = Color(0.8, 0.6, 0.4) # Màu cam vàng ấm
 	
 	if GameManager.story.harbor_wave <= 5:
 		if not GameManager.get_flag("harbor_meeting_p1_done"):

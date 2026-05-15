@@ -10,24 +10,20 @@ func get_npc_positions() -> Dictionary:
 
 func on_stage_start():
 	if not GameManager.harbor_mission_unlocked:
-		# Hiệu ứng buổi đêm "Thơ"
+		# Hiệu ứng buổi đêm
 		var lighting = CanvasModulate.new()
 		map.add_child(lighting)
-		lighting.color = Color(0.15, 0.15, 0.35) # Xanh tím Indigo sâu
-		
-		# Thêm đom đóm
-		var fx = EnvironmentEffects.create_fireflies(map)
+		lighting.color = Color(0.2, 0.2, 0.4) # Trời tối
 		
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_rest"), func():
 			# Transition to morning
-			_do_morning_transition(lighting, fx)
+			_do_morning_transition(lighting)
 		)
 
-func _do_morning_transition(lighting: CanvasModulate, fx: Node):
+func _do_morning_transition(lighting: CanvasModulate):
 	await ScreenFade.fade_out(1.0)
 	await map.get_tree().create_timer(1.0).timeout
 	
-	if fx: fx.queue_free()
 	lighting.color = Color(1.0, 1.0, 1.0) # Trời sáng
 	GameManager.harbor_mission_unlocked = true
 	
