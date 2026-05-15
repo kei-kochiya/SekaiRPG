@@ -25,11 +25,15 @@ var flags: Dictionary = {
 	"guards_defeated": false,
 	"training_ichika_done": false,
 	"training_kanade_done": false,
+	"training_ena_done": false,
+	"training_mizuki_done": false,
+	"post_harbor_training_reset": false,
 	"harbor_meeting_p1_done": false,
 	"mafuyu_honami_talked": false,
 	"mizuki_control_phase": false,
 	"harbor_mizuki_snack_done": false,
 	"mizuki_vs_mafuyu_done": false,
+	"mizuki_report_done": false,
 	"post_harbor_morning_done": false,
 	"ena_released": false
 }

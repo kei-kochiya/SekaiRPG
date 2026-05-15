@@ -51,8 +51,10 @@ func _spawn_enemy_wave():
 
 func _complete_training():
 	for p in GameManager.training_participants:
-		if p == "Ichika": GameManager.training_ichika_done = true
-		if p == "Kanade": GameManager.training_kanade_done = true
+		if p == "Ichika": GameManager.set_flag("training_ichika_done", true)
+		if p == "Kanade": GameManager.set_flag("training_kanade_done", true)
+		if p == "Ena": GameManager.set_flag("training_ena_done", true)
+		if p == "Mizuki": GameManager.set_flag("training_mizuki_done", true)
 	
 	GameManager.is_training_mode = false
 	DialogueManager.play_dialogue([{

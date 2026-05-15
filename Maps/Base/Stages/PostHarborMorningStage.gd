@@ -23,11 +23,23 @@ func on_stage_start():
 	# Hủy góc nhìn Mizuki
 	GameManager.set_flag("mizuki_control_phase", false)
 	
+	# Đảm bảo player là Ichika
+	var player = map.get_node_or_null("OverworldPlayer")
+	if player:
+		player.character_color = map.NPC_COLORS["Ichika"]
+		player.queue_redraw()
+	
+	# Reset training flags
+	if not GameManager.get_flag("post_harbor_training_reset"):
+		GameManager.set_flag("training_ichika_done", false)
+		GameManager.set_flag("training_kanade_done", false)
+		GameManager.set_flag("training_ena_done", false)
+		GameManager.set_flag("training_mizuki_done", false)
+		GameManager.set_flag("post_harbor_training_reset", true)
+	
 	# Đặt người chơi (Ichika) cạnh giường ban đầu nếu chưa xem cutscene
 	if not GameManager.get_flag("post_harbor_morning_done"):
 		_cutscene_active = true
-		map._spawn_player()
-		var player = map.get_node_or_null("OverworldPlayer")
 		if player: player.position = Vector2(6 * map.TILE_SIZE, 6 * map.TILE_SIZE)
 		
 	# Hiệu ứng ánh sáng buổi sáng
@@ -101,7 +113,14 @@ func handle_npc_interaction(npc_name: String):
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade"))
 		else:
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade_post"), func():
-				get_tree().change_scene_to_file("res://Menus/UpgradeMenu.tscn")
+				var p_list: Array[Entity] = [
+					GameManager.get_party_member("Ichika"),
+					GameManager.get_party_member("Kanade"),
+					GameManager.get_party_member("Mafuyu"),
+					GameManager.get_party_member("Ena"),
+					GameManager.get_party_member("Mizuki")
+				]
+				UpgradeUI.show_ui(p_list)
 			)
 	elif npc_name == "Mizuki":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_mizuki"))
@@ -131,11 +150,35 @@ func handle_npc_interaction(npc_name: String):
 
 func _show_training_menu():
 	GameManager.set_flag("talked_to_mafuyu_training", true)
-	# Mở Training Menu có thêm Ena
-	var participants = ["Ichika", "Kanade", "Mizuki", "Ena"]
+	
+	var opts: Array = []
+	var mapping = []
+	if not GameManager.get_flag("training_ichika_done"):
+		opts.append("Ichika (5 Waves)")
+		mapping.append("Ichika")
+	if not GameManager.get_flag("training_kanade_done"):
+		opts.append("Kanade (5 Waves)")
+		mapping.append("Kanade")
+	if not GameManager.get_flag("training_ena_done"):
+		opts.append("Ena (5 Waves)")
+		mapping.append("Ena")
+	if not GameManager.get_flag("training_mizuki_done"):
+		opts.append("Mizuki (5 Waves)")
+		mapping.append("Mizuki")
+	
+	opts.append("Để sau.")
+	
+	DialogueManager.show_choice(opts)
+	var idx: int = await DialogueManager.choice_made
+	if opts[idx] == "Để sau.": return
+	
 	GameManager.is_training_mode = true
-	GameManager.training_participants = participants
-	GameManager.trigger_battle()
+	GameManager.warehouse_wave = 1
+	GameManager.training_participants = [mapping[idx]]
+	
+	await ScreenFade.fade_out(1.0)
+	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)
+	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
 
 func get_quest_text() -> String:
 	if not GameManager.get_flag("ena_released"):

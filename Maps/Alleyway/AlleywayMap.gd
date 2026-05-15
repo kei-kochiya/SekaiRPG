@@ -100,5 +100,6 @@ func _play_sequence():
 		
 	DialogueManager.play_dialogue(DialogueLoader.get_lines(key), func():
 		await ScreenFade.fade_out(1.5)
+		GameManager.last_player_position = Vector2.ZERO
 		get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
 	)

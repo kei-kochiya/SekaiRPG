@@ -323,6 +323,7 @@ func finish_battle(victory: bool, count: int = 1):
 	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Maps/Harbor/HarborMap.tscn":
 		await get_tree().create_timer(1.5, false).timeout # Đợi 1.5s để đọc nốt câu cuối
 		await ScreenFade.fade_out(0.8)
+		last_player_position = Vector2.ZERO
 		get_tree().change_scene_to_file("res://Maps/Alleyway/AlleywayMap.tscn")
 	else:
 		get_tree().change_scene_to_file(current_map_file)
