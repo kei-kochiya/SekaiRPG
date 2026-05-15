@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cxcafe0001"]
+
+[ext_resource type="Script" uid="uid://cdrqe7bh6ovcb" path="res://Maps/Cafe/CafeMap.gd" id="1_scpt"]
+
+[node name="CafeMap" type="Node2D" unique_id=1599475517]
+script = ExtResource("1_scpt")

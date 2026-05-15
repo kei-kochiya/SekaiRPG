@@ -14,8 +14,11 @@ func get_npc_positions() -> Dictionary:
 		# Đang ở trong giường
 		pos["Ena"] = Vector2(7 * map.TILE_SIZE, 6 * map.TILE_SIZE)
 	else:
-		# Bị treo ở sảnh chính
-		pos["Ena"] = Vector2(24 * map.TILE_SIZE, 15 * map.TILE_SIZE)
+		if GameManager.get_flag("ena_control_phase"):
+			pos["Ichika"] = Vector2(24 * map.TILE_SIZE, 15 * map.TILE_SIZE)
+		else:
+			# Bị treo ở sảnh chính / Đứng ở sảnh chính
+			pos["Ena"] = Vector2(24 * map.TILE_SIZE, 15 * map.TILE_SIZE)
 		
 	return pos
 
@@ -23,10 +26,13 @@ func on_stage_start():
 	# Hủy góc nhìn Mizuki
 	GameManager.set_flag("mizuki_control_phase", false)
 	
-	# Đảm bảo player là Ichika
+	# Đảm bảo player là đúng nhân vật
 	var player = map.get_node_or_null("OverworldPlayer")
 	if player:
-		player.character_color = map.NPC_COLORS["Ichika"]
+		if GameManager.get_flag("ena_control_phase"):
+			player.character_color = map.NPC_COLORS["Ena"]
+		else:
+			player.character_color = map.NPC_COLORS["Ichika"]
 		player.queue_redraw()
 	
 	# Reset training flags
@@ -51,6 +57,27 @@ func on_stage_start():
 		_play_morning_cutscene()
 	else:
 		_update_ena_visuals()
+		_check_ena_phase_trigger()
+
+func _check_ena_phase_trigger():
+	if GameManager.get_flag("ena_control_phase"): return
+	if not GameManager.get_flag("ena_released"): return
+	
+	var trained = GameManager.get_flag("training_ichika_done") or GameManager.get_flag("training_kanade_done") or GameManager.get_flag("training_ena_done") or GameManager.get_flag("training_mizuki_done")
+	var count = GameManager.get_flag("interaction_count", 0)
+	
+	if trained or count >= 4:
+		if not GameManager.get_flag("ena_cafe_unlocked"):
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("ena_bored_intro"), func():
+				GameManager.set_flag("ena_cafe_unlocked", true)
+				GameManager.set_flag("ena_control_phase", true)
+				var player = map.get_node_or_null("OverworldPlayer")
+				if player:
+					player.character_color = map.NPC_COLORS["Ena"]
+					player.queue_redraw()
+				map._spawn_npcs()
+				map._refresh_quest_label()
+			)
 
 func _play_morning_cutscene():
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("morning_p1"), func():
@@ -108,11 +135,22 @@ func _update_ena_visuals():
 func handle_npc_interaction(npc_name: String):
 	if _cutscene_active: return
 	
-	if npc_name == "Kanade":
+	var is_ena = GameManager.get_flag("ena_control_phase")
+	
+	if not is_ena:
+		var count = GameManager.get_flag("interaction_count", 0)
+		GameManager.set_flag("interaction_count", count + 1)
+		
+	if npc_name == "Ichika":
+		if is_ena:
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("ena_talk_ichika"))
+			
+	elif npc_name == "Kanade":
 		if not GameManager.get_flag("ena_released"):
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade"))
 		else:
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade_post"), func():
+			var lines = "talk_kanade_post_ena" if is_ena else "talk_kanade_post"
+			DialogueManager.play_dialogue(DialogueLoader.get_lines(lines), func():
 				var p_list: Array[Entity] = [
 					GameManager.get_party_member("Ichika"),
 					GameManager.get_party_member("Kanade"),
@@ -123,12 +161,22 @@ func handle_npc_interaction(npc_name: String):
 				UpgradeUI.show_ui(p_list)
 			)
 	elif npc_name == "Mizuki":
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_mizuki"))
-	elif npc_name == "Ena":
-		if not GameManager.get_flag("ena_released"):
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_ena_hanging"))
+		if is_ena:
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("ena_invite_mizuki"), func():
+				await ScreenFade.fade_out(1.0)
+				GameManager.last_player_position = Vector2.ZERO
+				get_tree().change_scene_to_file("res://Maps/Cafe/CafeMap.tscn")
+			)
 		else:
-			DialogueManager.play_dialogue([{"text": "Xê ra! Chị mày đang đau lưng!", "type": "dialogue", "name": "Ena", "color": Color("#b86028")}])
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_mizuki"))
+			
+	elif npc_name == "Ena":
+		if not is_ena:
+			if not GameManager.get_flag("ena_released"):
+				DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_ena_hanging"))
+			else:
+				DialogueManager.play_dialogue([{"text": "Xê ra! Chị mày đang đau lưng!", "type": "dialogue", "name": "Ena", "color": Color("#b86028")}])
+				
 	elif npc_name == "Mafuyu":
 		if not GameManager.get_flag("ena_released"):
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_mafuyu_release"), func():
@@ -144,7 +192,8 @@ func handle_npc_interaction(npc_name: String):
 				map._refresh_quest_label()
 			)
 		else:
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_mafuyu_post"), func():
+			var lines = "talk_mafuyu_post_ena" if is_ena else "talk_mafuyu_post"
+			DialogueManager.play_dialogue(DialogueLoader.get_lines(lines), func():
 				_show_training_menu()
 			)
 
@@ -183,5 +232,7 @@ func _show_training_menu():
 func get_quest_text() -> String:
 	if not GameManager.get_flag("ena_released"):
 		return "MỤC TIÊU: Nói chuyện với Mafuyu để thả Ena."
+	elif GameManager.get_flag("ena_control_phase"):
+		return "MỤC TIÊU: (Góc nhìn Ena) Rủ Mizuki đi chơi cho đỡ chán."
 	else:
-		return "MỤC TIÊU: Tự do khám phá (Kanade: Upgrade, Mafuyu: Training)"
+		return "MỤC TIÊU: Tự do khám phá (Nói chuyện 4 lần hoặc Đi tập luyện để tiếp tục)"

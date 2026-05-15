@@ -210,6 +210,26 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 			"enemy_team": [mafuyu],
 			"scenario": ScriptedBattleScenario.new()
 		}
+	if battle_id == "ena_vs_mizuki":
+		var ena = GameManager.get_party_member("Ena")
+		var mizuki = character_classes["Mizuki"].new()
+		mizuki.entity_name = "Mizuki"
+		LevelManager.set_initial_level(mizuki, max(ena.level, 15))
+		
+		return {
+			"player_team": [ena],
+			"enemy_team": [mizuki],
+			"scenario": ScriptedBattleScenario.new()
+		}
+		
+	if battle_id == "ena_vs_thugs":
+		var ena = GameManager.get_party_member("Ena")
+		var enemies = _create_enemies("kidnapper", 3, ena.level)
+		return {
+			"player_team": [ena],
+			"enemy_team": enemies,
+			"scenario": ScriptedBattleScenario.new()
+		}
 	
 	if battle_id == "harbor_boss":
 		var p_team = [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Ena")]

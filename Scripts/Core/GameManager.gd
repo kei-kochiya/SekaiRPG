@@ -300,6 +300,20 @@ func finish_battle(victory: bool, count: int = 1):
 			scripted_battle_id = ""
 			get_tree().change_scene_to_file(current_map_file)
 			return
+		elif scripted_battle_id == "ena_vs_mizuki":
+			story.set_flag("ena_vs_mizuki_done", true)
+			story.set_flag("ena_vs_mizuki_won", victory)
+			is_scripted_battle = false
+			scripted_battle_id = ""
+			get_tree().change_scene_to_file(current_map_file)
+			return
+		elif scripted_battle_id == "ena_vs_thugs":
+			story.set_flag("ena_vs_thugs_done", true)
+			story.set_flag("ena_vs_thugs_won", victory)
+			is_scripted_battle = false
+			scripted_battle_id = ""
+			get_tree().change_scene_to_file(current_map_file)
+			return
 		
 		is_scripted_battle = false
 		scripted_battle_id = ""

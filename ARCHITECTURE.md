@@ -47,13 +47,13 @@ Hệ thống sử dụng **Scenario Pattern** để can thiệp vào các "Hooks
 
 ## 3. Dialogue System (Hệ thống hội thoại)
 
-Tuân thủ chặt chẽ mô hình **MVC (Model-View-Controller)**, tách biệt hoàn toàn giữa dữ liệu, hiển thị và logic.
+Tuân thủ chặt chẽ mô hình **MVC (Model-View-Controller)**, tách biệt hoàn toàn giữa dữ liệu, hiển thị và logic. Hỗ trợ hiển thị và tương tác rẽ nhánh cốt truyện (Branching Choices).
 
 | File | Vai trò | Chức năng chính |
 | :--- | :--- | :--- |
-| **`DialogueManager.gd`** | **Controller** | Điều phối luồng thoại, block input, gọi Callback sự kiện sau khi hết thoại. |
-| **`DialogueUI.gd`** | **View** | Vẽ giao diện khung thoại, chân dung NPC, hiệu ứng gõ chữ (Typewriter effect). |
-| **`DialogueLoader.gd`** | **Model** | Nạp và phân tích dữ liệu hội thoại từ bộ nhớ hoặc file JSON. |
+| **`DialogueManager.gd`** | **Controller** | Điều phối luồng thoại, block input, hiển thị lựa chọn (`show_choice`) và chờ trả kết quả (`choice_made`). |
+| **`DialogueUI.gd`** | **View** | Vẽ giao diện khung thoại, chân dung NPC, tự động build UI nút lựa chọn (Choices). |
+| **`DialogueLoader.gd`** | **Model** | Nạp và phân tích dữ liệu hội thoại từ bộ nhớ hoặc thư mục JSON. |
 
 ---
 
@@ -64,10 +64,12 @@ Quản lý không gian Overworld và luồng di chuyển của người chơi. S
 | File/Thư mục | Chức năng chính | Trạng thái (Story) |
 | :--- | :--- | :--- |
 | **`PrologueMap.gd`** | Bản đồ mở đầu. Quản lý kịch bản Ichika bị bao vây và Mafuyu cứu viện. | Tutorial |
-| **`BaseMap.gd`** (Shell)| Vỏ bọc Safehouse. Chứa BaseMapStage để thay đổi ánh sáng, NPC tùy tiến độ. | Hub/Safehouse |
+| **`BaseMap.gd`** (Shell)| Vỏ bọc Safehouse. Chứa BaseMapStage để thay đổi không gian (sáng/tối/buổi sáng). | Hub/Safehouse |
 | **`WarehouseMap.gd`** | Bản đồ Nhà kho. Đánh theo dạng Wave liên tục. | Nhiệm vụ phụ |
+| **`TrainingWarehouseMap.gd`** | Bản đồ Luyện tập/Sandbox. Tự động spawn địch theo thành viên tham gia, có cờ giới hạn (limit). | Luyện tập |
+| **`CafeMap.gd`** | Bản đồ trang trí Quán Cafe. Cảnh hội thoại và phân nhánh kết cục sự kiện Ena say xỉn. | Nhiệm vụ phụ |
 | **`HarborMap.gd`** | Bản đồ Bến cảng. Quản lý đường đi (Đánh lính gác hoặc vào thẳng Boss). | Nhiệm vụ chính |
-| **`AlleywayMap.gd`** | Bản đồ Hẻm nhỏ. Trạm dừng chân sau nhiệm vụ Bến cảng. | Transition |
+| **`AlleywayMap.gd`** | Bản đồ Hẻm nhỏ. Trạm dừng chân và hội thoại sau khi đánh Boss. | Transition |
 
 ---
 
