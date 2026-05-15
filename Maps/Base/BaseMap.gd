@@ -39,7 +39,9 @@ func _init_stage():
 	var stage_script
 	
 	# Logic chọn Stage dựa trên tiến độ câu chuyện
-	if GameManager.get_flag("harbor_mission_done"):
+	if GameManager.get_flag("mizuki_vs_mafuyu_done"):
+		stage_script = preload("res://Maps/Base/Stages/PostHarborMorningStage.gd")
+	elif GameManager.get_flag("harbor_mission_done"):
 		stage_script = preload("res://Maps/Base/Stages/PostHarborStage.gd")
 	elif GameManager.warehouse_wave > 5 or GameManager.get_flag("harbor_mission_unlocked"):
 		stage_script = preload("res://Maps/Base/Stages/PostWarehouseStage.gd")

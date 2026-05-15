@@ -29,7 +29,9 @@ var flags: Dictionary = {
 	"mafuyu_honami_talked": false,
 	"mizuki_control_phase": false,
 	"harbor_mizuki_snack_done": false,
-	"mizuki_vs_mafuyu_done": false
+	"mizuki_vs_mafuyu_done": false,
+	"post_harbor_morning_done": false,
+	"ena_released": false
 }
 
 # ── Tiến độ Nhiệm vụ Hiện tại (Volatile/Persistent) ─────────────────────────

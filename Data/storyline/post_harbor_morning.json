@@ -1,0 +1,327 @@
+{
+  "morning_p1": [
+    {
+      "type": "narrator",
+      "text": "Sáng hôm sau..."
+    },
+    {
+      "type": "narrator",
+      "text": "Kanade đã cõng Ichika và Ena vào phòng ngủ sau khi hai người ngất lịm đi tối qua."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Ngọ nguậy, vươn vai)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ưm... sao tự nhiên gối ôm nay to thế nhỉ... lại còn mềm mềm ấm ấm nữa..."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Hé mắt ra nhìn)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ể?!"
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Phát hiện ra mình đang ôm cứng ngắc Ichika trên cùng một cái giường)"
+    }
+  ],
+  "morning_push": [
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Rón rén gỡ tay ra, đẩy nhẹ Ichika sang một bên để lẻn xuống giường)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Nhột quá Ena ơi... cho em ngủ thêm chút nữa đi..."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Khựng lại. Nếu cứ thế này thì không thoát ra được mất, phải làm mạnh tay thôi!)"
+    }
+  ],
+  "morning_kick": [
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Lấy hết sức bình sinh, tung một cú đạp không thương tiếc!)"
+    },
+    {
+      "type": "narrator",
+      "text": "BỐP!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Ái da! Đau quá!!"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Lăn lông lốc xuống sàn, tỉnh hẳn ngủ)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị làm cái trò gì vậy hả Ena?! Tự nhiên đạp người ta rớt giường!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ai bảo nhóc dám cướp giường của tôi! Còn ôm cứng ngắc thế kia nữa, ghê chết đi được!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chính chị là người ôm khư khư đấy chứ! Quá đáng thật sự, em đi méc Mafuyu-san!"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Ichika phụng phịu chạy vội ra khỏi phòng)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Xì, làm như tôi sợ bà sếp già đó chắc. Ngủ tiếp cho sướng thân..."
+    }
+  ],
+  "mafuyu_order": [
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Mới sáng sớm đã ồn ào cái gì vậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Mafuyu-san! Chị Ena vô cớ đạp em xuống giường kìa!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tôi nghe thấy hết rồi. Nhóc chạy ra cửa hàng tiện lợi mua chút đồ ăn sáng cho cả nhóm đi, để chuyện đó cho tôi giải quyết."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Vâng ạ!"
+    },
+    {
+      "type": "narrator",
+      "text": "Một lúc sau..."
+    }
+  ],
+  "return_home": [
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Mở cửa bước vào nhà với túi đồ ăn lớn)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em mua đồ ăn sáng về rồi đâ- Ơ..."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Chết lặng nhìn cảnh tượng trước mắt)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Thả tao xuốnnggggg! Đầu tao sắp nổ tung vì dồn máu não rồi đây này!!!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị bị Mafuyu-san trói treo ngược lên trần nhà luôn á?!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Còn không mau ra đây cởi trói cho chị! Tại con nhỏ điếc còi nhà em mét lẻo chứ ai!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Thái độ lồi lõm quá nha. Em nghĩ là chị cứ bị treo thêm vài phút nữa cho tỉnh táo đi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Con ranh kia!! Mày đợi tao xuống được xem tao có lột da mày không!"
+    }
+  ],
+  "talk_kanade": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#aaaacc",
+      "text": "Đừng lo, sợi dây thừng đó Mafuyu mua hàng chất lượng cao đấy, không đứt nổi đâu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#aaaacc",
+      "text": "Cứ để cậu ấy treo lủng lẳng vậy như món đồ trang trí Halloween cũng vui mà."
+    }
+  ],
+  "talk_mizuki": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena-nan trông như con dơi bị bắt quả tang đang ngủ nướng vậy. Buồn cười quá đi mất, tớ phải chụp lại làm meme mới được!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Góc độ này... hoàn hảo! Tối nay tớ sẽ spam ảnh này vào group chat."
+    }
+  ],
+  "talk_ena_hanging": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Nhìn cái gì mà nhìn! Mày có thả tao xuống ngay không thì bảo!!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Sếp điên kia đúng là ác quỷ, tự nhiên lôi mình ra khỏi chăn ấm nệm êm rồi bắt treo như cục giò lụa thế này..."
+    }
+  ],
+  "talk_mafuyu_release": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Mua đồ ăn sáng về rồi à? Ngoan lắm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Ena bị treo nãy giờ mặt đỏ gay rồi kìa, tha cho chị ấy đi Mafuyu-san."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Được rồi, phạt thế đủ rồi."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Vung tay cắt đứt dây thừng một cách gọn gàng. Ena rớt cái uỵch xuống sàn)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ái! Cái eo của tôi... tụi bay nhớ mặt tao đấy!"
+    }
+  ],
+  "talk_kanade_post": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#aaaacc",
+      "text": "Đến lúc phải kiểm tra lại trang bị và nâng cấp kỹ năng rồi. Em đã sẵn sàng chưa, Ichika?"
+    }
+  ],
+  "talk_mafuyu_post": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Có muốn ra ngoài khởi động gân cốt một chút không? Ena cũng có thể tham gia đợt này."
+    }
+  ]
+}
