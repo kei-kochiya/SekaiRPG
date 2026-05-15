@@ -120,6 +120,11 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 	
 	zone.interacted.connect(func():
 		GameManager.harbor_route = route
+		# Boss được tính là trận đấu kịch bản (Scripted)
+		if route == "boss" or GameManager.harbor_wave > 3:
+			GameManager.is_scripted_battle = true
+			GameManager.scripted_battle_id = "harbor_boss"
+		
 		GameManager.store_map_state("res://Maps/Harbor/HarborMap.tscn", get_node("OverworldPlayer").global_position)
 		GameManager.trigger_battle()
 	)

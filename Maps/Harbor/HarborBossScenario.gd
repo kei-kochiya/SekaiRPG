@@ -116,6 +116,7 @@ func _trigger_phase_3(main: Node):
 	
 	var honami = Honami.new()
 	honami.is_harbor = true
+	LevelManager.set_initial_level(honami, 25)
 	var boss = main._get_entity("Đội Trưởng")
 	var ichika = GameManager.get_party_member("Ichika")
 	var ena = GameManager.get_party_member("Ena")

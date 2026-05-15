@@ -48,11 +48,11 @@ func freezing_void(_target: Entity):
 		target.add_status({"type": "Bleed", "duration": 3})
 
 func lost_world(_target: Entity):
-	# [Lost World]: Tuyệt kỹ AoE Pure DMG - scale đến x3 khi gần hết máu. Sống sót → 2 Bleed cho tất cả.
+	# [Lost World]: Tuyệt kỹ AoE Pure DMG - scale đến x7 khi gần hết máu. Sống sót → 2 Bleed cho tất cả.
 	print(entity_name, " kích hoạt [Lost World]...")
 	
 	var lost_hp_ratio = 1.0 - (float(current_hp) / max_hp)
-	var dmg_mult = 1.0 + (lost_hp_ratio * 2.0) # Tối đa x3 sát thương khi gần hết máu
+	var dmg_mult = 1.0 + (lost_hp_ratio * 7.0) # Tối đa x7 sát thương khi gần hết máu
 	
 	for e in enemies:
 		if e.current_hp > 0:

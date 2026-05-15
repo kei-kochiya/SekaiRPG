@@ -118,6 +118,8 @@ func _setup_phase_0():
 
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase0"), func():
 			GameManager.is_tutorial = true
+			GameManager.is_scripted_battle = true
+			GameManager.scripted_battle_id = "prologue"
 			GameManager.store_map_state("res://Maps/Prologue/PrologueMap.tscn", Vector2.ZERO)
 			GameManager.trigger_battle()
 		)

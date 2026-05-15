@@ -55,7 +55,7 @@ func _init_party():
 	LevelManager.set_initial_level(party["Ichika"], 1)
 	LevelManager.set_initial_level(party["Kanade"], 5)
 	LevelManager.set_initial_level(party["Mafuyu"], 25)
-	LevelManager.set_initial_level(party["Ena"], 15)
+	LevelManager.set_initial_level(party["Ena"], 20)
 	LevelManager.set_initial_level(party["Mizuki"], 25)
 	LevelManager.set_initial_level(party["Honami"], 25)
 
@@ -296,11 +296,13 @@ func finish_battle(victory: bool, count: int = 1):
 	if is_scripted_battle:
 		if scripted_battle_id == "mizuki_vs_mafuyu":
 			story.set_flag("mizuki_vs_mafuyu_done", true)
+			is_scripted_battle = false
+			scripted_battle_id = ""
+			get_tree().change_scene_to_file(current_map_file)
+			return
 		
 		is_scripted_battle = false
 		scripted_battle_id = ""
-		get_tree().change_scene_to_file(current_map_file)
-		return
 
 	if not victory and is_training_mode:
 		var bonus_exp = int(last_battle_max_lv * 50)

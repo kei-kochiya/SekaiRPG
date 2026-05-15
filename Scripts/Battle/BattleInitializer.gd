@@ -210,4 +210,24 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 			"enemy_team": [mafuyu],
 			"scenario": ScriptedBattleScenario.new()
 		}
+	
+	if battle_id == "harbor_boss":
+		var p_team = [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Ena")]
+		var boss = Captain.new()
+		LevelManager.set_initial_level(boss, 25)
+		return {
+			"player_team": p_team,
+			"enemy_team": [boss],
+			"scenario": HarborBossScenario.new()
+		}
+		
+	if battle_id == "prologue":
+		var p_team = [GameManager.get_party_member("Ichika")]
+		var enemies = _create_enemies("kidnapper", 3, 1)
+		return {
+			"player_team": p_team,
+			"enemy_team": enemies,
+			"scenario": PrologueScenario.new()
+		}
+		
 	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}
