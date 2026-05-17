@@ -55,6 +55,7 @@ func _style_button(btn: Button):
 	
 	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
 	btn.add_theme_color_override("font_hover_color", Color(0.1, 0.1, 0.1))
+	btn.add_theme_font_override("font", load("res://Fonts/Lagu Sans Bold.otf"))
 
 func _apply_kenney_styles():
 	# Title Background using NinePatchRect for better stretching
@@ -80,6 +81,7 @@ func _apply_kenney_styles():
 	cc.add_child(title)
 	title.add_theme_font_size_override("font_size", 32)
 	title.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+	title.add_theme_font_override("font", load("res://Fonts/zhcn.ttf"))
 
 	for btn in [$CenterContainer/VBoxContainer/NewGameBtn, $CenterContainer/VBoxContainer/SandboxBtn, $CenterContainer/VBoxContainer/ExitBtn]:
 		_style_button(btn)

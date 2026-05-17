@@ -45,6 +45,8 @@ var enemies: Array = []
 var skills: Array = []
 var active_statuses: Array = []
 var cooldowns: Dictionary = {}
+var skills_disabled: bool = false
+var gives_exp: bool = true
 var stat_caps: Dictionary = {
 	"max_hp": 30000,
 	"atk": 15000,
@@ -162,4 +164,5 @@ func can_use_skill(skill_name: String) -> bool:
 	- skill_name: Tên kỹ năng cần kiểm tra (String).
 	- Return: True nếu dùng được, ngược lại False (bool).
 	"""
+	if skills_disabled: return false
 	return CooldownManager.is_skill_ready(self , skill_name)

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cstartmenu01"]
 
-[ext_resource type="Script" path="res://Menus/Start/StartMenu.gd" id="1_start"]
+[ext_resource type="Script" uid="uid://c3sixo0uefwbc" path="res://Menus/Start/StartMenu.gd" id="1_start"]
 
-[node name="StartMenu" type="Control"]
+[node name="StartMenu" type="Control" unique_id=1494265498]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_start")
 
-[node name="BG" type="ColorRect" parent="."]
+[node name="BG" type="ColorRect" parent="." unique_id=2118280431]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0627451, 0.0627451, 0.0823529, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1349865770]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,27 +28,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1174868356]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Title" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1858751373]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "SEKAI RPG"
 horizontal_alignment = 1
 
-[node name="NewGameBtn" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="NewGameBtn" type="Button" parent="CenterContainer/VBoxContainer" unique_id=2003123850]
 custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
 text = "CHƠI MỚI"
 
-[node name="SandboxBtn" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="SandboxBtn" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1272224881]
 custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
 text = "SANDBOX"
 
-[node name="ExitBtn" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="ExitBtn" type="Button" parent="CenterContainer/VBoxContainer" unique_id=746644008]
 custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
 text = "THOÁT"

@@ -86,8 +86,8 @@ func _build_ui():
 	command_menu.offset_top = 350
 	add_child(command_menu)
 	
-	# Nút Skip Battle (Chỉ hiện cho các trận không phải kịch bản/boss/hướng dẫn)
-	if not GameManager.is_scripted_battle and not GameManager.is_tutorial:
+	# Nút Skip Battle (Chỉ hiện khi Option bật và không phải kịch bản/boss/hướng dẫn)
+	if GameManager.skip_battle_enabled and not GameManager.is_scripted_battle and not GameManager.is_tutorial:
 		var skip_btn = Button.new()
 		skip_btn.text = "⏭ BỎ QUA TRẬN ĐẤU"
 		skip_btn.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)

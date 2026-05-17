@@ -53,9 +53,14 @@ func show_choice(options: Array):
 
 # ── Điều phối dòng chảy ─────────────────────────────────────────────────────
 
-func _unhandled_input(event: InputEvent):
+func _input(event: InputEvent):
 	if _in_choice or not active: return
-	if event.is_action_pressed("ui_accept") or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+	
+	var is_accept = event.is_action_pressed("ui_accept")
+	var is_click = event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT
+	var is_touch = event is InputEventScreenTouch and event.pressed
+	
+	if is_accept or is_click or is_touch:
 		get_viewport().set_input_as_handled()
 		index += 1
 		if index < current_dialogue.size():

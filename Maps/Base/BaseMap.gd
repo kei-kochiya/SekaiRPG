@@ -39,7 +39,9 @@ func _init_stage():
 	var stage_script
 	
 	# Logic chọn Stage dựa trên tiến độ câu chuyện
-	if GameManager.get_flag("mizuki_report_done"):
+	if GameManager.get_flag("ena_cafe_done"):
+		stage_script = preload("res://Maps/Base/Stages/PostCafeStreetMissionStage.gd")
+	elif GameManager.get_flag("mizuki_report_done"):
 		stage_script = preload("res://Maps/Base/Stages/PostHarborMorningStage.gd")
 	elif GameManager.get_flag("harbor_mission_done"):
 		stage_script = preload("res://Maps/Base/Stages/PostHarborStage.gd")
@@ -182,6 +184,14 @@ func _on_exit_interacted():
 		await ScreenFade.fade_out(1.0)
 		GameManager.store_map_state("res://Maps/Harbor/HarborMap.tscn", Vector2.ZERO)
 		get_tree().change_scene_to_file("res://Maps/Harbor/HarborMap.tscn")
+	# Kiểm tra chuyển cảnh sang StreetMap
+	elif GameManager.get_flag("ena_cafe_done") and not GameManager.get_flag("street_survival_done"):
+		if GameManager.get_flag("street_mission_ready"):
+			await ScreenFade.fade_out(1.0)
+			GameManager.store_map_state("res://Maps/Street/StreetMap.tscn", Vector2.ZERO)
+			get_tree().change_scene_to_file("res://Maps/Street/StreetMap.tscn")
+		else:
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("lobby_street_mission_not_ready"))
 	# Chỉ đi Warehouse nếu chưa xong 5 wave
 	elif GameManager.warehouse_mission_accepted and GameManager.warehouse_wave <= 5:
 		await ScreenFade.fade_out(1.0)

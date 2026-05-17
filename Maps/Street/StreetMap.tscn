@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cxstreet0001"]
+
+[ext_resource type="Script" uid="uid://t77uv734fuuv" path="res://Maps/Street/StreetMap.gd" id="1_street"]
+
+[node name="StreetMap" type="Node2D" unique_id=542181521]
+script = ExtResource("1_street")

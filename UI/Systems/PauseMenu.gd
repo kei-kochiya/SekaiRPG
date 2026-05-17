@@ -12,6 +12,7 @@ var _root: Control
 var _panel: PanelContainer
 var _guide_panel: PanelContainer
 var _options_panel: PanelContainer
+var _pw_dialog: PanelContainer
 
 func _ready():
 	"""
@@ -224,11 +225,93 @@ func _on_options():
 	)
 	v_vol.add_child(slider)
 	
+	# --- Skip Battle Option ---
+	var hb_skip = HBoxContainer.new()
+	vbox.add_child(hb_skip)
+	
+	var lbl_skip = Label.new()
+	lbl_skip.text = "Bỏ qua trận đánh (Skip Battle)"
+	lbl_skip.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))
+	lbl_skip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hb_skip.add_child(lbl_skip)
+	
+	var btn_skip = CheckButton.new()
+	btn_skip.button_pressed = GameManager.skip_battle_enabled
+	btn_skip.toggled.connect(func(pressed):
+		if pressed and not GameManager.skip_battle_unlocked:
+			btn_skip.button_pressed = false # Reset lại cho đến khi nhập đúng pass
+			_show_password_dialog(btn_skip)
+		else:
+			GameManager.skip_battle_enabled = pressed
+	)
+	hb_skip.add_child(btn_skip)
+	
 	# --- Close Button ---
 	var close = _create_button("Đóng", func(): _options_panel.visible = false)
 	vbox.add_child(close)
 	
 	_options_panel.visible = true
+
+func _show_password_dialog(target_check: CheckButton):
+	"""
+	Hiển thị hộp thoại nhập mật khẩu để mở khóa chức năng Skip Battle.
+	"""
+	if _pw_dialog: _pw_dialog.queue_free()
+	
+	_pw_dialog = PanelContainer.new()
+	_pw_dialog.custom_minimum_size = Vector2(300, 150)
+	_pw_dialog.set_anchors_preset(Control.PRESET_CENTER)
+	
+	var sb = StyleBoxFlat.new()
+	sb.bg_color = Color(0.1, 0.1, 0.15, 0.95)
+	sb.set_border_width_all(2)
+	sb.border_color = Color(0.8, 0.6, 0.2)
+	_pw_dialog.add_theme_stylebox_override("panel", sb)
+	_root.add_child(_pw_dialog)
+	
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 15)
+	_pw_dialog.add_child(vbox)
+	
+	var lbl = Label.new()
+	lbl.text = "NHẬP MẬT MÃ"
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(lbl)
+	
+	var edit = LineEdit.new()
+	edit.secret = true # Ẩn mật khẩu
+	edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	edit.placeholder_text = "****"
+	vbox.add_child(edit)
+	edit.grab_focus()
+	
+	var hb = HBoxContainer.new()
+	hb.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(hb)
+	
+	var btn_ok = Button.new()
+	btn_ok.text = "XÁC NHẬN"
+	hb.add_child(btn_ok)
+	
+	var btn_cancel = Button.new()
+	btn_cancel.text = "HỦY"
+	hb.add_child(btn_cancel)
+	
+	var on_confirm = func():
+		if edit.text == "27101108":
+			GameManager.skip_battle_unlocked = true
+			GameManager.skip_battle_enabled = true
+			target_check.button_pressed = true
+			_pw_dialog.queue_free()
+			print("[Options] Skip Battle unlocked!")
+		else:
+			edit.text = ""
+			lbl.text = "SAI MẬT MÃ! THỬ LẠI"
+			lbl.add_theme_color_override("font_color", Color(1, 0.3, 0.3))
+	
+	btn_ok.pressed.connect(on_confirm)
+	edit.text_submitted.connect(func(_t): on_confirm.call())
+	btn_cancel.pressed.connect(func(): _pw_dialog.queue_free())
 
 func _create_button(txt: String, callback: Callable) -> Button:
 	"""

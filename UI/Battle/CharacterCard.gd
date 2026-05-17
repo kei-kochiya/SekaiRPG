@@ -86,9 +86,15 @@ func _create_header() -> HBoxContainer:
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	var p_path = "res://Art/Portraits/%s.png" % entity.entity_name.to_lower()
 	if entity is Kidnapper:
-		p_path = "res://Assets/Person/b_down.png"
+		p_path = "res://Assets/Person/kidnapper.png"
 	elif entity is WarehouseWorker or entity is TrainingBot:
-		p_path = "res://Assets/Person/c_down.png"
+		p_path = "res://Assets/Person/warehouse_worker.png"
+	elif entity is Guard:
+		p_path = "res://Assets/Person/guard.png"
+	elif entity is Captain:
+		p_path = "res://Assets/Person/captain.png"
+	elif entity is Terrorist:
+		p_path = "res://Assets/Person/terrorist.png"
 		
 	if ResourceLoader.exists(p_path): portrait.texture = load(p_path)
 	h.add_child(portrait)

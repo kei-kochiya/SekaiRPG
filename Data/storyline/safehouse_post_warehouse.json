@@ -32,14 +32,14 @@
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Trời ơi cái báng súng bằng sợi carbon này mướt rượt luôn, đám quân đội lần này chơi lớn phết!"
+      "text": "Trời ơi cái báng súng bằng sợi carbon này đỉnh vãi! Đám quân đội lần này chơi lớn phết!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Khoan đã, cái quái gì kẹt dưới đáy thùng thế này?"
+      "text": "Khoan đã, cái gì kẹt dưới đáy thùng thế này?"
     },
     {
       "type": "dialogue",
@@ -53,7 +53,7 @@
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Á á á! Lục bạc nguyên khối phiên bản giới hạn!"
+      "text": "Á á á! Lục bạc nguyên khối, bản giới hạn!"
     },
     {
       "type": "dialogue",
@@ -180,7 +180,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Sau hôm qua, chắc em cũng đã thấy mình còn nhiều điều phải học lắm."
+      "text": "Sau hôm qua, chắc em cũng đã thấy mình còn nhiều thứ phải học hỏi lắm."
     },
     {
       "type": "dialogue",
@@ -208,7 +208,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Ừm. Em có thể nói chuyện với Mafuyu về chuyện đó."
+      "text": "Ừm. Có gì em qua nói chuyện với Mafuyu nhé."
     }
   ],
   "mafuyu_training_intro": [
@@ -240,7 +240,7 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Nghỉ ngơi đi nhóc. Tập nhiều quá không tốt đâu."
+      "text": "Nghỉ ngơi đi nhóc. Tập quá sức không tốt đâu."
     }
   ]
 }

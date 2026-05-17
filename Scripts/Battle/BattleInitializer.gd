@@ -11,10 +11,12 @@ chế độ chơi và thiết lập các trạng thái hồi phục cơ bản.
 # Ánh xạ ID kẻ địch sang các Class tương ứng
 static var enemy_classes = {
 	"kidnapper": Kidnapper,
+	"thug": Thug,
 	"guard": Guard,
 	"harbor_boss": Captain,
 	"target": TrainingBot,
-	"warehouse_worker": WarehouseWorker
+	"warehouse_worker": WarehouseWorker,
+	"terrorist": Terrorist
 }
 
 static var mission_battles: Dictionary = {}
@@ -165,9 +167,9 @@ static func _setup_training_battle() -> Dictionary:
 	if randf() < 0.7:
 		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika"]
 		var candidates = []
-		for name in pool:
-			if name not in GameManager.training_participants and name not in GameManager.training_used_opponents:
-				candidates.append(name)
+		for p_name in pool:
+			if p_name not in GameManager.training_participants and p_name not in GameManager.training_used_opponents:
+				candidates.append(p_name)
 		candidates.shuffle()
 		
 		if not candidates.is_empty():
@@ -211,10 +213,8 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 			"scenario": ScriptedBattleScenario.new()
 		}
 	if battle_id == "ena_vs_mizuki":
+		var mizuki = GameManager.get_party_member("Mizuki")
 		var ena = GameManager.get_party_member("Ena")
-		var mizuki = character_classes["Mizuki"].new()
-		mizuki.entity_name = "Mizuki"
-		LevelManager.set_initial_level(mizuki, max(ena.level, 15))
 		
 		return {
 			"player_team": [ena],
@@ -224,7 +224,7 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 		
 	if battle_id == "ena_vs_thugs":
 		var ena = GameManager.get_party_member("Ena")
-		var enemies = _create_enemies("kidnapper", 3, ena.level)
+		var enemies = _create_enemies("thug", 3, 25)
 		return {
 			"player_team": [ena],
 			"enemy_team": enemies,
@@ -248,6 +248,24 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 			"player_team": p_team,
 			"enemy_team": enemies,
 			"scenario": PrologueScenario.new()
+		}
+		
+	if battle_id == "street_skirmish":
+		var p_team = [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")]
+		var enemies = _create_enemies("terrorist", 3, 25)
+		return {
+			"player_team": p_team,
+			"enemy_team": enemies,
+			"scenario": DefaultScenario.new()
+		}
+		
+	if battle_id == "street_survival":
+		var p_team = [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")]
+		var enemies = _create_enemies("terrorist", 3, 25)
+		return {
+			"player_team": p_team,
+			"enemy_team": enemies,
+			"scenario": StreetSurvivalScenario.new()
 		}
 		
 	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}

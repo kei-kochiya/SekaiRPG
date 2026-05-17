@@ -41,10 +41,21 @@ func _ready():
 func _process(_delta):
 	if not _is_mobile: return
 	
+	var current_scene = get_tree().current_scene
+	if not current_scene: return
+	
+	var is_menu = current_scene.scene_file_path.begins_with("res://Menus/")
+	
+	if is_menu:
+		if _root.visible:
+			_root.visible = false
+			_reset_joystick()
+		return
+	
 	# Ẩn controls khi đang hội thoại hoặc menu tạm dừng đang mở
 	var is_paused = get_tree().paused
 	var in_dialogue = GameManager.is_in_dialogue
-	var in_battle = get_tree().current_scene.name == "Main"
+	var in_battle = current_scene.name == "Main"
 	
 	# Toàn bộ UI mobile (bao gồm nút Menu) ẩn khi có hội thoại hoặc đang pause
 	if (in_dialogue or is_paused) and _root.visible:
@@ -222,7 +233,7 @@ func _on_interact_pressed():
 	ev_rel.pressed = false
 	Input.parse_input_event(ev_rel)
 
-func set_interact_visible(is_visible: bool):
+func set_interact_visible(p_is_visible: bool):
 	if not _is_mobile: return
 	if _btn_interact:
-		_btn_interact.visible = is_visible
+		_btn_interact.visible = p_is_visible

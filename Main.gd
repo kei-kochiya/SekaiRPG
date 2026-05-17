@@ -269,7 +269,7 @@ func _on_entity_died(entity: Entity):
 	print(">>> ", entity.entity_name, " đã bị hạ gục! <<<")
 	_purge_dead_from_timeline(entity)
 	
-	if not entity.is_character:
+	if not entity.is_character and entity.gives_exp:
 		var exp_reward = LevelManager.get_exp_reward(entity.level)
 		for p in player_team:
 			LevelManager.gain_exp(p, exp_reward)

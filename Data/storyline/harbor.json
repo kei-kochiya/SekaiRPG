@@ -82,6 +82,13 @@
       "name": "Ichika",
       "color": "#4a9e9e",
       "text": "*Thở dốc* Chết tiệt... hắn mạnh quá..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chết tiệt... hắn mạnh quá..."
     }
   ],
   "harbor_mafuyu_reinforcement": [
@@ -97,7 +104,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Mafuyu! Cô đến đúng lúc lắm!"
+      "text": "Mafuyu! Sếp đến đúng lúc lắm!"
     },
     {
       "type": "dialogue",
@@ -167,7 +174,7 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Vết chém ngọt xớt đi qua tận xương sườn, tim ngừng đập hẳn rồi. Ca này thánh giáng trần cũng không cứu nổi."
+      "text": "Chém đẹp đấy. Tôi có lời khen dành cho cô đấy, cô bé tóc xanh đằng kia. Giờ tim khách hàng tôi đứt đôi rồi."
     },
     {
       "type": "dialogue",
@@ -181,7 +188,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Con ranh chui từ lỗ nào ra phá đám thế này, muốn chầu diêm vương chung với lão lợn béo đó luôn à!"
+      "text": "Con ranh chui từ lỗ nào ra phá đám thế này, muốn chầu diêm vương chung với lão béo đó luôn à!"
     },
     {
       "type": "dialogue",
@@ -203,7 +210,7 @@
     },
     {
       "type": "narrator",
-      "text": "Mafuyu lao vút đi với tốc độ của một vệt sáng đen, mũi dao đâm ngay yết hầu Honami."
+      "text": "Mafuyu lao vút đi, nhắm mũi dao lướt qua yết hầu Honami."
     },
     {
       "type": "dialogue",
@@ -217,44 +224,40 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#665588",
-      "text": "(Honami đỡ nhát chém bằng chiếc vali của mình)."
+      "text": "Honami nhanh chóng giơ chiếc vali lên đỡ lấy đòn tấn công."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Này sếp lớn, mới gặp nhau đã vậy rồi. Không vui đâu nhé."
+      "text": "Gắt thế sếp? Vừa gặp đã muốn tiễn người ta đi rồi, chẳng vui gì cả."
     },
     {
       "type": "narrator",
-      "text": "Lưỡi dao găm của Mafuyu bất ngờ đổi hướng, cô dồn toàn lực giáng xuống một đòn cực mạnh từ trên đỉnh đầu Honami."
+      "text": "Mafuyu bất ngờ đổi hướng, dồn toàn lực vào cán dao, giáng xuống một đòn cực mạnh từ trên đỉnh đầu Honami."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Đừng tỏ ra là không quen biết."
+      "text": "Đừng có diễn cái trò người dưng đó nữa."
     },
     {
       "type": "narrator",
-      "text": "Chiếc vali hợp kim bị mũi dao xẻ toạc làm đôi, kim tiêm và thuốc văng tung tóe ra sàn nhà rỉ sét."
+      "text": "Chiếc vali hợp kim bị mũi dao xẻ toạc làm đôi, làm kim tiêm và thuốc văng tung tóe khắp sàn nhà."
     },
     {
       "type": "narrator",
-      "text": "Honami nhăn mặt cắn răng chịu đựng luồng phản lực khủng khiếp. Toàn bộ cánh tay phải của cô tê rần mất đi cảm giác."
+      "text": "Honami nhăn mặt, cắn răng chịu đựng lực va đập khủng khiếp. Toàn bộ cánh tay phải của cô tê rần, mất đi cảm giác."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Vãi chưởng, sếp dùng chiêu đó thật kìa!"
-    },
-    {
-      "type": "narrator",
-      "text": "..."
+      "text": "Vãi thật, sếp điên đến mức dùng cả chiêu đó ở đây luôn à?"
     },
     {
       "type": "dialogue",
@@ -268,7 +271,7 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Hôm nay tới đây thôi nhé, tôi xin phép cáo từ."
+      "text": "Cuộc vui thế này là đủ rồi, tôi không muốn phế cả tay đâu. Cáo từ nhé."
     },
     {
       "type": "dialogue",

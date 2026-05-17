@@ -1,0 +1,114 @@
+{
+  "street_followed": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Ichika, khoan đã... Nhóc có ngửi thấy mùi gì lạ không?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Mùi khói súng... và... có tiếng bước chân dồn dập đằng sau!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Chậc, bị bám đuôi thật rồi. Bọn này trông không giống lính gác bến cảng, chúng trang bị vũ khí nóng!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Là đám Khủng Bố! Mau chuẩn bị chiến đấu thôi, Mizuki!"
+    }
+  ],
+  "street_surrounded": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Phù... xử lý xong ba tên đó rồi. Nhưng... nhóc nhìn xung quanh kìa!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Cái gì?! Từ ngã tư... bọn chúng đang ùa ra từ mọi phía! Đông quá!"
+    },
+    {
+      "type": "narrator",
+      "text": "Tiếng còi hú vang dội. Hàng chục tên khủng bố trang bị tận răng bao vây ngã tư đường phố."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Chết tiệt! Sóng vô tuyến bị nhiễu hoàn toàn, không thể gọi về căn cứ!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Cánh tay tôi... lực lượng của chúng quá áp đảo, áp lực này làm tôi không thể tập trung vận sức mạnh kỹ năng được nữa!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Tớ cũng vậy, tớ không dùng được kỹ năng nữa! Phải tự vệ bằng đòn đánh thường thôi!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Không thể lùi bước! Chiến đấu đến cùng!"
+    }
+  ],
+  "street_aftermath": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Các người... dám đụng đến thành viên của Nightcord sao?"
+    },
+    {
+      "type": "narrator",
+      "text": "Khói súng dần tan. 10 tên khủng bố đổ sụp xuống đất trước lưỡi kiếm lạnh lùng của Mafuyu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "*Thở dốc* Chị... Mafuyu... Sếp đến cứu tụi em sao..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "May quá... sếp đến kịp lúc... tí nữa là tụi em tỏi mạng rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Lần sau đừng tự ý đi sâu vào khu vực nguy hiểm. Về Safehouse trị thương thôi."
+    }
+  ]
+}

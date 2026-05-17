@@ -23,7 +23,6 @@ const SkillDetailPopupClass = preload("res://UI/Popups/SkillDetailPopup.gd")
 var action_container: VBoxContainer
 var target_container: VBoxContainer
 var title_label: Label
-var _tooltip: PanelContainer
 var _skill_detail_popup: Node
 
 func _ready():

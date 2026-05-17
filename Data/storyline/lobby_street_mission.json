@@ -1,0 +1,82 @@
+{
+  "lobby_street_mission_start": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ichika, Mizuki. Hai đứa đến đây một lát."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ, có chuyện gì vậy chị Mafuyu?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Sếp gọi tụi em có việc gì thế? Lại có nhiệm vụ mới hả sếp?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Đúng vậy. Theo thông tin trinh sát, gần đây có một nhóm vũ trang lạ mặt xuất hiện ở khu phố mua sắm phía Tây."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chúng mang trang bị quân sự rất nặng, có dấu hiệu của quân khủng bố. Tôi cần hai đứa đi thám thính và đánh giá tình hình."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em hiểu rồi. Em và Mizuki sẽ đi ngay."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Tuân lệnh sếp! Đi thám thính đường phố thôi nào!"
+    }
+  ],
+  "lobby_street_mission_ready_mizuki": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Ichika! Nhóc đã sẵn sàng chưa? Khi nào xong việc chuẩn bị thì mình xuất phát nhé!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Tôi sẵn sàng rồi, đi thôi Mizuki!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#e0a0c0",
+      "text": "Được rồi, hướng ra cửa chính để đến Khu phố Tây nào!"
+    }
+  ],
+  "lobby_street_mission_not_ready": [
+    {
+      "type": "narrator",
+      "text": "Bạn cần nói chuyện với Mizuki để xác nhận sẵn sàng lên đường thám thính trước khi ra ngoài."
+    }
+  ]
+}

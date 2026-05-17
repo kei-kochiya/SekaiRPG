@@ -15,6 +15,7 @@ const TILE_SIZE = 32 # 8x8 tiles scaled 4x
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
+	AudioManager.play_music("map")
 	ScreenFade.fade_in(1.0)
 	_build_map()
 	
@@ -103,10 +104,10 @@ func _setup_phase_0():
 	player.position = Vector2(12 * TILE_SIZE, 10 * TILE_SIZE)
 	add_child(player)
 
-	# Kidnappers surrounding Ichika
-	_create_enemy_npc(Vector2(11 * TILE_SIZE, 9 * TILE_SIZE), "b_down.png")
-	_create_enemy_npc(Vector2(13 * TILE_SIZE, 9 * TILE_SIZE), "b_down.png")
-	_create_enemy_npc(Vector2(12 * TILE_SIZE, 12 * TILE_SIZE), "b_up.png")
+	# Kidnappers surrounding Ichika (repositioned horizontally and center-back)
+	_create_enemy_npc(Vector2(9 * TILE_SIZE, 9 * TILE_SIZE), "kidnapper.png")
+	_create_enemy_npc(Vector2(15 * TILE_SIZE, 9 * TILE_SIZE), "kidnapper.png")
+	_create_enemy_npc(Vector2(12 * TILE_SIZE, 7 * TILE_SIZE), "kidnapper.png")
 
 	# Mafuyu visible outside the door
 	_create_visual_npc("Mafuyu", Vector2(12 * TILE_SIZE, 18 * TILE_SIZE), Color(0.4, 0.3, 0.5))
@@ -141,9 +142,9 @@ func _setup_phase_1():
 		DialogueLoader.get_lines("prologue_phase1_recruit"))
 
 	# Dead bodies from the fight
-	_create_dead_body(Vector2(11 * TILE_SIZE, 9 * TILE_SIZE))
-	_create_dead_body(Vector2(13 * TILE_SIZE, 9 * TILE_SIZE))
-	_create_dead_body(Vector2(12 * TILE_SIZE, 12 * TILE_SIZE))
+	_create_dead_body(Vector2(9 * TILE_SIZE, 9 * TILE_SIZE))
+	_create_dead_body(Vector2(15 * TILE_SIZE, 9 * TILE_SIZE))
+	_create_dead_body(Vector2(12 * TILE_SIZE, 7 * TILE_SIZE))
 
 	get_tree().create_timer(0.8).timeout.connect(func():
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase1_intro"))
@@ -226,7 +227,7 @@ func _create_dead_body(pos: Vector2):
 	var root = Node2D.new()
 	root.position = pos
 	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/Person/b_up.png")
+	sprite.texture = load("res://Assets/Person/kidnapper.png")
 	sprite.scale = Vector2(4, 4)
 	sprite.rotation = PI / 2 # Rotate to look like they are lying down
 	sprite.position = Vector2(0, 0)

@@ -42,6 +42,7 @@ Hệ thống sử dụng **Scenario Pattern** để can thiệp vào các "Hooks
 | **`DefaultScenario.gd`** | Logic chiến đấu mặc định (Đánh đến khi một bên hết máu). |
 | **`HarborBossScenario.gd`**| Kịch bản phức tạp 3 Phase của trận Đội Trưởng (Cảng), hồi sinh, đổi team. |
 | **`PrologueScenario.gd`** | Kịch bản trận mở màn (Ichika bị bao vây). |
+| **`StreetSurvivalScenario.gd`** | Kịch bản sinh tồn đặc biệt: Khóa kỹ năng nhân vật, quái spawn vô hạn và tăng cấp dần theo lượt. Khi phe ta gục ngã, kích hoạt pha Cứu viện của Mafuyu (buff 50% chỉ số) và quản lý điều kiện diệt 10 tên Khủng Bố để chiến thắng. |
 
 ---
 
@@ -70,6 +71,7 @@ Quản lý không gian Overworld và luồng di chuyển của người chơi. S
 | **`CafeMap.gd`** | Bản đồ trang trí Quán Cafe. Cảnh hội thoại và phân nhánh kết cục sự kiện Ena say xỉn. | Nhiệm vụ phụ |
 | **`HarborMap.gd`** | Bản đồ Bến cảng. Quản lý đường đi (Đánh lính gác hoặc vào thẳng Boss). | Nhiệm vụ chính |
 | **`AlleywayMap.gd`** | Bản đồ Hẻm nhỏ. Trạm dừng chân và hội thoại sau khi đánh Boss. | Transition |
+| **`StreetMap.gd`** | Bản đồ Đường phố ngã tư đô thị. Quản lý kịch bản thám thính, trận phục kích Skirmish, trận chiến sinh tồn đặc biệt của Ichika & Mizuki và pha cứu viện của Mafuyu. Dàn dựng bối cảnh xe đỏ/xanh, vỉa hè, vạch qua đường cực kỳ chuyên nghiệp. | Nhiệm vụ chính |
 
 ---
 
@@ -91,6 +93,35 @@ Các script nằm trong `Entities/Enemies/`.
 *   **`Guard.gd` / `Captain.gd`**: Lính gác và Boss Đội trưởng tại Bến cảng.
 *   **`WarehouseWorker.gd`**: Quái vật ở Nhà kho.
 *   **`TrainingBot.gd`**: Dùng cho chế độ Sandbox/Training.
+*   **`Thug.gd`**: Kẻ địch giang hồ xuất hiện tại Quán Cafe (CafeMap).
+*   **`Terrorist.gd`**: Kẻ địch khủng bố xuất hiện tại khu vực Ngã tư đường phố (StreetMap) trong pha phục kích và sinh tồn, có kỹ năng xả súng liên thanh gây Bleed.
+
+---
+
+## 6. UI & Common Systems (Hệ thống UI & Hỗ trợ)
+
+Quản lý các giao diện hỗ trợ tương tác người chơi, cài đặt hệ thống và tối ưu hóa trải nghiệm trên đa nền tảng di động.
+
+| File | Vai trò | Chức năng chính |
+| :--- | :--- | :--- |
+| **`MobileControls.gd`** (Autoload) | **Mobile Controller** | Tạo joystick ảo, các nút bấm (Menu, Interact) có bao viền gỗ tinh tế. Tự động ẩn/hiện thông minh tùy thuộc vào scene (Ẩn ở Menus, ẩn Joystick ở Battle) và hỗ trợ chạm tua đối thoại cực nhạy. |
+| **`PauseMenu.gd`** (Autoload) | **System Menu** | Menu tạm dừng tích hợp chỉnh âm lượng (Master Volume), bật/tắt Fast Battle (tăng tốc lượt AI), và tính năng **Skip Battle** (bảo mật bằng mật mã ẩn danh `27101108`). |
+| **`UpgradeUI.gd`** | **Upgrade View** | Giao diện nâng cấp thuộc tính, chỉ số cho nhân vật bằng tài nguyên thu thập được. |
+
+---
+
+## 7. Font & Theme System (Hệ thống Font & Theme)
+
+SekaiRPG sử dụng hệ thống Font chữ phân lớp chuyên nghiệp để định hình phong cách đồ họa sang trọng và tăng khả năng tối ưu hóa trải nghiệm đọc của người chơi.
+
+| Thành phần | Font chữ áp dụng | Mô tả & Cách hoạt động |
+| :--- | :--- | :--- |
+| **Global Theme** (`default_theme.tres`) | **`zhcn.ttf`** | Thiết lập làm Font mặc định cho toàn bộ dự án Godot. Mọi Node văn bản (`Label`, `RichTextLabel`...) nếu không ghi đè sẽ tự động sử dụng font này. |
+| **Global Buttons** (`default_theme.tres`) | **`Lagu Sans Bold.otf`** | Thiết lập ghi đè lớp `Button` trong Global Theme để mọi nút bấm trong trò chơi tự động mang kiểu chữ đậm cá tính này. |
+| **Title Banner** (`StartMenu.gd`) | **`zhcn.ttf`** | Dùng riêng cho tiêu đề trò chơi "SEKAI RPG" ở màn hình mở đầu. |
+| **Dialogue Narration** (`DialogueUI.gd`) | **`Lagu Sans Light.otf`** | Gán cho thuộc tính `normal_font` của RichTextLabel trong hộp hội thoại người dẫn chuyện (Narrator) và thoại chính. |
+| **Dialogue Action** (`DialogueUI.gd`) | **`Lagu Sans Light Italic.otf`** | Tự động kích hoạt khi dùng thẻ `[i]` (thể hiện thoại hành động cốt truyện). |
+| **Character Name** (`DialogueUI.gd`) | **`Lagu Sans Bold.otf`** | Tự động kích hoạt khi dùng thẻ `[b]` (bọc quanh tên nhân vật phát ngôn cốt truyện). |
 
 ---
 
@@ -115,11 +146,13 @@ graph TD
         MAP[Maps] --> GM
         MAP --> DM[DialogueManager]
         BM[BaseMap] --> BSt[BaseMapStages]
+        MAP --> MC[MobileControls]
     end
 
     subgraph UI & Systems
         DM --> DUI[DialogueUI]
         DM --> DL[DialogueLoader]
+        GM --> PM[PauseMenu]
     end
 ```
 
@@ -141,3 +174,4 @@ graph TD
     *   Tạo file Stage mới trong `Maps/Base/Stages/` (kế thừa `BaseMapStage`).
     *   Ghi đè các hàm như `get_npc_positions()`, `on_stage_start()` để đặt logic.
     *   Đăng ký Stage vào `BaseMap.gd`.
+

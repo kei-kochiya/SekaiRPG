@@ -37,6 +37,9 @@ var master_volume: float = 1.0:
 		master_volume = clamp(v, 0.0, 1.0)
 		if AudioManager: AudioManager.update_volume(master_volume)
 
+var skip_battle_unlocked: bool = false
+var skip_battle_enabled: bool = false
+
 # ── Dữ liệu Đội hình (Party) ───────────────────────────────────────────────
 var party: Dictionary = {}
 
@@ -310,6 +313,20 @@ func finish_battle(victory: bool, count: int = 1):
 		elif scripted_battle_id == "ena_vs_thugs":
 			story.set_flag("ena_vs_thugs_done", true)
 			story.set_flag("ena_vs_thugs_won", victory)
+			is_scripted_battle = false
+			scripted_battle_id = ""
+			get_tree().change_scene_to_file(current_map_file)
+			return
+		elif scripted_battle_id == "street_skirmish":
+			story.set_flag("street_skirmish_done", true)
+			story.set_flag("street_skirmish_won", victory)
+			is_scripted_battle = false
+			scripted_battle_id = ""
+			get_tree().change_scene_to_file(current_map_file)
+			return
+		elif scripted_battle_id == "street_survival":
+			story.set_flag("street_survival_done", true)
+			story.set_flag("street_survival_won", victory)
 			is_scripted_battle = false
 			scripted_battle_id = ""
 			get_tree().change_scene_to_file(current_map_file)

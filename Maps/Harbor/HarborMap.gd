@@ -13,6 +13,7 @@ const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
+	AudioManager.play_music("map")
 	ScreenFade.fade_in(0.8)
 	
 	_build_map()
@@ -98,11 +99,14 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 	root.position = pos
 	root.add_to_group("objectives")
 	
-	var vis = ColorRect.new()
-	vis.size = Vector2(32, 48)
-	vis.position = Vector2(-16, -48)
-	vis.color = Color(0.8, 0.2, 0.2) if route == "guards" else Color(0.2, 0.2, 0.8)
-	root.add_child(vis)
+	var sprite = Sprite2D.new()
+	var texture_path = "res://Assets/Person/guard.png"
+	if route == "boss" or GameManager.harbor_wave > 3:
+		texture_path = "res://Assets/Person/captain.png"
+	sprite.texture = load(texture_path)
+	sprite.scale = Vector2(4, 4)
+	sprite.position = Vector2(0, -12)
+	root.add_child(sprite)
 	
 	var lbl = Label.new()
 	lbl.text = label

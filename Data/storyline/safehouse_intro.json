@@ -5,7 +5,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Trời đất, cô nhặt đâu ra con nhóc bê bết máu me thế này?"
+      "text": "Trời đất, cô nhặt đâu ra con nhóc máu me bê bết thế này?"
     },
     {
       "type": "dialogue",
@@ -220,7 +220,7 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Có vẻ như, rời khỏi tổ chức này không dễ dàng gì."
+      "text": "Được rồi. Cố gắng hết sức thôi."
     }
   ],
   "npc_hello_mafuyu": [
@@ -279,14 +279,14 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Chó săn của Bộ Quốc phòng Nhật Bản."
+      "text": "Là chó săn của Bộ Quốc phòng."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Chính phủ đích thân chọn chị cùng bốn kẻ khác thành lập ra Nightcord để dọn dẹp những thứ rác rưởi ngoài kia."
+      "text": "Chính phủ đích thân chọn chị cùng bốn người khác, lập ra Nightcord để dọn dẹp những thứ rác rưởi ngoài kia."
     },
     {
       "type": "dialogue",
@@ -323,28 +323,28 @@
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "À, chuyện đó hả? Chị bị một thằng khách hàng nào đó của Nightcord nhắm đến. Không hiểu lý do."
+      "text": "À, chuyện đó hả? Chả hiểu sao mà chị lại bị một thằng khách hàng nào đó của Nightcord nhắm đến."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Tên tay sai của hắn tìm đến xưởng vẽ của chị. Lúc đó trong tay chị chỉ có cọ vẽ."
+      "text": "Lúc đó đang vẽ mà, biết gì đâu. Tự nhiên có tên xông vào, đã thế còn chê bai tác phẩm của chị."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Chả buồn nghĩ, chị xiên hắn luôn. Cũng mạnh, đáng tiếc là chị đang tập trung vẽ nên chả để tâm mấy."
+      "text": "Đã đang buồn lòng rồi, còn bị phán câu như thế nữa. Nên chị xiên hắn luôn. Cũng mạnh đấy, nhưng với chị thì chưa là gì."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Mafuyu nghe tin, bảo 'thái độ ngông cuồng không biết hối hận' hợp mắt bả, rồi mời chị về. Thế là chị vào thay vị trí của thằng xấu số kia."
+      "text": "Mafuyu nghe tin liền gọi cho chị. Bảo 'thái độ ngông cuồng không biết hối hận' hợp mắt bả, rồi mời chị về. Thế là chị vào thay vị trí của thằng xấu số kia."
     }
   ],
   "npc_info_kanade": [
@@ -360,7 +360,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Giáo viên mầm non. Trông bọn nhóc cả ngày."
+      "text": "Là một giáo viên mầm non thôi. Trông đám nhóc cả ngày."
     },
     {
       "type": "dialogue",
@@ -374,14 +374,14 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Hôm đó có tai nạn trên sân thượng. Mấy thanh sắt rơi xuống chỗ bọn nhóc đang chơi. Chị không kịp nghĩ, dùng từ trường bẻ cong đường bay của chúng lại."
+      "text": "Hôm đó có tai nạn trên sân thượng. Mấy thanh sắt rơi xuống chỗ bọn nhóc đang chơi. Không kịp nghĩ nên chị dùng từ trường bẻ cong đường bay của chúng."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Bọn nhóc an toàn. Nhưng chị bị lộ. Mafuyu đang dự giờ hôm đó, nên đến trước bọn buôn người kịp. Thế là chị ở đây."
+      "text": "Bọn nhóc an toàn, nhưng chị thì bị lộ bí mật. Mafuyu đang dự giờ hôm đó, nên mang chị về, trước khi bọn buôn người bắt được. Thế là chị ở đây."
     },
     {
       "type": "narrator",
@@ -392,7 +392,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Mì ly ở đây vẫn ngon. Đó là điều duy nhất chị không hối hận."
+      "text": "Thôi thì, mì ly ở đây vẫn ngon. Đó là điều duy nhất chị không hối hận."
     }
   ],
   "npc_info_mizuki": [
@@ -408,21 +408,21 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#da99cc",
-      "text": "Hahaha~ Từ dưới đáy xã hội thôi. Mấy khu ổ chuột tồi tàn nhất thành phố."
+      "text": "Hahaha~ Từ dưới đáy xã hội thôi. Mấy khu ổ chuột tồi tàn phía nam thành phố."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#da99cc",
-      "text": "Tớ trộm tiền tiêu vặt, hóa trang thành bất kỳ ai để qua mắt bọn chúng. Chỉ trong chớp mắt thôi."
+      "text": "Tớ hóa trang thành bất kỳ ai trong chớp mắt, để đi trộm chút tiền tiêu vặt ấy mà."
     },
     {
       "type": "action",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#da99cc",
-      "text": "Một viên xúc xắc đỏ xuất hiện, nhảy múa lơ lửng trên không trung."
+      "text": "Mizuki lấy ra một viên xúc xắc đỏ."
     },
     {
       "type": "dialogue",
@@ -436,7 +436,7 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#da99cc",
-      "text": "Mafuyu tự mình đến chiêu mộ tớ. Chắc bả thấy tớ có tiềm năng~"
+      "text": "Mafuyu tự mình đến chiêu mộ tớ. Chắc bả thấy tớ có tiềm năng đấy~"
     }
   ],
   "kanade_mission": [

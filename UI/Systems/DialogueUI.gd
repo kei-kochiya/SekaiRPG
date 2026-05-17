@@ -8,7 +8,7 @@ Lớp này tách biệt hoàn toàn logic hiển thị (vẽ khung, chạy chữ
 khỏi logic điều phối của DialogueManager.
 """
 
-signal line_completed
+
 signal choice_selected(idx: int)
 
 var dialogue_box: PanelContainer
@@ -28,6 +28,7 @@ func _ready():
 	offset_right = 0
 	offset_top = 0
 	offset_bottom = 0
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_init_ui()
 
 func _init_ui():
@@ -54,6 +55,7 @@ func _init_ui():
 	narrator_label.bbcode_enabled = true
 	narrator_label.fit_content = true
 	narrator_label.add_theme_font_size_override("normal_font_size", 18)
+	narrator_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Light.otf"))
 	narrator_box.add_child(narrator_label)
 	narrator_box.visible = false
 
@@ -73,6 +75,9 @@ func _init_ui():
 	text_label.bbcode_enabled = true
 	text_label.add_theme_font_size_override("normal_font_size", 20)
 	text_label.add_theme_color_override("default_color", Color(0.15, 0.08, 0.05))
+	text_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Light.otf"))
+	text_label.add_theme_font_override("bold_font", load("res://Fonts/Lagu Sans Bold.otf"))
+	text_label.add_theme_font_override("italic_font", load("res://Fonts/Lagu Sans Light Italic.otf"))
 	dialogue_box.add_child(text_label)
 
 	choice_panel = PanelContainer.new()
@@ -103,7 +108,7 @@ func display_line(line: Dictionary):
 		narrator_label.text = "[center][color=#ddddcc]%s[/color][/center]" % text
 	else:
 		var final_text = "[i]%s[/i]" % text if type == "action" else text
-		text_label.text = "[color=#%s]%s:[/color]\n\n%s" % [color.to_html(false), speaker_name, final_text]
+		text_label.text = "[b][color=#%s]%s:[/color][/b]\n\n%s" % [color.to_html(false), speaker_name, final_text]
 		_update_portraits(speaker_name, speaker_side)
 
 func display_choices(options: Array):
@@ -115,6 +120,7 @@ func display_choices(options: Array):
 		btn.add_theme_stylebox_override("normal", _get_style("button_brown.svg", 10, 10))
 		btn.add_theme_stylebox_override("hover", _get_style("button_grey.svg", 10, 10))
 		btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+		btn.add_theme_font_override("font", load("res://Fonts/Lagu Sans Bold.otf"))
 		btn.pressed.connect(func(): choice_selected.emit(i))
 		choice_box.add_child(btn)
 	
