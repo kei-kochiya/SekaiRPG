@@ -74,6 +74,7 @@ func _init_ui():
 	text_label = RichTextLabel.new()
 	text_label.bbcode_enabled = true
 	text_label.add_theme_font_size_override("normal_font_size", 20)
+	text_label.add_theme_font_size_override("bold_font_size", 24)
 	text_label.add_theme_color_override("default_color", Color(0.15, 0.08, 0.05))
 	text_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Medium.otf"))
 	text_label.add_theme_font_override("bold_font", load("res://Fonts/Lagu Sans Bold.otf"))
