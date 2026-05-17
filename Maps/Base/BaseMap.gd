@@ -23,7 +23,16 @@ var _quest_panel: PanelContainer
 func _ready() -> void:
 	_init_stage()
 	
-	AudioManager.play_music("base")
+	var base_music = "base"
+	if current_stage:
+		var script_path = current_stage.get_script().resource_path
+		if "PostWarehouseStage" in script_path:
+			if not GameManager.harbor_mission_unlocked:
+				base_music = "night"
+		elif "PostHarborStage" in script_path:
+			base_music = "night"
+			
+	AudioManager.play_music(base_music)
 	ScreenFade.fade_in(0.8)
 	
 	_build_map()
@@ -179,8 +188,8 @@ func _spawn_transitions():
 	exit.interacted.connect(_on_exit_interacted)
 
 func _on_exit_interacted():
-	# Ưu tiên đi Harbor nếu đã nhận nhiệm vụ
-	if GameManager.accepted_harbor_mission or GameManager.get_flag("harbor_mission_unlocked"):
+	# Ưu tiên đi Harbor nếu đã nhận nhiệm vụ và chưa hoàn thành
+	if (GameManager.accepted_harbor_mission or GameManager.get_flag("harbor_mission_unlocked")) and not GameManager.harbor_mission_done:
 		await ScreenFade.fade_out(1.0)
 		GameManager.store_map_state("res://Maps/Harbor/HarborMap.tscn", Vector2.ZERO)
 		get_tree().change_scene_to_file("res://Maps/Harbor/HarborMap.tscn")

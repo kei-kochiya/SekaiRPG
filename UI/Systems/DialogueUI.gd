@@ -51,11 +51,16 @@ func _init_ui():
 	narrator_box.add_theme_stylebox_override("panel", _get_style("panel_brown_dark.svg", 12, 20))
 	d_layer.add_child(narrator_box)
 	
+	var base_font = load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf")
+	var italic_font = FontVariation.new()
+	italic_font.base_font = base_font
+	italic_font.variation_transform = Transform2D(Vector2(1.0, 0.0), Vector2(-0.2, 1.0), Vector2.ZERO)
+	
 	narrator_label = RichTextLabel.new()
 	narrator_label.bbcode_enabled = true
 	narrator_label.fit_content = true
-	narrator_label.add_theme_font_size_override("normal_font_size", 18)
-	narrator_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Medium.otf"))
+	narrator_label.add_theme_font_size_override("normal_font_size", 20)
+	narrator_label.add_theme_font_override("normal_font", base_font)
 	narrator_box.add_child(narrator_label)
 	narrator_box.visible = false
 
@@ -73,12 +78,15 @@ func _init_ui():
 
 	text_label = RichTextLabel.new()
 	text_label.bbcode_enabled = true
-	text_label.add_theme_font_size_override("normal_font_size", 20)
-	text_label.add_theme_font_size_override("bold_font_size", 24)
+	text_label.add_theme_font_size_override("normal_font_size", 22)
+	text_label.add_theme_font_size_override("bold_font_size", 28)
 	text_label.add_theme_color_override("default_color", Color(0.15, 0.08, 0.05))
-	text_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Medium.otf"))
-	text_label.add_theme_font_override("bold_font", load("res://Fonts/Lagu Sans Bold.otf"))
-	text_label.add_theme_font_override("italic_font", load("res://Fonts/Lagu Sans Bold Italic.otf"))
+	text_label.add_theme_font_override("normal_font", base_font)
+	text_label.add_theme_font_override("bold_font", base_font)
+	text_label.add_theme_font_override("italic_font", italic_font)
+	text_label.add_theme_font_override("italics_font", italic_font)
+	text_label.add_theme_font_override("bold_italic_font", italic_font)
+	text_label.add_theme_font_override("bold_italics_font", italic_font)
 	dialogue_box.add_child(text_label)
 
 	choice_panel = PanelContainer.new()
@@ -121,7 +129,7 @@ func display_choices(options: Array):
 		btn.add_theme_stylebox_override("normal", _get_style("button_brown.svg", 10, 10))
 		btn.add_theme_stylebox_override("hover", _get_style("button_grey.svg", 10, 10))
 		btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
-		btn.add_theme_font_override("font", load("res://Fonts/Lagu Sans Bold.otf"))
+		btn.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 		btn.pressed.connect(func(): choice_selected.emit(i))
 		choice_box.add_child(btn)
 	

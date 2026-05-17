@@ -16,7 +16,8 @@ const TRACKS = {
 	"base": "base_music.mp3",
 	"battle": "battle_music.mp3",
 	"main_menu": "main_menu.mp3",
-	"map": "map_music.mp3"
+	"map": "map_music.mp3",
+	"night": "night.mp3"
 }
 
 func _ready():

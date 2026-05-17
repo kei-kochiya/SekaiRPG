@@ -24,6 +24,8 @@ func _do_morning_transition(lighting: CanvasModulate):
 	await ScreenFade.fade_out(1.0)
 	await map.get_tree().create_timer(1.0).timeout
 	
+	AudioManager.play_music("base")
+	
 	lighting.color = Color(1.0, 1.0, 1.0) # Trời sáng
 	GameManager.harbor_mission_unlocked = true
 	

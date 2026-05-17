@@ -94,6 +94,10 @@ func run_battle():
 	print("=== TRẬN CHIẾN BẮT ĐẦU ===")
 	
 	while not battle_over:
+		if is_scripting:
+			await get_tree().create_timer(0.1, false).timeout
+			continue
+			
 		if timeline.is_empty():
 			_regenerate_timeline()
 			if timeline.is_empty():
@@ -135,6 +139,8 @@ func run_battle():
 		
 		if _check_battle_end():
 			break
+		if is_scripting:
+			continue
 		
 		if is_player_turn:
 			await _player_turn(actor)
@@ -146,6 +152,8 @@ func run_battle():
 		
 		if _check_battle_end():
 			break
+		if is_scripting:
+			continue
 		
 		await get_tree().create_timer(0.4, false).timeout
 	

@@ -39,10 +39,10 @@ func _build_ui():
 	
 	_panel = PanelContainer.new()
 	_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_panel.offset_left = -150
-	_panel.offset_right = 150
-	_panel.offset_top = -100
-	_panel.offset_bottom = 100
+	_panel.offset_left = -200
+	_panel.offset_right = 200
+	_panel.offset_top = -220
+	_panel.offset_bottom = 220
 	
 	var sb = StyleBoxTexture.new()
 	sb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_brown.svg")
@@ -60,10 +60,12 @@ func _build_ui():
 	title.text = "TẠM DỪNG"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 24)
+	title.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 	vbox.add_child(title)
 	
 	vbox.add_child(_create_button("Tiếp tục", _on_resume))
-	vbox.add_child(_create_button("Lưu Game", _on_save))
+	vbox.add_child(_create_button("Lưu nhanh (Quick Save)", _on_save))
+	vbox.add_child(_create_button("Lưu tùy chỉnh (Custom Save)", _on_custom_save))
 	vbox.add_child(_create_button("Hướng dẫn", _on_guide))
 	vbox.add_child(_create_button("Tùy chọn", _on_options))
 	vbox.add_child(_create_button("Thoát ra Menu", _on_quit))
@@ -166,19 +168,26 @@ func _on_guide():
 	
 	_guide_panel.visible = true
 
+func show_options(from_main_menu: bool = false):
+	visible = true
+	_root.visible = true
+	_panel.visible = false
+	_guide_panel.visible = false
+	_options_panel.visible = true
+	_build_options_vbox(from_main_menu)
+
 func _on_options():
-	"""
-	Xử lý khi mở bảng tùy chọn cài đặt.
-	"""
 	if _options_panel.visible:
 		_options_panel.visible = false
 		return
-		
+	_build_options_vbox(false)
+
+func _build_options_vbox(from_main_menu: bool):
 	for child in _options_panel.get_children():
 		child.queue_free()
 		
 	var vbox = VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 20)
+	vbox.add_theme_constant_override("separation", 15)
 	_options_panel.add_child(vbox)
 	
 	var title = Label.new()
@@ -186,6 +195,7 @@ func _on_options():
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color(0.2, 0.2, 0.2))
 	title.add_theme_font_size_override("font_size", 20)
+	title.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 	vbox.add_child(title)
 	
 	# --- Fast Battle Option ---
@@ -196,6 +206,7 @@ func _on_options():
 	lbl_fast.text = "Chiến đấu nhanh (Fast Battle)"
 	lbl_fast.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))
 	lbl_fast.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl_fast.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 	hb_fast.add_child(lbl_fast)
 	
 	var check = CheckButton.new()
@@ -212,6 +223,7 @@ func _on_options():
 	var lbl_vol = Label.new()
 	lbl_vol.text = "Âm lượng tổng: " + str(int(GameManager.master_volume * 100)) + "%"
 	lbl_vol.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))
+	lbl_vol.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 	v_vol.add_child(lbl_vol)
 	
 	var slider = HSlider.new()
@@ -233,24 +245,70 @@ func _on_options():
 	lbl_skip.text = "Bỏ qua trận đánh (Skip Battle)"
 	lbl_skip.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))
 	lbl_skip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl_skip.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 	hb_skip.add_child(lbl_skip)
 	
 	var btn_skip = CheckButton.new()
 	btn_skip.button_pressed = GameManager.skip_battle_enabled
 	btn_skip.toggled.connect(func(pressed):
 		if pressed and not GameManager.skip_battle_unlocked:
-			btn_skip.button_pressed = false # Reset lại cho đến khi nhập đúng pass
+			btn_skip.button_pressed = false
 			_show_password_dialog(btn_skip)
 		else:
 			GameManager.skip_battle_enabled = pressed
 	)
 	hb_skip.add_child(btn_skip)
 	
+	# --- Nút TẢI GAME chỉ hiện khi mở từ Main Menu ---
+	if from_main_menu:
+		var btn_load = _create_button("Tải Game (Load Custom Save)", func():
+			_on_custom_load()
+		)
+		vbox.add_child(btn_load)
+		
 	# --- Close Button ---
-	var close = _create_button("Đóng", func(): _options_panel.visible = false)
+	var close = _create_button("Đóng", func():
+		_options_panel.visible = false
+		if from_main_menu:
+			visible = false
+			_root.visible = false
+	)
 	vbox.add_child(close)
 	
 	_options_panel.visible = true
+
+func _on_custom_load():
+	var file_dialog = FileDialog.new()
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	file_dialog.add_filter("*.json", "JSON Save Files")
+	file_dialog.file_selected.connect(func(path):
+		var success = GameManager.load_game(path)
+		if success:
+			_options_panel.visible = false
+			visible = false
+			_root.visible = false
+	)
+	add_child(file_dialog)
+	file_dialog.popup_centered(Vector2i(700, 500))
+
+func _on_custom_save():
+	var player = get_tree().current_scene.find_child("OverworldPlayer", true, false)
+	if player:
+		GameManager.last_player_position = player.global_position
+		
+	var file_dialog = FileDialog.new()
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	file_dialog.add_filter("*.json", "JSON Save Files")
+	file_dialog.file_selected.connect(func(path):
+		if not path.ends_with(".json"):
+			path += ".json"
+		GameManager.save_game(path)
+		_on_resume()
+	)
+	add_child(file_dialog)
+	file_dialog.popup_centered(Vector2i(700, 500))
 
 func _show_password_dialog(target_check: CheckButton):
 	"""

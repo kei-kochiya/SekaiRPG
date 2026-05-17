@@ -117,11 +117,11 @@ SekaiRPG sử dụng hệ thống Font chữ phân lớp chuyên nghiệp để 
 | Thành phần | Font chữ áp dụng | Mô tả & Cách hoạt động |
 | :--- | :--- | :--- |
 | **Global Theme** (`default_theme.tres`) | **`zhcn.ttf`** | Thiết lập làm Font mặc định cho toàn bộ dự án Godot. Mọi Node văn bản (`Label`, `RichTextLabel`...) nếu không ghi đè sẽ tự động sử dụng font này. |
-| **Global Buttons** (`default_theme.tres`) | **`Lagu Sans Bold.otf`** | Thiết lập ghi đè lớp `Button` trong Global Theme để mọi nút bấm trong trò chơi tự động mang kiểu chữ đậm cá tính này. |
+| **Global Buttons** (`default_theme.tres`) | **`#9Slide03 AMPLESOFT MEDIUM.ttf`** | Thiết lập ghi đè lớp `Button` trong Global Theme để mọi nút bấm trong trò chơi tự động mang kiểu chữ đậm cá tính này. |
 | **Title Banner** (`StartMenu.gd`) | **`zhcn.ttf`** | Dùng riêng cho tiêu đề trò chơi "SEKAI RPG" ở màn hình mở đầu. |
-| **Dialogue Narration** (`DialogueUI.gd`) | **`Lagu Sans Medium.otf`** | Gán cho thuộc tính `normal_font` của RichTextLabel trong hộp hội thoại người dẫn chuyện (Narrator) và thoại chính. |
-| **Dialogue Action** (`DialogueUI.gd`) | **`Lagu Sans Bold Italic.otf`** | Tự động kích hoạt khi dùng thẻ `[i]` (thể hiện thoại hành động cốt truyện). |
-| **Character Name** (`DialogueUI.gd`) | **`Lagu Sans Bold.otf`** | Tự động kích hoạt khi dùng thẻ `[b]` (bọc quanh tên nhân vật phát ngôn cốt truyện). |
+| **Dialogue Narration** (`DialogueUI.gd`) | **`#9Slide03 AMPLESOFT MEDIUM.ttf`** | Gán cho thuộc tính `normal_font` của RichTextLabel trong hộp hội thoại người dẫn chuyện (Narrator) và thoại chính. |
+| **Dialogue Action** (`DialogueUI.gd`) | **`#9Slide03 AMPLESOFT MEDIUM.ttf`** | Tự động kích hoạt khi dùng thẻ `[i]` (thể hiện thoại hành động cốt truyện). |
+| **Character Name** (`DialogueUI.gd`) | **`#9Slide03 AMPLESOFT MEDIUM.ttf`** | Tự động kích hoạt khi dùng thẻ `[b]` (bọc quanh tên nhân vật phát ngôn cốt truyện). |
 
 ---
 

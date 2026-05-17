@@ -140,6 +140,7 @@ func _sync_battle_state(main: Node):
 	main.all_entities = main.player_team + main.enemy_team
 	main._refresh_team_context()
 	for e in main.all_entities:
+		e.action_gauge = 0.0 # Reset thanh hành động để bắt đầu Phase mới công bằng
 		if not e.died.is_connected(main._on_entity_died):
 			e.died.connect(main._on_entity_died.bind(e))
 	main.hud.setup(main.player_team, main.enemy_team)

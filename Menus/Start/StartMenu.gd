@@ -22,15 +22,15 @@ func _ready():
 		continue_btn.pressed.connect(_on_continue)
 	
 	$CenterContainer/VBoxContainer/NewGameBtn.pressed.connect(_on_new_game)
-	
-	var save_menu_btn = Button.new()
-	save_menu_btn.text = "LOAD"
-	$CenterContainer/VBoxContainer.add_child(save_menu_btn)
-	$CenterContainer/VBoxContainer.move_child(save_menu_btn, 2)
-	_style_button(save_menu_btn)
-	save_menu_btn.pressed.connect(_on_open_save_menu)
-	
 	$CenterContainer/VBoxContainer/SandboxBtn.pressed.connect(_on_sandbox)
+	
+	var option_menu_btn = Button.new()
+	option_menu_btn.text = "CÀI ĐẶT"
+	$CenterContainer/VBoxContainer.add_child(option_menu_btn)
+	_style_button(option_menu_btn)
+	$CenterContainer/VBoxContainer.move_child(option_menu_btn, $CenterContainer/VBoxContainer/ExitBtn.get_index())
+	option_menu_btn.pressed.connect(_on_open_options)
+	
 	$CenterContainer/VBoxContainer/ExitBtn.pressed.connect(_on_exit)
 	
 	ScreenFade.fade_in(1.0)
@@ -55,7 +55,7 @@ func _style_button(btn: Button):
 	
 	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
 	btn.add_theme_color_override("font_hover_color", Color(0.1, 0.1, 0.1))
-	btn.add_theme_font_override("font", load("res://Fonts/Lagu Sans Bold.otf"))
+	btn.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 
 func _apply_kenney_styles():
 	# Title Background using NinePatchRect for better stretching
@@ -99,10 +99,8 @@ func _on_sandbox():
 	await ScreenFade.fade_out(0.5)
 	get_tree().change_scene_to_file("res://Menus/Sandbox/SandboxMenu.tscn")
 
-func _on_open_save_menu():
-	var save_scene = load("res://Menus/SaveLoad/SaveLoadMenu.tscn")
-	var menu_instance = save_scene.instantiate()
-	add_child(menu_instance)
+func _on_open_options():
+	PauseMenu.show_options(true)
 
 func _on_exit():
 	get_tree().quit()

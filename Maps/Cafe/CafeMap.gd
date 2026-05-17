@@ -12,7 +12,7 @@ const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
-	AudioManager.play_music("base")
+	AudioManager.play_music("map")
 	
 	# Draw background (outside walls)
 	var bg = ColorRect.new()
@@ -41,32 +41,32 @@ func _build_cafe():
 	for i in range(1, 7):
 		_place_indoor_asset("kitchen_%d.png" % i, Vector2(10 + i, 5), true)
 		
-	# Table 1: Ena & Mizuki (Rotated 90 degrees -> Horizontal table)
-	_place_indoor_asset("table_1.png", Vector2(9, 11), true, false, PI / 2)
-	_place_indoor_asset("table_2.png", Vector2(10, 11), true, false, PI / 2)
-	_place_indoor_asset("table_3.png", Vector2(11, 11), true, false, PI / 2)
+	# Table 1: Ena & Mizuki (Vertical table)
+	_place_indoor_asset("table_1.png", Vector2(10, 10), true)
+	_place_indoor_asset("table_2.png", Vector2(10, 11), true)
+	_place_indoor_asset("table_3.png", Vector2(10, 12), true)
 	
-	# Chairs for Table 1 (1 tile away, left/right ends of the table)
+	# Chairs for Table 1 (1 tile away)
 	_place_indoor_asset("chair_facing_right.png", Vector2(8, 11), true)
 	_place_indoor_asset("chair_facing_right.png", Vector2(12, 11), true, true) # Mirrored
 	
-	# Table 2: 3 Thugs (Rotated 90 degrees -> Horizontal table)
-	_place_indoor_asset("table_1.png", Vector2(18, 11), true, false, PI / 2)
-	_place_indoor_asset("table_2.png", Vector2(19, 11), true, false, PI / 2)
-	_place_indoor_asset("table_3.png", Vector2(20, 11), true, false, PI / 2)
+	# Table 2: 3 Thugs (Vertical table)
+	_place_indoor_asset("table_1.png", Vector2(20, 10), true)
+	_place_indoor_asset("table_2.png", Vector2(20, 11), true)
+	_place_indoor_asset("table_3.png", Vector2(20, 12), true)
 	
-	# Chairs for Table 2 (3 Thugs sitting along the top side of the table, facing down)
-	_place_indoor_asset("chair_facing_right.png", Vector2(18, 10), true, false, PI / 2)
-	_place_indoor_asset("chair_facing_right.png", Vector2(19, 10), true, false, PI / 2)
-	_place_indoor_asset("chair_facing_right.png", Vector2(20, 10), true, false, PI / 2)
+	# Chairs for Table 2 (3 Thugs sitting along the table, 1 tile away)
+	_place_indoor_asset("chair_facing_right.png", Vector2(18, 10), true)
+	_place_indoor_asset("chair_facing_right.png", Vector2(18, 11), true)
+	_place_indoor_asset("chair_facing_right.png", Vector2(18, 12), true)
 	
 	# Characters as dummy sprites
 	_create_dummy_char("Ena", Vector2(8, 11), Color(0.72, 0.38, 0.16))
 	_create_dummy_char("Mizuki", Vector2(12, 11), Color(0.85, 0.65, 0.8))
 	
 	_create_dummy_char("Giang Hồ 1", Vector2(18, 10), Color.DARK_GRAY)
-	_create_dummy_char("Giang Hồ 2", Vector2(19, 10), Color.DARK_GRAY)
-	_create_dummy_char("Giang Hồ 3", Vector2(20, 10), Color.DARK_GRAY)
+	_create_dummy_char("Giang Hồ 2", Vector2(18, 11), Color.DARK_GRAY)
+	_create_dummy_char("Giang Hồ 3", Vector2(18, 12), Color.DARK_GRAY)
 
 func _create_dummy_char(p_name: String, grid_pos: Vector2, color: Color):
 	var root = Node2D.new()

@@ -142,6 +142,8 @@ func _trigger_rescue_phase(main: Node):
 	# Cập nhật toàn bộ hệ thống Battle Engine
 	main.all_entities = main.player_team + main.enemy_team
 	main._refresh_team_context()
+	for e in main.all_entities:
+		e.action_gauge = 0.0 # Reset thanh hành động để bắt đầu pha cứu viện công bằng
 	main.hud.setup(main.player_team, main.enemy_team)
 	main._setup_gauge_teams()
 	main._regenerate_timeline()
