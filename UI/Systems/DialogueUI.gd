@@ -55,7 +55,7 @@ func _init_ui():
 	narrator_label.bbcode_enabled = true
 	narrator_label.fit_content = true
 	narrator_label.add_theme_font_size_override("normal_font_size", 18)
-	narrator_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Light.otf"))
+	narrator_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Medium.otf"))
 	narrator_box.add_child(narrator_label)
 	narrator_box.visible = false
 
@@ -75,9 +75,9 @@ func _init_ui():
 	text_label.bbcode_enabled = true
 	text_label.add_theme_font_size_override("normal_font_size", 20)
 	text_label.add_theme_color_override("default_color", Color(0.15, 0.08, 0.05))
-	text_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Light.otf"))
+	text_label.add_theme_font_override("normal_font", load("res://Fonts/Lagu Sans Medium.otf"))
 	text_label.add_theme_font_override("bold_font", load("res://Fonts/Lagu Sans Bold.otf"))
-	text_label.add_theme_font_override("italic_font", load("res://Fonts/Lagu Sans Light Italic.otf"))
+	text_label.add_theme_font_override("italic_font", load("res://Fonts/Lagu Sans Bold Italic.otf"))
 	dialogue_box.add_child(text_label)
 
 	choice_panel = PanelContainer.new()
