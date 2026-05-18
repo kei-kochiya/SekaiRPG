@@ -33,13 +33,15 @@ func _ready() -> void:
 			base_music = "night"
 			
 	AudioManager.play_music(base_music)
-	ScreenFade.fade_in(0.8)
 	
 	_build_map()
 	_spawn_npcs()
 	_spawn_player()
 	_spawn_transitions()
 	_build_quest_hud()
+	
+	# Chờ màn hình chuyển cảnh sáng hoàn toàn trước khi chạy hội thoại kịch bản
+	await ScreenFade.fade_in(0.8)
 	
 	if current_stage:
 		current_stage.on_stage_start()

@@ -19,7 +19,7 @@ func _ready():
 	Khởi tạo cấu hình ban đầu cho Menu tạm dừng.
 	"""
 	process_mode = Node.PROCESS_MODE_ALWAYS # Cho phép hoạt động ngay cả khi game bị pause
-	layer = 110
+	layer = 130
 	visible = false
 	_build_ui()
 

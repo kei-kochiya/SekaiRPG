@@ -26,6 +26,7 @@ func _ready() -> void:
 	_ui = DialogueUI.new()
 	add_child(_ui)
 	_ui.choice_selected.connect(_on_choice_selected)
+	_ui.get_node("DialogueLayer/Clicker").pressed.connect(_on_clicker_pressed)
 
 # ── API Công khai ──────────────────────────────────────────────────────────
 
@@ -56,17 +57,20 @@ func show_choice(options: Array):
 func _input(event: InputEvent):
 	if _in_choice or not active: return
 	
-	var is_accept = event.is_action_pressed("ui_accept")
-	var is_click = event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT
-	var is_touch = event is InputEventScreenTouch and event.pressed
-	
-	if is_accept or is_click or is_touch:
+	if event.is_action_pressed("ui_accept"):
 		get_viewport().set_input_as_handled()
-		index += 1
-		if index < current_dialogue.size():
-			_show_current_line()
-		else:
-			_finish()
+		_advance_dialogue()
+
+func _on_clicker_pressed():
+	if _in_choice or not active: return
+	_advance_dialogue()
+
+func _advance_dialogue():
+	index += 1
+	if index < current_dialogue.size():
+		_show_current_line()
+	else:
+		_finish()
 
 func _show_current_line():
 	if index < current_dialogue.size():

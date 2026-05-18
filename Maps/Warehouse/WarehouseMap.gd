@@ -13,7 +13,6 @@ const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
 	AudioManager.play_music("map")
-	ScreenFade.fade_in(0.8)
 	
 	# Reset bộ đếm nếu đây là lần đầu vào Warehouse để không bị ảnh hưởng bởi Prologue
 	if GameManager.warehouse_wave == 1 and GameManager.enemies_defeated > 0:
@@ -21,6 +20,11 @@ func _ready():
 	
 	_build_map()
 	_spawn_player()
+	_build_mission_hud()
+	_spawn_current_wave()
+	
+	# Chờ màn hình chuyển cảnh sáng hoàn toàn để tránh Dialogue UI (Layer 100) bị che bởi ScreenFade (Layer 200)
+	await ScreenFade.fade_in(0.8)
 	
 	# Trường hợp kết thúc: Đã qua wave 5, hiện hội thoại rồi chuyển về Safehouse mới.
 	if GameManager.warehouse_wave > 5:
@@ -39,9 +43,6 @@ func _ready():
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave3_start"))
 	elif GameManager.warehouse_wave == 5 and (GameManager.enemies_defeated % 5 == 0):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave5_start"))
-	
-	_build_mission_hud()
-	_spawn_current_wave()
 
 func _return_to_base_with_fade():
 	await ScreenFade.fade_out(1.5)

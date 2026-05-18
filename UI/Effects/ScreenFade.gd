@@ -13,6 +13,7 @@ func _ready() -> void:
 	"""
 	Khởi tạo lớp phủ màu đen ở lớp cao nhất (Layer 200).
 	"""
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 200
 	_rect = ColorRect.new()
 	_rect.color = Color.BLACK

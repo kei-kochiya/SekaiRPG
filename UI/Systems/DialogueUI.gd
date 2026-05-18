@@ -44,11 +44,24 @@ func _init_ui():
 	d_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(d_layer)
 
+	# Clicker toàn màn hình để người chơi click/tap tiến hành hội thoại
+	var clicker = TextureButton.new()
+	clicker.name = "Clicker"
+	clicker.anchor_right = 1.0
+	clicker.anchor_bottom = 1.0
+	clicker.offset_left = 0
+	clicker.offset_right = 0
+	clicker.offset_top = 0
+	clicker.offset_bottom = 0
+	clicker.mouse_filter = Control.MOUSE_FILTER_STOP
+	d_layer.add_child(clicker)
+
 	narrator_box = PanelContainer.new()
 	narrator_box.set_anchors_preset(Control.PRESET_CENTER)
 	narrator_box.offset_left = -400; narrator_box.offset_right = 400
 	narrator_box.offset_top = -40; narrator_box.offset_bottom = 40
 	narrator_box.add_theme_stylebox_override("panel", _get_style("panel_brown_dark.svg", 12, 20))
+	narrator_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	d_layer.add_child(narrator_box)
 	
 	var base_font = load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf")
@@ -61,6 +74,7 @@ func _init_ui():
 	narrator_label.fit_content = true
 	narrator_label.add_theme_font_size_override("normal_font_size", 20)
 	narrator_label.add_theme_font_override("normal_font", base_font)
+	narrator_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	narrator_box.add_child(narrator_label)
 	narrator_box.visible = false
 
@@ -74,6 +88,7 @@ func _init_ui():
 	dialogue_box.offset_top = -200; dialogue_box.offset_bottom = -30
 	dialogue_box.offset_left = 100; dialogue_box.offset_right = -100
 	dialogue_box.add_theme_stylebox_override("panel", _get_style("panel_brown.svg", 12, 25))
+	dialogue_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	d_layer.add_child(dialogue_box)
 
 	text_label = RichTextLabel.new()
@@ -87,6 +102,7 @@ func _init_ui():
 	text_label.add_theme_font_override("italics_font", italic_font)
 	text_label.add_theme_font_override("bold_italic_font", italic_font)
 	text_label.add_theme_font_override("bold_italics_font", italic_font)
+	text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	dialogue_box.add_child(text_label)
 
 	choice_panel = PanelContainer.new()
@@ -180,4 +196,5 @@ func _create_portrait(preset: int, x: int, y: int) -> TextureRect:
 	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	t.pivot_offset = Vector2(128, 256)
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return t

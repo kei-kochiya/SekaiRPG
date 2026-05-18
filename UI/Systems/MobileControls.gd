@@ -35,6 +35,7 @@ func _ready():
 		visible = false
 		return
 	
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 120
 	_setup_ui()
 
@@ -55,7 +56,7 @@ func _process(_delta):
 	# Ẩn controls khi đang hội thoại hoặc menu tạm dừng đang mở
 	var is_paused = get_tree().paused
 	var in_dialogue = GameManager.is_in_dialogue
-	var in_battle = current_scene.name == "Main"
+	var in_battle = current_scene.name == "BattleRoot" or current_scene.scene_file_path == "res://BattleSystem/BattleScene.tscn"
 	
 	# Toàn bộ UI mobile (bao gồm nút Menu) ẩn khi có hội thoại hoặc đang pause
 	if (in_dialogue or is_paused) and _root.visible:
@@ -92,7 +93,7 @@ func _setup_ui():
 	_joystick_base = Control.new()
 	_joystick_base.custom_minimum_size = Vector2(JOYSTICK_RADIUS * 2, JOYSTICK_RADIUS * 2)
 	_joystick_base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_joystick_base.set_begin(Vector2(100, -250)) # Position relative to bottom-left
+	_joystick_base.set_begin(Vector2(150, -250)) # Position relative to bottom-left
 	_root.add_child(_joystick_base)
 	
 	var base_circle = ColorRect.new()
