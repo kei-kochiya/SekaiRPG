@@ -2,26 +2,33 @@ extends Node
 class_name DamageCalculator
 
 """
-DamageCalculator: Tính toán lượng sát thương cuối cùng trong trận đấu.
+Tóm tắt: DamageCalculator phụ trách tính toán lượng sát thương cuối cùng trong trận đấu.
 
-Áp dụng công thức: raw_dmg = ATK - DEF, nhân hệ số kháng (RES) và tương khắc
-thuộc tính (TypeChart). Đảm bảo sát thương tối thiểu không thấp hơn 5% ATK.
+Chức năng chính:
+- Cung cấp phương thức tĩnh `calculate_damage` để xử lý công thức sát thương: raw_dmg = (ATK * Multiplier) - DEF.
+- Tự động áp dụng hệ số giảm trừ theo kháng (RES) và tương khắc thuộc tính (thông qua TypeChart).
+- Đảm bảo sát thương tối thiểu gây ra không bao giờ thấp hơn 5% ATK của người tấn công.
 """
+
+# ── Xử Lý Sát Thương ───────────────────────────────────────────────────────
+
 
 static func calculate_damage(attacker: Entity, defender: Entity, skill_multiplier: float = 1.0) -> int:
 	"""
 	Tính toán lượng sát thương thực tế mà mục tiêu sẽ nhận.
-
+	
 	Công thức tính toán bao gồm:
 	- Sát thương thô: max(0, (ATK * Multiplier) - DEF).
 	- Giảm trừ theo kháng: raw * (1 - RES/100).
 	- Nhân hệ số tương khắc thuộc tính từ TypeChart.
 	- Sát thương tối thiểu: 5% ATK của người tấn công.
-
-	- attacker: Thực thể thực hiện tấn công (Entity).
-	- defender: Thực thể nhận sát thương (Entity).
-	- skill_multiplier: Hệ số nhân sát thương của kỹ năng (mặc định là 1.0).
-	- Return: Lượng sát thương cuối cùng sau khi áp dụng toàn bộ hệ số (int).
+	
+	Args:
+		attacker (Entity): Thực thể thực hiện tấn công.
+		defender (Entity): Thực thể nhận sát thương.
+		skill_multiplier (float): Hệ số nhân sát thương của kỹ năng (mặc định là 1.0).
+	Returns: 
+		int: Lượng sát thương cuối cùng sau khi áp dụng toàn bộ hệ số.
 	"""
 	if attacker == null or defender == null:
 		return 0

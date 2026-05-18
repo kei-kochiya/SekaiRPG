@@ -2,11 +2,14 @@ extends Node
 class_name TypeChart
 
 """
-TypeChart: Bảng tương khắc thuộc tính giữa các hệ trong game.
+Tóm tắt: TypeChart quản lý bảng tương khắc thuộc tính giữa các hệ trong game.
 
-Hệ thuộc tính: Cool, Happy, Cute, Mysterious, Pure.
-Quy tắc: Mạnh hơn x1.25, Yếu hơn x0.8, Bình thường x1.0.
+Chức năng chính:
+- Định nghĩa ma trận tương khắc cho 5 hệ: Cool, Happy, Cute, Mysterious, Pure.
+- Cung cấp phương thức tĩnh `get_multiplier` để trả về hệ số nhân: x1.25 (Mạnh hơn), x0.8 (Yếu hơn) hoặc x1.0 (Bình thường).
 """
+
+# ── Dữ Liệu Tương Khắc ─────────────────────────────────────────────────────
 
 static var chart = {
 	"Cool":       {"weak_to": "Cute",  "strong_against": "Happy"},
@@ -16,18 +19,22 @@ static var chart = {
 	"Pure":       {"weak_to": "None",  "strong_against": "Mysterious"},
 }
 
+# ── Xử Lý Logic ────────────────────────────────────────────────────────────
+
 static func get_multiplier(attacker_element: String, defender_element: String) -> float:
 	"""
 	Lấy hệ số nhân sát thương dựa trên tương khắc thuộc tính.
-
+	
 	- Mạnh hơn (Strong): 1.25x.
 	- Yếu hơn (Weak): 0.8x.
 	- Mysterious và Pure khắc chế lẫn nhau: 1.25x.
 	- Bình thường hoặc không có hệ: 1.0x.
-
-	- attacker_element: Hệ của người tấn công (String).
-	- defender_element: Hệ của mục tiêu (String).
-	- Return: Hệ số nhân sát thương (float).
+	
+	Args:
+		attacker_element (String): Hệ của người tấn công.
+		defender_element (String): Hệ của mục tiêu.
+	Returns: 
+		float: Hệ số nhân sát thương.
 	"""
 	if defender_element == "None" or attacker_element == "None":
 		return 1.0

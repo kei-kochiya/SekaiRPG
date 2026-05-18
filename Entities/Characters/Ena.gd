@@ -2,11 +2,17 @@ extends Entity
 class_name Ena
 
 """
-Ena: Nhân vật hệ Happy, kết hợp giữa sát thương duy trì (Poison) và hỗ trợ hồi phục.
+Tóm tắt: Định nghĩa nhân vật Ena (Hệ Happy), quản lý chỉ số và bộ kỹ năng chiến đấu.
 
-Lối chơi của Ena tập trung vào việc bào mòn kẻ địch bằng độc tố và cung cấp 
-khả năng hồi phục khẩn cấp cho đồng minh có lượng máu thấp nhất thông qua tuyệt kỹ.
+Chức năng chính:
+- Khởi tạo các chỉ số sức mạnh cơ bản (HP, ATK, DEF, SPD) và danh sách kỹ năng.
+- Thực thi logic kỹ năng [Nét Cọ Tàn Nhẫn]: Gây lượng sát thương vật lý đơn mục tiêu lớn.
+- Thực thi logic kỹ năng [Bức Tranh Độc Đáo]: Gây sát thương và đặt trạng thái Trúng Độc (Poison).
+- Thực thi logic tuyệt kỹ [Kiệt Tác Dang Dở]: Gây sát thương chuẩn (Pure Damage), cộng dồn độc, và hồi máu khẩn cấp cho đồng minh yếu nhất.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Ena"
@@ -24,6 +30,8 @@ func _init():
 		{"name": "Bức Tranh Độc Đáo", "method": "toxic_criticism", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Trúng độc (Poison) trong 3 lượt.\nTỷ lệ: 100% ATK."},
 		{"name": "Kiệt Tác Dang Dở", "method": "masterpiece", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương xuyên thấu cực lớn, gây Poison và hồi máu cho đồng đội yếu nhất.\nTỷ lệ: 250% ATK (Sát thương) / 150% ATK (Hồi máu)."},
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func brush_stroke(target: Entity):
 	# [Nét Cọ Tàn Nhẫn]: Đòn đơn 150% ATK vật lý.

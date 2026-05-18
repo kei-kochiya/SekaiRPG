@@ -77,9 +77,9 @@ def build_tree(files: list) -> dict:
 
 CSS = """
 :root{
-  --bg:#0d0f14;--sidebar:#111520;--panel:#161b27;--border:#252d40;
-  --acc:#5eead4;--acc2:#818cf8;--text:#e2e8f0;--muted:#64748b;
-  --fn:#f8fafc;--tag:#334155;--warn:#fbbf24;
+  --bg:#ffffff;--sidebar:#f8f9fa;--panel:#ffffff;--border:#e2e8f0;
+  --acc:#0f766e;--acc2:#4f46e5;--text:#0f172a;--muted:#64748b;
+  --fn:#1e293b;--tag:#f1f5f9;--warn:#ea580c;
   font-family:'Segoe UI',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -97,12 +97,12 @@ aside{width:280px;min-width:220px;background:var(--sidebar);border-right:1px sol
 .tree-item{display:flex;align-items:center;gap:6px;padding:4px 12px;
   cursor:pointer;font-size:.82rem;border-radius:0;transition:background .15s;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tree-item:hover{background:rgba(94,234,212,.07)}
-.tree-item.active{background:rgba(94,234,212,.12);color:var(--acc)}
+.tree-item:hover{background:rgba(15,118,110,.06)}
+.tree-item.active{background:rgba(15,118,110,.12);color:var(--acc)}
 .tree-folder{color:var(--acc2);font-weight:600;font-size:.8rem;
   padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;
   user-select:none;border-radius:0}
-.tree-folder:hover{background:rgba(129,140,248,.08)}
+.tree-folder:hover{background:rgba(79,70,229,.08)}
 .tree-folder .arrow{transition:transform .2s;display:inline-block;font-size:.65rem}
 .tree-folder.open .arrow{transform:rotate(90deg)}
 .tree-children{display:none;padding-left:14px}
@@ -119,7 +119,8 @@ main{flex:1;overflow-y:auto;padding:32px 40px}
 .badge.ext{color:var(--acc2)}
 .docstring{background:var(--panel);border-left:3px solid var(--acc);
   padding:14px 18px;border-radius:0 8px 8px 0;margin:16px 0;
-  font-size:.88rem;line-height:1.7;color:#94a3b8;white-space:pre-wrap}
+  font-size:.88rem;line-height:1.7;color:#334155;white-space:pre-wrap;
+  border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
 h3{font-size:.95rem;font-weight:600;color:var(--muted);letter-spacing:.08em;
   text-transform:uppercase;margin:28px 0 12px;border-bottom:1px solid var(--border);padding-bottom:6px}
 .fn-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;
@@ -129,15 +130,15 @@ h3{font-size:.95rem;font-weight:600;color:var(--muted);letter-spacing:.08em;
   display:flex;gap:8px;align-items:baseline;cursor:pointer}
 .fn-kw{color:var(--acc2)}
 .fn-name{color:var(--acc);font-weight:700}
-.fn-params{color:#94a3b8}
-.fn-doc{padding:8px 16px 14px;font-size:.82rem;color:#64748b;
+.fn-params{color:#475569}
+.fn-doc{padding:8px 16px 14px;font-size:.82rem;color:#475569;
   line-height:1.7;border-top:1px solid var(--border);white-space:pre-wrap;display:none}
 .fn-card.open .fn-doc{display:block}
 .var-table{width:100%;border-collapse:collapse;font-size:.83rem}
 .var-table th{text-align:left;color:var(--muted);font-weight:500;
   padding:6px 12px;border-bottom:1px solid var(--border)}
-.var-table td{padding:5px 12px;border-bottom:1px solid rgba(37,45,64,.5)}
-.var-table tr:hover td{background:rgba(94,234,212,.04)}
+.var-table td{padding:5px 12px;border-bottom:1px solid var(--border)}
+.var-table tr:hover td{background:var(--sidebar)}
 .vname{color:var(--acc);font-family:monospace}
 .vtype{color:var(--acc2);font-size:.78rem}
 ::-webkit-scrollbar{width:6px}

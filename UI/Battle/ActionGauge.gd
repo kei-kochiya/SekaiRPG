@@ -2,13 +2,16 @@ extends VBoxContainer
 class_name ActionGauge
 
 """
-ActionGauge: Hiển thị danh sách thứ tự hành động (Timeline) trong trận đấu.
+Tóm tắt: ActionGauge hiển thị danh sách thứ tự hành động (Timeline) trong trận đấu.
 
-Thành phần này trực quan hóa danh sách các lượt đánh sắp tới, sử dụng màu sắc 
-để phân biệt giữa phe người chơi và phe địch. Đặc biệt, nó sử dụng cơ chế 
-so sánh đối tượng (Object-based) để xác định chính xác danh tính thực thể, 
-ngay cả khi có các nhân vật trùng tên trên sân.
+Chức năng chính:
+- Trực quan hóa danh sách các lượt đánh sắp tới (tối đa 10 lượt).
+- Sử dụng màu sắc để phân biệt giữa phe người chơi (Xanh) và phe địch (Đỏ).
+- Cập nhật linh hoạt thông qua hàm `refresh` mỗi khi có thay đổi trong timeline.
 """
+
+# ── Cấu Hình & Biến ────────────────────────────────────────────────────────
+
 
 const PLAYER_COLOR = Color(0.0, 0.8, 0.8)
 const ENEMY_COLOR  = Color(1.0, 0.3, 0.3)
@@ -19,6 +22,8 @@ var player_team: Array = []
 func _ready():
 	add_theme_constant_override("separation", 2)
 	custom_minimum_size = Vector2(140, 0)
+
+# ── Khởi Tạo & Cập Nhật ────────────────────────────────────────────────────
 
 func set_player_team(team: Array):
 	"""

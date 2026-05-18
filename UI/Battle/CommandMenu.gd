@@ -2,14 +2,16 @@ extends PanelContainer
 class_name CommandMenu
 
 """
-CommandMenu: Menu điều khiển hành động của nhân vật trong trận đấu.
+Tóm tắt: CommandMenu quản lý hệ thống lựa chọn hành động trong trận đấu.
 
-Lớp này quản lý quy trình chọn lệnh cho người chơi, bao gồm:
-1. Chọn hành động (Tấn công thường hoặc Kỹ năng).
-2. Chọn mục tiêu (Kẻ địch hoặc Đồng minh tùy theo loại kỹ năng).
-Tích hợp hệ thống Tooltip nhanh để hiển thị mô tả kỹ năng và nút 'i' để xem 
-thông số chi tiết thông qua SkillDetailPopup.
+Chức năng chính:
+- Hiển thị danh sách kỹ năng khả dụng của thực thể hiện tại (`show_for`).
+- Cung cấp luồng chọn 2 bước: Chọn kỹ năng (Action) -> Chọn mục tiêu (Target).
+- Hỗ trợ nút Info (Tooltip) để xem mô tả chi tiết của kỹ năng thông qua `SkillDetailPopup`.
 """
+
+# ── Tham Chiếu UI ──────────────────────────────────────────────────────────
+
 
 signal command_chosen(action: String, target: Entity)
 
@@ -24,6 +26,8 @@ var action_container: VBoxContainer
 var target_container: VBoxContainer
 var title_label: Label
 var _skill_detail_popup: Node
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
 
 func _ready():
 	"""

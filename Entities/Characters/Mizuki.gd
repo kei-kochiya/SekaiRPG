@@ -2,11 +2,17 @@ extends Entity
 class_name Mizuki
 
 """
-Mizuki: Nhân vật hệ Cute, chuyên về khống chế và sát thương duy trì (Poison).
+Tóm tắt: Định nghĩa nhân vật Mizuki (Hệ Cute), quản lý chỉ số và bộ kỹ năng chiến đấu.
 
-Lối chơi của Mizuki tập trung vào việc áp dụng các hiệu ứng bất lợi lên kẻ địch 
-thông qua độc tố và các đòn tấn công tinh tế.
+Chức năng chính:
+- Khởi tạo các chỉ số sức mạnh cơ bản (HP, ATK, DEF, SPD) và danh sách kỹ năng (thiên hướng khống chế và Poison).
+- Thực thi logic kỹ năng [Ruy Băng Trói Buộc]: Đòn đơn vật lý sát thương mạnh.
+- Thực thi logic kỹ năng [Bí Mật Cay Đắng]: Gây sát thương vật lý và đặt hiệu ứng Trúng Độc (Poison).
+- Thực thi logic tuyệt kỹ [Rối Độc Thoại]: Gây sát thương chuẩn (Pure Damage) cực mạnh và Poison thời gian dài.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Mizuki"
@@ -24,6 +30,8 @@ func _init():
 		{"name": "Bí Mật Cay Đắng", "method": "bitter_secret", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Trúng độc (Poison) trong 3 lượt.\nTỷ lệ: 100% ATK."},
 		{"name": "Rối Độc Thoại", "method": "lonely_marionette", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương xuyên thấu (Pure DMG) và gây Poison mạnh trong 4 lượt.\nTỷ lệ: 250% ATK."},
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func ribbon_bind(target: Entity):
 	# [Ruy Băng Trói Buộc]: Đòn đơn 150% ATK vật lý.

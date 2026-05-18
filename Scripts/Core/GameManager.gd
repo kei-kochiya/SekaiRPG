@@ -1,27 +1,30 @@
 extends Node
 
 """
-GameManager: Bộ não trung tâm quản lý toàn bộ trạng thái của trò chơi.
+Tóm tắt: GameManager là bộ não trung tâm (Autoload) quản lý toàn bộ vòng đời của trò chơi.
 
-Lớp này quản lý các thành phần cốt lõi: Đội hình (Party), Hệ thống Save/Load, 
-và Dòng chảy kịch bản (thông qua StoryState). Đảm bảo tính nhất quán của dữ liệu 
-giữa các màn chơi và trạng thái trận đấu.
+Chức năng chính:
+- Lưu trữ và cung cấp đối tượng đội hình (Party).
+- Quản lý bộ đệm trạng thái cốt truyện thông qua StoryState (cờ sự kiện, tiến độ map).
+- Xử lý hệ thống lưu và tải game (Save/Load) qua JSON.
+- Điều phối các chế độ chơi đặc biệt: Sandbox, Training, Scripted Battle.
+- Xử lý luồng sau khi trận chiến kết thúc (tính exp, kích hoạt sự kiện, chuyển cảnh).
+- Quản lý tùy chọn cài đặt hệ thống (Volume, Battle Speed, Skip Battle).
 """
 
 # ── Tham chiếu đến các Manager thành phần ──────────────────────────────────
 var story: StoryState = StoryState.new()
 
-# ── Thông tin Bản đồ & Vị trí ──────────────────────────────────────────────
+# ── Biến Quản Lý Trạng Thái ────────────────────────────────────────────────
+
 var current_map_file: String = "res://Maps/Prologue/PrologueMap.tscn"
 var last_player_position: Vector2 = Vector2.ZERO
 
-# ── Trạng thái Luyện tập ────────────────────────────────────────────────────
 var is_training_mode: bool = false
 var training_participants: Array = []
 var training_used_opponents: Array = []
 var last_battle_max_lv: int = 1
 
-# ── Trạng thái Hệ thống ─────────────────────────────────────────────────────
 var is_in_dialogue: bool = false
 var is_tutorial: bool = false
 var is_sandbox: bool = false
@@ -30,8 +33,7 @@ var scripted_battle_id: String = ""
 var sandbox_player_team: Array = []
 var sandbox_enemy_team: Array = []
 
-# ── Cài đặt (Settings) ──────────────────────────────────────────────────────
-var battle_speed: float = 1.2 # Giây giữa các lượt AI
+var battle_speed: float = 1.2
 var master_volume: float = 1.0:
 	set(v):
 		master_volume = clamp(v, 0.0, 1.0)
@@ -40,14 +42,20 @@ var master_volume: float = 1.0:
 var skip_battle_unlocked: bool = false
 var skip_battle_enabled: bool = false
 
-# ── Dữ liệu Đội hình (Party) ───────────────────────────────────────────────
+# ── Đội Hình (Party) ───────────────────────────────────────────────────────
 var party: Dictionary = {}
 
+# Khởi tạo đội hình
 func _ready():
 	_init_party()
 
 func _init_party():
-	# Khởi tạo các đối tượng nhân vật chính và cấp độ ban đầu cho đội hình.
+	"""
+	Khởi tạo các đối tượng nhân vật chính và cấp độ ban đầu cho đội hình.
+	
+	Args: Không có
+	Returns: Không có
+	"""
 	party["Ichika"] = Ichika.new()
 	party["Kanade"] = Kanade.new()
 	party["Mafuyu"] = Mafuyu.new()
@@ -62,7 +70,7 @@ func _init_party():
 	LevelManager.set_initial_level(party["Mizuki"], 25)
 	LevelManager.set_initial_level(party["Honami"], 25)
 
-# ── Proxy Getters/Setters cho StoryState (Đảm bảo tương thích ngược) ───────
+# ── Kết nối StoryState (Flags & Variables) ─────────────────────────────────
 var flags: Dictionary:
 	get: return story.flags
 var warehouse_wave: int:
@@ -81,12 +89,12 @@ var harbor_route: String:
 	get: return story.harbor_route
 	set(v): story.harbor_route = v
 
+# Thiết lập một cờ trạng thái
 func set_flag(id: String, value: Variant):
-	# Ghi đè một cờ trạng thái (flag) trong hệ thống StoryState.
 	story.set_flag(id, value)
 
+# Lấy giá trị của một cờ trạng thái
 func get_flag(id: String, default: Variant = false) -> Variant:
-	# Lấy giá trị của một cờ trạng thái từ StoryState.
 	return story.get_flag(id, default)
 
 var prologue_phase: int:
@@ -144,30 +152,28 @@ var harbor_mizuki_snack_done: bool:
 	get: return story.get_flag("harbor_mizuki_snack_done", false)
 	set(v): story.set_flag("harbor_mizuki_snack_done", v)
 
-
-# ── Logic Điều khiển ───────────────────────────────────────────────────────
-
+# ── Tiện Ích Trò Chơi ──────────────────────────────────────────────────────
 func get_party_member(m_name: String) -> Entity:
-	# Lấy đối tượng thành viên đội hình theo tên.
 	return party.get(m_name)
 
+# Bắt đầu trạng thái hội thoại
 func start_dialogue():
-	# Bắt đầu trạng thái hội thoại.
 	is_in_dialogue = true
 
+# Kết thúc trạng thái hội thoại
 func end_dialogue():
-	# Kết thúc trạng thái hội thoại.
 	is_in_dialogue = false
 
-# ── Hệ thống Save/Load ─────────────────────────────────────────────────────
-
+# ── Hệ Thống Lưu/Tải (Save/Load) ───────────────────────────────────────────
 const SAVE_PATH = "user://sekai_save.json"
 
 func save_game(path: String = SAVE_PATH):
 	"""
-	Hàm này thực hiện lưu toàn bộ dữ liệu game vào một đường dẫn cụ thể.
-	- path: Đường dẫn lưu file (String). Mặc định là SAVE_PATH.
-	- Return: Không có.
+	Thực hiện lưu toàn bộ dữ liệu game vào một file cụ thể.
+	
+	Args:
+		path (String): Đường dẫn file lưu. Mặc định là SAVE_PATH.
+	Returns: Không có
 	"""
 	var save_data = {
 		"current_map": current_map_file,
@@ -191,19 +197,19 @@ func save_game(path: String = SAVE_PATH):
 	f.close()
 	print("[GameManager] Game đã được lưu tại: ", path)
 
+# Trả về đường dẫn save mặc định dựa trên bản đồ hiện tại
 func get_current_save_path() -> String:
-	"""
-	Trả về đường dẫn save mặc định dựa trên bản đồ hiện tại.
-	Ví dụ: 'user://PrologueMap.json'
-	"""
 	var map_name = current_map_file.get_file().get_basename()
 	return "user://" + map_name + ".json"
 
 func load_game(path: String = SAVE_PATH) -> bool:
 	"""
-	Hàm này thực hiện nạp dữ liệu từ một file save cụ thể.
-	- path: Đường dẫn file cần nạp (String). Mặc định là SAVE_PATH.
-	- Return: True nếu nạp thành công, ngược lại False (bool).
+	Nạp dữ liệu từ một file save cụ thể và phục hồi trạng thái game.
+	
+	Args:
+		path (String): Đường dẫn file nạp. Mặc định là SAVE_PATH.
+	Returns: 
+		bool: True nếu nạp thành công, False nếu thất bại.
 	"""
 	if not FileAccess.file_exists(path):
 		print("[GameManager] Lỗi: Không tìm thấy file tại ", path)
@@ -241,14 +247,17 @@ func load_game(path: String = SAVE_PATH) -> bool:
 	get_tree().change_scene_to_file(current_map_file)
 	return true
 
+# Kiểm tra sự tồn tại của file save
 func has_save(path: String = SAVE_PATH) -> bool:
-	# Kiểm tra sự tồn tại của một file save cụ thể.
 	return FileAccess.file_exists(path)
 
 func get_save_files() -> Array:
 	"""
-	Trả về danh sách tất cả các file save (.json) có trong thư mục user://.
-	Dùng để hiển thị danh sách cho người chơi chọn file để load.
+	Lấy danh sách tất cả các file save (.json) có trong thư mục user://.
+	
+	Args: Không có
+	Returns:
+		Array: Mảng chứa đường dẫn các file save.
 	"""
 	var saves = []
 	var dir = DirAccess.open("user://")
@@ -261,8 +270,9 @@ func get_save_files() -> Array:
 			file_name = dir.get_next()
 	return saves
 
+# ── Quản Lý Chuyển Cảnh & Trận Chiến ───────────────────────────────────────
+# Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới
 func reset_game():
-	# Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới.
 	story.reset()
 	last_player_position = Vector2.ZERO
 	current_map_file = "res://Maps/Prologue/PrologueMap.tscn"
@@ -271,26 +281,28 @@ func reset_game():
 	is_scripted_battle = false
 	_init_party()
 
+# Ghi nhớ bản đồ và vị trí hiện tại
 func store_map_state(map_path: String, player_pos: Vector2):
-	# Ghi nhớ bản đồ và vị trí hiện tại của người chơi.
 	current_map_file = map_path
 	last_player_position = player_pos
 
+# Đặt lại bộ đếm nhiệm vụ
 func reset_mission_stats():
-	# Đặt lại bộ đếm kẻ địch bị hạ gục.
 	story.enemies_defeated = 0
 
+# Chuyển cảnh đến trận chiến
 func trigger_battle():
-	# Chuyển cảnh đến màn hình chiến đấu.
 	AudioManager.play_music("battle")
 	get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")
 
 func finish_battle(victory: bool, count: int = 1):
 	"""
-	Hàm này xử lý các logic sau trận đấu như phân phối EXP và cập nhật cốt truyện.
-	- victory: Thắng hay thua (bool).
-	- count: Số lượng địch bị hạ (int).
-	- Return: Không có.
+	Xử lý logic kết quả sau trận đấu (Exp, Cốt truyện, Chuyển cảnh).
+	
+	Args:
+		victory (bool): Cờ báo thắng hay thua.
+		count (int): Số lượng địch bị hạ.
+	Returns: Không có
 	"""
 	if is_sandbox:
 		get_tree().change_scene_to_file("res://Menus/Sandbox/SandboxMenu.tscn")
@@ -347,12 +359,11 @@ func finish_battle(victory: bool, count: int = 1):
 		if current_map_file.contains("Warehouse"): story.warehouse_wave += 1
 		if current_map_file == "res://Maps/Harbor/HarborMap.tscn":
 			story.harbor_wave += 1
-			# If the wave was the Boss (either directly or after 3 waves)
-			if story.harbor_wave > 4 or GameManager.harbor_route == "boss":
+			if story.harbor_wave > 4 or harbor_route == "boss":
 				story.set_flag("harbor_boss_defeated", true)
 			
 	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Maps/Harbor/HarborMap.tscn":
-		await get_tree().create_timer(1.5, false).timeout # Đợi 1.5s để đọc nốt câu cuối
+		await get_tree().create_timer(1.5, false).timeout 
 		await ScreenFade.fade_out(0.8)
 		last_player_position = Vector2.ZERO
 		get_tree().change_scene_to_file("res://Maps/Alleyway/AlleywayMap.tscn")

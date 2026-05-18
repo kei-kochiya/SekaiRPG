@@ -2,11 +2,15 @@ extends Entity
 class_name TrainingBot
 
 """
-TrainingBot: Robot giả lập dùng để luyện tập trong Safehouse.
+Tóm tắt: Định nghĩa lớp kẻ địch TrainingBot (Robot Huấn Luyện).
 
-Loại kẻ địch này được sử dụng trong chế độ luyện tập để người chơi kiểm tra 
-sát thương và thăng cấp nhân vật một cách an toàn.
+Chức năng chính:
+- Khởi tạo chỉ số trung bình dùng để làm "bia tập bắn" trong Safehouse.
+- Không có kỹ năng kích hoạt, chỉ nhận đòn để người chơi thử nghiệm sát thương.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Robot Huấn Luyện"

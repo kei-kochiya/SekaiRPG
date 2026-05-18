@@ -2,17 +2,18 @@ extends Node
 class_name UpgradeManager
 
 """
-UpgradeManager: Quản lý hệ thống nâng cấp chỉ số vĩnh viễn bằng Skill Points (SP).
+Tóm tắt: UpgradeManager là lớp tĩnh (Static Class) phụ trách logic sử dụng Điểm Kỹ Năng (SP) để nâng cấp chỉ số.
 
-Lớp này cho phép người chơi hoặc hệ thống tự động phân bổ điểm SP
-vào các chỉ số cơ bản như Máu, Tấn công, Phòng thủ và Tốc độ, đồng thời đảm bảo
-các chỉ số này không vượt quá giới hạn (Cap) đã định.
+Chức năng chính:
+- Xác định chi phí SP và hệ số gia tăng cơ bản cho mỗi loại chỉ số (HP, ATK, DEF, SPD).
+- Cung cấp API `upgrade_stat` để kiểm tra điều kiện (đủ SP, chưa đạt giới hạn Max Cap) và thực hiện cộng chỉ số.
+- Cung cấp API `bulk_upgrade` giúp thực hiện nâng cấp hàng loạt hoặc nâng tối đa chỉ số chỉ trong một lần bấm để tăng tính tiện dụng cho UI.
 """
 
-# Chi phí SP cho mỗi lần nâng cấp
+# ── Hằng Số Nâng Cấp ───────────────────────────────────────────────────────
+
 const UPGRADE_COST = 1
 
-# Lượng chỉ số tăng thêm cụ thể cho mỗi lần nâng cấp
 const UPGRADE_AMOUNTS = {
 	"max_hp": 30,
 	"atk": 10,
@@ -20,18 +21,17 @@ const UPGRADE_AMOUNTS = {
 	"spd": 2
 }
 
+# ── API Nâng Cấp Đơn ───────────────────────────────────────────────────────
+
 static func upgrade_stat(entity: Entity, stat_name: String) -> bool:
 	"""
-	Thực hiện nâng cấp một chỉ số cụ thể cho thực thể.
-
-	Quy trình kiểm tra:
-	- Tính hợp lệ của tên chỉ số (stat_name).
-	- Số lượng điểm Skill Points (SP) hiện có.
-	- Giới hạn tối đa (Hard Cap) của chỉ số từ dữ liệu Entity.
-
-	- entity: Thực thể thực hiện nâng cấp (Entity).
-	- stat_name: Tên thuộc tính cần nâng, ví dụ: 'atk' (String).
-	- Return: True nếu nâng cấp thành công, False nếu không đủ SP hoặc đạt giới hạn (bool).
+	Thực hiện nâng cấp một chỉ số cụ thể cho thực thể nếu đủ SP và chưa đạt giới hạn.
+	
+	Args:
+		entity (Entity): Thực thể thực hiện nâng cấp.
+		stat_name (String): Tên thuộc tính cần nâng, ví dụ: 'atk', 'max_hp'.
+	Returns: 
+		bool: True nếu nâng cấp thành công, False nếu không đủ SP hoặc đạt giới hạn.
 	"""
 	if entity == null:
 		return false
@@ -60,14 +60,18 @@ static func upgrade_stat(entity: Entity, stat_name: String) -> bool:
 	return true
 
 
+# ── API Nâng Cấp Hàng Loạt ─────────────────────────────────────────────────
+
 static func bulk_upgrade(entity: Entity, stat_name: String, count: int) -> int:
 	"""
-	Thực hiện nâng cấp hàng loạt một chỉ số.
-
-	- entity: Thực thể cần nâng cấp (Entity).
-	- stat_name: Tên chỉ số (String).
-	- count: Số lần muốn nâng, dùng 999 để nâng tối đa (int).
-	- Return: Số lần nâng cấp đã thực hiện thành công (int).
+	Thực hiện nâng cấp hàng loạt một chỉ số để tiết kiệm thời gian.
+	
+	Args:
+		entity (Entity): Thực thể cần nâng cấp.
+		stat_name (String): Tên chỉ số.
+		count (int): Số lần muốn nâng (dùng giá trị lớn để nâng tối đa).
+	Returns: 
+		int: Số lần nâng cấp đã thực hiện thành công.
 	"""
 	var upgrades_done = 0
 	for i in range(count):

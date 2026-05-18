@@ -2,12 +2,17 @@ extends CharacterBody2D
 class_name OverworldPlayer
 
 """
-OverworldPlayer: Điều khiển nhân vật người chơi trong thế giới khám phá (Overworld).
+Tóm tắt: OverworldPlayer điều khiển nhân vật người chơi trong thế giới khám phá (Overworld).
 
-Lớp này quản lý việc di chuyển của nhân vật, hiển thị hình đại diện đồ họa 
-(Marker động thay đổi theo hướng đi) và mũi tên chỉ hướng mục tiêu (Objective arrow) 
-để hướng dẫn người chơi thực hiện nhiệm vụ.
+Chức năng chính:
+- Khởi tạo hitbox vật lý, camera và hình ảnh đại diện (Marker) cho người chơi.
+- Xử lý hệ thống di chuyển đa hướng (8 hướng) bằng cả bàn phím (WASD/Mũi tên) và tay cầm/joystick.
+- Tự động tìm kiếm và xoay mũi tên hướng dẫn (Objective Arrow) về phía mục tiêu nhiệm vụ gần nhất.
+- Hỗ trợ khóa di chuyển khi đang trong trạng thái hội thoại.
 """
+
+# ── Cấu Hình & Biến ────────────────────────────────────────────────────────
+
 
 const SPEED = 250.0
 
@@ -17,6 +22,8 @@ var character_color: Color = Color(0.29, 0.62, 0.62)
 var _marker: Polygon2D
 var _objective_arrow: Sprite2D
 var _last_dir: Vector2 = Vector2.ZERO
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
 
 func _ready():
 	"""
@@ -56,6 +63,8 @@ func _ready():
 	if GameManager.last_player_position != Vector2.ZERO:
 		global_position = GameManager.last_player_position
 
+# ── Logic Khung Hình ───────────────────────────────────────────────────────
+
 func _process(_delta):
 	"""
 	Cập nhật logic hình ảnh không liên quan đến vật lý (Mũi tên mục tiêu).
@@ -92,6 +101,8 @@ func _update_objective_arrow():
 	var dir = (closest.global_position - global_position).normalized()
 	_objective_arrow.rotation = dir.angle()
 	_objective_arrow.position = dir * 40.0
+
+# ── Logic Vật Lý & Di Chuyển ───────────────────────────────────────────────
 
 func _physics_process(_delta):
 	"""
@@ -130,6 +141,8 @@ func _physics_process(_delta):
 		if _last_dir != Vector2.ZERO:
 			_last_dir = Vector2.ZERO
 			_draw_dot()
+
+# ── Xử Lý Đồ Họa ───────────────────────────────────────────────────────────
 
 func _draw_dot():
 	"""

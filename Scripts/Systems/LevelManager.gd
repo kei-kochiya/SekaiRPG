@@ -2,35 +2,34 @@ extends Node
 class_name LevelManager
 
 """
-LevelManager: Quản lý hệ thống cấp độ, kinh nghiệm và thăng tiến sức mạnh.
+Tóm tắt: LevelManager là lớp tĩnh (Static Class) chuyên trách tính toán kinh nghiệm và thăng cấp nhân vật.
 
-Lớp này xử lý việc tính toán phần thưởng kinh nghiệm, xử lý tiến trình lên cấp,
-tự động nâng cấp chỉ số cho quái vật và áp dụng các giới hạn (Soft/Hard Cap).
+Chức năng chính:
+- Xử lý việc cấp và cộng dồn điểm kinh nghiệm (EXP) thông qua hàm `gain_exp()`.
+- Tự động tính toán số cấp thăng lên nếu điểm EXP vượt mức, xử lý chuỗi lên cấp liên tục.
+- Cung cấp thuật toán gia tăng chỉ số gốc dựa trên tỷ lệ % (Growth Rate) và áp dụng cơ chế Soft Cap/Hard Cap.
+- Tự động phân bổ Điểm Kỹ Năng (SP) ngẫu nhiên cho hệ thống quái vật để tạo độ khó biến thiên.
 """
+
+# ── Hằng Số Cấp Độ ─────────────────────────────────────────────────────────
 
 const SOFT_CAP_LEVEL = 50
 const MAX_LEVEL = 100
 
-static func get_exp_reward(enemy_level: int) -> int:
-	"""
-	Tính toán lượng kinh nghiệm (EXP) nhận được dựa trên cấp độ kẻ địch.
-	
-	Công thức: enemy_level * 75.
+# ── Xử Lý Kinh Nghiệm ──────────────────────────────────────────────────────
 
-	- enemy_level: Cấp độ của kẻ địch đã bị hạ gục (int).
-	- Return: Tổng lượng EXP nhận được (int).
-	"""
+# Tính toán lượng kinh nghiệm nhận được dựa trên cấp độ kẻ địch
+static func get_exp_reward(enemy_level: int) -> int:
 	return enemy_level * 75
 
 static func gain_exp(entity: Entity, amount: int):
 	"""
 	Cấp kinh nghiệm cho một thực thể và kiểm tra điều kiện lên cấp.
 	
-	Nếu EXP tích lũy vượt quá mốc tiếp theo, thực thể sẽ tự động lên cấp
-	thông qua process_level_up.
-
-	- entity: Thực thể nhận kinh nghiệm (Entity).
-	- amount: Lượng kinh nghiệm nhận được (int).
+	Args:
+		entity (Entity): Thực thể nhận kinh nghiệm.
+		amount (int): Lượng kinh nghiệm nhận được.
+	Returns: Không có
 	"""
 	if entity == null or entity.level >= MAX_LEVEL:
 		return
@@ -41,18 +40,15 @@ static func gain_exp(entity: Entity, amount: int):
 		entity.current_exp -= entity.next_level_exp
 		process_level_up(entity)
 
+# ── Xử Lý Lên Cấp ──────────────────────────────────────────────────────────
+
 static func process_level_up(entity: Entity):
 	"""
-	Thực hiện các thay đổi khi thực thể lên một cấp độ mới.
-
-	Quy trình bao gồm:
-	- Tăng Skill Points (3 cho Player, 2 cho Quái).
-	- Tăng chỉ số cơ bản (5% growth, giảm còn 2% sau Soft Cap lv 50).
-	- Áp dụng Hard Cap chỉ số từ định nghĩa trong Entity.
-	- Hồi phục đầy HP và cập nhật EXP curve (x1.2 hoặc x1.5 sau lv 50).
-	- Tự động nâng cấp chỉ số cho quái vật.
-
-	- entity: Thực thể lên cấp (Entity).
+	Thực hiện các thay đổi chỉ số khi thực thể lên một cấp độ mới.
+	
+	Args:
+		entity (Entity): Thực thể vừa được lên cấp.
+	Returns: Không có
 	"""
 	if entity == null: return
 	
@@ -96,13 +92,12 @@ static func process_level_up(entity: Entity):
 
 static func set_initial_level(entity: Entity, target_level: int):
 	"""
-	Thiết lập cấp độ ban đầu cho một thực thể (thường dùng khi spawn).
-
-	Lên cấp hàng loạt cho đến khi đạt target_level và đảm bảo SP
-	được phân bổ chính xác cho quái vật.
-
-	- entity: Thực thể cần thiết lập (Entity).
-	- target_level: Cấp độ đích muốn đạt tới (int).
+	Thiết lập cấp độ ban đầu cho một thực thể bằng cách lặp vòng lên cấp ảo.
+	
+	Args:
+		entity (Entity): Thực thể cần thiết lập.
+		target_level (int): Cấp độ đích muốn đạt tới.
+	Returns: Không có
 	"""
 	if entity == null:
 		return
@@ -125,12 +120,10 @@ static func set_initial_level(entity: Entity, target_level: int):
 		
 	entity.current_exp = 0
 
-static func _auto_upgrade_monster(entity: Entity):
-	"""
-	Tự động phân bổ điểm kỹ năng (SP) cho quái vật vào các chỉ số ngẫu nhiên.
+# ── Nâng Cấp Tự Động ───────────────────────────────────────────────────────
 
-	- entity: Thực thể quái vật (Entity).
-	"""
+# Tự động phân bổ ngẫu nhiên điểm kỹ năng (SP) cho quái vật
+static func _auto_upgrade_monster(entity: Entity):
 	var stats = UpgradeManager.UPGRADE_AMOUNTS.keys()
 	var attempts = 0
 	while entity.skill_points >= UpgradeManager.UPGRADE_COST and attempts < 100:

@@ -1,13 +1,19 @@
 extends CanvasLayer
 
 """
-DialogueManager: Trình điều phối (Controller) hệ thống đối thoại.
+Tóm tắt: DialogueManager là trình điều phối luồng logic (Controller) của hệ thống hội thoại.
 
-Lớp này quản lý luồng dữ liệu hội thoại, theo dõi chỉ số dòng thoại hiện tại 
-và xử lý các sự kiện đầu vào. Toàn bộ phần hiển thị được giao cho DialogueUI.
+Chức năng chính:
+- Lưu trữ danh sách các câu thoại hiện tại và theo dõi tiến trình đọc (index).
+- Tiếp nhận dữ liệu cấu hình để hiển thị Menu lựa chọn (Choices).
+- Bắt và xử lý các sự kiện đầu vào (Click chuột, Touch màn hình, phím Enter/Space) để sang câu tiếp theo.
+- Kích hoạt tín hiệu `choice_made` và gọi hàm callback khi chuỗi hội thoại kết thúc.
+- Hoạt động độc lập với logic vẽ UI (được đảm nhiệm bởi DialogueUI).
 """
 
-# ── Trạng thái (State) ───────────────────────────────────────────────────────
+# ── Trạng Thái & Biến ──────────────────────────────────────────────────────
+
+
 var current_dialogue: Array = []
 var index: int   = 0
 var active: bool = false
@@ -16,9 +22,11 @@ var _callback: Callable
 
 signal choice_made(index: int)
 
-# ── Thành phần hiển thị ──────────────────────────────────────────────────────
 var _ui: DialogueUI
 
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
+# Khởi tạo giao diện UI
 func _ready() -> void:
 	layer = 100
 	visible = false
@@ -28,9 +36,17 @@ func _ready() -> void:
 	_ui.choice_selected.connect(_on_choice_selected)
 	_ui.get_node("DialogueLayer/Clicker").pressed.connect(_on_clicker_pressed)
 
-# ── API Công khai ──────────────────────────────────────────────────────────
+# ── API Công Khai ──────────────────────────────────────────────────────────
 
 func play_dialogue(lines: Array, on_complete: Callable = Callable()) -> void:
+	"""
+	Khởi chạy chuỗi hội thoại mới và hiển thị ra màn hình.
+	
+	Args:
+		lines (Array): Mảng các dòng thoại (Dictionary) đã được chuẩn hóa.
+		on_complete (Callable): Hàm callback chạy sau khi hội thoại kết thúc.
+	Returns: Không có
+	"""
 	if active or lines.is_empty(): 
 		if on_complete.is_valid(): on_complete.call()
 		return
@@ -45,6 +61,13 @@ func play_dialogue(lines: Array, on_complete: Callable = Callable()) -> void:
 	_show_current_line()
 
 func show_choice(options: Array):
+	"""
+	Hiển thị danh sách các tùy chọn cho người chơi chọn lựa.
+	
+	Args:
+		options (Array): Danh sách các lựa chọn dạng chuỗi văn bản.
+	Returns: Không có
+	"""
 	active = false
 	_ui.clear()
 	visible = true
@@ -52,8 +75,9 @@ func show_choice(options: Array):
 	GameManager.start_dialogue()
 	_ui.display_choices(options)
 
-# ── Điều phối dòng chảy ─────────────────────────────────────────────────────
+# ── Điều Phối Luồng ────────────────────────────────────────────────────────
 
+# Xử lý nút bấm trên bàn phím/tay cầm
 func _input(event: InputEvent):
 	if _in_choice or not active: return
 	
@@ -61,10 +85,12 @@ func _input(event: InputEvent):
 		get_viewport().set_input_as_handled()
 		_advance_dialogue()
 
+# Xử lý chạm/click trên màn hình
 func _on_clicker_pressed():
 	if _in_choice or not active: return
 	_advance_dialogue()
 
+# Chuyển sang dòng thoại tiếp theo
 func _advance_dialogue():
 	index += 1
 	if index < current_dialogue.size():
@@ -72,10 +98,12 @@ func _advance_dialogue():
 	else:
 		_finish()
 
+# Hiển thị dòng thoại hiện tại
 func _show_current_line():
 	if index < current_dialogue.size():
 		_ui.display_line(current_dialogue[index])
 
+# Xử lý sự kiện khi người chơi chọn một lựa chọn
 func _on_choice_selected(idx: int):
 	_in_choice = false
 	if not active:
@@ -83,6 +111,7 @@ func _on_choice_selected(idx: int):
 		GameManager.end_dialogue()
 	choice_made.emit(idx)
 
+# Kết thúc và đóng giao diện hội thoại
 func _finish():
 	active = false
 	visible = false

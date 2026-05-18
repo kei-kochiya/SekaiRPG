@@ -1,37 +1,40 @@
 extends CanvasLayer
 
 """
-PauseMenu: Hệ thống Menu tạm dừng của trò chơi.
+Tóm tắt: PauseMenu là hệ thống Menu tạm dừng toàn cục của trò chơi.
 
-Cung cấp các chức năng: Tiếp tục, Lưu game, Xem hướng dẫn và Thoát ra Menu chính.
-Menu này hoạt động độc lập với trạng thái Pause của game để người chơi vẫn có thể tương tác UI.
+Chức năng chính:
+- Cung cấp giao diện tạm dừng game, hỗ trợ hoạt động bất chấp `get_tree().paused = true`.
+- Quản lý các chức năng: Tiếp tục, Lưu/Tải nhanh, Xem Cẩm nang chiến đấu (Guide), Cài đặt hệ thống.
+- Cung cấp bảng Options chuyên sâu để tinh chỉnh Âm lượng, Tốc độ trận đấu, và bật/tắt tính năng Bỏ qua trận đấu (Skip Battle).
+- Hỗ trợ cơ chế nhập mật khẩu (Secret Code) để mở khóa các tùy chọn ẩn.
 """
 
-# ── Biến tham chiếu ────────────────────────────────────────────────────────
+# ── Biến Tham Chiếu ────────────────────────────────────────────────────────
+
 var _root: Control
 var _panel: PanelContainer
 var _guide_panel: PanelContainer
 var _options_panel: PanelContainer
 var _pw_dialog: PanelContainer
 
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
+# Khởi tạo Menu tạm dừng
 func _ready():
-	"""
-	Khởi tạo cấu hình ban đầu cho Menu tạm dừng.
-	"""
-	process_mode = Node.PROCESS_MODE_ALWAYS # Cho phép hoạt động ngay cả khi game bị pause
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 130
 	visible = false
 	_build_ui()
 
+# ── Xây Dựng Cấu Trúc UI ───────────────────────────────────────────────────
+
+# Xây dựng cây node giao diện
 func _build_ui():
-	"""
-	Xây dựng cây node giao diện cho Menu tạm dừng.
-	"""
 	_root = Control.new()
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(_root)
 	
-	# Hiệu ứng làm mờ nền
 	var dim = ColorRect.new()
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.color = Color(0, 0, 0, 0.5)
@@ -70,7 +73,6 @@ func _build_ui():
 	vbox.add_child(_create_button("Tùy chọn", _on_options))
 	vbox.add_child(_create_button("Thoát ra Menu", _on_quit))
 
-	# --- Bảng Hướng dẫn (Guide Panel) ---
 	_guide_panel = PanelContainer.new()
 	_guide_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_guide_panel.offset_left = 50
@@ -86,7 +88,6 @@ func _build_ui():
 	_guide_panel.add_theme_stylebox_override("panel", gsb)
 	_root.add_child(_guide_panel)
 
-	# --- Bảng Tùy chọn (Options Panel) ---
 	_options_panel = PanelContainer.new()
 	_options_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_options_panel.offset_left = -200; _options_panel.offset_right = 200
@@ -101,15 +102,14 @@ func _build_ui():
 	_options_panel.add_theme_stylebox_override("panel", osb)
 	_root.add_child(_options_panel)
 
+# ── Xử Lý Bảng Hướng Dẫn ───────────────────────────────────────────────────
+
+# Xử lý hiển thị bảng hướng dẫn
 func _on_guide():
-	"""
-	Xử lý khi mở bảng hướng dẫn nâng cao.
-	"""
 	if _guide_panel.visible:
 		_guide_panel.visible = false
 		return
 		
-	# Xóa nội dung cũ để xây dựng lại (tránh trùng lặp)
 	for child in _guide_panel.get_children():
 		child.queue_free()
 		
@@ -168,6 +168,8 @@ func _on_guide():
 	
 	_guide_panel.visible = true
 
+# ── Xử Lý Bảng Tùy Chọn ────────────────────────────────────────────────────
+
 func show_options(from_main_menu: bool = false):
 	visible = true
 	_root.visible = true
@@ -198,7 +200,6 @@ func _build_options_vbox(from_main_menu: bool):
 	title.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 	vbox.add_child(title)
 	
-	# --- Fast Battle Option ---
 	var hb_fast = HBoxContainer.new()
 	vbox.add_child(hb_fast)
 	
@@ -216,7 +217,6 @@ func _build_options_vbox(from_main_menu: bool):
 	)
 	hb_fast.add_child(check)
 	
-	# --- Volume Option ---
 	var v_vol = VBoxContainer.new()
 	vbox.add_child(v_vol)
 	
@@ -237,7 +237,6 @@ func _build_options_vbox(from_main_menu: bool):
 	)
 	v_vol.add_child(slider)
 	
-	# --- Skip Battle Option ---
 	var hb_skip = HBoxContainer.new()
 	vbox.add_child(hb_skip)
 	
@@ -259,14 +258,12 @@ func _build_options_vbox(from_main_menu: bool):
 	)
 	hb_skip.add_child(btn_skip)
 	
-	# --- Nút TẢI GAME chỉ hiện khi mở từ Main Menu ---
 	if from_main_menu:
 		var btn_load = _create_button("Tải Game (Load Custom Save)", func():
 			_on_custom_load()
 		)
 		vbox.add_child(btn_load)
 		
-	# --- Close Button ---
 	var close = _create_button("Đóng", func():
 		_options_panel.visible = false
 		if from_main_menu:
@@ -310,10 +307,10 @@ func _on_custom_save():
 	add_child(file_dialog)
 	file_dialog.popup_centered(Vector2i(700, 500))
 
+# ── Tiện Ích Khác ──────────────────────────────────────────────────────────
+
+# Hiển thị hộp thoại nhập mật khẩu
 func _show_password_dialog(target_check: CheckButton):
-	"""
-	Hiển thị hộp thoại nhập mật khẩu để mở khóa chức năng Skip Battle.
-	"""
 	if _pw_dialog: _pw_dialog.queue_free()
 	
 	_pw_dialog = PanelContainer.new()
@@ -337,7 +334,7 @@ func _show_password_dialog(target_check: CheckButton):
 	vbox.add_child(lbl)
 	
 	var edit = LineEdit.new()
-	edit.secret = true # Ẩn mật khẩu
+	edit.secret = true
 	edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	edit.placeholder_text = "****"
 	vbox.add_child(edit)
@@ -371,10 +368,8 @@ func _show_password_dialog(target_check: CheckButton):
 	edit.text_submitted.connect(func(_t): on_confirm.call())
 	btn_cancel.pressed.connect(func(): _pw_dialog.queue_free())
 
+# Hàm tiện ích tạo nút bấm
 func _create_button(txt: String, callback: Callable) -> Button:
-	"""
-	Hàm tiện ích tạo các nút Menu với phong cách thống nhất.
-	"""
 	var btn = Button.new()
 	btn.text = txt
 	btn.add_theme_font_size_override("font_size", 18)
@@ -399,23 +394,24 @@ func _create_button(txt: String, callback: Callable) -> Button:
 	btn.pressed.connect(callback)
 	return btn
 
+# ── Điều Khiển ─────────────────────────────────────────────────────────────
+
+# Lắng nghe phím ESC để bật/tắt Menu
 func _input(event):
-	"""
-	Lắng nghe phím ESC (ui_cancel) để bật/tắt Menu.
-	"""
 	if event.is_action_pressed("ui_cancel"):
-		# Cho phép mở Menu khi không đang đối thoại
 		if not GameManager.is_in_dialogue:
 			toggle()
 
 func toggle():
 	"""
 	Chuyển đổi trạng thái hiển thị của Menu và trạng thái Pause của Game.
+	
+	Args: Không có
+	Returns: Không có
 	"""
 	visible = !visible
 	get_tree().paused = visible
 	if visible:
-		# Tự động focus nút đầu tiên để hỗ trợ điều khiển bằng phím
 		_panel.get_child(0).get_child(1).grab_focus() 
 
 func _on_resume():
@@ -423,7 +419,10 @@ func _on_resume():
 
 func _on_save():
 	"""
-	Lưu lại vị trí hiện tại của người chơi và các cờ sự kiện.
+	Lưu lại vị trí hiện tại của người chơi và lưu game.
+	
+	Args: Không có
+	Returns: Không có
 	"""
 	var player = get_tree().current_scene.find_child("OverworldPlayer", true, false)
 	if player:
@@ -435,6 +434,9 @@ func _on_save():
 func _on_quit():
 	"""
 	Thoát game và quay về Start Menu.
+	
+	Args: Không có
+	Returns: Không có
 	"""
 	visible = false
 	get_tree().paused = false

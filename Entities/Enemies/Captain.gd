@@ -2,9 +2,15 @@ extends Entity
 class_name Captain
 
 """
-Captain: Đội trưởng vệ binh, Boss chính tại Cảng (Harbor Boss).
-Có lượng máu và sát thương cực lớn, là thử thách lớn nhất cho người chơi ở giai đoạn đầu.
+Tóm tắt: Định nghĩa lớp kẻ địch Captain (Harbor Boss).
+
+Chức năng chính:
+- Khởi tạo chỉ số vượt trội (Boss) với lượng HP khổng lồ và ATK cao.
+- Thực thi kỹ năng [Xử Quyết]: Đòn tấn công đơn mục tiêu gây sát thương vật lý lớn.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Đội Trưởng"
@@ -20,6 +26,8 @@ func _init():
 	skills = [
 		{"name": "Xử Quyết", "method": "execution", "cooldown_turns": 1, "target": "enemy"}
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func execution(target: Entity):
 	# [Xử Quyết]: Đòn tấn công vật lý đơn mục tiêu.

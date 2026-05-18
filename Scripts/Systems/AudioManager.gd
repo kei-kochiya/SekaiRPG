@@ -1,11 +1,17 @@
 extends Node
 
 """
-AudioManager: Hệ thống quản lý âm nhạc nền toàn cục (Autoload).
+Tóm tắt: AudioManager là Node Autoload chịu trách nhiệm quản lý phát nhạc nền toàn cục.
 
-Xử lý việc chuyển đổi giữa các bài nhạc bằng hiệu ứng Fade In/Out.
-Không phát lại nếu bài hiện tại đang được phát (tránh ngắt mạch).
+Chức năng chính:
+- Duy trì việc phát nhạc nền (BGM) xuyên suốt các cảnh chơi mà không bị ngắt quãng.
+- Cung cấp tính năng chuyển đổi bài nhạc mượt mà thông qua hiệu ứng Fade In/Fade Out (Tween âm lượng).
+- Lưu trữ danh sách đường dẫn các bài nhạc thường dùng qua hằng số `TRACKS`.
+- Cung cấp API `update_volume` cho phép tùy chỉnh âm lượng tổng (Master Bus) thông qua Settings.
 """
+
+# ── Biến & Cấu Hình ────────────────────────────────────────────────────────
+
 
 var _player: AudioStreamPlayer
 var _current_track: String = ""
@@ -20,13 +26,26 @@ const TRACKS = {
 	"night": "night.mp3"
 }
 
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
+# Khởi tạo Node âm thanh
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_player = AudioStreamPlayer.new()
 	_player.bus = "Master"
 	add_child(_player)
 
+# ── Điều Khiển Phát Nhạc ───────────────────────────────────────────────────
+
 func play_music(track_name: String, fade_duration: float = 1.0):
+	"""
+	Phát một bài nhạc nền có sẵn trong thư mục Music.
+	
+	Args:
+		track_name (String): Tên định danh của bài nhạc.
+		fade_duration (float): Thời gian làm mờ khi chuyển bài (giây).
+	Returns: Không có
+	"""
 	if _current_track == track_name:
 		return
 	
@@ -40,7 +59,6 @@ func play_music(track_name: String, fade_duration: float = 1.0):
 		
 	_current_track = track_name
 	
-	# Đảm bảo nhạc tự động lặp lại (Loop)
 	if new_stream is AudioStreamMP3 or new_stream is AudioStreamWAV:
 		new_stream.loop = true
 	
@@ -60,6 +78,13 @@ func play_music(track_name: String, fade_duration: float = 1.0):
 		tween.tween_property(_player, "volume_db", 0, fade_duration)
 
 func stop_music(fade_duration: float = 1.0):
+	"""
+	Dừng phát nhạc nền hiện tại kèm hiệu ứng giảm âm dần.
+	
+	Args:
+		fade_duration (float): Thời gian làm mờ (giây) trước khi tắt hẳn.
+	Returns: Không có
+	"""
 	_current_track = ""
 	if fade_duration > 0 and _player.playing:
 		var tween = create_tween()
@@ -67,12 +92,10 @@ func stop_music(fade_duration: float = 1.0):
 		await tween.finished
 	_player.stop()
 
+# ── Cài Đặt Âm Lượng ───────────────────────────────────────────────────────
+
+# Cập nhật âm lượng tổng
 func update_volume(value: float):
-	"""
-	Cập nhật âm lượng tổng (Master) của toàn bộ game.
-	- value: Giá trị từ 0.0 (tắt) đến 1.0 (tối đa).
-	"""
 	var bus_index = AudioServer.get_bus_index("Master")
-	# Chuyển đổi linear sang decibel: 0.0 -> -80dB, 1.0 -> 0dB
 	var db = linear_to_db(max(value, 0.0001))
 	AudioServer.set_bus_volume_db(bus_index, db)

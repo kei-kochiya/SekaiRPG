@@ -22,10 +22,14 @@
 *   **Kịch bản phân nhánh (Scenario-based)**: Hệ thống chiến đấu hỗ trợ các kịch bản đặc biệt như Boss nhiều Phase, NPC cứu viện giữa trận, hoặc thay đổi đội hình tức thời.
 *   **Safehouse (Căn cứ)**: Nơi các nhân vật nghỉ ngơi, tương tác và trò chuyện. Bầu không khí và các đoạn hội thoại sẽ thay đổi linh hoạt theo tiến độ nhiệm vụ.
 
-⚙️ **Cơ chế Tiện ích**
+⚙️ **Cơ chế Tiện ích & Trải nghiệm di động**
+*   **Touch-optimized Mobile Controls**: Hỗ trợ joystick ảo di chuyển mượt mà, nút tương tác Overworld và nút Menu hệ thống được tối ưu hóa cho màn hình cảm ứng di động.
 *   **Auto-Leveling Quái vật**: Trò chơi tự động tính toán cấp độ kẻ địch dựa trên tiến trình cốt truyện để luôn duy trì độ khó vừa phải.
 *   **Skip Battle**: Chức năng bỏ qua trận đấu rảnh tay dành cho các trận đánh cày cuốc (Chỉ vô hiệu hóa ở các trận Boss cốt truyện).
 *   **Sandbox & Training**: Chế độ tự do cho phép người chơi thiết lập đội hình hai bên, chọn quái vật và cấp độ để luyện tập.
+
+📖 **Tài liệu Kỹ thuật Tự động**
+*   Trang tài liệu được sinh tự động trực tiếp từ mã nguồn GDScript, sử dụng giao diện trắng đen tối giản, thanh lịch, giúp nhà phát triển dễ dàng tra cứu API.
 
 ## 📁 Cấu trúc Dự án
 
@@ -37,6 +41,7 @@ Dự án được thiết kế theo kiến trúc **Domain-Driven**, dễ dàng b
 *   `Scripts/`: Chứa Lõi trò chơi (GameManager), Hệ thống tính toán (Damage, Turn, Level) và Battle Engine.
 *   `UI/`: Giao diện người dùng (Hội thoại, Menu, HUD trong trận đấu).
 *   `Assets/`: Tài nguyên hình ảnh và âm thanh (Kenney Assets).
+*   `docs/`: Trang tài liệu kỹ thuật tự động sinh từ GDScript (`docs/index.html`).
 
 ## 🚀 Hướng dẫn cài đặt
 

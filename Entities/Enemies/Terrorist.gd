@@ -2,8 +2,15 @@ extends Entity
 class_name Terrorist
 
 """
-Terrorist: Kẻ địch Khủng Bố xuất hiện trong sự kiện đường phố.
+Tóm tắt: Định nghĩa lớp kẻ địch Terrorist (Khủng Bố).
+
+Chức năng chính:
+- Khởi tạo chỉ số trung bình, không cung cấp điểm kinh nghiệm (gives_exp = false).
+- Thực thi kỹ năng [Xả Súng]: Tấn công liên thanh kèm xác suất gây Chảy Máu (Bleed).
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Khủng Bố"
@@ -20,6 +27,8 @@ func _init():
 	skills = [
 		{"name": "Xả Súng", "method": "gunshot", "cooldown_turns": 1, "target": "enemy"}
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func gunshot(target: Entity):
 	print(entity_name, " nổ súng liên thanh vào mục tiêu!")

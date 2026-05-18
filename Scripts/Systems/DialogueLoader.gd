@@ -1,24 +1,31 @@
 extends Node
 
 """
-DialogueLoader: Tải và quản lý dữ liệu hội thoại từ các tệp JSON.
+Tóm tắt: DialogueLoader là Node hệ thống có nhiệm vụ nạp và xử lý toàn bộ dữ liệu hội thoại từ các file JSON.
 
-Lớp này tự động quét thư mục 'res://Data/storyline/', tải toàn bộ các tệp JSON
-hội thoại và gộp chúng vào một kho lưu trữ tập trung. Nó cung cấp các phương thức
-để truy xuất danh sách lời thoại dựa trên từ khóa (key) đã được chuẩn hóa.
+Chức năng chính:
+- Tự động quét toàn bộ thư mục `res://Data/storyline/` lúc khởi động game.
+- Phân tích cú pháp (parse) và chuyển đổi các file JSON thành một Dictionary `_data` tập trung trên bộ nhớ.
+- Cung cấp API `get_lines(key)` để trích xuất và chuẩn hóa dữ liệu dòng thoại (xác định loại thoại, người nói, màu sắc, vị trí chân dung) cho `DialogueManager` sử dụng.
 """
+
+# ── Biến Lưu Trữ ───────────────────────────────────────────────────────────
+
 
 var _data: Dictionary = {}
 
+# ── Khởi Tạo & Tải Dữ Liệu ─────────────────────────────────────────────────
+
+# Khởi tạo loader
 func _ready() -> void:
-	"""
-	Khởi tạo loader và thực hiện tải toàn bộ dữ liệu hội thoại vào bộ nhớ.
-	"""
 	_load_json()
 
 func _load_json() -> void:
 	"""
 	Quét thư mục chứa hội thoại và tải tuần tự từng tệp JSON tìm thấy.
+	
+	Args: Không có
+	Returns: Không có
 	"""
 	var path = "res://Data/storyline/"
 	var dir = DirAccess.open(path)
@@ -35,9 +42,10 @@ func _load_json() -> void:
 func _load_single_file(file_path: String) -> void:
 	"""
 	Tải một tệp JSON đơn lẻ và gộp nội dung vào bộ nhớ đệm dùng chung.
-
+	
 	Args:
 		file_path (String): Đường dẫn tuyệt đối đến tệp JSON cần nạp.
+	Returns: Không có
 	"""
 	var f := FileAccess.open(file_path, FileAccess.READ)
 	if f == null:
@@ -54,22 +62,16 @@ func _load_single_file(file_path: String) -> void:
 	for key in new_data:
 		_data[key] = new_data[key]
 
+# ── API Truy Xuất ──────────────────────────────────────────────────────────
+
 func get_lines(key: String) -> Array:
 	"""
-	Lấy danh sách các dòng thoại tương ứng với một khóa (key) chỉ định.
-
-	Dữ liệu trả về được chuẩn hóa thành một mảng các Dictionary chứa:
-	- type: Loại hội thoại (dialogue/narrator).
-	- text: Nội dung chữ.
-	- name: Tên nhân vật hiển thị.
-	- speaker: Vị trí hiển thị (left/right).
-	- color: Đối tượng Color đã được chuyển đổi từ mã Hex.
-
+	Lấy và chuẩn hóa danh sách các dòng thoại tương ứng với một khóa (key) chỉ định.
+	
 	Args:
 		key (String): Khóa định danh hội thoại trong file JSON.
-
 	Returns:
-		Array: Mảng các dòng thoại đã chuẩn hóa. Trả về mảng trống nếu không tìm thấy key.
+		Array: Mảng các dòng thoại đã chuẩn hóa (chứa type, text, name, speaker, color). Trả về mảng trống nếu không tìm thấy.
 	"""
 	if not _data.has(key):
 		return []

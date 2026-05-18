@@ -1,23 +1,23 @@
 extends CanvasLayer
 
 """
-MobileControls: Cung cấp điều khiển cảm ứng cho nền tảng di động.
+Tóm tắt: MobileControls quản lý hệ thống phím điều khiển cảm ứng cho nền tảng di động.
 
-Bao gồm:
-- Joystick ảo ở góc dưới bên trái để di chuyển.
-- Nút Menu ở góc trên bên trái.
-- Nút Tương tác (Interact) hiện lên khi ở gần NPC/Cửa.
-
-Chỉ hiển thị trên các nền tảng di động hoặc khi có hỗ trợ cảm ứng.
+Chức năng chính:
+- Hiển thị Joystick ảo và cụm nút hành động (Interact, Menu) nếu phát hiện thiết bị hỗ trợ Touch.
+- Tự động ẩn/hiện giao diện thông minh dựa trên trạng thái game (đang mở Menu, đang hội thoại, trong trận chiến).
+- Tiếp nhận thao tác Drag/Touch và quy đổi thành các Input Event tiêu chuẩn (ui_up, ui_down, ui_accept) để tương thích chéo với bộ code PC.
 """
 
-# ── Cấu hình ────────────────────────────────────────────────────────────────
+# ── Cấu Hình ───────────────────────────────────────────────────────────────
+
+
 const JOYSTICK_RADIUS = 80.0
 const HANDLE_RADIUS = 40.0
 const INTERACT_BUTTON_SIZE = Vector2(100, 100)
 const MENU_BUTTON_SIZE = Vector2(80, 80)
 
-# ── Biến thành phần ─────────────────────────────────────────────────────────
+# ── Biến Thành Phần ────────────────────────────────────────────────────────
 var _is_mobile: bool = false
 var _root: Control
 var _joystick_base: Control
@@ -28,6 +28,9 @@ var _btn_interact: TextureButton
 var _is_dragging_joystick: bool = false
 var _current_dir: Vector2 = Vector2.ZERO
 
+# ── Khởi Tạo & Vòng Lặp ────────────────────────────────────────────────────
+
+# Khởi tạo giao diện phím ảo nếu đang trên Mobile
 func _ready():
 	_check_platform()
 	
@@ -39,6 +42,7 @@ func _ready():
 	layer = 120
 	_setup_ui()
 
+# Kiểm tra và ẩn/hiện bộ phím ảo tùy theo ngữ cảnh game
 func _process(_delta):
 	if not _is_mobile: return
 	
@@ -53,19 +57,16 @@ func _process(_delta):
 			_reset_joystick()
 		return
 	
-	# Ẩn controls khi đang hội thoại hoặc menu tạm dừng đang mở
 	var is_paused = get_tree().paused
 	var in_dialogue = GameManager.is_in_dialogue
 	var in_battle = current_scene.name == "BattleRoot" or current_scene.scene_file_path == "res://BattleSystem/BattleScene.tscn"
 	
-	# Toàn bộ UI mobile (bao gồm nút Menu) ẩn khi có hội thoại hoặc đang pause
 	if (in_dialogue or is_paused) and _root.visible:
 		_root.visible = false
 		_reset_joystick()
 	elif not (in_dialogue or is_paused) and not _root.visible:
 		_root.visible = true
 	
-	# Riêng Joystick và nút Interact thì ẩn khi đang trong trận đấu
 	if in_battle:
 		if _joystick_base.visible: 
 			_joystick_base.visible = false
@@ -73,34 +74,31 @@ func _process(_delta):
 		if _btn_interact.visible: _btn_interact.visible = false
 	else:
 		if not _joystick_base.visible: _joystick_base.visible = true
-		# Nút interact do InteractableZone quản lý nên không ép hiện ở đây
 
+# Xác định thiết bị có hỗ trợ cảm ứng hay không
 func _check_platform():
 	var os = OS.get_name()
-	# Cho phép test trên PC nếu có touch hoặc debug
 	_is_mobile = (os == "Android" or os == "iOS" or DisplayServer.is_touchscreen_available())
-	
-	# Debug: uncomment line below to test on PC
-	# _is_mobile = true 
 
+# ── Xây Dựng UI ────────────────────────────────────────────────────────────
+
+# Khởi tạo toàn bộ cấu trúc Node UI
 func _setup_ui():
 	_root = Control.new()
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_root)
 	
-	# 1. Joystick Ảo
 	_joystick_base = Control.new()
 	_joystick_base.custom_minimum_size = Vector2(JOYSTICK_RADIUS * 2, JOYSTICK_RADIUS * 2)
 	_joystick_base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_joystick_base.set_begin(Vector2(150, -250)) # Position relative to bottom-left
+	_joystick_base.set_begin(Vector2(150, -250))
 	_root.add_child(_joystick_base)
 	
 	var base_circle = ColorRect.new()
 	base_circle.size = Vector2(JOYSTICK_RADIUS * 2, JOYSTICK_RADIUS * 2)
 	base_circle.position = -base_circle.size / 2
 	base_circle.color = Color(1, 1, 1, 0.15)
-	# Bo tròn giả lập (nếu có texture thì tốt hơn, nhưng dùng ColorRect cho gọn)
 	_joystick_base.add_child(base_circle)
 	
 	_joystick_handle = ColorRect.new()
@@ -109,14 +107,12 @@ func _setup_ui():
 	_joystick_handle.color = Color(1, 1, 1, 0.4)
 	_joystick_base.add_child(_joystick_handle)
 	
-	# 2. Nút Menu
 	_btn_menu = TextureButton.new()
 	_btn_menu.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
 	_btn_menu.custom_minimum_size = MENU_BUTTON_SIZE
 	_btn_menu.ignore_texture_size = true
 	_btn_menu.stretch_mode = TextureButton.STRETCH_SCALE
 	
-	# Đặt ở góc trên bên phải
 	_btn_menu.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	_btn_menu.offset_left = -110
 	_btn_menu.offset_top = 20
@@ -125,7 +121,6 @@ func _setup_ui():
 	
 	_btn_menu.pressed.connect(_on_menu_pressed)
 	
-	# Chữ MENU
 	var menu_lbl = Label.new()
 	menu_lbl.text = "MENU"
 	menu_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -138,14 +133,12 @@ func _setup_ui():
 	
 	_root.add_child(_btn_menu)
 	
-	# 3. Nút Tương tác
 	_btn_interact = TextureButton.new()
 	_btn_interact.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
 	_btn_interact.custom_minimum_size = INTERACT_BUTTON_SIZE
 	_btn_interact.ignore_texture_size = true
 	_btn_interact.stretch_mode = TextureButton.STRETCH_SCALE
 	
-	# Đặt ở góc dưới phải
 	_btn_interact.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	_btn_interact.offset_left = -150
 	_btn_interact.offset_top = -150
@@ -167,6 +160,9 @@ func _setup_ui():
 	
 	_root.add_child(_btn_interact)
 
+# ── Xử Lý Joystick ─────────────────────────────────────────────────────────
+
+# Đón sự kiện kéo/chạm để xử lý Joystick
 func _input(event):
 	if not _is_mobile or not visible: return
 	
@@ -184,6 +180,7 @@ func _input(event):
 	elif event is InputEventScreenDrag and _is_dragging_joystick:
 		_update_joystick(event.position)
 
+# Cập nhật vị trí của tâm Joystick và tính góc
 func _update_joystick(touch_pos: Vector2):
 	var diff = touch_pos - _joystick_base.global_position
 	if diff.length() > JOYSTICK_RADIUS:
@@ -194,15 +191,21 @@ func _update_joystick(touch_pos: Vector2):
 	var dir = diff / JOYSTICK_RADIUS
 	_apply_movement_input(dir)
 
+# Đặt lại Joystick về chính giữa
 func _reset_joystick():
 	_joystick_handle.position = -_joystick_handle.size / 2
 	_apply_movement_input(Vector2.ZERO)
 
 func _apply_movement_input(dir: Vector2):
-	# Deadzone
+	"""
+	Áp dụng hướng di chuyển ảo vào hệ thống phím tắt Godot (InputMap).
+	
+	Args:
+		dir (Vector2): Vector hướng di chuyển (giá trị -1 đến 1).
+	Returns: Không có
+	"""
 	var threshold = 0.2
 	
-	# Release old actions
 	if _current_dir.x > threshold: Input.action_release("ui_right")
 	if _current_dir.x < -threshold: Input.action_release("ui_left")
 	if _current_dir.y > threshold: Input.action_release("ui_down")
@@ -210,18 +213,20 @@ func _apply_movement_input(dir: Vector2):
 	
 	_current_dir = dir
 	
-	# Press new actions
 	if dir.x > threshold: Input.action_press("ui_right")
 	if dir.x < -threshold: Input.action_press("ui_left")
 	if dir.y > threshold: Input.action_press("ui_down")
 	if dir.y < -threshold: Input.action_press("ui_up")
 
+# ── Xử Lý Nút Bấm ──────────────────────────────────────────────────────────
+
+# Mở trình đơn Pause
 func _on_menu_pressed():
 	if not GameManager.is_in_dialogue:
 		PauseMenu.toggle()
 
+# Giả lập thao tác nhấn phím tương tác
 func _on_interact_pressed():
-	# Giả lập sự kiện phím Enter (ui_accept) một cách đầy đủ để Android nhận diện tốt hơn
 	var ev = InputEventAction.new()
 	ev.action = "ui_accept"
 	ev.pressed = true
@@ -234,6 +239,7 @@ func _on_interact_pressed():
 	ev_rel.pressed = false
 	Input.parse_input_event(ev_rel)
 
+# Ẩn/Hiện nút Tương tác (Interact) theo khoảng cách vùng
 func set_interact_visible(p_is_visible: bool):
 	if not _is_mobile: return
 	if _btn_interact:

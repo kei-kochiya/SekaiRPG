@@ -2,29 +2,37 @@ extends Node
 class_name ScreenShake
 
 """
-ScreenShake: Cung cấp hiệu ứng rung màn hình và dừng hình (Hitstop).
+Tóm tắt: ScreenShake cung cấp hiệu ứng rung màn hình và dừng hình (Hitstop) cho các pha hành động.
 
-Sử dụng để tăng cảm giác va chạm và sự kịch tính trong các pha hành động
-hoặc khi nhân vật nhận sát thương mạnh.
+Chức năng chính:
+- Xử lý dịch chuyển (offset) ngẫu nhiên Node cha (thường là Camera hoặc khung hình chính) để tạo cảm giác rung lắc.
+- Cung cấp API `shake` để tùy chỉnh cường độ (intensity) và thời lượng (duration) của rung chấn.
+- Cung cấp API `hitstop` để làm chậm thời gian cục bộ (Engine.time_scale) nhằm tạo độ nặng cho đòn đánh.
 """
+
+# ── Biến Cấu Hình ──────────────────────────────────────────────────────────
+
 
 var shake_intensity: float = 0.0
 var shake_timer: float = 0.0
 var original_offset: Vector2 = Vector2.ZERO
 
+# ── Khởi Tạo & Vòng Lặp ────────────────────────────────────────────────────
+
+# Tắt quá trình xử lý rung mặc định
 func _ready():
-	"""
-	Ban đầu tắt quá trình xử lý rung để tiết kiệm tài nguyên.
-	"""
 	set_process(false)
+
+# ── API Kích Hoạt ──────────────────────────────────────────────────────────
 
 func shake(intensity: float = 5.0, duration: float = 0.2):
 	"""
 	Kích hoạt hiệu ứng rung màn hình.
-
+	
 	Args:
 		intensity (float): Độ mạnh của cú rung (pixels).
 		duration (float): Thời gian rung (giây).
+	Returns: Không có
 	"""
 	shake_intensity = intensity
 	shake_timer = duration
@@ -33,19 +41,19 @@ func shake(intensity: float = 5.0, duration: float = 0.2):
 func hitstop(duration: float = 0.1):
 	"""
 	Hiệu ứng dừng hình chớp nhoáng (giảm time_scale) để tạo cảm giác lực va chạm mạnh.
-
+	
 	Args:
 		duration (float): Thời gian dừng (giây thực tế).
+	Returns: Không có
 	"""
 	Engine.time_scale = 0.05
-	# Sử dụng timer bỏ qua time_scale để đếm thời gian thực
 	await get_tree().create_timer(duration, true, false, true).timeout
 	Engine.time_scale = 1.0
 
+# ── Xử Lý Frame ────────────────────────────────────────────────────────────
+
+# Xử lý dịch chuyển vị trí ngẫu nhiên của Node cha
 func _process(delta):
-	"""
-	Xử lý việc dịch chuyển vị trí ngẫu nhiên của Node cha để tạo hiệu ứng rung.
-	"""
 	var parent = get_parent()
 	if not parent:
 		set_process(false)

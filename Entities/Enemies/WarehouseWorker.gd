@@ -2,11 +2,15 @@ extends Entity
 class_name WarehouseWorker
 
 """
-WarehouseWorker: Nhân viên kho hàng biến chất.
+Tóm tắt: Định nghĩa lớp kẻ địch WarehouseWorker (Nhân viên kho hàng biến chất).
 
-Loại kẻ địch này có chỉ số phòng thủ và máu cao hơn Robot Huấn Luyện, 
-phản ánh tính chất công việc nặng nhọc trong kho.
+Chức năng chính:
+- Khởi tạo chỉ số với phòng thủ cao.
+- Thực thi kỹ năng [Ném Thùng Hàng]: Tấn công vật lý kèm xác suất gây Làm Chậm (Slow).
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Nhân Viên Kho"
@@ -22,6 +26,8 @@ func _init():
 	skills = [
 		{"name": "Ném Thùng Hàng", "method": "throw_box", "cooldown_turns": 2, "target": "enemy"}
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func throw_box(target: Entity):
 	# [Ném Thùng Hàng]: Tấn công vật lý + 30% tỷ lệ gây Slow 2 lượt (giảm 20% SPD).

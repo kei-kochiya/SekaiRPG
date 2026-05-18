@@ -2,11 +2,13 @@ extends Node
 class_name Entity
 
 """
-Entity: Lớp cơ sở cho toàn bộ các nhân vật và kẻ địch trong game.
+Tóm tắt: Entity là lớp cơ sở (Base Class) cho mọi thực thể tham gia chiến đấu (Nhân vật và Kẻ địch).
 
-Lớp này quản lý các chỉ số cơ bản (HP, ATK, DEF...), trạng thái (Status Effects),
-hệ thống kỹ năng và logic chiến đấu cốt lõi như nhận sát thương, hồi máu.
-Mọi thực thể tham gia chiến đấu đều phải kế thừa từ lớp này.
+Chức năng chính:
+- Định nghĩa toàn bộ chỉ số cốt lõi (HP, ATK, DEF, SPD, Type) và các biến hỗ trợ thăng cấp.
+- Quản lý thanh hành động (Action Gauge) để sắp xếp thứ tự đánh trong lượt.
+- Quản lý danh sách các hiệu ứng trạng thái (Status Effects) như Poison, Bleed, Stun và thời gian hồi chiêu (Cooldown).
+- Cung cấp các phương thức chiến đấu tiêu chuẩn: nhận sát thương (take_damage), hồi máu (heal) và xử lý hiệu ứng.
 """
 
 # ── Tín hiệu (Signals) ─────────────────────────────────────────────────────
@@ -58,10 +60,13 @@ var stat_caps: Dictionary = {
 
 func take_damage(amount: int, damage_type: String = "physical") -> bool:
 	"""
-	Xử lý việc thực thể nhận sát thương và kiểm tra còn sống.
-	- amount: Lượng sát thương nhận vào (int).
-	- damage_type: Loại sát thương (String - 'physical', 'pure', 'dot').
-	- Return: True nếu thực thể chết (HP = 0), ngược lại False (bool).
+	Xử lý việc thực thể nhận sát thương và kiểm tra trạng thái sống còn.
+	
+	Args:
+		amount (int): Lượng sát thương nhận vào.
+		damage_type (String): Loại sát thương (physical, pure, dot).
+	Returns: 
+		bool: True nếu thực thể chết (HP = 0), ngược lại False.
 	"""
 	current_hp -= amount
 	current_hp = clamp(current_hp, 0, max_hp)
@@ -77,8 +82,10 @@ func take_damage(amount: int, damage_type: String = "physical") -> bool:
 func heal(amount: int):
 	"""
 	Hồi phục HP cho thực thể nếu còn sống.
-	- amount: Lượng máu hồi phục (int).
-	- Return: Không có.
+	
+	Args:
+		amount (int): Lượng máu hồi phục.
+	Returns: Không có
 	"""
 	if current_hp <= 0: return
 	var actual = min(amount, max_hp - current_hp)
@@ -92,8 +99,10 @@ func heal(amount: int):
 func add_status(status: Dictionary):
 	"""
 	Thêm hiệu ứng trạng thái mới và xử lý logic cộng dồn/ghi đè.
-	- status: Dictionary chứa thông tin hiệu ứng (type, duration...).
-	- Return: Không có.
+	
+	Args:
+		status (Dictionary): Dictionary chứa thông tin hiệu ứng (type, duration...).
+	Returns: Không có
 	"""
 	var type_name = status.get("type", "Unknown")
 	
@@ -107,8 +116,6 @@ func add_status(status: Dictionary):
 	if type_name == "Bleed":
 		var bleed_count = get_status_count("Bleed")
 		if bleed_count >= 5:
-			# Tìm stack có duration thấp nhất để thay thế hoặc đơn giản là không thêm
-			# Ở đây ta chọn không thêm nếu đã đạt tối đa 5 stack
 			return
 			
 	active_statuses.append(status)
@@ -147,7 +154,14 @@ func clear_all_debuffs():
 	remove_statuses(to_remove)
 
 func refresh_status_duration(type_name: String, new_duration: int):
-	"""Cập nhật thời gian tồn tại cho tất cả các stack của một loại trạng thái."""
+	"""
+	Cập nhật thời gian tồn tại cho tất cả các stack của một loại trạng thái.
+	
+	Args:
+		type_name (String): Tên loại trạng thái.
+		new_duration (int): Thời gian mới (tính theo lượt).
+	Returns: Không có
+	"""
 	var changed = false
 	for s in active_statuses:
 		if s["type"] == type_name:
@@ -161,8 +175,11 @@ func refresh_status_duration(type_name: String, new_duration: int):
 func can_use_skill(skill_name: String) -> bool:
 	"""
 	Kiểm tra kỹ năng có sẵn sàng để sử dụng hay không.
-	- skill_name: Tên kỹ năng cần kiểm tra (String).
-	- Return: True nếu dùng được, ngược lại False (bool).
+	
+	Args:
+		skill_name (String): Tên kỹ năng cần kiểm tra.
+	Returns: 
+		bool: True nếu dùng được, ngược lại False.
 	"""
 	if skills_disabled: return false
 	return CooldownManager.is_skill_ready(self , skill_name)

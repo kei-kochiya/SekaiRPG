@@ -2,11 +2,17 @@ extends Entity
 class_name Mafuyu
 
 """
-Mafuyu: Nhân vật hệ Mysterious, sở hữu chỉ số toàn diện và sát thương diện rộng (AoE).
+Tóm tắt: Định nghĩa nhân vật Mafuyu (Hệ Mysterious), quản lý chỉ số và bộ kỹ năng chiến đấu.
 
-Lối chơi của Mafuyu tập trung vào việc duy trì sát thương duy trì thông qua 
-hiệu ứng Chảy máu (Bleed) và dọn dẹp kẻ địch bằng các đòn đánh diện rộng mạnh mẽ.
+Chức năng chính:
+- Khởi tạo các chỉ số sức mạnh cơ bản (HP, ATK, DEF, SPD) và danh sách kỹ năng (thiên hướng sát thương AoE và Bleed).
+- Thực thi logic kỹ năng [Lưỡi Dao Vô Hồn]: Đòn đơn sát thương kèm trạng thái Chảy Máu (Bleed).
+- Thực thi logic kỹ năng [Vực Thẳm Vô Định]: Đánh ngẫu nhiên nhiều mục tiêu kèm hiệu ứng Bleed.
+- Thực thi logic tuyệt kỹ [Lost World]: Gây Pure Damage quy mô lớn dựa trên lượng máu đã mất của kẻ địch, và lây lan dịch bệnh (Bleed) cho cả hai phe nếu có kẻ sống sót.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Mafuyu"
@@ -24,6 +30,8 @@ func _init():
 		{"name": "Vực Thẳm Vô Định", "method": "freezing_void", "cooldown_turns": 3, "target": "all_enemies", "details": "Gây DMG và 2 stack Bleed cho 2 kẻ địch bất kỳ."},
 		{"name": "Lost World", "method": "lost_world", "initial_cooldown": 5, "once_per_battle": true, "target": "all_enemies", "details": "Sát thương scale theo máu đã mất. Nếu có người sống sót, gây 2 stack Bleed cho cả 2 phe."},
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func numb_blade(target: Entity):
 	# [Lưỡi Dao Vô Hồn]: Đòn đơn vật lý (1.25x ATK) + 1 stack Bleed (3 lượt).

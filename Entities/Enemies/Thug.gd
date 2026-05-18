@@ -2,10 +2,15 @@ extends Entity
 class_name Thug
 
 """
-Thug (Giang Hồ): Kẻ địch xuất hiện tại Quán Cafe.
+Tóm tắt: Định nghĩa lớp kẻ địch Thug (Giang Hồ).
 
-Sức mạnh trung bình, có khả năng gây chảy máu (Bleed) nhẹ.
+Chức năng chính:
+- Khởi tạo chỉ số trung bình, xuất hiện trong các sự kiện đường phố.
+- Thực thi kỹ năng [Chém Ngang]: Tấn công vật lý kèm xác suất gây Chảy Máu (Bleed).
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Giang Hồ"
@@ -21,6 +26,8 @@ func _init():
 	skills = [
 		{"name": "Chém Ngang", "method": "slash_attack", "cooldown_turns": 1, "target": "enemy"}
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func slash_attack(target: Entity):
 	# [Chém Ngang]: Tấn công vật lý gây sát thương.

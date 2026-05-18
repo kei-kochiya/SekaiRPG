@@ -2,14 +2,17 @@ extends Node
 class_name StoryState
 
 """
-StoryState: Quản lý toàn bộ tiến trình cốt truyện, nhiệm vụ và các biến cờ (flags).
+Tóm tắt: StoryState là vùng nhớ chuyên dụng lưu trữ toàn bộ tiến trình và sự kiện cốt truyện.
 
-Lớp này đóng vai trò là một kho chứa dữ liệu tập trung cho trạng thái trò chơi, 
-tách biệt khỏi logic điều phối của GameManager. Hỗ trợ việc lưu trữ bền vững (persistence) 
-cho các sự kiện quan trọng trong thế giới Sekai.
+Chức năng chính:
+- Lưu trữ bộ từ điển `flags` chứa các biến boolean/int để theo dõi trạng thái nhiệm vụ, đối thoại và mở khóa.
+- Lưu trữ biến đếm (wave, kẻ địch tiêu diệt) cho các nhiệm vụ cày cuốc (Warehouse, Harbor).
+- Cung cấp API để `GameManager` dễ dàng thiết lập (set), đọc (get) và khôi phục (reset) trạng thái.
+- Hỗ trợ Serialize/Deserialize dữ liệu sang JSON để phục vụ việc Save/Load Game.
 """
 
-# ── Cờ Trạng thái Cốt truyện (Persistent Flags) ──────────────────────────────
+# ── Dữ Liệu Cờ Trạng Thái (Flags) ──────────────────────────────────────────
+
 var flags: Dictionary = {
 	"prologue_phase": 0,
 	"safehouse_intro_done": false,
@@ -46,24 +49,29 @@ var flags: Dictionary = {
 	"ena_released": false
 }
 
-# ── Tiến độ Nhiệm vụ Hiện tại (Volatile/Persistent) ─────────────────────────
 var warehouse_wave: int = 1
 var harbor_wave: int = 1
 var enemies_defeated: int = 0
 var harbor_guards_defeated: int = 0
 var harbor_route: String = ""
 
+# ── API Quản Lý Trạng Thái ─────────────────────────────────────────────────
+
+# Thiết lập giá trị cho một cờ trạng thái cụ thể.
 func set_flag(id: String, value: Variant):
-	#Thiết lập giá trị cho một cờ trạng thái cụ thể.
 	flags[id] = value
 
+# Lấy giá trị của một cờ trạng thái từ bộ nhớ.
 func get_flag(id: String, default: Variant = false) -> Variant:
-	#Lấy giá trị của một cờ trạng thái từ bộ nhớ.
 	return flags.get(id, default)
 
 func reset():
-	#Khôi phục toàn bộ tiến trình và dữ liệu nhiệm vụ về trạng thái mặc định.
-	#Dùng khi người chơi bắt đầu lại từ đầu hoặc reset màn chơi.
+	"""
+	Khôi phục toàn bộ tiến trình và dữ liệu nhiệm vụ về trạng thái mặc định.
+	
+	Args: Không có
+	Returns: Không có
+	"""
 	for key in flags:
 		if flags[key] is bool: flags[key] = false
 		elif flags[key] is int: flags[key] = 0
@@ -75,9 +83,16 @@ func reset():
 	harbor_guards_defeated = 0
 	harbor_route = ""
 
+# ── API Tuần Tự Hóa (Serialize/Deserialize) ────────────────────────────────
+
 func serialize() -> Dictionary:
-	#Chuyển đổi toàn bộ dữ liệu trạng thái sang định dạng Dictionary.
-	#Phục vụ cho việc mã hóa JSON trong hệ thống lưu trữ (Save system).
+	"""
+	Chuyển đổi toàn bộ dữ liệu trạng thái sang định dạng Dictionary.
+	
+	Args: Không có
+	Returns:
+		Dictionary: Chứa dữ liệu toàn bộ state để lưu.
+	"""
 	return {
 		"flags": flags,
 		"warehouse_wave": warehouse_wave,
@@ -88,7 +103,13 @@ func serialize() -> Dictionary:
 	}
 
 func deserialize(data: Dictionary):
-	#Khôi phục trạng thái từ dữ liệu đã được nạp (deserialize).
+	"""
+	Khôi phục trạng thái từ dữ liệu đã được nạp (deserialize).
+	
+	Args:
+		data (Dictionary): Dữ liệu trạng thái đã lưu.
+	Returns: Không có
+	"""
 	flags = data.get("flags", flags.duplicate())
 	warehouse_wave = data.get("warehouse_wave", 1)
 	harbor_wave = data.get("harbor_wave", 1)

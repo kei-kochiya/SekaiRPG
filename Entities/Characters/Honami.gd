@@ -2,12 +2,18 @@ extends Entity
 class_name Honami
 
 """
-Honami: Nhân vật hệ Pure, chuyên về hỗ trợ hồi phục và thanh tẩy trạng thái xấu.
+Tóm tắt: Định nghĩa nhân vật Honami (Hệ Pure), quản lý chỉ số và bộ kỹ năng chiến đấu.
 
-Lối chơi của Honami tập trung hoàn toàn vào việc duy trì sự sống cho đội hình. 
-Cô sở hữu khả năng hồi phục mạnh mẽ cho cả đơn mục tiêu và diện rộng, 
-đồng thời có khả năng thanh tẩy các hiệu ứng bất lợi.
+Chức năng chính:
+- Khởi tạo các chỉ số sức mạnh cơ bản (HP, ATK, DEF, SPD) và danh sách kỹ năng (thiên hướng phòng thủ/hồi phục).
+- Ghi đè hàm nhận sát thương `take_damage` để kích hoạt trạng thái bất tử (miễn sát thương) trong các màn cốt truyện đặc biệt.
+- Thực thi logic kỹ năng [Vệt Cắt Xót Thương]: Gây sát thương diện rộng.
+- Thực thi logic kỹ năng [Điểm Tựa Vững Chắc]: Thanh tẩy debuff và hồi máu mạnh cho mục tiêu chỉ định.
+- Thực thi logic tuyệt kỹ [Án Tử Bình Yên]: Xuyên giáp mạnh, nếu kết liễu sẽ hồi nhiều máu cho toàn đội, nếu không kết liễu sẽ Làm Choáng (Stun) và hồi ít máu.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 @export var is_harbor: bool = false
 
@@ -28,12 +34,16 @@ func _init():
 		{"name": "Án Tử Bình Yên", "method": "painless_execution", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Đập tan mục tiêu, bỏ qua 50% DEF. Hồi máu toàn đội dựa trên kết quả."},
 	]
 
+# ── Ghi Đè Logic Chiến Đấu ─────────────────────────────────────────────────
+
 func take_damage(amount: int, damage_type: String = "physical") -> bool:
 	# Khi is_harbor = true (trong trận Harbor): miễn tổn thương hoàn toàn.
 	if is_harbor:
 		damage_received.emit(0, damage_type)
 		return false
 	return super.take_damage(amount, damage_type)
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func merciful_cleave(_target: Entity):
 	# [Vệt Cắt Xót Thương]: AoE 80% ATK cho toàn bộ kẻ địch còn sống.

@@ -2,12 +2,17 @@ extends Entity
 class_name Kanade
 
 """
-Kanade: Nhân vật hệ Cool, thiên hướng sát thương bùng nổ nhưng phòng thủ thấp.
+Tóm tắt: Định nghĩa nhân vật Kanade (Hệ Cool), quản lý chỉ số và bộ kỹ năng chiến đấu.
 
-Lối chơi của Kanade tập trung vào việc gây sát thương lớn và khống chế (Stun). 
-Cô có khả năng đặc biệt giúp chuyển hướng một phần sát thương sang đồng minh 
-để bù đắp cho chỉ số phòng thủ cực thấp của mình.
+Chức năng chính:
+- Khởi tạo các chỉ số sức mạnh cơ bản (HP, ATK, DEF, SPD) và danh sách kỹ năng bùng nổ sát thương.
+- Thực thi logic kỹ năng [Tuyệt Âm Phân Rã] và [Giọng Ca Vô Thanh]: Gây sát thương kèm Làm Choáng (Stun).
+- Thực thi logic tuyệt kỹ [Final Requiem]: Sát thương cực lớn (Pure Damage) và Stun kéo dài.
+- Ghi đè hàm `take_damage` để áp dụng cơ chế nội tại: Có tỷ lệ chuyển hướng một nửa sát thương nhận vào sang đồng minh ngẫu nhiên.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Kanade"
@@ -25,6 +30,8 @@ func _init():
 		{"name": "Giọng Ca Vô Thanh", "method": "soundless_voice", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và Làm choáng (Stun) trong 1 lượt.\nTỷ lệ: 100% ATK."},
 		{"name": "Final Requiem", "method": "salvation_song", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương diện rộng xuyên thấu (Pure DMG) và Làm choáng 2 lượt.\nTỷ lệ: 350% ATK."},
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func resonance(target: Entity):
 	# [Tuyệt Âm Phân Rã]: Đòn đơn 150% ATK vật lý.
@@ -49,16 +56,17 @@ func salvation_song(target: Entity):
 	target.take_damage(massive_dmg, "pure")
 	target.add_status({"type": "Stun", "duration": 2})
 
+# ── Ghi Đè Logic Chiến Đấu ─────────────────────────────────────────────────
+
 func take_damage(amount: int, damage_type: String = "physical") -> bool:
 	"""
 	Xử lý nhận sát thương với cơ chế Chuyển hướng (Deflect).
-
-	Kanade có 20% tỷ lệ chuyển 50% sát thương sang một đồng minh ngẫu nhiên.
-	Nếu không có đồng minh nào, cô chỉ nhận 50% sát thương.
-
-	- amount: Lượng sát thương gốc (int).
-	- damage_type: Loại sát thương (String).
-	- Return: True nếu Kanade bị hạ gục, ngược lại False (bool).
+	
+	Args:
+		amount (int): Lượng sát thương gốc.
+		damage_type (String): Loại sát thương.
+	Returns: 
+		bool: True nếu Kanade bị hạ gục, ngược lại False.
 	"""
 	if randf() < 0.20:
 		print("[DEFLECT] Kanade bẻ cong đường tấn công!")

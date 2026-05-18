@@ -2,11 +2,15 @@ extends Entity
 class_name Kidnapper
 
 """
-Kidnapper: Kẻ bắt cóc xuất hiện trong Prologue và Warehouse.
+Tóm tắt: Định nghĩa lớp kẻ địch Kidnapper (Kẻ bắt cóc).
 
-Đây là loại kẻ địch cơ bản nhất, phục vụ việc giới thiệu cơ chế chiến đấu. 
-Chỉ có các kỹ năng tấn công vật lý đơn giản.
+Chức năng chính:
+- Khởi tạo chỉ số yếu, phục vụ chủ yếu cho màn chơi hướng dẫn (Prologue).
+- Thực thi kỹ năng [Đâm Lén]: Đòn tấn công vật lý cơ bản nhất.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Kẻ Bắt Cóc"
@@ -22,6 +26,8 @@ func _init():
 	skills = [
 		{"name": "Đâm Lén", "method": "basic_attack", "cooldown_turns": 1, "target": "enemy"}
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func basic_attack(target: Entity):
 	# [Đâm Lén]: Tấn công vật lý cơ bản.

@@ -2,15 +2,19 @@ extends Entity
 class_name Ichika
 
 """
-Ichika: Nhân vật hệ Pure, thiên hướng sát thương vật lý mạnh và kỹ năng tự tổn hại.
+Tóm tắt: Định nghĩa nhân vật Ichika (Hệ Pure), quản lý chỉ số và bộ kỹ năng chiến đấu.
 
-Lối chơi của Ichika tập trung vào việc gây sát thương lớn và áp dụng hiệu ứng 
-Chảy máu (Bleed). Tuyệt kỹ của cô có khả năng bỏ qua phòng thủ nhưng đổi lại 
-bằng việc tiêu tốn sinh lực của bản thân.
+Chức năng chính:
+- Khởi tạo các chỉ số sức mạnh cơ bản (HP, ATK, DEF, SPD) và danh sách kỹ năng của Ichika.
+- Thực thi logic kỹ năng [Xuyên Tâm Kích]: Gây sát thương vật lý mạnh và thêm trạng thái Chảy máu (Bleed).
+- Thực thi logic kỹ năng [Âm Vang Đồng Điệu]: Buff tốc độ (SPD) cho bản thân để giành lợi thế lượt đánh.
+- Thực thi logic tuyệt kỹ [Ảnh Sát]: Gây sát thương khổng lồ và kích nổ toàn bộ hiệu ứng Bleed trên mục tiêu thành sát thương chuẩn (True Damage).
 """
 
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
+
 func _init():
-	# Khởi tạo chỉ số cơ bản cho Ichika.
 	entity_name = "Ichika"
 	max_hp = 175
 	current_hp = 175
@@ -27,8 +31,9 @@ func _init():
 		{"name": "Ảnh Sát", "method": "shadow_strike", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Chém chí mạng (400% ATK). Kích nổ tất cả stack Bleed để gây thêm Sát thương chuẩn (True Damage)."},
 	]
 
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
+
 func can_use_skill(skill_name: String) -> bool:
-	# Kiểm tra điều kiện thời gian hồi chiêu của kỹ năng.
 	return CooldownManager.is_skill_ready(self , skill_name)
 
 func piercing_chord(target: Entity):

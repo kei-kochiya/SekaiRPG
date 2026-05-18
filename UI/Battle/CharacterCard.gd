@@ -2,16 +2,17 @@ extends PanelContainer
 class_name CharacterCard
 
 """
-CharacterCard: Hiển thị thẻ trạng thái của nhân vật hoặc kẻ địch trong trận đấu.
+Tóm tắt: CharacterCard hiển thị thẻ trạng thái của nhân vật hoặc kẻ địch.
 
-Lớp này quản lý việc hiển thị thông tin trực quan cho một thực thể, bao gồm:
-- Ảnh chân dung và Tên (màu sắc phân biệt Ta/Địch).
-- Cấp độ và Thanh HP (tự động cập nhật bằng Tween).
-- Danh sách hiệu ứng trạng thái (Status Dots).
-- Chỉ số hồi chiêu kỹ năng (Cooldown Icons).
-Hệ thống sử dụng cơ chế Signal-driven để tự động cập nhật UI khi dữ liệu 
-của Entity thay đổi.
+Chức năng chính:
+- Hiển thị thông tin trực quan: Ảnh chân dung, Tên, Cấp độ, Thanh máu (HP).
+- Cập nhật thời gian thực các hiệu ứng trạng thái (Status Dots) và biểu tượng hồi chiêu (Cooldown Icons).
+- Tích hợp hệ thống Tween để tạo hiệu ứng mượt mà khi thanh máu thay đổi hoặc khi thực thể tử trận.
+- Lắng nghe tự động thông qua hệ thống Signal của Entity.
 """
+
+# ── Biến Giao Diện ─────────────────────────────────────────────────────────
+
 
 const COLORS = {
 	"player": Color(0.29, 0.62, 0.62),
@@ -23,7 +24,8 @@ const COLORS = {
 var entity: Entity
 var is_player: bool = false
 
-# Các thành phần giao diện
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 var hp_bar: ProgressBar
 var hp_label: Label
 var name_label: Label
@@ -44,6 +46,8 @@ func setup(e: Entity, player: bool):
 	_build_ui()
 	_connect_signals()
 	_refresh_all()
+
+# ── Xây Dựng Component ─────────────────────────────────────────────────────
 
 func _build_ui():
 	"""Xây dựng cấu trúc cây Node và áp dụng phong cách hình ảnh (Kenney Style)."""
@@ -163,6 +167,8 @@ func _create_cooldown_row() -> HBoxContainer:
 		row.add_child(panel)
 		cooldown_icons[skill["method"]] = {"label": l, "panel": panel, "style": sb}
 	return row
+
+# ── Cập Nhật UI ────────────────────────────────────────────────────────────
 
 func _connect_signals():
 	"""Kết nối các tín hiệu của thực thể để đảm bảo UI cập nhật tự động."""

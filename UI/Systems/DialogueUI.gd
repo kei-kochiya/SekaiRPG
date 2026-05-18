@@ -2,11 +2,17 @@ extends Control
 class_name DialogueUI
 
 """
-DialogueUI: Thành phần giao diện của hệ thống hội thoại.
+Tóm tắt: DialogueUI là thành phần hiển thị (View) của hệ thống hội thoại.
 
-Lớp này tách biệt hoàn toàn logic hiển thị (vẽ khung, chạy chữ, chân dung) 
-khỏi logic điều phối của DialogueManager.
+Chức năng chính:
+- Khởi tạo và thiết lập các phần tử giao diện người dùng: khung thoại (PanelContainer), text (RichTextLabel), ảnh chân dung (TextureRect), nút bấm.
+- Xử lý hiệu ứng hiển thị: đổi màu text (BBCode), đổi kích thước/độ mờ của chân dung nhân vật đang nói.
+- Cung cấp API `display_line` và `display_choices` cho DialogueManager gọi đến.
+- Quản lý giao diện của màn hình tường thuật (Narrator mode) không có chân dung nhân vật.
 """
+
+# ── Biến Giao Diện ──────────────────────────────────────────────────────────
+
 
 
 signal choice_selected(idx: int)
@@ -20,8 +26,10 @@ var narrator_label: RichTextLabel
 var choice_box: VBoxContainer
 var choice_panel: PanelContainer
 
+# ── Khởi Tạo UI ────────────────────────────────────────────────────────────
+
+# Thiết lập căn chỉnh ban đầu
 func _ready():
-	# Ensure the root Control is full screen
 	anchor_right = 1.0
 	anchor_bottom = 1.0
 	offset_left = 0
@@ -31,8 +39,8 @@ func _ready():
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_init_ui()
 
+# Khởi tạo các thành phần giao diện
 func _init_ui():
-	# Cấu trúc UI được di chuyển từ DialogueManager sang đây
 	var d_layer = Control.new()
 	d_layer.name = "DialogueLayer"
 	d_layer.anchor_right = 1.0
@@ -44,7 +52,6 @@ func _init_ui():
 	d_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(d_layer)
 
-	# Clicker toàn màn hình để người chơi click/tap tiến hành hội thoại
 	var clicker = TextureButton.new()
 	clicker.name = "Clicker"
 	clicker.anchor_right = 1.0
@@ -117,7 +124,16 @@ func _init_ui():
 	choice_panel.add_child(choice_box)
 	choice_panel.visible = false
 
+# ── API Hiển Thị ───────────────────────────────────────────────────────────
+
 func display_line(line: Dictionary):
+	"""
+	Hiển thị một dòng thoại lên màn hình, tự động điều chỉnh khung và chân dung.
+	
+	Args:
+		line (Dictionary): Dữ liệu dòng thoại chứa type, text, name, speaker và color.
+	Returns: Không có
+	"""
 	var type = line.get("type", "dialogue")
 	var text = line.get("text", "")
 	var speaker_name = line.get("name", "")
@@ -137,6 +153,13 @@ func display_line(line: Dictionary):
 		_update_portraits(speaker_name, speaker_side)
 
 func display_choices(options: Array):
+	"""
+	Hiển thị danh sách các lựa chọn lên màn hình.
+	
+	Args:
+		options (Array): Mảng chứa chuỗi văn bản của các lựa chọn.
+	Returns: Không có
+	"""
 	choice_panel.visible = true
 	for c in choice_box.get_children(): c.queue_free()
 	for i in options.size():
@@ -152,6 +175,7 @@ func display_choices(options: Array):
 	if choice_box.get_child_count() > 0:
 		choice_box.get_child(0).grab_focus()
 
+# Xóa nội dung trên màn hình
 func clear():
 	left_portrait.texture = null
 	right_portrait.texture = null
@@ -161,6 +185,9 @@ func clear():
 	dialogue_box.visible = false
 	choice_panel.visible = false
 
+# ── Tiện Ích Nội Bộ ────────────────────────────────────────────────────────
+
+# Cập nhật hình ảnh và animation cho chân dung nhân vật
 func _update_portraits(character_name: String, side: String):
 	var path = "res://Art/Portraits/%s.png" % character_name.to_lower()
 	var tex = load(path) if ResourceLoader.exists(path) else null
@@ -179,6 +206,7 @@ func _update_portraits(character_name: String, side: String):
 	tw.tween_property(right_portrait, "modulate", Color(1,1,1,1) if not focus_l else Color(0.4,0.4,0.4,1), 0.2)
 	tw.tween_property(right_portrait, "scale", Vector2(1.05, 1.05) if not focus_l else Vector2(0.9, 0.9), 0.2)
 
+# Tạo StyleBoxTexture với các thông số truyền vào
 func _get_style(tex: String, margin: int, padding: int) -> StyleBoxTexture:
 	var s = StyleBoxTexture.new()
 	s.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/" + tex)
@@ -187,6 +215,7 @@ func _get_style(tex: String, margin: int, padding: int) -> StyleBoxTexture:
 	s.set_content_margin_all(padding)
 	return s
 
+# Khởi tạo TextureRect chân dung
 func _create_portrait(preset: int, x: int, y: int) -> TextureRect:
 	var t = TextureRect.new()
 	t.custom_minimum_size = Vector2(256, 256)

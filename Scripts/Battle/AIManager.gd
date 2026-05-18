@@ -2,12 +2,16 @@ extends Node
 class_name AIManager
 
 """
-AIManager: Quản lý trí tuệ nhân tạo (AI) cho kẻ địch trong trận đấu.
+Tóm tắt: AIManager quản lý trí tuệ nhân tạo (AI) cho kẻ địch trong trận đấu.
 
-Lớp này cung cấp các phương thức tĩnh để chọn mục tiêu và hành động cho kẻ địch 
-dựa trên các yếu tố chiến thuật như hệ thuộc tính, lượng máu còn lại và thứ tự lượt.
-Sử dụng hệ thống Heuristic để đưa ra quyết định tối ưu.
+Chức năng chính:
+- Cung cấp các phương thức tĩnh để chọn mục tiêu tối ưu (`pick_target`) dựa trên hệ thống điểm Heuristic (tương khắc hệ, máu còn lại, lượt đánh).
+- Quyết định hành động (`pick_action`): Chọn giữa tấn công thường hoặc sử dụng kỹ năng, và chọn mục tiêu tương ứng (kẻ địch hoặc đồng minh để hồi phục).
+- Lọc danh sách các đơn vị còn sống (`get_alive_targets`).
 """
+
+# ── Xử Lý Mục Tiêu ─────────────────────────────────────────────────────────
+
 
 static func get_alive_targets(team: Array) -> Array:
 	# Lấy danh sách các đơn vị còn sống trong một đội.
@@ -20,10 +24,13 @@ static func get_alive_targets(team: Array) -> Array:
 static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) -> Entity:
 	"""
 	Chọn mục tiêu tối ưu cho AI dựa trên hệ thống tính điểm Heuristic.
-	- attacker: Thực thể tấn công (Entity).
-	- enemy_team: Danh sách kẻ địch (Array).
-	- timeline: Thứ tự lượt đi hiện tại (Array).
-	- Return: Thực thể mục tiêu được chọn (Entity).
+	
+	Args:
+		attacker (Entity): Thực thể tấn công.
+		enemy_team (Array): Danh sách kẻ địch.
+		timeline (Array): Thứ tự lượt đi hiện tại.
+	Returns: 
+		Entity: Thực thể mục tiêu được chọn.
 	"""
 	var alive_targets = get_alive_targets(enemy_team)
 	if alive_targets.is_empty():
@@ -58,14 +65,19 @@ static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) ->
 
 	return weighted_pool.pick_random()
 
+# ── Quyết Định Hành Động ───────────────────────────────────────────────────
+
 static func pick_action(actor: Entity, enemies: Array, allies: Array, timeline: Array) -> Dictionary:
 	"""
-	Hàm quyết định hành động tiếp theo của AI (Tấn công thường hoặc dùng kỹ năng).
-	- actor: Thực thể AI (Entity).
-	- enemies: Danh sách kẻ địch (Array).
-	- allies: Danh sách đồng minh (Array).
-	- timeline: Dòng thời gian lượt đi (Array).
-	- Return: Dictionary chứa tên hành động và mục tiêu.
+	Quyết định hành động tiếp theo của AI (Tấn công thường hoặc dùng kỹ năng).
+	
+	Args:
+		actor (Entity): Thực thể AI.
+		enemies (Array): Danh sách kẻ địch.
+		allies (Array): Danh sách đồng minh.
+		timeline (Array): Dòng thời gian lượt đi.
+	Returns: 
+		Dictionary: Chứa 'action' (Tên hành động) và 'target' (Mục tiêu).
 	"""
 	var target = pick_target(actor, enemies, timeline)
 	if target == null:

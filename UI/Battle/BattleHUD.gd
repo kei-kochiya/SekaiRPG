@@ -1,19 +1,18 @@
 extends CanvasLayer
 
 """
-BattleHUD: Lớp điều phối giao diện chính trong trận chiến.
+Tóm tắt: BattleHUD là lớp điều phối giao diện chính trong trận chiến.
 
-Lớp này quản lý việc xây dựng và cập nhật các thành phần UI cốt lõi: 
-- Thanh hành động (Action Gauge).
-- Danh sách thẻ nhân vật (Character Cards) phe ta và phe địch.
-- Menu lệnh chiến đấu (Command Menu).
-- Các banner thông báo lượt đi, thắng lợi và thất bại.
+Chức năng chính:
+- Quản lý việc xây dựng và cập nhật các thành phần UI cốt lõi như: Thanh hành động (Action Gauge), Thẻ nhân vật (Character Cards) và Menu lệnh (Command Menu).
+- Cung cấp các hàm hiển thị thông báo trận đấu: Đến lượt (Turn Indicator), Chiến thắng (Victory), Thất bại (Defeat).
+- Kết nối các nút chức năng phụ như 'Bỏ qua trận đấu' (Skip) và 'Chi tiết chỉ số' (Info).
 """
 
 var player_team: Array
 var enemy_team: Array
 
-# ── Tham chiếu Component ───────────────────────────────────────────────────
+# ── Tham Chiếu Component ───────────────────────────────────────────────────
 const ActionGaugeClass = preload("res://UI/Battle/ActionGauge.gd")
 const CharacterCardClass = preload("res://UI/Battle/CharacterCard.gd")
 const CommandMenuClass = preload("res://UI/Battle/CommandMenu.gd")
@@ -27,7 +26,7 @@ var action_gauge: Node
 var command_menu: Node
 var _info_panel: Node
 
-# ── Cấu hình UI ─────────────────────────────────────────────────────────────
+# ── Xây Dựng UI ────────────────────────────────────────────────────────────
 
 func setup(players: Array, enemies: Array):
 	"""
@@ -107,7 +106,7 @@ func _build_ui():
 	_info_panel = EntityDetailPanelClass.new()
 	add_child(_info_panel)
 
-# ── Logic Điều khiển ───────────────────────────────────────────────────────
+# ── Logic Điều Khiển ───────────────────────────────────────────────────────
 
 func _on_info_pressed():
 	"""Mở bảng thông số chi tiết của toàn bộ thực thể trên sân."""

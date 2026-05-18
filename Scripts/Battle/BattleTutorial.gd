@@ -2,11 +2,16 @@ extends Node
 class_name BattleTutorial
 
 """
-BattleTutorial: Quản lý giao diện hướng dẫn chiến đấu theo từng bước.
+Tóm tắt: BattleTutorial quản lý giao diện hướng dẫn chiến đấu theo từng bước.
 
-Lớp này hiển thị các thông báo và giải thích cơ chế trận đấu cho người chơi
-lần đầu tham gia chiến đấu trong chế độ cốt truyện.
+Chức năng chính:
+- Hiển thị bảng giải thích cơ chế chiến đấu (Turn-based, Action Gauge, Kỹ năng) cho người chơi.
+- Khóa cờ `is_tutorial` trong GameManager để đảm bảo hướng dẫn chỉ hiện một lần duy nhất.
+- Tự động xây dựng UI tùy chỉnh hỗ trợ BBCode và đọc Asset từ thư viện Kenney.
 """
+
+# ── Chạy Hướng Dẫn ─────────────────────────────────────────────────────────
+
 
 static func run_tutorial(main: Node):
 	"""
@@ -54,6 +59,8 @@ static func run_tutorial(main: Node):
 
 	# Xóa toàn bộ CanvasLayer chứa panel hướng dẫn
 	panel.get_parent().queue_free()
+
+# ── Xây Dựng Giao Diện ─────────────────────────────────────────────────────
 
 static func _show_tutorial_step(_main: Node, vbox: VBoxContainer, title: String, content: String):
 	"""

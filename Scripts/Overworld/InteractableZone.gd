@@ -2,12 +2,17 @@ extends Area2D
 class_name InteractableZone
 
 """
-InteractableZone: Vùng tương tác trong thế giới trò chơi (Overworld).
+Tóm tắt: InteractableZone quản lý các vùng tương tác sự kiện trên bản đồ.
 
-Lớp này quản lý việc phát hiện người chơi khi đi vào vùng kích hoạt, hiển thị
-nhãn gợi ý (prompt) và phát tín hiệu khi người chơi thực hiện thao tác tương tác. 
-Sử dụng hệ thống Collision Mask để chỉ phản hồi với thực thể người chơi.
+Chức năng chính:
+- Tạo một vùng phát hiện va chạm (Area2D) chuyên biệt để nhận diện OverworldPlayer.
+- Tự động hiển thị nhãn gợi ý (Prompt) "Press ENTER" khi người chơi nằm trong vùng an toàn.
+- Lắng nghe sự kiện phím (InputEvent) và phát tín hiệu `interacted` khi người chơi bấm nút tương tác.
+- Tích hợp với hệ thống MobileControls để hiển thị phím bấm tương tác ảo trên điện thoại.
 """
+
+# ── Biến Thành Phần ────────────────────────────────────────────────────────
+
 
 signal interacted
 
@@ -15,6 +20,8 @@ var prompt_label: Label
 var is_player_inside: bool = false
 
 @export var prompt_text: String = "Press ENTER"
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
 
 func _ready():
 	"""
@@ -51,6 +58,8 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
+# ── Xử Lý Va Chạm ──────────────────────────────────────────────────────────
+
 func _on_body_entered(body):
 	"""
 	Xử lý khi người chơi bước vào vùng tương tác.
@@ -76,6 +85,8 @@ func _on_body_exited(body):
 		prompt_label.visible = false
 		if has_node("/root/MobileControls"):
 			get_node("/root/MobileControls").set_interact_visible(false)
+
+# ── Xử Lý Tương Tác ────────────────────────────────────────────────────────
 
 func _unhandled_input(event: InputEvent) -> void:
 	"""

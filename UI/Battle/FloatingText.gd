@@ -2,10 +2,16 @@ extends Label
 class_name FloatingText
 
 """
-FloatingText: Hiển thị các con số (sát thương, hồi máu) bay lên trên màn hình.
+Tóm tắt: FloatingText hiển thị các con số nổi (sát thương, hồi máu) bay lên trên màn hình.
 
-Mỗi instance tự động thực hiện hiệu ứng bay lên, mờ dần và tự hủy sau khi kết thúc.
+Chức năng chính:
+- Tự động thực hiện hiệu ứng bay lên và mờ dần (Tween).
+- Quy định màu sắc dựa trên loại sát thương (Physical: Đỏ, Pure: Trắng, DoT: Tím, Heal: Xanh lá).
+- Cung cấp hàm tĩnh `spawn` để dễ dàng khởi tạo tại bất kỳ vị trí nào trên màn hình.
 """
+
+# ── Cấu Hình ───────────────────────────────────────────────────────────────
+
 
 const COLORS = {
 	"physical": Color(1.0, 0.3, 0.3),
@@ -15,6 +21,8 @@ const COLORS = {
 }
 
 var float_color: Color = Color.RED
+
+# ── Xử Lý Hiệu Ứng ─────────────────────────────────────────────────────────
 
 func _ready():
 	"""
@@ -46,11 +54,13 @@ func _ready():
 static func spawn(parent: Node, amount: int, damage_type: String, pos: Vector2):
 	"""
 	Hàm tĩnh để tạo nhanh một FloatingText tại vị trí chỉ định.
-
-	- parent: Node cha để gắn vào (thường là UI Overlay) (Node).
-	- amount: Giá trị con số hiển thị (int).
-	- damage_type: Loại sát thương để xác định màu sắc (String).
-	- pos: Vị trí bắt đầu trên màn hình (Vector2).
+	
+	Args:
+		parent (Node): Node cha để gắn vào (thường là UI Overlay).
+		amount (int): Giá trị con số hiển thị.
+		damage_type (String): Loại sát thương để xác định màu sắc.
+		pos (Vector2): Vị trí bắt đầu trên màn hình.
+	Returns: Không có
 	"""
 	var ft = FloatingText.new()
 	var prefix = "+" if damage_type == "heal" else "-"

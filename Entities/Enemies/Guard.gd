@@ -2,9 +2,15 @@ extends Entity
 class_name Guard
 
 """
-Guard: Vệ binh tuần tra tại Cảng. 
-Sở hữu lượng máu khá và có khả năng gây Choáng (Stun).
+Tóm tắt: Định nghĩa lớp kẻ địch Guard (Vệ binh tuần tra cảng).
+
+Chức năng chính:
+- Khởi tạo chỉ số của lính gác (HP và phòng thủ khá).
+- Thực thi kỹ năng [Trấn Áp]: Tấn công vật lý có tỷ lệ làm choáng (Stun) mục tiêu.
 """
+
+# ── Khởi Tạo ───────────────────────────────────────────────────────────────
+
 
 func _init():
 	entity_name = "Lính Cảng"
@@ -20,6 +26,8 @@ func _init():
 	skills = [
 		{"name": "Trấn Áp", "method": "suppress", "cooldown_turns": 2, "target": "enemy"}
 	]
+
+# ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func suppress(target: Entity):
 	# [Trấn Áp]: Tấn công vật lý + 30% tỷ lệ gây Stun 1 lượt.

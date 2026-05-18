@@ -1,11 +1,17 @@
 extends CanvasLayer
 
 """
-UpgradeUI: Giao diện nâng cấp chỉ số nhân vật bằng điểm SP.
+Tóm tắt: UpgradeUI là hệ thống giao diện cho phép người chơi nâng cấp chỉ số nhân vật.
 
-Cho phép người chơi lựa chọn nhân vật trong đội và sử dụng Skill Points (SP) 
-để tăng vĩnh viễn các chỉ số như HP, ATK, DEF và SPD.
+Chức năng chính:
+- Khởi tạo bảng UI động hiển thị danh sách các nhân vật trong đội hình.
+- Lấy và hiển thị các chỉ số hiện tại (HP, ATK, DEF, SPD) và Điểm Kỹ Năng (SP) của nhân vật được chọn.
+- Xây dựng cụm nút nâng cấp (+1, +10, +25, MAX) kết nối trực tiếp với API của `UpgradeManager`.
+- Tự động khóa sự kiện di chuyển của người chơi (thông qua `GameManager.start_dialogue()`) khi đang hiển thị.
 """
+
+# ── Biến Giao Diện & Dữ Liệu ───────────────────────────────────────────────
+
 
 signal closed
 
@@ -20,29 +26,33 @@ var stat_vbox: VBoxContainer
 var sp_label: Label
 var char_name_label: Label
 
+# ── Vòng Đời & Khởi Tạo UI ──────────────────────────────────────────────────
+
+# Khởi tạo giao diện
 func _ready():
-	"""
-	Khởi tạo cấu trúc UI ban đầu.
-	"""
 	_build_ui()
 	visible = false
+
+# ── API Hiển Thị ───────────────────────────────────────────────────────────
 
 func show_ui(chars: Array[Entity]):
 	"""
 	Hiển thị giao diện nâng cấp với danh sách nhân vật hiện có.
-
-	- chars: Danh sách các nhân vật có thể nâng cấp (Array[Entity]).
+	
+	Args:
+		chars (Array[Entity]): Danh sách các nhân vật có thể nâng cấp.
+	Returns: Không có
 	"""
 	characters = chars
 	selected_index = 0
 	visible = true
-	GameManager.start_dialogue() # Khóa di chuyển người chơi khi đang nâng cấp
+	GameManager.start_dialogue()
 	_refresh_all()
 
+# ── Xây Dựng Cấu Trúc UI ───────────────────────────────────────────────────
+
+# Xây dựng cấu trúc UI động
 func _build_ui():
-	"""
-	Xây dựng cây node giao diện động cho bảng nâng cấp.
-	"""
 	var panel = PanelContainer.new()
 	panel.custom_minimum_size = Vector2(600, 400)
 	panel.set_anchors_preset(Control.PRESET_CENTER)
@@ -68,7 +78,6 @@ func _build_ui():
 	main_hbox.add_theme_constant_override("separation", 20)
 	panel.add_child(main_hbox)
 	
-	# -- Cột trái: Danh sách nhân vật --
 	var left_vbox = VBoxContainer.new()
 	left_vbox.custom_minimum_size = Vector2(150, 0)
 	main_hbox.add_child(left_vbox)
@@ -82,7 +91,6 @@ func _build_ui():
 	char_list.name = "CharList"
 	left_vbox.add_child(char_list)
 	
-	# -- Cột phải: Chỉ số & Nút nâng cấp --
 	var right_vbox = VBoxContainer.new()
 	right_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	main_hbox.add_child(right_vbox)
@@ -109,7 +117,6 @@ func _build_ui():
 	stat_vbox.add_theme_constant_override("separation", 10)
 	right_vbox.add_child(stat_vbox)
 	
-	# Nút đóng
 	var close_btn = Button.new()
 	close_btn.text = " ĐÓNG "
 	close_btn.size_flags_horizontal = Control.SIZE_SHRINK_END
@@ -121,11 +128,10 @@ func _build_ui():
 	right_vbox.add_child(Control.new())
 	right_vbox.add_child(close_btn)
 
+# ── Tiện Ích Cập Nhật UI ───────────────────────────────────────────────────
+
+# Cập nhật danh sách và chỉ số
 func _refresh_all():
-	"""
-	Cập nhật lại danh sách nhân vật và các chỉ số hiển thị của nhân vật đang chọn.
-	"""
-	# Làm mới danh sách nhân vật bên trái
 	for c in char_list.get_children(): c.queue_free()
 	for i in range(characters.size()):
 		var btn = Button.new()
@@ -148,7 +154,6 @@ func _refresh_all():
 	char_name_label.text = entity.entity_name.to_upper() + " - Lv." + str(entity.level)
 	sp_label.text = "Điểm kỹ năng (SP): " + str(entity.skill_points)
 	
-	# Làm mới khu vực chỉ số bên phải
 	for c in stat_vbox.get_children(): c.queue_free()
 	
 	var stats_to_show = ["max_hp", "atk", "defense", "spd"]
@@ -173,12 +178,10 @@ func _refresh_all():
 		val_lbl.custom_minimum_size = Vector2(60, 0)
 		row.add_child(val_lbl)
 		
-		# Nút nâng cấp
 		var btn_container = HBoxContainer.new()
 		btn_container.add_theme_constant_override("separation", 4)
 		row.add_child(btn_container)
 		
-		# Hàm tạo nút helper
 		var create_up_btn = func(label: String, count: int):
 			var b = Button.new()
 			b.text = label

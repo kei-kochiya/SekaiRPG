@@ -2,12 +2,15 @@ extends Node
 class_name BattleScenario
 
 """
-BattleScenario: Lớp cơ sở cho các kịch bản trận đấu đặc biệt.
+Tóm tắt: BattleScenario là lớp cơ sở (Base Class) cho các kịch bản trận đấu đặc biệt.
 
-Các phương thức trong lớp này được thiết kế để Main.gd gọi vào tại các thời điểm 
-quan trọng trong vòng lặp chiến đấu, cho phép tùy biến logic mà không cần 
-sửa đổi code cốt lõi của Engine.
+Chức năng chính:
+- Định nghĩa các phương thức ảo (Virtual Methods) như `on_start`, `on_turn_start`, `on_turn_end`, `on_entity_died`.
+- Cung cấp điểm nối (hooks) để các kịch bản cốt truyện có thể ghi đè và thực thi logic tùy chỉnh mà không cần sửa đổi Engine trận đấu.
 """
+
+# ── Hooks Vòng Lặp Trận Đấu ────────────────────────────────────────────────
+
 
 func on_start(_main: Node):
 	"""Gọi khi trận đấu bắt đầu."""
@@ -24,6 +27,8 @@ func on_turn_end(_main: Node, _actor: Entity):
 func on_entity_died(_main: Node, _entity: Entity):
 	"""Gọi khi có bất kỳ thực thể nào tử trận."""
 	pass
+
+# ── Hooks Kết Thúc Trận Đấu ────────────────────────────────────────────────
 
 func check_battle_end(_main: Node) -> bool:
 	"""

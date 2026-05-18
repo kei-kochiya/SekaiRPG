@@ -2,11 +2,17 @@ extends Node
 class_name BattleInitializer
 
 """
-BattleInitializer: Khởi tạo dữ liệu và đội hình cho các trận đấu.
+Tóm tắt: BattleInitializer khởi tạo dữ liệu và đội hình cho các trận đấu.
 
-Lớp này chịu trách nhiệm xác định đội hình phe ta và phe địch dựa trên bản đồ hiện tại, 
-chế độ chơi và thiết lập các trạng thái hồi phục cơ bản.
+Chức năng chính:
+- Load dữ liệu trận đấu (Mission Battles) từ tệp JSON.
+- Xây dựng đội hình phe ta và phe địch dựa trên tiến trình cốt truyện, map hiện tại hoặc chế độ Sandbox/Training.
+- Tự động scale level của kẻ địch cho phù hợp (`_setup_mission_battle`, `_setup_training_battle`).
+- Chọn kịch bản (Scenario) đặc biệt cho các trận đấu cốt truyện quan trọng.
 """
+
+# ── Cấu Hình & Biến ────────────────────────────────────────────────────────
+
 
 # Ánh xạ ID kẻ địch sang các Class tương ứng
 static var enemy_classes = {
@@ -20,6 +26,8 @@ static var enemy_classes = {
 }
 
 static var mission_battles: Dictionary = {}
+
+# ── Dữ Liệu Tệp ────────────────────────────────────────────────────────────
 
 static func _ensure_data_loaded():
 	"""
@@ -42,9 +50,16 @@ static func _load_json(path: String) -> Dictionary:
 	f.close()
 	return d if d is Dictionary else {}
 
+# ── Khởi Tạo Trận Đấu ──────────────────────────────────────────────────────
+
 static func setup_battle(_main: Node) -> Dictionary:
 	"""
-	Thiết lập toàn bộ thông tin cho một trận đấu mới.
+	Thiết lập toàn bộ thông tin cho một trận đấu mới (Đội hình & Kịch bản).
+	
+	Args:
+		_main (Node): Tham chiếu tới Scene trận đấu.
+	Returns: 
+		Dictionary: Chứa 'player_team', 'enemy_team', 'scenario'.
 	"""
 	_ensure_data_loaded()
 	
@@ -79,6 +94,8 @@ static func setup_battle(_main: Node) -> Dictionary:
 	
 	print("[BattleInitializer] Cảnh báo: Không tìm thấy cấu hình trận đấu cho bản đồ ", current_map)
 	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}
+
+# ── Logic Thiết Lập Đội Hình ───────────────────────────────────────────────
 
 static func _setup_mission_battle(cfg: Dictionary, battle_key: String = "") -> Dictionary:
 	"""

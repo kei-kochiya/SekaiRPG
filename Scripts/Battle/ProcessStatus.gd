@@ -2,17 +2,25 @@ extends Node
 class_name ProcessStatus
 
 """
-ProcessStatus: Xử lý các hiệu ứng trạng thái (Status Effects) cho thực thể.
+Tóm tắt: ProcessStatus xử lý các hiệu ứng trạng thái (Status Effects) cho thực thể.
 
-Lớp này quản lý các logic gây sát thương theo thời gian (DoT), làm choáng (Stun),
-và cập nhật thời hạn (duration) của các hiệu ứng đang có trên thực thể vào đầu mỗi lượt.
+Chức năng chính:
+- Quản lý logic gây sát thương theo thời gian (DoT) như Poison, Bleed.
+- Xử lý trạng thái khống chế (Stun) và cập nhật thời hạn (duration) của các hiệu ứng đang có trên thực thể vào đầu mỗi lượt (`handle_turn_start`).
+- Tự động xóa các hiệu ứng đã hết thời hạn.
 """
+
+# ── Xử Lý Lượt Đi ───────────────────────────────────────────────────────────
+
 
 static func handle_turn_start(entity: Entity) -> bool:
 	"""
-	Hàm này xử lý toàn bộ các hiệu ứng trạng thái (DoT, Stun...) khi thực thể bắt đầu lượt.
-	- entity: Thực thể cần xử lý trạng thái (Entity).
-	- Return: True nếu thực thể có thể hành động, False nếu bị choáng/khống chế (bool).
+	Xử lý toàn bộ các hiệu ứng trạng thái (DoT, Stun...) khi thực thể bắt đầu lượt.
+	
+	Args:
+		entity (Entity): Thực thể cần xử lý trạng thái.
+	Returns: 
+		bool: True nếu thực thể có thể hành động, False nếu bị choáng/khống chế.
 	"""
 	if entity == null:
 		return true
@@ -38,9 +46,6 @@ static func handle_turn_start(entity: Entity) -> bool:
 				var pct = status.get("percent", 0.1)
 				var dmg = int(entity.max_hp * pct)
 				entity.take_damage(dmg, "dot")
-				# Poison không còn giảm % sau mỗi lượt theo yêu cầu mới (giữ logic cũ nếu cần, 
-				# nhưng ở đây user bảo 'logic như cũ' và 'không thể stack')
-				# Trong file cũ logic là giảm 3%, mình giữ lại hoặc làm đơn giản hơn.
 				status["percent"] = max(0.01, pct - 0.03) 
 			"Stun":
 				print("[ProcessStatus] ", entity.entity_name, " đang bị Choáng!")
