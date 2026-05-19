@@ -275,7 +275,7 @@ def main():
     js_final  = JS.replace("__DATA__", data_json)
     OUT.mkdir(exist_ok=True)
     html = HTML_TEMPLATE.format(css=CSS, js=js_final)
-    out_path = OUT / "index.html"
+    out_path = OUT / "docstring.html"
     out_path.write_text(html, encoding="utf-8")
     print(f"Documentation generated at {out_path}")
 
