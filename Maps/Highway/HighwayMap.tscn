@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://h1w2x3y4z5v6t"]
+
+[ext_resource type="Script" path="res://Maps/Highway/HighwayMap.gd" id="1_h0m3p"]
+
+[node name="HighwayMap" type="Node2D"]
+script = ExtResource("1_h0m3p")

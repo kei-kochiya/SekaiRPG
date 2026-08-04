@@ -22,7 +22,8 @@ static var enemy_classes = {
 	"harbor_boss": Captain,
 	"target": TrainingBot,
 	"warehouse_worker": WarehouseWorker,
-	"terrorist": Terrorist
+	"terrorist": Terrorist,
+	"prime_minister": PrimeMinister
 }
 
 static var mission_battles: Dictionary = {}
@@ -182,7 +183,7 @@ static func _setup_training_battle() -> Dictionary:
 	
 	# Random chance to fight party members
 	if randf() < 0.7:
-		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika"]
+		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika", "Honami"]
 		var candidates = []
 		for p_name in pool:
 			if p_name not in GameManager.training_participants and p_name not in GameManager.training_used_opponents:
@@ -248,10 +249,37 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 				"scenario": HarborBossScenario.new()
 			},
 		"prologue": func():
+			var kidnappers = _create_enemies("kidnapper", 3, 1)
 			return {
 				"player_team": [GameManager.get_party_member("Ichika")],
-				"enemy_team": _create_enemies("kidnapper", 3, 1),
+				"enemy_team": kidnappers,
 				"scenario": PrologueScenario.new()
+			},
+		"ops_kanade": func():
+			return {
+				"player_team": [GameManager.get_party_member("Kanade")],
+				"enemy_team": _create_enemies("terrorist", 2, 35),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"ops_ichika": func():
+			return {
+				"player_team": [GameManager.get_party_member("Ichika")],
+				"enemy_team": _create_enemies("terrorist", 2, 35),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"ops_honami": func():
+			return {
+				"player_team": [GameManager.get_party_member("Honami")],
+				"enemy_team": _create_enemies("terrorist", 3, 35),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"pm_boss": func():
+			var pm = PrimeMinister.new()
+			LevelManager.set_initial_level(pm, 50)
+			return {
+				"player_team": [GameManager.get_party_member("Mafuyu"), GameManager.get_party_member("Ena"), GameManager.get_party_member("Mizuki")],
+				"enemy_team": [pm],
+				"scenario": PrimeMinisterBossScenario.new()
 			},
 		"street_skirmish": func():
 			return {

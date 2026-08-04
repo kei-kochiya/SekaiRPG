@@ -55,6 +55,8 @@ func _complete_training():
 		if p == "Kanade": GameManager.set_flag("training_kanade_done", true)
 		if p == "Ena": GameManager.set_flag("training_ena_done", true)
 		if p == "Mizuki": GameManager.set_flag("training_mizuki_done", true)
+		if p == "Mafuyu": GameManager.set_flag("training_mafuyu_done", true)
+		if p == "Honami": GameManager.set_flag("training_honami_done", true)
 	
 	GameManager.is_training_mode = false
 	DialogueManager.play_dialogue([{

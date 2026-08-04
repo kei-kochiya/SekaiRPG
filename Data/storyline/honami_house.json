@@ -1,0 +1,91 @@
+{
+  "honami_house_intro": [
+    {
+      "type": "narrator",
+      "text": "(Một phòng khám nhỏ gọn, sạch sẽ, nồng nặc mùi thuốc sát trùng. Vài người dân nghèo đang ngồi đợi ở băng ghế ngoài hành lang.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ngồi tạm lên giường bệnh đi. Tôi đi lấy cho cô ly nước."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ... em cảm ơn chị Honami. Chỗ này là nhà của chị sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cứ coi là vậy đi. Nửa là phòng khám, nửa là chỗ ngủ. Tôi không cần không gian sống quá rộng lớn làm gì."
+    },
+    {
+      "type": "narrator",
+      "text": "(Một người đàn ông khắc khổ bước vào, cúi rạp người cảm ơn Honami, dúi vào tay cô vài đồng tiền lẻ rồi rời đi. Honami chỉ mỉm cười nhận lấy và cất vào hộp y tế.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị làm bác sĩ từ thiện ạ? Nhưng ban nãy... em nghe chị Ena nói chị là một bác sĩ ngầm, chỉ làm việc vì tiền..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cô bé con, ở cái thành phố thối nát này, muốn làm người tốt thì trước tiên phải có tiền, và phải biết cách tự bảo vệ mình."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Bọn băng đảng sẵn sàng trả hàng đống tiền để mua mạng sống. Tôi lấy tiền của bọn chúng để mua thuốc men cho những người thực sự cần. Đơn giản vậy thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Ra là vậy... Chị Honami tuyệt vời quá! Chị ngầu thật đấy!"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Bật cười nhẹ)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ngây thơ thế này mà sống được cùng với lũ quái vật Nightcord kia... cô cũng là một hiện tượng lạ đấy, Ichika."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Bây giờ cô có thể nghỉ ngơi tự do. Hoặc nếu muốn khởi động gân cốt để chuẩn bị cho lần ra ngoài tiếp theo, tôi có thể chỉ cho cô vài đường cơ bản. Dù sao thì Nightcord cũng chỉ dạy cô giết người, không dạy cô cách sống sót đâu."
+    }
+  ],
+  "honami_training_offer": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Sao nào? Cảm thấy gân cốt rệu rã rồi à? Có muốn ra bãi phế liệu phía sau phòng khám tập luyện một chút không?"
+    }
+  ]
+}

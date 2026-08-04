@@ -16,6 +16,8 @@ Thiết kế ngã tư chuyên nghiệp (Level Design & Set Dressing):
 const TILE_SIZE = 32
 const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
+var _lighting: CanvasModulate
+
 func _ready():
 	AudioManager.play_music("battle") # Đổi sang nhạc căng thẳng
 	
@@ -24,6 +26,10 @@ func _ready():
 	bg.size = Vector2(2000, 2000)
 	bg.color = Color(0.08, 0.08, 0.1)
 	add_child(bg)
+	
+	_lighting = CanvasModulate.new()
+	_lighting.color = Color(1.0, 1.0, 1.0)
+	add_child(_lighting)
 	
 	# Vẽ ngã tư đường phố
 	_build_street()
@@ -154,10 +160,29 @@ func _draw_street_walls():
 		MapUtils.place_tile(self, "right_vertical_wall.png", Vector2(27, y))
 
 func _run_logic():
-	if GameManager.get_flag("street_survival_done"):
+	if GameManager.get_flag("street_mission_fully_done"):
+		_return_to_base()
+	elif GameManager.get_flag("street_survival_done"):
 		# Sau khi thắng trận sinh tồn/cứu viện của Mafuyu
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("street_aftermath"), func():
-			_return_to_base()
+			# Mafuyu dẫn Mizuki về, để Ichika lại
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("street_intel_search"), func():
+				await ScreenFade.fade_out(1.0)
+				_lighting.color = Color(0.1, 0.1, 0.15) # Tối khuya
+				# Biến mất các nhân vật khác
+				for child in get_children():
+					if child.has_meta("is_npc") and child.get_meta("npc_name") != "Ichika":
+						child.queue_free()
+				await ScreenFade.fade_in(1.0)
+				
+				# Spawn Honami
+				MapUtils.create_dummy_char(self, "Honami", Vector2(16, 11), Color(0.5, 0.35, 0.25))
+				
+				DialogueManager.play_dialogue(DialogueLoader.get_lines("street_honami_encounter"), func():
+					GameManager.set_flag("street_mission_fully_done", true)
+					_return_to_base()
+				)
+			)
 		)
 	elif GameManager.get_flag("street_skirmish_done"):
 		# Sau khi thắng trận đấu thường 1

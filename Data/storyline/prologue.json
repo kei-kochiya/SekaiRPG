@@ -2,15 +2,15 @@
   "prologue_phase0": [
     {
       "type": "narrator",
-      "text": "Một ngày bình thường của Ichika cũng như bao người khác."
+      "text": "Ichika cũng chỉ là cô gái bình thường như bao người khác."
     },
     {
       "type": "narrator",
-      "text": "Ngủ nướng, cắm tai nghe lẩm nhẩm vài giai điệu, thỉnh thoảng ôm cây guitar gảy vài hợp âm đứt quãng."
+      "text": "Vốn là một cô gái với cuộc sống bình yên, dành phần lớn thời gian bên cây đàn và những giai điệu của riêng mình. Mọi thứ cứ thế trôi đi êm đềm, cho đến một ngày..."
     },
     {
       "type": "narrator",
-      "text": "Rồi bỗng nhiên... tất cả bị giật sập. Không báo trước, không đường lui."
+      "text": "Định mệnh ép cô phải bước vào con đường sinh tử..."
     },
     {
       "type": "dialogue",
@@ -75,14 +75,14 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Mục tiêu trong tầm mắt. Không có vết thương chí mạng, chỉ xây xát nhẹ. Tuy nhiên..."
+      "text": "Con tin trong tầm mắt. Không có vết thương chí mạng, chỉ xây xát nhẹ. Tuy nhiên..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ông Hoshino, tôi sẽ đưa con gái ông đi. Coi như thù lao cho vụ này."
+      "text": "Ông Hoshino, tôi sẽ đưa con gái ông đi. Coi như thù lao cho vụ này nhé."
     },
     {
       "type": "narrator",
@@ -93,7 +93,7 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Kết thúc giao tiếp."
+      "text": "Rất vui được hợp tác với ông, ngài Hoshino."
     }
   ],
   "prologue_phase1_recruit": [

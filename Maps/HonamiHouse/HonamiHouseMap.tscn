@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5q0q0x0a1b2c"]
+
+[ext_resource type="Script" path="res://Maps/HonamiHouse/HonamiHouseMap.gd" id="1_a2b3c"]
+
+[node name="HonamiHouseMap" type="Node2D"]
+script = ExtResource("1_a2b3c")

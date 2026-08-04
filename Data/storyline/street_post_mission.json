@@ -1,0 +1,156 @@
+{
+  "street_intel_search": [
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tình trạng của Mizuki có vẻ không ổn. Tôi sẽ đưa cô ta về Nightcord trước."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ichika, cô ở lại dọn dẹp nốt khu vực này. Cố lục tìm xem có manh mối hay tài liệu (intel) gì rớt lại không. Xong thì tự tìm đường về."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ... vâng ạ. Các chị cứ về trước đi, em sẽ cố gắng tìm..."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu không nói gì thêm, khoác tay Mizuki rồi nhanh chóng biến mất vào bóng tối của con hẻm.)"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Chỉ còn một mình mình ở đây... Vết thương ở chân đau quá... Nhưng mình phải cố lên, không thể để chị Mafuyu thất vọng được.)"
+    }
+  ],
+  "street_honami_encounter": [
+    {
+      "type": "narrator",
+      "text": "(Vài tiếng đồng hồ sau... Trời đã về khuya, gió lạnh buốt.)"
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Tìm mãi mà chẳng thấy gì cả... Mắt mình mờ đi mất rồi...)"
+    },
+    {
+      "type": "narrator",
+      "text": "Bốp! (Ichika vấp phải một mảnh vỡ và ngã khuỵu xuống đất)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Á...!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cô không sao chứ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Ơ...? Chị là..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chân cô đang chảy máu kìa. Ngồi yên đó, để tôi xem nào."
+    },
+    {
+      "type": "narrator",
+      "text": "(Honami nhẹ nhàng quỳ xuống, lấy từ trong chiếc cặp mang theo một cuộn băng gạc và thuốc sát trùng. Bàn tay cô thao tác cực kỳ điêu luyện, nhanh chóng cầm máu và băng bó vết thương cho Ichika.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Cảm ơn chị nhiều lắm... Em... em cứ tưởng mình sẽ phải nằm đây đến sáng mất."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Khuya khoắt thế này, một cô gái trẻ lang thang ở khu phố Tây đầy rẫy nguy hiểm để làm gì? Trông cô không giống người ở thế giới ngầm lắm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ... em đang phải tìm vài tài liệu quan trọng bị rớt lại sau vụ ẩu đả lúc nãy... Nhưng em tìm nãy giờ chẳng thấy gì cả."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Tài liệu sao? Nhìn qua đống tàn tích này... Thử kiểm tra dưới nắp capo chiếc xe màu xanh kia xem."
+    },
+    {
+      "type": "narrator",
+      "text": "(Honami tiến tới chiếc xe bị lật, dùng chút sức lực vạch nắp capo lên. Chưa đầy 5 phút sau, cô đã lôi ra được một chiếc USB bám đầy bụi.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Là cái này đúng không? Cầm lấy đi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Ôi... tuyệt quá! Chị tìm ra nhanh thật đấy! Cảm ơn chị... chị tên là gì vậy ạ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Gọi tôi là Honami. Tôi chỉ là một bác sĩ qua đường thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Muộn rồi, tôi đã gọi một chiếc taxi ở đầu phố, cô đi bộ ra đó rồi về nhà nghỉ ngơi đi. Đừng vướng vào mấy chuyện đâm chém này nữa, không hợp với cô đâu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Honami... chị cũng làm việc ở thế giới ngầm này sao? Em... em muốn biết thêm về chị..."
+    },
+    {
+      "type": "narrator",
+      "text": "(Honami không trả lời. Cô chỉ mỉm cười nhẹ nhàng, xoa đầu Ichika một cái rồi quay lưng bước đi, hòa mình vào bóng đêm tĩnh lặng của đường phố.)"
+    }
+  ]
+}

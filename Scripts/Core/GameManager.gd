@@ -324,6 +324,14 @@ func _handle_scripted_battle_finish(victory: bool):
 	elif scripted_battle_id == "street_survival":
 		story.set_flag("street_survival_done", true)
 		story.set_flag("street_survival_won", victory)
+	elif scripted_battle_id == "ops_kanade":
+		if victory: story.set_flag("ops_kanade_done", true)
+	elif scripted_battle_id == "ops_ichika":
+		if victory: story.set_flag("ops_ichika_done", true)
+	elif scripted_battle_id == "ops_honami":
+		if victory: story.set_flag("ops_honami_done", true)
+	elif scripted_battle_id == "pm_boss":
+		if victory: story.set_flag("pm_boss_defeated", true)
 	
 	is_scripted_battle = false
 	scripted_battle_id = ""
