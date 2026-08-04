@@ -216,73 +216,58 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 	"""
 	Khởi tạo các trận đấu theo kịch bản cốt truyện.
 	"""
-	if battle_id == "mizuki_vs_mafuyu":
-		var mizuki = GameManager.get_party_member("Mizuki")
-		var mafuyu = Mafuyu.new() # Create a fresh boss version of Mafuyu
-		mafuyu.entity_name = "Mafuyu (BOSS)"
-		
-		# Set Mafuyu to Level 100 to ensure Mizuki loses
-		LevelManager.set_initial_level(mafuyu, 100)
-		
-		return {
-			"player_team": [mizuki],
-			"enemy_team": [mafuyu],
-			"scenario": ScriptedBattleScenario.new()
-		}
-	if battle_id == "ena_vs_mizuki":
-		var mizuki = GameManager.get_party_member("Mizuki")
-		var ena = GameManager.get_party_member("Ena")
-		
-		return {
-			"player_team": [ena],
-			"enemy_team": [mizuki],
-			"scenario": ScriptedBattleScenario.new()
-		}
-		
-	if battle_id == "ena_vs_thugs":
-		var ena = GameManager.get_party_member("Ena")
-		var enemies = _create_enemies("thug", 3, 25)
-		return {
-			"player_team": [ena],
-			"enemy_team": enemies,
-			"scenario": ScriptedBattleScenario.new()
-		}
+	var registry = {
+		"mizuki_vs_mafuyu": func():
+			var mizuki = GameManager.get_party_member("Mizuki")
+			var mafuyu = Mafuyu.new()
+			mafuyu.entity_name = "Mafuyu (BOSS)"
+			LevelManager.set_initial_level(mafuyu, 100)
+			return {
+				"player_team": [mizuki],
+				"enemy_team": [mafuyu],
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"ena_vs_mizuki": func():
+			return {
+				"player_team": [GameManager.get_party_member("Ena")],
+				"enemy_team": [GameManager.get_party_member("Mizuki")],
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"ena_vs_thugs": func():
+			return {
+				"player_team": [GameManager.get_party_member("Ena")],
+				"enemy_team": _create_enemies("thug", 3, 25),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"harbor_boss": func():
+			var boss = Captain.new()
+			LevelManager.set_initial_level(boss, 25)
+			return {
+				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Ena")],
+				"enemy_team": [boss],
+				"scenario": HarborBossScenario.new()
+			},
+		"prologue": func():
+			return {
+				"player_team": [GameManager.get_party_member("Ichika")],
+				"enemy_team": _create_enemies("kidnapper", 3, 1),
+				"scenario": PrologueScenario.new()
+			},
+		"street_skirmish": func():
+			return {
+				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")],
+				"enemy_team": _create_enemies("terrorist", 3, 25),
+				"scenario": DefaultScenario.new()
+			},
+		"street_survival": func():
+			return {
+				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")],
+				"enemy_team": _create_enemies("terrorist", 3, 25),
+				"scenario": StreetSurvivalScenario.new()
+			}
+	}
 	
-	if battle_id == "harbor_boss":
-		var p_team = [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Ena")]
-		var boss = Captain.new()
-		LevelManager.set_initial_level(boss, 25)
-		return {
-			"player_team": p_team,
-			"enemy_team": [boss],
-			"scenario": HarborBossScenario.new()
-		}
-		
-	if battle_id == "prologue":
-		var p_team = [GameManager.get_party_member("Ichika")]
-		var enemies = _create_enemies("kidnapper", 3, 1)
-		return {
-			"player_team": p_team,
-			"enemy_team": enemies,
-			"scenario": PrologueScenario.new()
-		}
-		
-	if battle_id == "street_skirmish":
-		var p_team = [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")]
-		var enemies = _create_enemies("terrorist", 3, 25)
-		return {
-			"player_team": p_team,
-			"enemy_team": enemies,
-			"scenario": DefaultScenario.new()
-		}
-		
-	if battle_id == "street_survival":
-		var p_team = [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")]
-		var enemies = _create_enemies("terrorist", 3, 25)
-		return {
-			"player_team": p_team,
-			"enemy_team": enemies,
-			"scenario": StreetSurvivalScenario.new()
-		}
-		
+	if registry.has(battle_id):
+		return registry[battle_id].call()
+	
 	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}

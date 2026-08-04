@@ -5,28 +5,28 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Ichika, khoan đã... Nhóc có ngửi thấy mùi gì lạ không?"
+      "text": "Ichika, khoan đã... Cô có ngửi thấy mùi gì lạ không?"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Mùi khói súng... và... có tiếng bước chân dồn dập đằng sau!"
+      "text": "Mùi khói súng... và cả tiếng bước chân phía sau nữa chị!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Chậc, bị bám đuôi thật rồi. Bọn này trông không giống lính gác bến cảng, chúng trang bị vũ khí nóng!"
+      "text": "Chậc, bị bám đuôi rồi. Đám này không giống lính gác bình thường, chúng có hàng nóng đấy."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Là đám Khủng Bố! Mau chuẩn bị chiến đấu thôi, Mizuki!"
+      "text": "Là bọn chúng! Chị Mizuki, chuẩn bị chiến đấu thôi!"
     }
   ],
   "street_surrounded": [
@@ -35,46 +35,46 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Phù... xử lý xong ba tên đó rồi. Nhưng... nhóc nhìn xung quanh kìa!"
+      "text": "Phù... xử lý xong ba tên đó rồi. Nhưng... cô nhìn quanh đi kìa!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Cái gì?! Từ ngã tư... bọn chúng đang ùa ra từ mọi phía! Đông quá!"
+      "text": "Từ ngã tư... bọn chúng đang ùa ra kìa! Đông quá, chị làm sao bây giờ!"
     },
     {
       "type": "narrator",
-      "text": "Tiếng còi hú vang dội. Hàng chục tên khủng bố trang bị tận răng bao vây ngã tư đường phố."
+      "text": "Tiếng còi xe xé toạc màn đêm. Hàng chục tên lính vũ trang đầy đủ đã bao vây ngã tư từ mọi hướng."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Chết tiệt! Sóng vô tuyến bị nhiễu hoàn toàn, không thể gọi về căn cứ!"
+      "text": "Chết tiệt! Tín hiệu bị nhiễu hoàn toàn rồi, tôi không thể liên lạc với Mafuyu!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Cánh tay tôi... lực lượng của chúng quá áp đảo, áp lực này làm tôi không thể tập trung vận sức mạnh kỹ năng được nữa!"
+      "text": "Tay em... Áp lực quá lớn, em không thể tập trung để dùng kỹ năng được nữa chị ơi!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Tớ cũng vậy, tớ không dùng được kỹ năng nữa! Phải tự vệ bằng đòn đánh thường thôi!"
+      "text": "Tôi cũng vậy, kỹ năng bị khóa rồi! Chỉ còn cách đánh tay đôi thôi!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Không thể lùi bước! Chiến đấu đến cùng!"
+      "text": "Em không lùi bước đâu! Cùng chiến đấu nào chị!"
     }
   ],
   "street_aftermath": [
@@ -83,32 +83,32 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Các người... dám đụng đến thành viên của Nightcord sao?"
+      "text": "Dám đụng đến người của Nightcord... chán sống rồi sao?"
     },
     {
       "type": "narrator",
-      "text": "Khói súng dần tan. 10 tên khủng bố đổ sụp xuống đất trước lưỡi kiếm lạnh lùng của Mafuyu."
+      "text": "Khói súng dần tan. Hơn chục tên lính ngã gục dưới mũi kiếm vô tình của Mafuyu."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "*Thở dốc* Chị... Mafuyu... Sếp đến cứu tụi em sao..."
+      "text": "*Thở dốc* Chị Mafuyu... May quá, chị đến cứu tụi em..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "May quá... sếp đến kịp lúc... tí nữa là tụi em tỏi mạng rồi."
+      "text": "May quá... cô đến kịp lúc... Chậm chút nữa là đi đời rồi."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Lần sau đừng tự ý đi sâu vào khu vực nguy hiểm. Về Safehouse trị thương thôi."
+      "text": "Lần sau đừng tự ý dấn sâu vào khu vực nguy hiểm nữa. Trở về căn cứ trị thương đi."
     }
   ]
 }

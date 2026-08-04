@@ -61,21 +61,7 @@ func _fill_rect(tile: String, x1, y1, x2, y2, collision: bool):
 			_place_tile(tile, Vector2(x, y), collision)
 
 func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
-	var tile_pos = grid_pos * TILE_SIZE
-	var sprite = Sprite2D.new()
-	sprite.texture = load(ASSET_ROOT + file)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = tile_pos
-	add_child(sprite)
-	if has_collision:
-		var body = StaticBody2D.new()
-		body.position = tile_pos
-		var col = CollisionShape2D.new()
-		var shape = RectangleShape2D.new()
-		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-		col.shape = shape
-		body.add_child(col)
-		add_child(body)
+	MapUtils.place_tile(self, file, grid_pos, has_collision)
 
 func _spawn_interactables():
 	# --- Cổng chính: 3 wave lính gác tuần tự, sau đó là Boss ---

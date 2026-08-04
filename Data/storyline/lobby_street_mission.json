@@ -5,49 +5,49 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ichika, Mizuki. Hai đứa đến đây một lát."
+      "text": "Ichika, Mizuki. Hai cô qua đây một lát."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Dạ, có chuyện gì vậy chị Mafuyu?"
+      "text": "Dạ, có lệnh gì mới sao chị Mafuyu?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Sếp gọi tụi em có việc gì thế? Lại có nhiệm vụ mới hả sếp?"
+      "text": "Ái chà, sếp gọi có chuyện gì đây? Lại có con mồi mới cho bọn tôi hả?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Đúng vậy. Theo thông tin trinh sát, gần đây có một nhóm vũ trang lạ mặt xuất hiện ở khu phố mua sắm phía Tây."
+      "text": "Đúng. Nguồn tin tình báo cho biết có một nhóm vũ trang lạ mặt đang tụ tập ở khu phố mua sắm phía Tây."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Chúng mang trang bị quân sự rất nặng, có dấu hiệu của quân khủng bố. Tôi cần hai đứa đi thám thính và đánh giá tình hình."
+      "text": "Trang bị của chúng rất hạng nặng, giống bọn khủng bố. Tôi cần hai cô đến đó do thám và đánh giá mức độ rủi ro."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Em hiểu rồi. Em và Mizuki sẽ đi ngay."
+      "text": "Vâng, em rõ rồi. Em và chị Mizuki sẽ đi ngay."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Tuân lệnh sếp! Đi thám thính đường phố thôi nào!"
+      "text": "Rõ rồi sếp! Nào, đi dạo phố thôi Ichika~"
     }
   ],
   "lobby_street_mission_ready_mizuki": [
@@ -56,21 +56,21 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Ichika! Nhóc đã sẵn sàng chưa? Khi nào xong việc chuẩn bị thì mình xuất phát nhé!"
+      "text": "Ichika! Cô chuẩn bị đồ đạc xong chưa? Xong xuôi thì mình vút luôn nhé!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Tôi sẵn sàng rồi, đi thôi Mizuki!"
+      "text": "Em sẵn sàng rồi, đi thôi chị Mizuki!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#e0a0c0",
-      "text": "Được rồi, hướng ra cửa chính để đến Khu phố Tây nào!"
+      "text": "Okela! Cửa chính thẳng tiến đến Khu phố Tây nào!"
     }
   ],
   "lobby_street_mission_not_ready": [

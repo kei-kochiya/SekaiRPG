@@ -9,7 +9,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Bắt đầu tiệc thôi. 25 tên tất cả, nhớ phối hợp với chị đấy nhé."
+      "text": "Bắt đầu dọn dẹp thôi. Có 25 tên, liệu mà bám sát tôi đấy, cô bé."
     }
   ],
   "warehouse_wave1_start": [
@@ -18,14 +18,14 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Em phát hiện nhóm đầu tiên."
+      "text": "Em thấy nhóm đầu tiên rồi."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Khá lắm. Đừng để bọn chúng trốn thoát."
+      "text": "Được. Đừng để lọt tên nào."
     }
   ],
   "warehouse_wave3_start": [
@@ -34,14 +34,14 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Quân tiếp viện đến rồi. Cẩn thận nhé, Ichika."
+      "text": "Tiếp viện của chúng tới rồi kìa. Liệu hồn đấy, Ichika."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Vâng."
+      "text": "Vâng, thưa chị."
     }
   ],
   "warehouse_wave5_start": [
@@ -50,14 +50,14 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Có vẻ là vắng hơn rồi đấy. Cố gắng đừng gục trước chị nhé!"
+      "text": "Vãn bớt rồi. Đừng có gục trước tôi đấy, Ichika."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Haaah!"
+      "text": "Hộc... em biết rồi...!"
     }
   ],
   "warehouse_clear": [
@@ -66,7 +66,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Còn 1 con chuột nhắt nữa. Để chị moi thông tin từ hắn."
+      "text": "Sót một con chuột nhắt. Để tôi nạy miệng nó xem sao."
     },
     {
       "type": "narrator",
@@ -77,71 +77,71 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Khai ra mạng lưới của mày nhanh, tôi không đủ kiên nhẫn đứng nghe tiếng heo chọc tiết đâu."
+      "text": "Khai. Tổ chức của mày ở đâu. Tôi không có hứng nghe chó sủa đâu."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Tên kia",
       "color": "#888888",
-      "text": "Tao nói... tao nói hết, hàng này của băng Yakuza khu Tây dạt về... bãi đáp tiếp theo là cảng số bốn..."
+      "text": "Tao khai... tao khai hết! Hàng này do băng Yakuza khu Tây tuồn về... bến đỗ tiếp theo là cảng số bốn..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "[Bộ đàm] Tôi nghe đủ rồi."
+      "text": "[Bộ đàm] Thông tin thế là đủ."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Tôi vừa gọi người bên quân đội đến thu dọn bãi chiến trường này và hốt trọn đống vũ khí kia rồi. Chúng ta sẽ được chia vài món từ lô hàng đó. Xong việc rồi thì hai cô về đi."
+      "text": "Tôi đã báo quân đội đến dọn dẹp và thu hồi đống vũ khí đó. Tổ chức sẽ được chia phần. Xong việc rồi, hai cô rút về đi."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Rõ thưa sếp."
+      "text": "Đã rõ."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Đi về nào nhóc."
+      "text": "Rút thôi, Ichika."
     },
     {
       "type": "narrator",
-      "text": "Ichika bước ra khỏi kho hàng trước."
+      "text": "Ichika lảo đảo bước ra khỏi kho hàng."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Người ta nói tôi là thiên thần."
+      "text": "Đã từng có kẻ gọi tôi là thiên thần."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Tiếc thay, phần thiên thần đó đã bị phần ác quỷ này lấn át từ lâu rồi."
+      "text": "Đáng tiếc... phần thiên thần ấy chết từ lâu rồi."
     },
     {
       "type": "narrator",
-      "text": "Kanade sử dụng năng lực từ trường, găm cây đinh sắt xuyên qua sọ tên lính còn sót lại."
+      "text": "Bằng năng lực từ trường, Kanade búng nhẹ ngón tay. Một cây đinh sắt phóng thẳng, xuyên thủng sọ tên lính đang run rẩy."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Đi thong thả nhé."
+      "text": "Chết thanh thản."
     }
   ]
 }

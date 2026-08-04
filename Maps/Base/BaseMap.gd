@@ -214,21 +214,9 @@ func _on_exit_interacted():
 # ── Quest HUD ────────────────────────────────────────────────────────────────
 
 func _build_quest_hud():
-	var canvas = CanvasLayer.new()
-	canvas.layer = 10
-	add_child(canvas)
-	_quest_panel = PanelContainer.new()
-	_quest_panel.position = Vector2(20, 20)
-	canvas.add_child(_quest_panel)
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0, 0, 0.6)
-	sb.border_width_left = 4
-	sb.border_color = Color(0.4, 0.7, 1.0)
-	sb.set_content_margin_all(10)
-	_quest_panel.add_theme_stylebox_override("panel", sb)
-	_quest_label = Label.new()
-	_quest_label.add_theme_font_size_override("font_size", 16)
-	_quest_panel.add_child(_quest_label)
+	var hud = QuestHUDBuilder.build(self)
+	_quest_panel = hud["panel"]
+	_quest_label = hud["label"]
 	_refresh_quest_label()
 
 func _refresh_quest_label():
@@ -256,21 +244,7 @@ func _draw_room_walls(x1, y1, x2, y2):
 	_place_tile("bottom_right_wall.png", Vector2(x2, y2), true)
 
 func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
-	var tile_pos = grid_pos * TILE_SIZE
-	var sprite = Sprite2D.new()
-	sprite.texture = load(ASSET_ROOT + file)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = tile_pos
-	add_child(sprite)
-	if has_collision:
-		var body = StaticBody2D.new()
-		body.position = tile_pos
-		var col = CollisionShape2D.new()
-		var shape = RectangleShape2D.new()
-		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-		col.shape = shape
-		body.add_child(col)
-		add_child(body)
+	MapUtils.place_tile(self, file, grid_pos, has_collision)
 
 func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool):
 	var tile_pos = grid_pos * TILE_SIZE

@@ -20,7 +20,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ưm... sao tự nhiên gối ôm nay to thế nhỉ... lại còn mềm mềm ấm ấm nữa..."
+      "text": "Ưm... sao nay cái gối ôm to thế nhỉ... lại còn mềm mềm ấm ấm..."
     },
     {
       "type": "action",
@@ -34,21 +34,21 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ể?!"
+      "text": "Hả?!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Đây là con nhóc lính mới mà. Sao nó lại ở đây!?)"
+      "text": "(Đây là con nhóc lính mới mà? Sao cô ta lại ở đây?!)"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Và tại sao mình lại ôm chặt nó thế này!?)"
+      "text": "(Mà tại sao mình lại ôm cứng ngắc nó thế này?!)"
     }
   ],
   "morning_push": [
@@ -64,14 +64,14 @@
       "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Ưm... nhột quá Ena... cho em ngủ thêm..."
+      "text": "Ưm... nhột quá chị Ena... cho em ngủ thêm đi..."
     },
     {
       "type": "action",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Chết rồi! Cứ thế này thì không thoát ra được mất, phải làm mạnh tay thôi!)"
+      "text": "(Khốn nạn! Con nhỏ này dai như đỉa, phải mạnh tay thôi!)"
     }
   ],
   "morning_kick": [
@@ -80,7 +80,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Lấy hết sức bình sinh, đạp một cú thật mạnh!)"
+      "text": "(Dồn toàn lực, tung một cú đạp không thương tiếc!)"
     },
     {
       "type": "narrator",
@@ -91,28 +91,28 @@
       "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Ái da! Đau quá!!"
+      "text": "Á!!! Đau quá!!!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị làm cái trò gì vậy Ena?! Tự nhiên đạp em rớt giường!"
+      "text": "Chị làm cái trò gì vậy chị Ena?! Đang yên đang lành tự dưng đạp em xuống giường!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ai bảo nhóc dám cướp giường của tôi! Còn ôm cứng ngắc thế kia nữa, ghê chết đi được!"
+      "text": "Ai mượn cô cướp giường của tôi! Lại còn ôm cứng ngắc tôi nữa, tởm chết đi được!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chính chị là người ôm chặt em đấy chứ! Quá đáng thật sự, em đi méc Mafuyu-san!"
+      "text": "Rõ ràng là chị ôm em mà! Chị quá đáng vừa thôi, em đi méc chị Mafuyu!"
     },
     {
       "type": "action",
@@ -126,7 +126,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Xì, làm như tôi sợ bà sếp già đó chắc. Ngủ tiếp cho sướng thân..."
+      "text": "Xì, làm như tôi sợ cô ta chắc. Ngủ tiếp cho sướng thân..."
     }
   ],
   "mafuyu_order": [
@@ -135,42 +135,42 @@
       "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Mới sáng sớm đã ồn ào cái gì vậy?"
+      "text": "Sáng sớm mà ồn ào cái gì vậy?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Mafuyu-san! Chị Ena vô cớ đạp em xuống giường kìa!"
+      "text": "Chị Mafuyu! Chị Ena vô cớ đạp em rớt xuống giường kìa!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ừ, tôi nghe thấy hết rồi."
+      "text": "Tôi nghe thấy cả rồi."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Nhóc chạy ra cửa hàng tiện lợi mua chút đồ ăn sáng cho cả nhóm đi, để chuyện đó cho tôi giải quyết. Nhớ mua 2 thùng mì ly vị nước tương nữa nhé."
+      "text": "Ichika, ra cửa hàng tiện lợi mua chút đồ ăn sáng cho cả nhóm đi, chuyện này cứ để tôi. Nhớ mua thêm hai thùng mì ly vị nước tương."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Vâng ạ!"
+      "text": "V-vâng ạ!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ena đâu rồi?"
+      "text": "Ena đâu rồi."
     },
     {
       "type": "narrator",
@@ -190,42 +190,42 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Em mua đồ ăn sáng về rồi đây- Ơ..."
+      "text": "Em mua đồ ăn sáng về rồi đây chị Mafuyu... Ủa?!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Thả tao xuốnnggggg! Đầu tao sắp nổ tung vì dồn máu não rồi đây này!!!"
+      "text": "Thả tôi xuống mau! Máu dồn hết lên não tôi rồi đây này!!!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị bị Mafuyu-san trói treo ngược lên trần nhà luôn á?!"
+      "text": "Chị bị chị Mafuyu treo ngược lên trần nhà luôn á?!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Tại ai mà chị ra nông nỗi này hả?! Còn không mau ra đây cởi trói cho chị!"
+      "text": "Vì ai mà tôi ra nông nỗi này hả?! Còn không mau cởi trói cho tôi!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Thái độ lồi lõm quá nha. Em nghĩ là nên để chị bị treo thêm vài phút nữa cho tỉnh táo đi."
+      "text": "Chị bị treo mà còn cộc cằn thế. Chắc để chị treo thêm vài phút nữa cho máu lên não đi ha."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Con ranh kia!! Mày đợi tao xuống được xem tao có lột da mày không!"
+      "text": "Con ranh kia!! Cứ đợi tôi xuống được đi xem tôi có bóp cổ cô không!"
     }
   ],
   "talk_kanade": [
@@ -234,14 +234,14 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#aaaacc",
-      "text": "Đừng lo, sợi dây thừng đó Mafuyu mua hàng chất lượng cao đấy, không đứt nổi đâu."
+      "text": "Cứ mặc kệ Ena đi. Dây thừng đó Mafuyu mua hàng chất lượng cao, không đứt nổi đâu."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#aaaacc",
-      "text": "Cứ để cậu ấy treo lủng lẳng vậy như món đồ trang trí Halloween cũng vui mà."
+      "text": "Cứ để Ena treo lủng lẳng vậy cho vui mắt, nhìn cũng hợp trang trí đấy."
     }
   ],
   "talk_mizuki": [
@@ -250,14 +250,14 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Ena-nan trông như con dơi bị bắt quả tang đang ngủ nướng vậy. Buồn cười quá đi mất, tớ phải chụp lại làm meme mới được!"
+      "text": "Trông Ena như con dơi mập bị tóm cổ vậy. Buồn cười quá đi mất, tôi phải chụp lại làm meme mới được!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Góc độ này... hoàn hảo! Tối nay tớ sẽ spam ảnh này vào group chat."
+      "text": "Góc này... hoàn hảo! Tối nay tôi sẽ spam ảnh này vào group chat."
     }
   ],
   "talk_ena_hanging": [
@@ -266,14 +266,14 @@
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Nhìn cái gì mà nhìn! Mày có thả tao xuống ngay không thì bảo!!"
+      "text": "Nhìn cái gì mà nhìn! Cô có thả tôi xuống ngay không thì bảo!!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Sếp kia đúng là ác quỷ, tự nhiên lôi mình ra khỏi chăn ấm nệm êm rồi bắt treo như cục giò lụa thế này..."
+      "text": "Mafuyu đúng là ác quỷ, tự nhiên lôi cổ tôi ra khỏi giường rồi treo lên như đòn chả thế này..."
     }
   ],
   "talk_mafuyu_release": [
@@ -282,35 +282,35 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Mua đồ ăn sáng về rồi à? Ngoan lắm."
+      "text": "Mua đồ về rồi à. Đặt lên bàn đi."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Ena bị treo nãy giờ mặt đỏ gay rồi kìa, tha cho chị ấy đi Mafuyu-san."
+      "text": "Chị Ena bị treo nãy giờ mặt đỏ lựng rồi kìa, chị tha cho chị ấy đi chị Mafuyu."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Được rồi, phạt thế đủ rồi."
+      "text": "Được rồi. Phạt thế là đủ."
     },
     {
       "type": "action",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "(Vung tay cắt đứt dây thừng, làm Ena rớt xuống sàn)"
+      "text": "(Vung nhẹ tay, đoạn dây thừng đứt phựt, Ena rơi tự do xuống sàn.)"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ái! Cái eo của tôi... tụi bay nhớ mặt tao đấy!"
+      "text": "Á!! Cái eo của tôi... Mấy người cứ đợi đấy!"
     }
   ],
   "talk_kanade_post": [
@@ -319,7 +319,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#aaaacc",
-      "text": "Đến lúc phải kiểm tra lại trang bị và nâng cấp kỹ năng rồi. Em đã sẵn sàng chưa, Ichika?"
+      "text": "Đã đến lúc kiểm tra trang bị và nâng cấp kỹ năng rồi. Cô sẵn sàng chưa, Ichika?"
     }
   ],
   "talk_mafuyu_post": [
@@ -328,7 +328,7 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Có muốn ra ngoài khởi động gân cốt một chút không? Ena cũng có thể tham gia đợt này."
+      "text": "Muốn ra ngoài khởi động gân cốt không? Lần này Ena cũng có thể tham gia."
     }
   ]
 }

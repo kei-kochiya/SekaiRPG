@@ -36,23 +36,20 @@ func _init():
 func resonance(target: Entity):
 	# [Tuyệt Âm Phân Rã]: Đòn đơn 150% ATK vật lý.
 	print(entity_name, " ngân lên [Tuyệt Âm Phân Rã]!")
-	var raw_dmg = DamageCalculator.calculate_damage(self , target)
-	var scaled_dmg = int(raw_dmg * 1.5)
+	var scaled_dmg = DamageCalculator.calculate_damage(self, target, 1.5)
 	target.take_damage(scaled_dmg)
 
 func soundless_voice(target: Entity):
 	# [Giọng Ca Vô Thanh]: Đòn đơn vật lý + Stun 1 lượt.
 	print(entity_name, " bóp nghẹt bằng [Giọng Ca Vô Thanh]...")
-	var dmg = DamageCalculator.calculate_damage(self , target)
+	var dmg = DamageCalculator.calculate_damage(self, target, 1.0)
 	target.take_damage(dmg)
 	target.add_status({"type": "Stun", "duration": 1})
 
 func salvation_song(target: Entity):
 	# [Final Requiem]: Tuyệt kỹ - Pure DMG 350% ATK + Stun 2 lượt.
 	print(entity_name, " bùng nổ với [Final Requiem]!")
-	var multiplier = TypeChart.get_multiplier(self.type, target.type)
-	var massive_dmg = int(self.atk * 3.5 * multiplier)
-	
+	var massive_dmg = DamageCalculator.calculate_damage(self, target, 3.5)
 	target.take_damage(massive_dmg, "pure")
 	target.add_status({"type": "Stun", "duration": 2})
 

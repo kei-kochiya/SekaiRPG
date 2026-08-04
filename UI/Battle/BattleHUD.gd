@@ -141,7 +141,7 @@ func show_victory():
 
 func show_defeat():
 	"""Hiển thị banner thông báo thất bại."""
-	var banner = _create_banner("THẤT BẠI...", Color(0.6, 0.2, 0.2))
+	var banner = _create_banner("THẤT BẠI...\nĐang rút lui về Safehouse...", Color(0.6, 0.2, 0.2))
 	add_child(banner)
 	banner.position.y -= 100
 	var tw = create_tween()

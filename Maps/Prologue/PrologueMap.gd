@@ -78,21 +78,7 @@ func _build_map():
 		_place_tile("tree.png", spot, true)
 
 func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
-	var sprite = Sprite2D.new()
-	sprite.texture = load(ASSET_ROOT + file)
-	sprite.scale = Vector2(4, 4) # 8x4 = 32
-	sprite.position = grid_pos * TILE_SIZE
-	add_child(sprite)
-	
-	if has_collision:
-		var body = StaticBody2D.new()
-		body.position = sprite.position
-		var col = CollisionShape2D.new()
-		var shape = RectangleShape2D.new()
-		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-		col.shape = shape
-		body.add_child(col)
-		add_child(body)
+	MapUtils.place_tile(self, file, grid_pos, has_collision)
 
 # ─────────────────────────────────────────────
 #  PHASE 0: Ichika surrounded by kidnappers
@@ -155,26 +141,10 @@ func _setup_phase_1():
 # ─────────────────────────────────────────────
 
 func _create_enemy_npc(pos: Vector2, sprite_file: String):
-	var root = Node2D.new()
-	root.position = pos
-	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/Person/" + sprite_file)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = Vector2(0, -12)
-	root.add_child(sprite)
-	root.z_index = 2
-	add_child(root)
+	MapUtils.create_enemy_npc(self, pos, sprite_file)
 
 func _create_visual_npc(_npc_name: String, pos: Vector2, color: Color):
-	var root = Node2D.new()
-	root.position = pos
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = color
-	root.add_child(vis)
-	root.z_index = 2
-	add_child(root)
+	MapUtils.create_visual_npc(self, _npc_name, pos, color)
 
 func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, lines: Array):
 	var root = Node2D.new()

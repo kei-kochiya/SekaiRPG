@@ -69,25 +69,8 @@ func _build_cafe():
 	_create_dummy_char("Giang Hồ 3", Vector2(18, 12), Color.DARK_GRAY)
 
 func _create_dummy_char(p_name: String, grid_pos: Vector2, color: Color):
-	var root = Node2D.new()
-	root.position = grid_pos * TILE_SIZE
-	
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = color
-	root.add_child(vis)
-	
-	var lbl = Label.new()
-	lbl.text = p_name
-	lbl.add_theme_color_override("font_color", color)
-	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.position = Vector2(-20, -40)
-	root.add_child(lbl)
-	
-	add_child(root)
+	MapUtils.create_dummy_char(self, p_name, grid_pos, color)
 
-# ── Tile Helpers ─────────────────────────────────────────────────────────────
 func _fill_floor(x1, y1, x2, y2):
 	for x in range(x1, x2 + 1):
 		for y in range(y1, y2 + 1):
@@ -106,12 +89,7 @@ func _draw_room_walls(x1, y1, x2, y2):
 	_place_tile("bottom_right_wall.png", Vector2(x2, y2))
 
 func _place_tile(file: String, grid_pos: Vector2):
-	var tile_pos = grid_pos * TILE_SIZE
-	var sprite = Sprite2D.new()
-	sprite.texture = load(ASSET_ROOT + file)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = tile_pos
-	add_child(sprite)
+	MapUtils.place_tile(self, file, grid_pos, false)
 
 func _place_indoor_asset(file: String, grid_pos: Vector2, _has_collision: bool, flip_h: bool = false, rot: float = 0.0):
 	var tile_pos = grid_pos * TILE_SIZE

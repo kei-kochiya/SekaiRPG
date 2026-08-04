@@ -46,10 +46,7 @@ func _ready():
 func _process(_delta):
 	if not _is_mobile: return
 	
-	var current_scene = get_tree().current_scene
-	if not current_scene: return
-	
-	var is_menu = current_scene.scene_file_path.begins_with("res://Menus/")
+	var is_menu = GameManager.is_in_menu
 	
 	if is_menu:
 		if _root.visible:
@@ -59,7 +56,7 @@ func _process(_delta):
 	
 	var is_paused = get_tree().paused
 	var in_dialogue = GameManager.is_in_dialogue
-	var in_battle = current_scene.name == "BattleRoot" or current_scene.scene_file_path == "res://BattleSystem/BattleScene.tscn"
+	var in_battle = GameManager.is_in_battle
 	
 	if (in_dialogue or is_paused) and _root.visible:
 		_root.visible = false
@@ -89,6 +86,11 @@ func _setup_ui():
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_root)
 	
+	_build_joystick()
+	_build_menu_button()
+	_build_interact_button()
+
+func _build_joystick():
 	_joystick_base = Control.new()
 	_joystick_base.custom_minimum_size = Vector2(JOYSTICK_RADIUS * 2, JOYSTICK_RADIUS * 2)
 	_joystick_base.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -106,7 +108,8 @@ func _setup_ui():
 	_joystick_handle.position = -_joystick_handle.size / 2
 	_joystick_handle.color = Color(1, 1, 1, 0.4)
 	_joystick_base.add_child(_joystick_handle)
-	
+
+func _build_menu_button():
 	_btn_menu = TextureButton.new()
 	_btn_menu.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
 	_btn_menu.custom_minimum_size = MENU_BUTTON_SIZE
@@ -132,7 +135,8 @@ func _setup_ui():
 	_btn_menu.add_child(menu_lbl)
 	
 	_root.add_child(_btn_menu)
-	
+
+func _build_interact_button():
 	_btn_interact = TextureButton.new()
 	_btn_interact.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
 	_btn_interact.custom_minimum_size = INTERACT_BUTTON_SIZE

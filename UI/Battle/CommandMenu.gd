@@ -131,12 +131,7 @@ func _on_action_picked(action_name: String):
 	chosen_action = action_name
 	action_container.visible = false
 	
-	var target_type = "enemy"
-	if action_name != "attack":
-		for s in current_entity.skills:
-			if s["method"] == action_name:
-				target_type = s.get("target", "enemy")
-				break
+	var target_type = GameManager.get_skill_target_type(current_entity, action_name)
 	
 	if target_type == "all_allies" or target_type == "all_enemies" or target_type == "self":
 		visible = false
@@ -157,7 +152,7 @@ func _show_targets(target_type: String = "enemy"):
 	target_container.add_child(header)
 	
 	var team = enemy_team if target_type == "enemy" else current_entity.allies
-	var alive = AIManager.get_alive_targets(team)
+	var alive = GameManager.get_alive_targets(team)
 	for member in alive:
 		var label = "%s  HP %d/%d" % [member.entity_name, member.current_hp, member.max_hp]
 		var btn = _make_btn(label, "", true)

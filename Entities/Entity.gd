@@ -145,8 +145,8 @@ func remove_all_status_type(type_name: String):
 	remove_statuses(to_remove)
 
 func clear_all_debuffs():
-	# Thanh tẩy toàn bộ các hiệu ứng xấu (Bleed, Poison, Stun).
-	var debuffs = ["Bleed", "Poison", "Stun"]
+	# Thanh tẩy toàn bộ các hiệu ứng xấu (Bleed, Poison, Stun, Slow).
+	var debuffs = ["Bleed", "Poison", "Stun", "Slow"]
 	var to_remove = []
 	for s in active_statuses:
 		if s["type"] in debuffs:
@@ -182,4 +182,7 @@ func can_use_skill(skill_name: String) -> bool:
 		bool: True nếu dùng được, ngược lại False.
 	"""
 	if skills_disabled: return false
-	return CooldownManager.is_skill_ready(self , skill_name)
+	return cooldowns.get(skill_name, 0) <= 0
+
+func get_portrait_path() -> String:
+	return "res://Art/Portraits/%s.png" % entity_name.to_lower()

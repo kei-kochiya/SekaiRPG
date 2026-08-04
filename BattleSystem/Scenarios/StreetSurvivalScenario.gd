@@ -51,21 +51,9 @@ func on_entity_died(main: Node, entity: Entity):
 	if not is_rescue_phase:
 		# Nếu là kẻ địch chết trong pha sinh tồn, lập tức spawn con mới thế chỗ
 		if entity in main.enemy_team:
-			spawn_counter += 1
 			var current_level = clamp(25 + int(turns_elapsed / 2), 25, 30)
-			var new_enemy = Terrorist.new()
-			new_enemy.entity_name = "Khủng Bố " + str(spawn_counter)
-			LevelManager.set_initial_level(new_enemy, current_level)
-			
-			main.enemy_team.append(new_enemy)
-			main.all_entities.append(new_enemy)
-			new_enemy.died.connect(main._on_entity_died.bind(new_enemy))
-			
-			main._refresh_team_context()
-			main.hud.setup(main.player_team, main.enemy_team)
-			main._setup_gauge_teams()
-			main._regenerate_timeline()
-			print("[Infinite Spawn] Kẻ địch mới xuất hiện: ", new_enemy.entity_name, " (Level ", current_level, ")")
+			_spawn_terrorist(main, current_level)
+			print("[Infinite Spawn] Kẻ địch mới xuất hiện (Level ", current_level, ")")
 			
 		# Kiểm tra nếu cả hai Ichika và Mizuki đều gục ngã
 		var alive_players = AIManager.get_alive_targets(main.player_team)
@@ -79,24 +67,28 @@ func on_entity_died(main: Node, entity: Entity):
 			
 			# Nếu chưa đủ 10 mạng, tiếp tục spawn quái level 30
 			if kill_count < 10:
-				spawn_counter += 1
-				var new_enemy = Terrorist.new()
-				new_enemy.entity_name = "Khủng Bố " + str(spawn_counter)
-				LevelManager.set_initial_level(new_enemy, 30)
-				
-				main.enemy_team.append(new_enemy)
-				main.all_entities.append(new_enemy)
-				new_enemy.died.connect(main._on_entity_died.bind(new_enemy))
-				
-				main._refresh_team_context()
-				main.hud.setup(main.player_team, main.enemy_team)
-				main._setup_gauge_teams()
-				main._regenerate_timeline()
+				_spawn_terrorist(main, 30)
 			else:
 				# Đã hạ gục 10 tên, chiến thắng!
 				print("[StreetSurvivalScenario] Mafuyu dẹp sạch vòng vây! Chiến thắng!")
 				main.hud.show_victory()
 				main.battle_over = true
+
+func _spawn_terrorist(main: Node, level: int, update_engine: bool = true):
+	spawn_counter += 1
+	var new_enemy = Terrorist.new()
+	new_enemy.entity_name = "Khủng Bố " + str(spawn_counter)
+	LevelManager.set_initial_level(new_enemy, level)
+	
+	main.enemy_team.append(new_enemy)
+	main.all_entities.append(new_enemy)
+	new_enemy.died.connect(main._on_entity_died.bind(new_enemy))
+	
+	if update_engine:
+		main._refresh_team_context()
+		main.hud.setup(main.player_team, main.enemy_team)
+		main._setup_gauge_teams()
+		main._regenerate_timeline()
 
 func _trigger_rescue_phase(main: Node):
 	is_rescue_phase = true
@@ -131,16 +123,13 @@ func _trigger_rescue_phase(main: Node):
 		
 	# Dọn dẹp kẻ địch cũ, tạo mới 3 tên Level 30
 	main.enemy_team.clear()
+	main.all_entities.clear()
+	main.all_entities.append_array(main.player_team)
+	
 	for i in range(3):
-		spawn_counter += 1
-		var e = Terrorist.new()
-		e.entity_name = "Khủng Bố " + str(spawn_counter)
-		LevelManager.set_initial_level(e, 30)
-		main.enemy_team.append(e)
-		e.died.connect(main._on_entity_died.bind(e))
+		_spawn_terrorist(main, 30, false)
 		
 	# Cập nhật toàn bộ hệ thống Battle Engine
-	main.all_entities = main.player_team + main.enemy_team
 	main._refresh_team_context()
 	for e in main.all_entities:
 		e.action_gauge = 0.0 # Reset thanh hành động để bắt đầu pha cứu viện công bằng
@@ -149,7 +138,9 @@ func _trigger_rescue_phase(main: Node):
 	main._regenerate_timeline()
 	
 	# Hiển thị Banner cứu viện
-	if main.hud.has_method("_create_banner"):
+	if main.hud.has_method("show_rescue_banner"):
+		main.hud.show_rescue_banner()
+	elif main.hud.has_method("_create_banner"):
 		var banner = main.hud._create_banner("MAFUYU CỨU VIỆN!", Color(0.6, 0.4, 1.0))
 		main.hud.add_child(banner)
 		banner.position.y -= 150

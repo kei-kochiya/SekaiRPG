@@ -38,3 +38,6 @@ func gunshot(target: Entity):
 	# Thêm tỷ lệ gây Bleed
 	if target.has_method("add_status") and randf() < 0.5:
 		target.add_status({"type": "Bleed", "duration": 2})
+
+func get_portrait_path() -> String:
+	return "res://Assets/Person/terrorist.png"

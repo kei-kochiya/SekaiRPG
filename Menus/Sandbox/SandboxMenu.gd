@@ -12,9 +12,6 @@ var selected_enemies: Array = []
 var player_lv_spin: SpinBox
 var enemy_lv_spin: SpinBox
 
-var available_chars = ["Ichika", "Kanade", "Mafuyu", "Ena", "Mizuki", "Honami"]
-var available_monsters = ["Lính Cảng", "Kidnapper", "Target", "Nhân Viên Kho", "Đội Trưởng (BOSS)"]
-
 func _ready():
 	_build_lists()
 	_apply_kenney_styles()
@@ -37,7 +34,7 @@ func _apply_kenney_styles():
 
 func _build_lists():
 	# Player list (Characters only)
-	for c_name in available_chars:
+	for c_name in GameManager.available_sandbox_chars:
 		var btn = CheckBox.new()
 		btn.text = c_name
 		btn.toggled.connect(_on_player_toggled.bind(c_name))
@@ -54,7 +51,7 @@ func _build_lists():
 	$HBox/PlayerSide.move_child(pl_box, 2)
 	
 	# Enemy list (Characters + Monsters)
-	var all_enemies = available_chars + available_monsters
+	var all_enemies = GameManager.available_sandbox_chars + GameManager.available_sandbox_monsters
 	
 	var el_box = HBoxContainer.new()
 	var el_lbl = Label.new()
@@ -158,7 +155,7 @@ func _on_start():
 	# Setup Enemies
 	var e_lv = int(enemy_lv_spin.value)
 	for e_name in selected_enemies:
-		var enemy = _create_sandbox_entity(e_name)
+		var enemy = GameManager.create_sandbox_entity(e_name)
 		LevelManager.set_initial_level(enemy, e_lv)
 		GameManager.sandbox_enemy_team.append(enemy)
 	
@@ -168,39 +165,3 @@ func _on_start():
 func _on_back():
 	await ScreenFade.fade_out(0.5)
 	get_tree().change_scene_to_file("res://Menus/Start/StartMenu.tscn")
-
-func _create_sandbox_entity(e_name: String) -> Entity:
-	# If it's a character name, create a NEW instance so it doesn't share state with party
-	match e_name:
-		"Ichika": return Ichika.new()
-		"Kanade": return Kanade.new()
-		"Mafuyu": return Mafuyu.new()
-		"Ena": return Ena.new()
-		"Mizuki": return Mizuki.new()
-		"Honami": return Honami.new()
-		"Lính Cảng":
-			var g = Entity.new()
-			g.entity_name = "Lính Cảng"
-			g.max_hp = 250; g.current_hp = 250; g.atk = 75; g.defense = 40; g.spd = 95; g.type = "Hard"
-			return g
-		"Kidnapper":
-			var k = Entity.new()
-			k.entity_name = "Kidnapper"
-			k.max_hp = 80; k.current_hp = 80; k.atk = 40; k.defense = 20; k.spd = 80; k.type = "None"
-			k.skills = [{"name": "Shank", "method": "basic_attack", "cooldown_turns": 1}]
-			return k
-		"Target":
-			var t = Entity.new()
-			t.entity_name = "Target"
-			t.max_hp = 100; t.current_hp = 100; t.atk = 45; t.defense = 25; t.spd = 90; t.type = "None"
-			return t
-		"Nhân Viên Kho":
-			var w = WarehouseWorker.new()
-			return w
-		"Đội Trưởng (BOSS)":
-			var b = Entity.new()
-			b.entity_name = "Đội Trưởng"
-			b.max_hp = 3500; b.current_hp = 3500; b.atk = 240; b.defense = 130; b.spd = 110; b.type = "Hard"
-			b.skills = [{"name": "Execution", "method": "basic_attack", "cooldown_turns": 1}]
-			return b
-	return Entity.new()

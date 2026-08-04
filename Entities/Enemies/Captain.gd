@@ -34,3 +34,6 @@ func execution(target: Entity):
 	print(entity_name, " tung đòn [Xử Quyết]!")
 	var dmg = DamageCalculator.calculate_damage(self, target)
 	target.take_damage(dmg)
+
+func get_portrait_path() -> String:
+	return "res://Assets/Person/captain.png"

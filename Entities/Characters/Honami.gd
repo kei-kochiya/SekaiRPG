@@ -50,8 +50,8 @@ func merciful_cleave(_target: Entity):
 	print(entity_name, " vung vũ khí: [Vệt Cắt Xót Thương]!")
 	for enemy in enemies:
 		if enemy.current_hp > 0:
-			var dmg = DamageCalculator.calculate_damage(self , enemy)
-			enemy.take_damage(int(dmg * 0.8))
+			var dmg = DamageCalculator.calculate_damage(self, enemy, 0.8)
+			enemy.take_damage(dmg)
 
 func rearguard_stance(target: Entity):
 	# [Điểm Tựa Vững Chắc]: Xóa debuff + hồi 30% max_hp cho bản thân và 1 đồng minh.

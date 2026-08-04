@@ -37,3 +37,6 @@ func suppress(target: Entity):
 	if randf() < 0.3:
 		print(entity_name, " đã làm choáng mục tiêu!")
 		target.add_status({"type": "Stun", "duration": 1})
+
+func get_portrait_path() -> String:
+	return "res://Assets/Person/guard.png"
