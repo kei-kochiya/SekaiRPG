@@ -164,17 +164,23 @@ static var character_classes = {
 static func _setup_training_battle() -> Dictionary:
 	"""
 	Thiết lập trận đấu luyện tập.
+	Dùng bản sao (clone) của party member để HP không bị ảnh hưởng sau training.
 	"""
 	var player_team = []
 	var total_lv = 0
 	var p_count = 0
 	
 	for p_name in GameManager.training_participants:
-		var p = GameManager.get_party_member(p_name)
-		if p:
-			player_team.append(p)
-			total_lv += p.level
-			p_count += 1
+		var real_p = GameManager.get_party_member(p_name)
+		if real_p:
+			# Tạo bản sao (fresh instance) cùng class, cùng level — HP luôn đầy
+			var clone_class = character_classes.get(p_name)
+			if clone_class:
+				var clone = clone_class.new()
+				LevelManager.set_initial_level(clone, real_p.level)
+				player_team.append(clone)
+				total_lv += real_p.level
+				p_count += 1
 	
 	var mean_lv = int(float(total_lv) / max(p_count, 1))
 	var target_lv = clamp(mean_lv + randi_range(-3, 3), 1, 100)
@@ -194,7 +200,7 @@ static func _setup_training_battle() -> Dictionary:
 			var e_name = candidates.pop_back()
 			GameManager.training_used_opponents.append(e_name)
 			
-			# Create a FRESH instance instead of duplicating, to ensure level scaling works
+			# Luôn dùng fresh instance cho đối thủ
 			var enemy_class = character_classes.get(e_name)
 			if enemy_class:
 				var enemy = enemy_class.new()
@@ -207,10 +213,6 @@ static func _setup_training_battle() -> Dictionary:
 
 	GameManager.last_battle_max_lv = target_lv
 	
-	for p in player_team:
-		var min_hp = int(p.max_hp * 0.5)
-		if p.current_hp < min_hp: p.current_hp = min_hp
-
 	return {"player_team": player_team, "enemy_team": enemies, "scenario": DefaultScenario.new()}
 
 static func _setup_scripted_battle(battle_id: String) -> Dictionary:
