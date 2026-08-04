@@ -20,6 +20,11 @@ func get_npc_positions() -> Dictionary:
 func on_stage_start():
 	pass
 
+# Trả về màu ánh sáng của bản đồ (Color.WHITE = bình thường, tối hơn = ban đêm)
+# Được gọi TRƯỚC fade_in để tránh flash sáng
+func get_scene_lighting() -> Color:
+	return Color.WHITE
+
 # Xử lý tương tác với NPC
 func handle_npc_interaction(_npc_name: String):
 	pass

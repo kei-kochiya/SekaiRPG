@@ -21,7 +21,10 @@ func _ready():
 	_build_map()
 	_spawn_player()
 	_build_mission_hud()
-	_spawn_current_wave()
+	
+	# Chỉ spawn wave trigger khi chưa hoàn thành tất cả các wave
+	if GameManager.warehouse_wave <= 5:
+		_spawn_current_wave()
 	
 	# Chờ màn hình chuyển cảnh sáng hoàn toàn để tránh Dialogue UI (Layer 100) bị che bởi ScreenFade (Layer 200)
 	await ScreenFade.fade_in(0.8)

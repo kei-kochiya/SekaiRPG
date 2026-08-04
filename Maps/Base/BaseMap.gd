@@ -40,6 +40,15 @@ func _ready() -> void:
 	_spawn_transitions()
 	_build_quest_hud()
 	
+	# Áp dụng ánh sáng TRUỚC fade_in để tránh flash sáng khi vào ban đêm
+	if current_stage:
+		var light_color = current_stage.get_scene_lighting()
+		if light_color != Color.WHITE:
+			var scene_lighting = CanvasModulate.new()
+			scene_lighting.name = "SceneLighting"
+			scene_lighting.color = light_color
+			add_child(scene_lighting)
+	
 	# Chờ màn hình chuyển cảnh sáng hoàn toàn trước khi chạy hội thoại kịch bản
 	await ScreenFade.fade_in(0.8)
 	
