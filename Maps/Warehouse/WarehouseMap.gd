@@ -21,14 +21,17 @@ func _ready():
 	_build_map()
 	_spawn_player()
 	_build_mission_hud()
-	_spawn_current_wave()
+	
+	# Chỉ spawn wave trigger khi chưa hoàn thành tất cả các wave
+	if GameManager.warehouse_wave <= 5:
+		_spawn_current_wave()
 	
 	# Chờ màn hình chuyển cảnh sáng hoàn toàn để tránh Dialogue UI (Layer 100) bị che bởi ScreenFade (Layer 200)
 	await ScreenFade.fade_in(0.8)
 	
 	# Trường hợp kết thúc: Đã qua wave 5, hiện hội thoại rồi chuyển về Safehouse mới.
 	if GameManager.warehouse_wave > 5:
-		AudioManager.play_music("after_warehouse")
+		AudioManager.play_music("night")
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_clear"), func():
 			_return_to_base_with_fade()
 		)

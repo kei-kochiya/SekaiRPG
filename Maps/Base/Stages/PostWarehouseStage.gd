@@ -8,15 +8,16 @@ func get_npc_positions() -> Dictionary:
 		"Kanade": Vector2(24 * map.TILE_SIZE, 15 * map.TILE_SIZE),
 	}
 
+func get_scene_lighting() -> Color:
+	if not GameManager.harbor_mission_unlocked:
+		return Color(0.2, 0.2, 0.4) # Ban đêm
+	return Color.WHITE
+
 func on_stage_start():
 	if not GameManager.harbor_mission_unlocked:
-		# Hiệu ứng buổi đêm
-		var lighting = CanvasModulate.new()
-		map.add_child(lighting)
-		lighting.color = Color(0.2, 0.2, 0.4) # Trời tối
-		
+		# Lấy CanvasModulate đã được tạo sẵn bởi BaseMap trước fade_in
+		var lighting = map.get_node_or_null("SceneLighting")
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_rest"), func():
-			# Transition to morning
 			_do_morning_transition(lighting)
 		)
 

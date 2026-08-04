@@ -21,17 +21,17 @@ func _ready():
 func _run_logic():
 	if not GameManager.get_flag("ops_kanade_done"):
 		_setup_scene("Kanade", "Hẻm tối", Color(0.2, 0.2, 0.25))
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("defense_agency_ops")["ops_kanade_intro"], func():
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_intro"), func():
 			_start_battle("ops_kanade")
 		)
 	elif not GameManager.get_flag("ops_ichika_done"):
 		_setup_scene("Ichika", "Đường phố", Color(0.15, 0.2, 0.2))
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("defense_agency_ops")["ops_ichika_intro"], func():
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_intro"), func():
 			_start_battle("ops_ichika")
 		)
 	elif not GameManager.get_flag("ops_honami_done"):
 		_setup_scene("Honami", "Bến cảng", Color(0.1, 0.15, 0.25))
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("defense_agency_ops")["ops_honami_intro"], func():
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_intro"), func():
 			_start_battle("ops_honami")
 		)
 	else:
