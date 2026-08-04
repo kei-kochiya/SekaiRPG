@@ -31,7 +31,7 @@ func _ready():
 	
 	# Trường hợp kết thúc: Đã qua wave 5, hiện hội thoại rồi chuyển về Safehouse mới.
 	if GameManager.warehouse_wave > 5:
-		AudioManager.play_music("after_warehouse")
+		AudioManager.play_music("night")
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_clear"), func():
 			_return_to_base_with_fade()
 		)

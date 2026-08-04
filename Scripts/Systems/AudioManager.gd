@@ -18,7 +18,6 @@ var _current_track: String = ""
 
 const MUSIC_DIR = "res://Music/"
 const TRACKS = {
-	"after_warehouse": "after_warehouse.mp3",
 	"base": "base_music.mp3",
 	"battle": "battle_music.mp3",
 	"main_menu": "main_menu.mp3",
