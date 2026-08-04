@@ -185,3 +185,54 @@ graph TD
     *   Tạo file Stage mới trong `Maps/Base/Stages/` (kế thừa `BaseMapStage`).
     *   Ghi đè các hàm như `get_npc_positions()`, `on_stage_start()` để đặt logic.
     *   Đăng ký Stage vào `BaseMap.gd`.
+
+---
+
+## 8. Game Flow & State Transitions (Luồng chuyển cảnh)
+
+Trò chơi sử dụng cấu trúc State Machine đơn giản do `GameManager` (Autoload) quản lý để chuyển đổi giữa bản đồ (Overworld) và trận đánh (BattleScene).
+
+### 8.1. Kích hoạt trận đấu (Trigger Battle)
+1. `GameManager.store_map_state()`: Lưu lại đường dẫn map hiện tại và vị trí người chơi.
+2. Kích hoạt cờ tương ứng: `is_scripted_battle` (nếu là trận cốt truyện), `is_training_mode` (nếu là trận huấn luyện), hoặc không có (trận quét map thông thường).
+3. `GameManager.trigger_battle()`: Gọi `get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")`.
+
+### 8.2. Kết thúc trận đấu (Battle Completion)
+Tại `Main.gd` (Battle Engine), khi trận đấu phân định thắng thua:
+1. Gọi `scenario.get_victory_status()` để xác định kết quả (is_victory).
+2. Gọi `scenario.on_battle_completed(main, is_victory)` để dọn dẹp và xử lý cốt truyện.
+
+**LƯU Ý CỰC KỲ QUAN TRỌNG:**
+- Nếu bạn tạo một Custom Scenario kế thừa trực tiếp từ `BattleScenario` (ví dụ `StreetSurvivalScenario`), **bạn BẮT BUỘC phải gọi `GameManager.finish_battle(is_victory, ...)`** ở cuối hàm `on_battle_completed`. Nếu không, game sẽ bị treo (đứng yên) tại giao diện chiến thắng do không có lệnh chuyển scene.
+- Nếu kế thừa từ `DefaultScenario`, hàm `on_battle_completed` của nó đã gọi sẵn `GameManager.finish_battle()`.
+
+### 8.3. Hậu trận đấu (Post-Battle)
+1. `GameManager.finish_battle()` được gọi.
+2. Cộng EXP, Cập nhật Quest/Wave dựa trên cờ thắng/thua.
+3. Nếu thua (ở trận cốt truyện/map): Hồi máu đầy đủ và Dịch chuyển người chơi về Safehouse (`BaseMap.tscn`).
+4. Chuyển scene: `get_tree().change_scene_to_file(current_map_file)`.
+
+---
+
+## 9. Tóm tắt Cốt truyện (Story Summary)
+
+Tiến trình trò chơi được chia thành các chương (Arcs) chính, xoay quanh biệt đội Nightcord (Mafuyu, Kanade, Ena, Mizuki) và các nhân vật liên quan (Ichika, Honami):
+
+### 9.1. Mở màn (Prologue)
+- **Sự kiện:** Ichika bị bắt cóc bởi một đám côn đồ. Nightcord (dẫn đầu bởi Mafuyu) xuất hiện giải cứu kịp thời.
+- **Bản đồ:** `PrologueMap` -> `BaseMap`.
+
+### 9.2. Các nhiệm vụ phụ & Xây dựng căn cứ (Mid-game)
+- **Nhà kho (Warehouse):** Nhóm dọn dẹp các đợt quái (công nhân biến chất) tại một nhà kho.
+- **Quán Cafe (Cafe):** Ena say xỉn, gây ra một cuộc ẩu đả nhỏ với giang hồ (`Thug`).
+- **Cảng (Harbor):** Nhóm thâm nhập bến cảng, tùy chọn đánh lính gác hoặc đối đầu trực tiếp với Boss Đội Trưởng (`Captain`).
+
+### 9.3. Vòng vây đường phố (Street Ambush)
+- **Sự kiện:** Ichika và Mizuki bị khủng bố (`Terrorist`) phục kích tại ngã tư. Bị vô hiệu hóa kỹ năng và ép vào đường cùng. Mafuyu xuất hiện ứng cứu, một mình dọn sạch vòng vây.
+- **Bản đồ:** `StreetMap`.
+
+### 9.4. Hồi Kết (Finale Arc: Chiến dịch Thủ Tướng)
+- **Tiết lộ (Plot Reveal):** Mafuyu phát hiện cấp trên của mình (Thủ tướng) là kẻ giật dây khủng bố để ám sát Nightcord, đồng thời thuê chính họ làm vệ sĩ để tẩu thoát. Cô bí mật liên minh với Honami và lật ngược thế cờ.
+- **Chiến dịch chia cắt (City Operations):** Kanade, Ichika, và Honami tỏa ra 3 hướng khác nhau để dẹp loạn khủng bố.
+- **Trận chiến Xa lộ (Highway):** Mizuki hóa trang thành tài xế của Thủ tướng. Mafuyu và Ena lật bài ngửa ngay trên xe. Trận đánh Boss cuối cùng diễn ra.
+- **Kết cục:** Thủ tướng bị Mafuyu hành quyết tàn nhẫn trước mặt Ichika. Nhóm Nightcord lui về ở ẩn tại phòng khám của Honami. Bộ trưởng Quốc phòng lên thay thế và bưng bít vụ việc.

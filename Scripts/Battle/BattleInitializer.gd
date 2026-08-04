@@ -286,13 +286,13 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 		"street_skirmish": func():
 			return {
 				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")],
-				"enemy_team": _create_enemies("terrorist", 3, 25),
+				"enemy_team": _create_enemies("terrorist", 3, 20),
 				"scenario": DefaultScenario.new()
 			},
 		"street_survival": func():
 			return {
 				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")],
-				"enemy_team": _create_enemies("terrorist", 3, 25),
+				"enemy_team": _create_enemies("terrorist", 3, 20),
 				"scenario": StreetSurvivalScenario.new()
 			}
 	}

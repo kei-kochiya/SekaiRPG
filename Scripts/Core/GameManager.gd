@@ -260,7 +260,7 @@ func full_heal_party():
 	for key in party.keys():
 		var entity = party[key]
 		if entity:
-			entity.hp = entity.max_hp
+			entity.current_hp = entity.max_hp
 			if entity.has_method("clear_all_debuffs"):
 				entity.clear_all_debuffs()
 
