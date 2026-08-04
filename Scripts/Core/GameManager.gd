@@ -310,7 +310,19 @@ func finish_battle(victory: bool, count: int = 1):
 		get_tree().change_scene_to_file(current_map_file)
 
 func _handle_scripted_battle_finish(victory: bool):
-	if scripted_battle_id == "mizuki_vs_mafuyu":
+	if scripted_battle_id == "harbor_boss":
+		is_scripted_battle = false
+		scripted_battle_id = ""
+		if victory:
+			story.set_flag("harbor_boss_defeated", true)
+			await get_tree().create_timer(1.5, false).timeout
+			await ScreenFade.fade_out(0.8)
+			last_player_position = Vector2.ZERO
+			get_tree().change_scene_to_file("res://Maps/Alleyway/AlleywayMap.tscn")
+		else:
+			get_tree().change_scene_to_file("res://Maps/Harbor/HarborMap.tscn")
+		return
+	elif scripted_battle_id == "mizuki_vs_mafuyu":
 		story.set_flag("mizuki_vs_mafuyu_done", true)
 	elif scripted_battle_id == "ena_vs_mizuki":
 		story.set_flag("ena_vs_mizuki_done", true)
