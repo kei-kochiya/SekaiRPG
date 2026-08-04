@@ -256,6 +256,14 @@ func store_map_state(map_path: String, player_pos: Vector2):
 func reset_mission_stats():
 	story.enemies_defeated = 0
 
+func full_heal_party():
+	for key in party.keys():
+		var entity = party[key]
+		if entity:
+			entity.hp = entity.max_hp
+			if entity.has_method("clear_all_debuffs"):
+				entity.clear_all_debuffs()
+
 # Chuyển cảnh đến trận chiến
 func trigger_battle():
 	AudioManager.play_music("battle")
@@ -287,6 +295,11 @@ func finish_battle(victory: bool, count: int = 1):
 
 	if victory:
 		_apply_victory_rewards(count)
+	else:
+		full_heal_party()
+		reset_mission_stats()
+		current_map_file = "res://Maps/Base/BaseMap.tscn"
+		last_player_position = Vector2.ZERO
 			
 	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Maps/Harbor/HarborMap.tscn":
 		await get_tree().create_timer(1.5, false).timeout 

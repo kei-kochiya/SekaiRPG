@@ -186,4 +186,3 @@ func can_use_skill(skill_name: String) -> bool:
 
 func get_portrait_path() -> String:
 	return "res://Art/Portraits/%s.png" % entity_name.to_lower()
-
