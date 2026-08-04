@@ -30,6 +30,8 @@ var flags: Dictionary = {
 	"training_kanade_done": false,
 	"training_ena_done": false,
 	"training_mizuki_done": false,
+	"training_mafuyu_done": false,
+	"training_honami_done": false,
 	"post_harbor_training_reset": false,
 	"ena_control_phase": false,
 	"ena_cafe_unlocked": false,
@@ -46,7 +48,19 @@ var flags: Dictionary = {
 	"mizuki_vs_mafuyu_done": false,
 	"mizuki_report_done": false,
 	"post_harbor_morning_done": false,
-	"ena_released": false
+	"ena_released": false,
+	"street_mission_fully_done": false,
+	"post_street_trained_once": false,
+	"honami_house_unlocked": false,
+	"honami_house_intro_done": false,
+	"honami_unlocked_intro_done": false,
+	"pm_arc_started": false,
+	"ops_kanade_done": false,
+	"ops_ichika_done": false,
+	"ops_honami_done": false,
+	"pm_car_scene_done": false,
+	"pm_boss_defeated": false,
+	"finale_done": false
 }
 
 var warehouse_wave: int = 1

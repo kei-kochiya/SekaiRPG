@@ -50,7 +50,13 @@ func _init_stage():
 	var stage_script
 	
 	# Logic chọn Stage dựa trên tiến độ câu chuyện
-	if GameManager.get_flag("ena_cafe_done"):
+	if GameManager.get_flag("pm_boss_defeated") and not GameManager.get_flag("finale_done"):
+		stage_script = preload("res://Maps/Base/Stages/FinaleStage.gd")
+	elif GameManager.get_flag("honami_house_unlocked"):
+		stage_script = preload("res://Maps/Base/Stages/HonamiHouseUnlockedStage.gd")
+	elif GameManager.get_flag("street_mission_fully_done"):
+		stage_script = preload("res://Maps/Base/Stages/PostStreetStage.gd")
+	elif GameManager.get_flag("ena_cafe_done"):
 		stage_script = preload("res://Maps/Base/Stages/PostCafeStreetMissionStage.gd")
 	elif GameManager.get_flag("mizuki_report_done"):
 		stage_script = preload("res://Maps/Base/Stages/PostHarborMorningStage.gd")
@@ -191,7 +197,18 @@ func _spawn_transitions():
 
 func _on_exit_interacted():
 	# Ưu tiên đi Harbor nếu đã nhận nhiệm vụ và chưa hoàn thành
-	if (GameManager.accepted_harbor_mission or GameManager.get_flag("harbor_mission_unlocked")) and not GameManager.harbor_mission_done:
+	if GameManager.get_flag("honami_house_unlocked"):
+		DialogueManager.show_choice(["[Đến nhà Honami]", "[Đi dạo (Khu phố)]", "[Hủy]"])
+		var idx = await DialogueManager.choice_made
+		if idx == 0:
+			await ScreenFade.fade_out(1.0)
+			GameManager.store_map_state("res://Maps/HonamiHouse/HonamiHouseMap.tscn", Vector2.ZERO)
+			get_tree().change_scene_to_file("res://Maps/HonamiHouse/HonamiHouseMap.tscn")
+		elif idx == 1:
+			await ScreenFade.fade_out(1.0)
+			GameManager.store_map_state("res://Maps/Street/StreetMap.tscn", Vector2.ZERO)
+			get_tree().change_scene_to_file("res://Maps/Street/StreetMap.tscn")
+	elif (GameManager.accepted_harbor_mission or GameManager.get_flag("harbor_mission_unlocked")) and not GameManager.harbor_mission_done:
 		await ScreenFade.fade_out(1.0)
 		GameManager.store_map_state("res://Maps/Harbor/HarborMap.tscn", Vector2.ZERO)
 		get_tree().change_scene_to_file("res://Maps/Harbor/HarborMap.tscn")

@@ -1,0 +1,12 @@
+{
+  "pm_boss_aftermath": [
+    {"speaker": "PM", "text": "Khốn kiếp... Các người dám chống lại ta? Ta là Thủ tướng!"},
+    {"speaker": "Mafuyu", "text": "Một kẻ cặn bã như ngươi không xứng đáng sống thêm một giây nào nữa."},
+    {"speaker": "PM", "text": "Cô... cô định làm gì?! Dừng lại!"},
+    {"speaker": "Mafuyu", "text": "Kết thúc thôi."},
+    {"speaker": "System", "text": "(Âm thanh của lưỡi kiếm xé gió, đầu của gã Thủ tướng lăn lông lốc trên đất)"},
+    {"speaker": "Ichika", "text": "(Chạy tới) Chị Mafuyu! Em... em đến rồi..."},
+    {"speaker": "Ichika", "text": "(Sững sờ nhìn cảnh tượng máu me) Chị... chị vừa làm gì vậy...?"},
+    {"speaker": "Mafuyu", "text": "Chỉ là dọn rác thôi. Cô không cần bận tâm."}
+  ]
+}

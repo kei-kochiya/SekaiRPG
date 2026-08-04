@@ -1,0 +1,18 @@
+{
+  "ops_intro": [
+    {"speaker": "Ichika", "text": "Báo cáo Cơ quan Phòng vệ. Chúng em đã sẵn sàng nhận lệnh."},
+    {"speaker": "Commander", "text": "Tốt lắm. Kanade, Ichika, Honami, ba cô sẽ được phân công tiêu diệt khủng bố ở 3 khu vực khác nhau."},
+    {"speaker": "Kanade", "text": "Tôi nhận nhiệm vụ ở Khu A. Tôi đi đây."},
+    {"speaker": "Honami", "text": "Tôi sẽ phụ trách Khu B. Mọi người cẩn thận nhé."},
+    {"speaker": "Ichika", "text": "Em sẽ dọn dẹp Khu C. Chị Kanade, chị Honami, bảo trọng!"}
+  ],
+  "ops_kanade_done": [
+    {"speaker": "Kanade", "text": "Khu A đã được dọn sạch. Lũ chuột nhắt này không làm khó được tôi."}
+  ],
+  "ops_ichika_done": [
+    {"speaker": "Ichika", "text": "Em đã tiêu diệt xong mục tiêu ở Khu C. Mọi thứ an toàn."}
+  ],
+  "ops_honami_done": [
+    {"speaker": "Honami", "text": "Khu B đã hoàn tất. Chúng ta có thể rút lui được rồi."}
+  ]
+}

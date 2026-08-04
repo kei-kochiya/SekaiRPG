@@ -10,7 +10,8 @@ Chịu trách nhiệm quản lý trạng thái toàn cục của trò chơi, bao
 
 | File | Chức năng chính | Phụ thuộc vào |
 | :--- | :--- | :--- |
-| **`GameManager.gd`** (Autoload) | Quản lý trạng thái toàn cục (Party, Save/Load, Scene Transition). Điều phối các `Scripted Battle`. | `StoryState`, `LevelManager` |
+| **`GameManager.gd`** (Autoload) | Quản lý trạng thái toàn cục (Party, Scene Transition). Điều phối các `Scripted Battle` và xử lý Game Over. | `StoryState`, `LevelManager`, `SaveManager` |
+| **`SaveManager.gd`** | Tách biệt logic mã hóa/giải mã, lưu và tải dữ liệu JSON, tách tải công việc từ GameManager. | `StoryState` |
 | **`StoryState.gd`** | Lưu trữ các cờ (flags) kịch bản và tiến độ nhiệm vụ (wave, quest). | Không có |
 | **`LevelManager.gd`** | Xử lý nhận EXP, tính toán chỉ số theo cấp độ (Soft/Hard Cap), và tự động phân bổ chỉ số (Auto-upgrade) cho quái vật. | `Entity` |
 
@@ -35,7 +36,7 @@ Hệ thống chiến đấu theo lượt (Turn-based) phức tạp sử dụng c
 | **`ProcessStatus.gd`** | Xử lý logic tại đầu/cuối lượt (Trừ máu do Bleed/Poison, giảm Cooldown, Stun). | `Entity` |
 
 ### 2.3. Scenarios (Kịch bản chiến đấu)
-Hệ thống sử dụng **Scenario Pattern** để can thiệp vào các "Hooks" của trận đấu (on_start, on_turn_start, on_entity_died).
+Hệ thống sử dụng **Scenario Pattern** để can thiệp vào các "Hooks" của trận đấu (on_start, on_turn_start, on_entity_died). Nằm trong thư mục `BattleSystem/Scenarios/`.
 | File | Chức năng chính |
 | :--- | :--- |
 | **`BattleScenario.gd`** | Lớp cơ sở (Abstract) định nghĩa các hooks chiến đấu. |
@@ -60,10 +61,11 @@ Tuân thủ chặt chẽ mô hình **MVC (Model-View-Controller)**, tách biệt
 
 ## 4. World & Maps (Hệ thống bản đồ)
 
-Quản lý không gian Overworld và luồng di chuyển của người chơi. Safehouse sử dụng **Stage Pattern** để thay đổi không gian theo thời gian thực mà không cần đổi Scene.
+Quản lý không gian Overworld và luồng di chuyển của người chơi. Các Map được tối ưu bằng `MapUtils.gd` để sử dụng chung logic vẽ gạch ngói, spawn NPC. 
 
 | File/Thư mục | Chức năng chính | Trạng thái (Story) |
 | :--- | :--- | :--- |
+| **`MapUtils.gd`** | Tiện ích hỗ trợ tạo hình nền, vẽ tường, spawn nhân vật giảm thiểu lặp code. | Hệ thống phụ |
 | **`PrologueMap.gd`** | Bản đồ mở đầu. Quản lý kịch bản Ichika bị bao vây và Mafuyu cứu viện. | Tutorial |
 | **`BaseMap.gd`** (Shell)| Vỏ bọc Safehouse. Chứa BaseMapStage để thay đổi không gian (sáng/tối/buổi sáng). | Hub/Safehouse |
 | **`WarehouseMap.gd`** | Bản đồ Nhà kho. Đánh theo dạng Wave liên tục. | Nhiệm vụ phụ |
@@ -71,21 +73,24 @@ Quản lý không gian Overworld và luồng di chuyển của người chơi. S
 | **`CafeMap.gd`** | Bản đồ trang trí Quán Cafe. Cảnh hội thoại và phân nhánh kết cục sự kiện Ena say xỉn. | Nhiệm vụ phụ |
 | **`HarborMap.gd`** | Bản đồ Bến cảng. Quản lý đường đi (Đánh lính gác hoặc vào thẳng Boss). | Nhiệm vụ chính |
 | **`AlleywayMap.gd`** | Bản đồ Hẻm nhỏ. Trạm dừng chân và hội thoại sau khi đánh Boss. | Transition |
-| **`StreetMap.gd`** | Bản đồ Đường phố ngã tư đô thị. Quản lý kịch bản thám thính, trận phục kích Skirmish, trận chiến sinh tồn đặc biệt của Ichika & Mizuki và pha cứu viện của Mafuyu. Dàn dựng bối cảnh xe đỏ/xanh, vỉa hè, vạch qua đường cực kỳ chuyên nghiệp. | Nhiệm vụ chính |
+| **`StreetMap.gd`** | Bản đồ Đường phố ngã tư đô thị. Dàn dựng bối cảnh xe cộ, trận phục kích, sinh tồn và pha cứu viện của Mafuyu. | Nhiệm vụ chính |
+| **`HonamiHouseMap.gd`** | Bản đồ Phòng khám tư nhân của Honami. Cung cấp Free Roam và tính năng Luyện tập với Honami. | Hub phụ |
+| **`CityOperationsMap.gd`** | Bản đồ chiến dịch của tổ chức phòng vệ, tự động tạo background Hẻm/Đường/Cảng để phục vụ chiến dịch chia cắt của Kanade, Ichika, Honami. | Sự kiện cuối |
+| **`HighwayMap.gd`** | Bản đồ xa lộ đêm. Kịch bản tẩu thoát trên xe và trận Boss cuối. | Sự kiện cuối |
 
 ---
 
 ## 5. Entities (Thực thể & Chỉ số)
 
-Thiết kế theo mô hình Hướng đối tượng (OOP). Mỗi nhân vật hoặc kẻ địch kế thừa từ một Base Class thống nhất.
+Thiết kế theo mô hình Hướng đối tượng (OOP). Mỗi nhân vật hoặc kẻ địch kế thừa từ một Base Class thống nhất. Tận dụng tính đa hình (Polymorphism) để tải ảnh thông qua `get_portrait_path()`.
 
 ### 5.1. Base Class
 | File | Chức năng chính |
 | :--- | :--- |
-| **`Entity.gd`** | Nền tảng của vạn vật. Quản lý Stats (HP, ATK, SPD, DEF), Mảng Kỹ năng (Skills), Buffs/Debuffs (Status), và Hệ (Elements). |
+| **`Entity.gd`** | Nền tảng của vạn vật. Quản lý Stats (HP, ATK, SPD, DEF), Mảng Kỹ năng (Skills), Buffs/Debuffs (Status), và Hệ (Elements). Tích hợp logic nhận diện ảnh chân dung `get_portrait_path()`. |
 
 ### 5.2. Characters (Phe ta)
-Các script nằm trong `Entities/Characters/`. Mỗi nhân vật (Ichika, Mafuyu, Ena, v.v.) có kỹ năng, chỉ số Hard Cap và cơ chế tương tác (Synergy) riêng biệt (VD: Ichika & Mafuyu tương tác với Bleed).
+Các script nằm trong `Entities/Characters/`. Mỗi nhân vật (Ichika, Mafuyu, Ena, Mizuki, Kanade, Honami) có kỹ năng, chỉ số Hard Cap và cơ chế tương tác (Synergy) riêng biệt. Lớp nhân vật giờ đây tự động định tuyến đường dẫn Avatar UI của mình.
 
 ### 5.3. Enemies (Kẻ địch)
 Các script nằm trong `Entities/Enemies/`.
@@ -95,17 +100,19 @@ Các script nằm trong `Entities/Enemies/`.
 *   **`TrainingBot.gd`**: Dùng cho chế độ Sandbox/Training.
 *   **`Thug.gd`**: Kẻ địch giang hồ xuất hiện tại Quán Cafe (CafeMap).
 *   **`Terrorist.gd`**: Kẻ địch khủng bố xuất hiện tại khu vực Ngã tư đường phố (StreetMap) trong pha phục kích và sinh tồn, có kỹ năng xả súng liên thanh gây Bleed.
+*   **`PrimeMinister.gd`**: Trùm cuối siêu mạnh (12000 HP), có kỹ năng Lệnh Bắn Tỉa (AOE) và Khóa Quyền Bính (Stun), cơ chế gọi đệ.
 
 ---
 
 ## 6. UI & Common Systems (Hệ thống UI & Hỗ trợ)
 
-Quản lý các giao diện hỗ trợ tương tác người chơi, cài đặt hệ thống và tối ưu hóa trải nghiệm trên đa nền tảng di động.
+Quản lý các giao diện hỗ trợ tương tác người chơi, thiết kế dựa trên các lớp Builder để tránh nhồi nhét logic vào file trung tâm.
 
 | File | Vai trò | Chức năng chính |
 | :--- | :--- | :--- |
-| **`MobileControls.gd`** (Autoload) | **Mobile Controller** | Tạo joystick ảo, các nút bấm (Menu, Interact) có bao viền gỗ tinh tế. Tự động ẩn/hiện thông minh tùy thuộc vào scene (Ẩn ở Menus, ẩn Joystick ở Battle) và hỗ trợ chạm tua đối thoại cực nhạy. |
-| **`PauseMenu.gd`** (Autoload) | **System Menu** | Menu tạm dừng tích hợp chỉnh âm lượng (Master Volume), bật/tắt Fast Battle (tăng tốc lượt AI), và tính năng **Skip Battle** (bảo mật bằng mật mã ẩn danh `27101108`). |
+| **`MobileControls.gd`** (Autoload) | **Mobile Controller** | Tạo joystick ảo, các nút bấm (Menu, Interact) có bao viền gỗ tinh tế. Tự động ẩn/hiện thông minh tùy thuộc vào scene. |
+| **`PauseMenu.gd`** & **`PauseMenuBuilder.gd`** | **System Menu** | Menu tạm dừng tích hợp chỉnh âm lượng, bật/tắt Fast Battle, và tính năng Skip Battle. PauseMenuBuilder chịu trách nhiệm vẽ giao diện tĩnh. |
+| **`QuestHUDBuilder.gd`** | **UI Builder** | Lắp ráp bảng điều khiển hiển thị Quest tại các Map. |
 | **`UpgradeUI.gd`** | **Upgrade View** | Giao diện nâng cấp thuộc tính, chỉ số cho nhân vật bằng tài nguyên thu thập được. |
 
 ---
@@ -132,6 +139,7 @@ graph TD
     subgraph Core
         GM[GameManager] --> SS[StoryState]
         GM --> LM[LevelManager]
+        GM --> SManager[SaveManager]
     end
 
     subgraph Battle
@@ -146,6 +154,7 @@ graph TD
         MAP[Maps] --> GM
         MAP --> DM[DialogueManager]
         BM[BaseMap] --> BSt[BaseMapStages]
+        MAP --> MU[MapUtils]
         MAP --> MC[MobileControls]
     end
 
@@ -153,6 +162,8 @@ graph TD
         DM --> DUI[DialogueUI]
         DM --> DL[DialogueLoader]
         GM --> PM[PauseMenu]
+        PM --> PMB[PauseMenuBuilder]
+        MAP --> QHB[QuestHUDBuilder]
     end
 ```
 
@@ -161,12 +172,12 @@ graph TD
 ## Hướng dẫn mở rộng cho Developer
 
 1.  **Thêm Nhân vật / Kẻ địch mới**:
-    *   Tạo script mới kế thừa `Entity.gd` trong thư mục `Entities/`.
+    *   Tạo script mới kế thừa `Entity.gd` trong thư mục `Entities/Characters/` hoặc `Entities/Enemies/`.
     *   Định nghĩa Base Stats, Element và danh sách Kỹ năng (Skills array).
     *   Đăng ký Class mới vào từ điển `character_classes` hoặc `enemy_classes` trong `BattleInitializer.gd`.
 
 2.  **Thêm Trận đánh Boss (Scripted Battle)**:
-    *   Tạo file Scenario mới trong `Scripts/Battle/Scenarios/` (kế thừa `BattleScenario.gd`).
+    *   Tạo file Scenario mới trong `BattleSystem/Scenarios/` (kế thừa `BattleScenario.gd`).
     *   Cập nhật `BattleInitializer.gd` (hàm `_setup_scripted_battle`) để trả về Scenario này cùng với đội hình tương ứng.
     *   Gọi `GameManager.is_scripted_battle = true` trước khi trigger trận.
 
@@ -174,4 +185,3 @@ graph TD
     *   Tạo file Stage mới trong `Maps/Base/Stages/` (kế thừa `BaseMapStage`).
     *   Ghi đè các hàm như `get_npc_positions()`, `on_stage_start()` để đặt logic.
     *   Đăng ký Stage vào `BaseMap.gd`.
-
