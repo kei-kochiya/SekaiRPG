@@ -63,40 +63,48 @@ func _init_ui():
 	clicker.mouse_filter = Control.MOUSE_FILTER_STOP
 	d_layer.add_child(clicker)
 
+	var base_font = load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf")
+	var italic_font = FontVariation.new()
+	italic_font.base_font = base_font
+	italic_font.variation_transform = Transform2D(Vector2(1.0, 0.0), Vector2(-0.2, 1.0), Vector2.ZERO)
+
+	_build_narrator_box(d_layer, base_font)
+	_build_portraits(d_layer)
+	_build_dialogue_box(d_layer, base_font, italic_font)
+	_build_choice_panel(d_layer)
+
+func _build_narrator_box(parent: Control, font: Font):
 	narrator_box = PanelContainer.new()
 	narrator_box.set_anchors_preset(Control.PRESET_CENTER)
 	narrator_box.offset_left = -400; narrator_box.offset_right = 400
 	narrator_box.offset_top = -40; narrator_box.offset_bottom = 40
 	narrator_box.add_theme_stylebox_override("panel", _get_style("panel_brown_dark.svg", 12, 20))
 	narrator_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	d_layer.add_child(narrator_box)
-	
-	var base_font = load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf")
-	var italic_font = FontVariation.new()
-	italic_font.base_font = base_font
-	italic_font.variation_transform = Transform2D(Vector2(1.0, 0.0), Vector2(-0.2, 1.0), Vector2.ZERO)
+	parent.add_child(narrator_box)
 	
 	narrator_label = RichTextLabel.new()
 	narrator_label.bbcode_enabled = true
 	narrator_label.fit_content = true
 	narrator_label.add_theme_font_size_override("normal_font_size", 20)
-	narrator_label.add_theme_font_override("normal_font", base_font)
+	narrator_label.add_theme_font_override("normal_font", font)
 	narrator_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	narrator_box.add_child(narrator_label)
 	narrator_box.visible = false
 
+func _build_portraits(parent: Control):
 	left_portrait = _create_portrait(Control.PRESET_BOTTOM_LEFT, 80, -456)
 	right_portrait = _create_portrait(Control.PRESET_BOTTOM_RIGHT, -336, -456)
-	d_layer.add_child(left_portrait)
-	d_layer.add_child(right_portrait)
+	parent.add_child(left_portrait)
+	parent.add_child(right_portrait)
 
+func _build_dialogue_box(parent: Control, base_font: Font, italic_font: FontVariation):
 	dialogue_box = PanelContainer.new()
 	dialogue_box.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	dialogue_box.offset_top = -200; dialogue_box.offset_bottom = -30
 	dialogue_box.offset_left = 100; dialogue_box.offset_right = -100
 	dialogue_box.add_theme_stylebox_override("panel", _get_style("panel_brown.svg", 12, 25))
 	dialogue_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	d_layer.add_child(dialogue_box)
+	parent.add_child(dialogue_box)
 
 	text_label = RichTextLabel.new()
 	text_label.bbcode_enabled = true
@@ -112,12 +120,13 @@ func _init_ui():
 	text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	dialogue_box.add_child(text_label)
 
+func _build_choice_panel(parent: Control):
 	choice_panel = PanelContainer.new()
 	choice_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	choice_panel.offset_top = -390; choice_panel.offset_bottom = -215
 	choice_panel.offset_left = 200; choice_panel.offset_right = -200
 	choice_panel.add_theme_stylebox_override("panel", _get_style("panel_border_brown.svg", 32, 16))
-	d_layer.add_child(choice_panel)
+	parent.add_child(choice_panel)
 	
 	choice_box = VBoxContainer.new()
 	choice_box.add_theme_constant_override("separation", 8)

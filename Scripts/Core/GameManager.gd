@@ -10,6 +10,7 @@ Chức năng chính:
 - Điều phối các chế độ chơi đặc biệt: Sandbox, Training, Scripted Battle.
 - Xử lý luồng sau khi trận chiến kết thúc (tính exp, kích hoạt sự kiện, chuyển cảnh).
 - Quản lý tùy chọn cài đặt hệ thống (Volume, Battle Speed, Skip Battle).
+- Cung cấp các hàm hỗ trợ chung (filter, entity factory).
 """
 
 # ── Tham chiếu đến các Manager thành phần ──────────────────────────────────
@@ -32,6 +33,9 @@ var is_scripted_battle: bool = false
 var scripted_battle_id: String = ""
 var sandbox_player_team: Array = []
 var sandbox_enemy_team: Array = []
+
+var available_sandbox_chars = ["Ichika", "Kanade", "Mafuyu", "Ena", "Mizuki", "Honami"]
+var available_sandbox_monsters = ["Lính Cảng", "Kidnapper", "Target", "Nhân Viên Kho", "Đội Trưởng (BOSS)"]
 
 var battle_speed: float = 1.2
 var master_volume: float = 1.0:
@@ -69,6 +73,56 @@ func _init_party():
 	LevelManager.set_initial_level(party["Ena"], 20)
 	LevelManager.set_initial_level(party["Mizuki"], 25)
 	LevelManager.set_initial_level(party["Honami"], 25)
+
+# ── Hàm Hỗ Trợ Dữ Liệu (Engine/Filter) ─────────────────────────────────────
+func get_skill_target_type(entity: Entity, action_name: String) -> String:
+	if action_name == "attack": return "enemy"
+	for s in entity.skills:
+		if s["method"] == action_name:
+			return s.get("target", "enemy")
+	return "enemy"
+
+func get_alive_targets(team: Array) -> Array:
+	var alive_units = []
+	for unit in team:
+		if unit.current_hp > 0:
+			alive_units.append(unit)
+	return alive_units
+
+func create_sandbox_entity(e_name: String) -> Entity:
+	match e_name:
+		"Ichika": return Ichika.new()
+		"Kanade": return Kanade.new()
+		"Mafuyu": return Mafuyu.new()
+		"Ena": return Ena.new()
+		"Mizuki": return Mizuki.new()
+		"Honami": return Honami.new()
+		"Lính Cảng":
+			var g = Entity.new()
+			g.entity_name = "Lính Cảng"
+			g.max_hp = 250; g.current_hp = 250; g.atk = 75; g.defense = 40; g.spd = 95; g.type = "Hard"
+			return g
+		"Kidnapper":
+			var k = Entity.new()
+			k.entity_name = "Kidnapper"
+			k.max_hp = 80; k.current_hp = 80; k.atk = 40; k.defense = 20; k.spd = 80; k.type = "None"
+			k.skills = [{"name": "Shank", "method": "basic_attack", "cooldown_turns": 1}]
+			return k
+		"Target":
+			var t = Entity.new()
+			t.entity_name = "Target"
+			t.max_hp = 100; t.current_hp = 100; t.atk = 45; t.defense = 25; t.spd = 90; t.type = "None"
+			return t
+		"Nhân Viên Kho":
+			var w = WarehouseWorker.new()
+			return w
+		"Đội Trưởng (BOSS)":
+			var b = Entity.new()
+			b.entity_name = "Đội Trưởng"
+			b.max_hp = 3500; b.current_hp = 3500; b.atk = 240; b.defense = 130; b.spd = 110; b.type = "Hard"
+			b.skills = [{"name": "Execution", "method": "basic_attack", "cooldown_turns": 1}]
+			return b
+	return Entity.new()
 
 # ── Kết nối StoryState (Flags & Variables) ─────────────────────────────────
 var flags: Dictionary:
@@ -168,107 +222,19 @@ func end_dialogue():
 const SAVE_PATH = "user://sekai_save.json"
 
 func save_game(path: String = SAVE_PATH):
-	"""
-	Thực hiện lưu toàn bộ dữ liệu game vào một file cụ thể.
-	
-	Args:
-		path (String): Đường dẫn file lưu. Mặc định là SAVE_PATH.
-	Returns: Không có
-	"""
-	var save_data = {
-		"current_map": current_map_file,
-		"player_pos": {"x": last_player_position.x, "y": last_player_position.y},
-		"story": story.serialize(),
-		"party": {}
-	}
-	
-	for p_name in party:
-		var e = party[p_name]
-		save_data["party"][p_name] = {
-			"level": e.level, "exp": e.current_exp, "skill_points": e.skill_points,
-			"atk": e.atk, "defense": e.defense, "spd": e.spd, "max_hp": e.max_hp
-		}
-	
-	var f = FileAccess.open(path, FileAccess.WRITE)
-	if f == null:
-		print("[GameManager] Lỗi: Không thể lưu file tại ", path)
-		return
-	f.store_string(JSON.stringify(save_data))
-	f.close()
-	print("[GameManager] Game đã được lưu tại: ", path)
+	SaveManager.save_game(path)
 
-# Trả về đường dẫn save mặc định dựa trên bản đồ hiện tại
 func get_current_save_path() -> String:
-	var map_name = current_map_file.get_file().get_basename()
-	return "user://" + map_name + ".json"
+	return SaveManager.get_current_save_path()
 
 func load_game(path: String = SAVE_PATH) -> bool:
-	"""
-	Nạp dữ liệu từ một file save cụ thể và phục hồi trạng thái game.
-	
-	Args:
-		path (String): Đường dẫn file nạp. Mặc định là SAVE_PATH.
-	Returns: 
-		bool: True nếu nạp thành công, False nếu thất bại.
-	"""
-	if not FileAccess.file_exists(path):
-		print("[GameManager] Lỗi: Không tìm thấy file tại ", path)
-		return false
-	
-	var f = FileAccess.open(path, FileAccess.READ)
-	var data = JSON.parse_string(f.get_as_text())
-	f.close()
-	
-	if not data is Dictionary: return false
-	
-	current_map_file = data.get("current_map", "res://Maps/Base/BaseMap.tscn")
-	var pos = data.get("player_pos", {"x": 0, "y": 0})
-	last_player_position = Vector2(pos.x, pos.y)
-	
-	if data.has("story"):
-		story.deserialize(data["story"])
-	else:
-		story.flags = data.get("flags", story.flags.duplicate())
-		var m_state = data.get("mission_state", {})
-		story.warehouse_wave = m_state.get("warehouse_wave", 1)
-		story.harbor_wave = m_state.get("harbor_wave", 1)
-		story.enemies_defeated = m_state.get("enemies_defeated", 0)
-	
-	var p_data = data.get("party", {})
-	for p_name in p_data:
-		if party.has(p_name):
-			var e = party[p_name]; var d = p_data[p_name]
-			e.level = d.get("level", 1); e.current_exp = d.get("exp", 0)
-			e.skill_points = d.get("skill_points", 0); e.atk = d.get("atk", e.atk)
-			e.defense = d.get("defense", e.defense); e.spd = d.get("spd", e.spd)
-			e.max_hp = d.get("max_hp", e.max_hp); e.current_hp = e.max_hp
-	
-	print("[GameManager] Game đã tải thành công từ: ", path)
-	get_tree().change_scene_to_file(current_map_file)
-	return true
+	return SaveManager.load_game(path)
 
-# Kiểm tra sự tồn tại của file save
 func has_save(path: String = SAVE_PATH) -> bool:
-	return FileAccess.file_exists(path)
+	return SaveManager.has_save(path)
 
 func get_save_files() -> Array:
-	"""
-	Lấy danh sách tất cả các file save (.json) có trong thư mục user://.
-	
-	Args: Không có
-	Returns:
-		Array: Mảng chứa đường dẫn các file save.
-	"""
-	var saves = []
-	var dir = DirAccess.open("user://")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if not dir.current_is_dir() and file_name.ends_with(".json"):
-				saves.append("user://" + file_name)
-			file_name = dir.get_next()
-	return saves
+	return SaveManager.get_save_files()
 
 # ── Quản Lý Chuyển Cảnh & Trận Chiến ───────────────────────────────────────
 # Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới
@@ -309,43 +275,8 @@ func finish_battle(victory: bool, count: int = 1):
 		return
 
 	if is_scripted_battle:
-		if scripted_battle_id == "mizuki_vs_mafuyu":
-			story.set_flag("mizuki_vs_mafuyu_done", true)
-			is_scripted_battle = false
-			scripted_battle_id = ""
-			get_tree().change_scene_to_file(current_map_file)
-			return
-		elif scripted_battle_id == "ena_vs_mizuki":
-			story.set_flag("ena_vs_mizuki_done", true)
-			story.set_flag("ena_vs_mizuki_won", victory)
-			is_scripted_battle = false
-			scripted_battle_id = ""
-			get_tree().change_scene_to_file(current_map_file)
-			return
-		elif scripted_battle_id == "ena_vs_thugs":
-			story.set_flag("ena_vs_thugs_done", true)
-			story.set_flag("ena_vs_thugs_won", victory)
-			is_scripted_battle = false
-			scripted_battle_id = ""
-			get_tree().change_scene_to_file(current_map_file)
-			return
-		elif scripted_battle_id == "street_skirmish":
-			story.set_flag("street_skirmish_done", true)
-			story.set_flag("street_skirmish_won", victory)
-			is_scripted_battle = false
-			scripted_battle_id = ""
-			get_tree().change_scene_to_file(current_map_file)
-			return
-		elif scripted_battle_id == "street_survival":
-			story.set_flag("street_survival_done", true)
-			story.set_flag("street_survival_won", victory)
-			is_scripted_battle = false
-			scripted_battle_id = ""
-			get_tree().change_scene_to_file(current_map_file)
-			return
-		
-		is_scripted_battle = false
-		scripted_battle_id = ""
+		_handle_scripted_battle_finish(victory)
+		return
 
 	if not victory and is_training_mode:
 		var bonus_exp = int(last_battle_max_lv * 50)
@@ -355,12 +286,7 @@ func finish_battle(victory: bool, count: int = 1):
 		victory = true
 
 	if victory:
-		story.enemies_defeated += count
-		if current_map_file.contains("Warehouse"): story.warehouse_wave += 1
-		if current_map_file == "res://Maps/Harbor/HarborMap.tscn":
-			story.harbor_wave += 1
-			if story.harbor_wave > 4 or harbor_route == "boss":
-				story.set_flag("harbor_boss_defeated", true)
+		_apply_victory_rewards(count)
 			
 	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Maps/Harbor/HarborMap.tscn":
 		await get_tree().create_timer(1.5, false).timeout 
@@ -369,3 +295,31 @@ func finish_battle(victory: bool, count: int = 1):
 		get_tree().change_scene_to_file("res://Maps/Alleyway/AlleywayMap.tscn")
 	else:
 		get_tree().change_scene_to_file(current_map_file)
+
+func _handle_scripted_battle_finish(victory: bool):
+	if scripted_battle_id == "mizuki_vs_mafuyu":
+		story.set_flag("mizuki_vs_mafuyu_done", true)
+	elif scripted_battle_id == "ena_vs_mizuki":
+		story.set_flag("ena_vs_mizuki_done", true)
+		story.set_flag("ena_vs_mizuki_won", victory)
+	elif scripted_battle_id == "ena_vs_thugs":
+		story.set_flag("ena_vs_thugs_done", true)
+		story.set_flag("ena_vs_thugs_won", victory)
+	elif scripted_battle_id == "street_skirmish":
+		story.set_flag("street_skirmish_done", true)
+		story.set_flag("street_skirmish_won", victory)
+	elif scripted_battle_id == "street_survival":
+		story.set_flag("street_survival_done", true)
+		story.set_flag("street_survival_won", victory)
+	
+	is_scripted_battle = false
+	scripted_battle_id = ""
+	get_tree().change_scene_to_file(current_map_file)
+
+func _apply_victory_rewards(count: int):
+	story.enemies_defeated += count
+	if current_map_file.contains("Warehouse"): story.warehouse_wave += 1
+	if current_map_file == "res://Maps/Harbor/HarborMap.tscn":
+		story.harbor_wave += 1
+		if story.harbor_wave > 4 or harbor_route == "boss":
+			story.set_flag("harbor_boss_defeated", true)

@@ -110,12 +110,7 @@ func run_battle():
 		if actor == null or actor.current_hp <= 0:
 			continue
 			
-		# Cập nhật thanh hành động cho tất cả thực thể dựa trên thời gian (AV) đã trôi qua
-		for e in all_entities:
-			if e.current_hp > 0:
-				e.action_gauge += e.spd * av_passed
-		
-		# Reset thanh hành động của người vừa đến lượt (về 0 hoặc trừ đi 10000 để giữ phần dư)
+		_advance_action_gauges(av_passed)
 		actor.action_gauge = max(0.0, actor.action_gauge - 10000.0)
 		
 		if scenario:
@@ -125,15 +120,12 @@ func run_battle():
 				continue
 		
 		var is_player_turn = actor in player_team
-		if not GameManager.is_tutorial:
+		if not GameManager.is_tutorial and is_player_turn:
 			hud.show_turn_indicator(actor)
 		
 		_update_gauge_display(actor)
 		
-		var can_act = ProcessStatus.handle_turn_start(actor)
-		CooldownManager.process_cooldowns(actor)
-		
-		if not can_act:
+		if not _process_turn_status(actor):
 			await get_tree().create_timer(0.8, false).timeout
 			continue
 		
@@ -161,6 +153,16 @@ func run_battle():
 	
 	var is_victory = scenario.get_victory_status(self)
 	scenario.on_battle_completed(self, is_victory)
+
+func _advance_action_gauges(av_passed: float):
+	for e in all_entities:
+		if e.current_hp > 0:
+			e.action_gauge += e.spd * av_passed
+
+func _process_turn_status(actor: Entity) -> bool:
+	var can_act = ProcessStatus.handle_turn_start(actor)
+	CooldownManager.process_cooldowns(actor)
+	return can_act
 
 func _player_turn(actor: Entity):
 	# Xử lý lượt đi của người chơi.
@@ -237,15 +239,16 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 	else:
 		print("[Warning] ", actor.entity_name, " không có skill: ", action)
 	
-	# [Synergy]: Ichika & Mafuyu Bleed refresh
-	# Khi đánh bất kỳ chiêu nào (bao gồm đánh thường, trừ Skill 3) lên ĐỊCH đang có Bleed, tự động reset duration và thêm 1 stack.
+	_apply_synergy(actor, action, target, had_bleed)
+	
+	_regenerate_timeline()
+
+func _apply_synergy(actor: Entity, action: String, target: Entity, had_bleed: bool):
 	if actor.entity_name in ["Ichika", "Mafuyu"] and action != "shadow_strike" and action != "lost_world":
 		if target and target in actor.enemies and had_bleed:
 			target.refresh_status_duration("Bleed", 3)
 			target.add_status({"type": "Bleed", "duration": 3})
 			print("[Synergy] ", actor.entity_name, " duy trì và tăng cường vết thương (Bleed refresh +1 stack)!")
-	
-	_regenerate_timeline()
 
 func _regenerate_timeline():
 	# Tái tạo lại danh sách thứ tự lượt đi (Timeline).

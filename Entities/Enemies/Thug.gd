@@ -38,3 +38,6 @@ func slash_attack(target: Entity):
 	# Xác suất gây Bleed nhẹ (tận dụng hệ thống status nếu có)
 	if target.has_method("add_status"):
 		target.add_status({"type": "Bleed", "duration": 2})
+
+func get_portrait_path() -> String:
+	return "res://Assets/Person/thug.png"

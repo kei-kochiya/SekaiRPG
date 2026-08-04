@@ -33,13 +33,10 @@ func _init():
 
 # ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
-func can_use_skill(skill_name: String) -> bool:
-	return CooldownManager.is_skill_ready(self , skill_name)
-
 func piercing_chord(target: Entity):
 	# [Xuyên Tâm Kích]: Đòn đơn vật lý + 1 stack Bleed (3 lượt).
 	print(entity_name, " sử dụng [Xuyên Tâm Kích] lên ", target.entity_name)
-	var dmg = DamageCalculator.calculate_damage(self , target, 1.5)
+	var dmg = DamageCalculator.calculate_damage(self, target, 1.5)
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
@@ -52,7 +49,7 @@ func shadow_strike(target: Entity):
 	# [Ảnh Sát]: Tuyệt kỹ - kích nổ toàn bộ Bleed stacks, gây True Damage theo số stack.
 	print(entity_name, " giáng xuống [Ảnh Sát]!")
 	var bleed_stacks = target.get_status_count("Bleed")
-	var base_dmg = DamageCalculator.calculate_damage(self , target, 4.0)
+	var base_dmg = DamageCalculator.calculate_damage(self, target, 4.0)
 	var bonus_dmg = bleed_stacks * int(self.atk * 0.5)
 	target.remove_all_status_type("Bleed")
 	target.take_damage(base_dmg + bonus_dmg, "pure")

@@ -147,22 +147,7 @@ func _draw_room_walls(x1, y1, x2, y2):
 	_place_tile("bottom_right_wall.png", Vector2(x2, y2), true)
 
 func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
-	var tile_pos = grid_pos * TILE_SIZE
-	var sprite = Sprite2D.new()
-	sprite.texture = load(ASSET_ROOT + file)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = tile_pos
-	add_child(sprite)
-	if has_collision:
-		var body = StaticBody2D.new()
-		body.position = tile_pos
-		body.name = "Body_" + str(grid_pos.x) + "_" + str(grid_pos.y)
-		var col = CollisionShape2D.new()
-		var shape = RectangleShape2D.new()
-		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-		col.shape = shape
-		body.add_child(col)
-		add_child(body)
+	MapUtils.place_tile(self, file, grid_pos, has_collision)
 
 func _remove_wall_at(grid_pos: Vector2):
 	var target_pos = grid_pos * TILE_SIZE

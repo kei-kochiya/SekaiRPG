@@ -36,22 +36,19 @@ func _init():
 func ribbon_bind(target: Entity):
 	# [Ruy Băng Trói Buộc]: Đòn đơn 150% ATK vật lý.
 	print(entity_name, " trói chặt bằng [Ruy Băng Trói Buộc]!")
-	var raw_dmg = DamageCalculator.calculate_damage(self , target)
-	var scaled_dmg = int(raw_dmg * 1.5)
+	var scaled_dmg = DamageCalculator.calculate_damage(self, target, 1.5)
 	target.take_damage(scaled_dmg)
 
 func bitter_secret(target: Entity):
 	# [Bí Mật Cay Đắng]: Đòn đơn vật lý + Poison 3 lượt (15% HP/lượt).
 	print(entity_name, " thì thầm [Bí Mật Cay Đắng]...")
-	var dmg = DamageCalculator.calculate_damage(self , target)
+	var dmg = DamageCalculator.calculate_damage(self, target, 1.0)
 	target.take_damage(dmg)
 	target.add_status({"type": "Poison", "duration": 3, "percent": 0.15})
 
 func lonely_marionette(target: Entity):
 	# [Rối Độc Thoại]: Tuyệt kỹ - Pure DMG 250% ATK + Poison cực mạnh 4 lượt.
 	print(entity_name, " giật dây [Rối Độc Thoại]!")
-	var multiplier = TypeChart.get_multiplier(self.type, target.type)
-	var massive_dmg = int(self.atk * 2.5 * multiplier)
-	
+	var massive_dmg = DamageCalculator.calculate_damage(self, target, 2.5)
 	target.take_damage(massive_dmg, "pure")
 	target.add_status({"type": "Poison", "duration": 4, "percent": 0.2})

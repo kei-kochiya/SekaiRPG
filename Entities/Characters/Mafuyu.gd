@@ -36,7 +36,7 @@ func _init():
 func numb_blade(target: Entity):
 	# [Lưỡi Dao Vô Hồn]: Đòn đơn vật lý (1.25x ATK) + 1 stack Bleed (3 lượt).
 	print(entity_name, " phóng [Lưỡi Dao Vô Hồn]!")
-	var dmg = DamageCalculator.calculate_damage(self , target, 1.25)
+	var dmg = DamageCalculator.calculate_damage(self, target, 1.25)
 	target.take_damage(dmg)
 	target.add_status({"type": "Bleed", "duration": 3})
 
@@ -51,12 +51,12 @@ func freezing_void(_target: Entity):
 	
 	for i in range(2):
 		var target = alive_enemies.pick_random()
-		var dmg = DamageCalculator.calculate_damage(self , target, 1.0)
+		var dmg = DamageCalculator.calculate_damage(self, target, 1.0)
 		target.take_damage(dmg)
 		target.add_status({"type": "Bleed", "duration": 3})
 
 func lost_world(_target: Entity):
-	# [Lost World]: Tuyệt kỹ AoE Pure DMG - scale đến x9 sát thương dựa trên lượng máu ĐÃ MẤT CỦA KẺ ĐỊCH. Sống sót → 2 Bleed cho tất cả.
+	# [Lost World]: Tuyệt kỹ AoE Pure DMG - scale đến x9 sát thương dựa trên lượng máu đã mất. Sống sót → 2 Bleed cho tất cả.
 	print(entity_name, " kích hoạt [Lost World]...")
 	
 	for e in enemies:
@@ -64,20 +64,12 @@ func lost_world(_target: Entity):
 			var e_lost_hp_ratio = 1.0 - (float(e.current_hp) / e.max_hp)
 			var dmg_mult = 1.0 + (e_lost_hp_ratio * 8.0) # Tối đa x9 sát thương đối với mục tiêu gần chết
 			
-			var base_dmg = DamageCalculator.calculate_damage(self , e)
+			var base_dmg = DamageCalculator.calculate_damage(self, e)
 			var final_dmg = int(base_dmg * dmg_mult)
 			e.take_damage(final_dmg, "pure")
 	
-	# Nếu còn kẻ sống sót, lan tỏa Bleed cho cả hai phe
-	var survivors = false
+	# Nếu còn kẻ sống sót, lan tỏa 2 Bleed cho cả hai phe
 	for e in enemies + allies:
 		if e.current_hp > 0:
-			survivors = true
-			break
-	
-	if survivors:
-		print("Vẫn còn kẻ sống sót... Bóng tối lan tỏa (2 Bleed stacks cho tất cả).")
-		for e in enemies + allies:
-			if e.current_hp > 0:
-				e.add_status({"type": "Bleed", "duration": 3})
-				e.add_status({"type": "Bleed", "duration": 3})
+			e.add_status({"type": "Bleed", "duration": 3})
+			e.add_status({"type": "Bleed", "duration": 3})

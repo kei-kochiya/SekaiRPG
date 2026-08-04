@@ -34,3 +34,6 @@ func basic_attack(target: Entity):
 	print(entity_name, " đâm lén!")
 	var dmg = DamageCalculator.calculate_damage(self, target)
 	target.take_damage(dmg)
+
+func get_portrait_path() -> String:
+	return "res://Assets/Person/kidnapper.png"

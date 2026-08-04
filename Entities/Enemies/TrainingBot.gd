@@ -22,3 +22,6 @@ func _init():
 	spd = 90
 	type = "None"
 	is_character = false
+
+func get_portrait_path() -> String:
+	return "res://Assets/Person/warehouse_worker.png"

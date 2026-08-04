@@ -36,23 +36,20 @@ func _init():
 func brush_stroke(target: Entity):
 	# [Nét Cọ Tàn Nhẫn]: Đòn đơn 150% ATK vật lý.
 	print(entity_name, " vung [Nét Cọ Tàn Nhẫn]!")
-	var raw_dmg = DamageCalculator.calculate_damage(self , target)
-	var scaled_dmg = int(raw_dmg * 1.5)
+	var scaled_dmg = DamageCalculator.calculate_damage(self, target, 1.5)
 	target.take_damage(scaled_dmg)
 
 func toxic_criticism(target: Entity):
 	# [Bức Tranh Độc Đáo]: Đòn đơn vật lý + Poison 3 lượt (15% HP/lượt).
 	print(entity_name, " tung ra [Bức Tranh Độc Đáo]!")
-	var dmg = DamageCalculator.calculate_damage(self , target)
+	var dmg = DamageCalculator.calculate_damage(self, target, 1.0)
 	target.take_damage(dmg)
 	target.add_status({"type": "Poison", "duration": 3, "percent": 0.15})
 
 func masterpiece(target: Entity):
 	# [Kiệt Tác Dang Dở]: Tuyệt kỹ - Pure DMG 250% ATK + Poison 4 lượt + hồi máu đồng đội yếu nhất.
 	print(entity_name, " hoàn thành [Kiệt Tác Dang Dở]!")
-	var multiplier = TypeChart.get_multiplier(self.type, target.type)
-	var massive_dmg = int(self.atk * 2.5 * multiplier)
-	
+	var massive_dmg = DamageCalculator.calculate_damage(self, target, 2.5)
 	target.take_damage(massive_dmg, "pure")
 	target.add_status({"type": "Poison", "duration": 4, "percent": 0.2})
 	
