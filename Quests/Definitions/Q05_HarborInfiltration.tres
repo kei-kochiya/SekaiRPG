@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_05_harbor"
+quest_name = "Thâm nhập Bến Cảng & Boss Đội Trưởng"
+arc_name = "Mid-game (Nhiệm vụ chính)"
+description = "Ichika và Ena thâm nhập Bến cảng, vượt qua lính gác và đối đầu Đội Trưởng. Trận chiến 3 giai đoạn kịch tính với sự cứu viện của Mafuyu và Honami."
+linked_map_scene = "res://Maps/Harbor/HarborMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/PostWarehouseStage.gd"
+battle_scenario_class = "HarborBossScenario"
+dialogue_files = ["res://Data/storyline/harbor.json", "res://Data/storyline/post_harbor.json"]
+pre_conditions = {
+"accepted_harbor_mission": true,
+"harbor_mission_done": false
+}
+post_conditions = {
+"harbor_boss_defeated": true,
+"harbor_mission_done": true
+}

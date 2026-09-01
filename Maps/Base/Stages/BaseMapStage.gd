@@ -25,6 +25,10 @@ func on_stage_start():
 func get_scene_lighting() -> Color:
 	return Color.WHITE
 
+# Xác định bài nhạc nền sẽ phát ở Stage này
+func get_bgm_track() -> String:
+	return "base"
+
 # Xử lý tương tác với NPC
 func handle_npc_interaction(_npc_name: String):
 	pass

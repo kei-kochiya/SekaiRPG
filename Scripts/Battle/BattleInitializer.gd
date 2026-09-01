@@ -231,9 +231,13 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 				"scenario": ScriptedBattleScenario.new()
 			},
 		"ena_vs_mizuki": func():
+			var mizuki_enemy = Mizuki.new()
+			var party_mizuki = GameManager.get_party_member("Mizuki")
+			var lv = party_mizuki.level if party_mizuki else 25
+			LevelManager.set_initial_level(mizuki_enemy, lv)
 			return {
 				"player_team": [GameManager.get_party_member("Ena")],
-				"enemy_team": [GameManager.get_party_member("Mizuki")],
+				"enemy_team": [mizuki_enemy],
 				"scenario": ScriptedBattleScenario.new()
 			},
 		"ena_vs_thugs": func():

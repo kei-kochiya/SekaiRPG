@@ -67,8 +67,8 @@ func _show_training_menu():
 	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
 
 func _play_honami_invasion():
-	# Phát âm thanh báo động
-	AudioManager.play_sound("res://Assets/Audio/SFX/alert.wav") # Giả định có âm thanh này hoặc sẽ bỏ qua nếu không có
+	# Phát âm thanh báo động (Chưa có hàm play_sound nên tạm tắt)
+	# AudioManager.play_sound("res://Assets/Audio/SFX/alert.wav")
 	
 	# Spawn Honami ở cửa chính
 	MapUtils.create_dummy_char(map, "Honami", Vector2(24, 21), Color(0.5, 0.35, 0.25))

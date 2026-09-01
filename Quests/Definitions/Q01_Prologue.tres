@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_01_prologue"
+quest_name = "Mở màn: Cuộc giải cứu Ichika"
+arc_name = "Prologue"
+description = "Ichika bị nhóm bắt cóc truy đuổi và dồn vào chân tường trong ngõ vắng. Mafuyu xuất hiện ứng cứu, hướng dẫn chiến đấu cơ bản và đưa Ichika về căn cứ bí mật của Nightcord."
+linked_map_scene = "res://Maps/Prologue/PrologueMap.tscn"
+entry_stage_script = ""
+battle_scenario_class = "PrologueScenario"
+dialogue_files = ["res://Data/storyline/prologue.json"]
+pre_conditions = {
+"prologue_phase": 0
+}
+post_conditions = {
+"prologue_phase": 1
+}

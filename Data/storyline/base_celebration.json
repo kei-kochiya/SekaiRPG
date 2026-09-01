@@ -1,13 +1,58 @@
 {
   "base_celebration": [
-    {"speaker": "Defense Minister", "text": "Làm tốt lắm. Tôi sẽ lo việc dọn dẹp hiện trường. Sắp tới, tôi sẽ là tân Thủ tướng."},
-    {"speaker": "Kanade", "text": "Tuyệt vời. Mọi chuyện coi như đã êm xuôi."},
-    {"speaker": "Ena", "text": "Đúng là một đêm dài. Chúc mừng chiến thắng của chúng ta!"},
-    {"speaker": "Mizuki", "text": "Tuyệt quá! Chúng ta nên mở tiệc ăn mừng thôi!"},
-    {"speaker": "Ichika", "text": "(Sắc mặt nhợt nhạt, ôm miệng) Ụe... Cảnh tượng đó... ánh mắt lạnh lẽo của chị Mafuyu..."},
-    {"speaker": "Honami", "text": "(Bước tới) Ichika, cô không sao chứ? Sắc mặt cô tệ quá."},
-    {"speaker": "Ichika", "text": "Chị Honami... em... em thấy sợ quá..."},
-    {"speaker": "Honami", "text": "Không sao đâu. Để tôi đưa cô về nhà nghỉ ngơi nhé. Mọi chuyện qua rồi."},
-    {"speaker": "Mafuyu", "text": "Nhờ cô chăm sóc con bé, Honami."}
+    {
+      "speaker": "right",
+      "text": "Làm tốt lắm. Tôi sẽ lo việc dọn dẹp hiện trường. Sắp tới, tôi sẽ là tân Thủ tướng.",
+      "type": "dialogue",
+      "name": "Defense Minister"
+    },
+    {
+      "speaker": "right",
+      "text": "Tuyệt vời. Mọi chuyện coi như đã êm xuôi.",
+      "type": "dialogue",
+      "name": "Kanade"
+    },
+    {
+      "speaker": "left",
+      "text": "Đúng là một đêm dài. Chúc mừng chiến thắng của chúng ta!",
+      "type": "dialogue",
+      "name": "Ena"
+    },
+    {
+      "speaker": "right",
+      "text": "Tuyệt quá! Chúng ta nên mở tiệc ăn mừng thôi!",
+      "type": "dialogue",
+      "name": "Mizuki"
+    },
+    {
+      "speaker": "left",
+      "text": "(Sắc mặt nhợt nhạt, ôm miệng) Ụe... Cảnh tượng đó... ánh mắt lạnh lẽo của chị Mafuyu...",
+      "type": "dialogue",
+      "name": "Ichika"
+    },
+    {
+      "speaker": "left",
+      "text": "(Bước tới) Ichika, cô không sao chứ? Sắc mặt cô tệ quá.",
+      "type": "dialogue",
+      "name": "Honami"
+    },
+    {
+      "speaker": "left",
+      "text": "Chị Honami... em... em thấy sợ quá...",
+      "type": "dialogue",
+      "name": "Ichika"
+    },
+    {
+      "speaker": "left",
+      "text": "Không sao đâu. Để tôi đưa cô về nhà nghỉ ngơi nhé. Mọi chuyện qua rồi.",
+      "type": "dialogue",
+      "name": "Honami"
+    },
+    {
+      "speaker": "right",
+      "text": "Nhờ cô chăm sóc con bé, Honami.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    }
   ]
 }

@@ -24,13 +24,8 @@ func _ready() -> void:
 	_init_stage()
 	
 	var base_music = "base"
-	if current_stage:
-		var script_path = current_stage.get_script().resource_path
-		if "PostWarehouseStage" in script_path:
-			if not GameManager.harbor_mission_unlocked:
-				base_music = "night"
-		elif "PostHarborStage" in script_path:
-			base_music = "night"
+	if current_stage and current_stage.has_method("get_bgm_track"):
+		base_music = current_stage.get_bgm_track()
 			
 	AudioManager.play_music(base_music)
 	

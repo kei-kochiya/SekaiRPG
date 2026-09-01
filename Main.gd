@@ -125,7 +125,7 @@ func run_battle():
 		
 		_update_gauge_display(actor)
 		
-		if not _process_turn_status(actor):
+		if not _process_turn_status(actor) or actor.current_hp <= 0:
 			await get_tree().create_timer(0.8, false).timeout
 			continue
 		

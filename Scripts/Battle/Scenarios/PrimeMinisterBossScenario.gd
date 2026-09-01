@@ -1,4 +1,4 @@
-extends BattleScenario
+extends DefaultScenario
 class_name PrimeMinisterBossScenario
 
 func on_start(battle_scene: Node):
@@ -9,13 +9,9 @@ func on_start(battle_scene: Node):
 			break
 			
 	if pm:
-		pm.apply_status_effect("Buff ATK", 5)
+		pm.add_status({"type": "Buff", "duration": 5})
 		
-	# Khóa kỹ năng hồi máu của phe ta nếu có
-	for p in battle_scene.player_team:
-		if p.entity_name == "Ichika": 
-			# Vô hiệu hóa một số thứ?
-			pass
+	super.on_start(battle_scene)
 
 func on_turn_start(battle_scene: Node, current_actor: Entity):
 	if current_actor.entity_name == "Thủ Tướng":
@@ -30,17 +26,20 @@ func on_turn_start(battle_scene: Node, current_actor: Entity):
 				current_actor.set_meta("guards_spawned", true)
 				print("[Boss] Thủ Tướng gọi chi viện!")
 				var guard1 = Guard.new()
-				guard1.entity_name = "Cảnh Vệ"
+				guard1.entity_name = "Cảnh Vệ 1"
 				var guard2 = Guard.new()
-				guard2.entity_name = "Cảnh Vệ"
+				guard2.entity_name = "Cảnh Vệ 2"
 				LevelManager.set_initial_level(guard1, 40)
 				LevelManager.set_initial_level(guard2, 40)
-				battle_scene.enemy_team.append(guard1)
-				battle_scene.enemy_team.append(guard2)
-				battle_scene.all_entities.append(guard1)
-				battle_scene.all_entities.append(guard2)
 				
-				# Vị trí tạm
-				# Do battle UI không vẽ lại danh sách kẻ địch linh hoạt lắm, ta tạm thời
-				# chỉ gọi Guard, cần cập nhật HUD nếu UI hỗ trợ.
-				pass
+				for g in [guard1, guard2]:
+					battle_scene.enemy_team.append(g)
+					battle_scene.all_entities.append(g)
+					if not g.died.is_connected(battle_scene._on_entity_died.bind(g)):
+						g.died.connect(battle_scene._on_entity_died.bind(g))
+				
+				battle_scene._refresh_team_context()
+				battle_scene.hud.setup(battle_scene.player_team, battle_scene.enemy_team)
+				battle_scene._setup_gauge_teams()
+				battle_scene._regenerate_timeline()
+

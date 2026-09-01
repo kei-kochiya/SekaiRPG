@@ -111,6 +111,37 @@ func _place_cars():
 	MapUtils.place_road_asset(self, "Green_Car_Facing_Left_2.png", Vector2(21, 10))
 
 func _place_characters():
+	if GameManager.get_flag("street_mission_fully_done"):
+		# Sandbox/Thăm lại: Chỉ spawn Player và 1 lối ra
+		var player = OverworldPlayer.new()
+		player.name = "OverworldPlayer"
+		if GameManager.last_player_position != Vector2.ZERO:
+			player.position = GameManager.last_player_position
+		else:
+			player.position = Vector2(15 * TILE_SIZE, 11 * TILE_SIZE)
+		player.character_color = Color(0.29, 0.62, 0.62)
+		add_child(player)
+		
+		# Thêm 1 exit zone để về Base
+		var exit = InteractableZone.new()
+		exit.position = Vector2(15 * TILE_SIZE, 13 * TILE_SIZE)
+		exit.prompt_text = "Rời khỏi đường phố"
+		var col = CollisionShape2D.new()
+		var rect = RectangleShape2D.new()
+		rect.size = Vector2(96, 32)
+		col.shape = rect
+		exit.add_child(col)
+		exit.interacted.connect(func():
+			DialogueManager.show_choice(["[Trở về Nightcord]", "[Hủy]"])
+			var idx = await DialogueManager.choice_made
+			if idx == 0:
+				await ScreenFade.fade_out(1.0)
+				GameManager.last_player_position = Vector2.ZERO
+				get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+		)
+		add_child(exit)
+		return
+		
 	MapUtils.create_dummy_char(self, "Ichika", Vector2(14, 11), Color(0.29, 0.62, 0.62))
 	MapUtils.create_dummy_char(self, "Mizuki", Vector2(15, 11), Color(0.85, 0.65, 0.8))
 
@@ -161,7 +192,7 @@ func _draw_street_walls():
 
 func _run_logic():
 	if GameManager.get_flag("street_mission_fully_done"):
-		_return_to_base()
+		return # Đi lại tự do
 	elif GameManager.get_flag("street_survival_done"):
 		# Sau khi thắng trận sinh tồn/cứu viện của Mafuyu
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("street_aftermath"), func():

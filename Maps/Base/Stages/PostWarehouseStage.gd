@@ -5,8 +5,13 @@ func get_npc_positions() -> Dictionary:
 		"Mafuyu": Vector2(10 * map.TILE_SIZE, 14 * map.TILE_SIZE),
 		"Ena":    Vector2(35 * map.TILE_SIZE, 15 * map.TILE_SIZE),
 		"Mizuki": Vector2(39 * map.TILE_SIZE, 15 * map.TILE_SIZE),
-		"Kanade": Vector2(24 * map.TILE_SIZE, 15 * map.TILE_SIZE),
+		"Kanade": Vector2(24 * map.TILE_SIZE, 15 * map.TILE_SIZE)
 	}
+
+func get_bgm_track() -> String:
+	if not GameManager.harbor_mission_unlocked:
+		return "night"
+	return "base"
 
 func get_scene_lighting() -> Color:
 	if not GameManager.harbor_mission_unlocked:
@@ -70,8 +75,13 @@ func _handle_training_dialogue():
 
 func _show_training_options():
 	var opts: Array = []
-	if not GameManager.get_flag("training_ichika_done"): opts.append("Ichika (5 Waves)")
-	if not GameManager.get_flag("training_kanade_done"): opts.append("Kanade (5 Waves)")
+	var mapping: Array = []
+	if not GameManager.get_flag("training_ichika_done"):
+		opts.append("Ichika (5 Waves)")
+		mapping.append("Ichika")
+	if not GameManager.get_flag("training_kanade_done"):
+		opts.append("Kanade (5 Waves)")
+		mapping.append("Kanade")
 	opts.append("Để sau.")
 	
 	DialogueManager.show_choice(opts)
@@ -80,7 +90,7 @@ func _show_training_options():
 	
 	GameManager.is_training_mode = true
 	GameManager.warehouse_wave = 1
-	GameManager.training_participants = ["Ichika"] if idx == 0 else ["Kanade"]
+	GameManager.training_participants = [mapping[idx]]
 	
 	await ScreenFade.fade_out(1.0)
 	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)

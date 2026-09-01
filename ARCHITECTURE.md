@@ -80,19 +80,46 @@ Quản lý không gian Overworld và luồng di chuyển của người chơi. C
 
 ---
 
-## 5. Entities (Thực thể & Chỉ số)
+## 5. Quests & Missions (Hệ thống Nhiệm vụ & Siêu dữ liệu)
+
+Để tổ chức codebase theo hướng dễ tra cứu và bảo trì theo nhiệm vụ (Quest-driven) thay vì chỉ theo địa điểm vật lý, hệ thống cung cấp lớp siêu dữ liệu (Metadata Resource) tại thư mục `res://Quests/`.
+
+| File / Thư mục | Chức năng chính | Phụ thuộc vào |
+| :--- | :--- | :--- |
+| **`QuestDefinition.gd`** | Lớp Resource định nghĩa cấu trúc dữ liệu cho một nhiệm vụ: ID, Tên, Arc, Scene bản đồ liên kết, Entry Stage, Scenario chiến đấu, Dialogue file, và điều kiện StoryState trước/sau. | `Resource` |
+| **`QuestRegistry.gd`** | Tiện ích tĩnh cung cấp API nạp và tra cứu danh sách toàn bộ nhiệm vụ (`get_all_quests`), tra cứu theo ID (`get_quest`), và tự động xác định nhiệm vụ hiện tại dựa trên cờ StoryState (`get_current_quest`). | `QuestDefinition`, `StoryState` |
+| **`Quests/Definitions/*.tres`** | 10 tài nguyên Resource tương ứng với 10 nhiệm vụ cốt truyện từ Prologue đến Finale. | `QuestDefinition` |
+
+### Bảng Mapping 10 Nhiệm Vụ (Quests)
+
+| Quest ID | Tên Nhiệm Vụ | Chương (Arc) | Map Scene Liên Kết | Safehouse Stage | Battle Scenario | Dialogue Files Chính |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`quest_01_prologue`** | Mở màn: Cuộc giải cứu Ichika | Prologue | `res://Maps/Prologue/PrologueMap.tscn` | N/A | `PrologueScenario` | `prologue.json` |
+| **`quest_02_safehouse_intro`** | Căn cứ Nightcord & Nhận nhiệm vụ Kho | Safehouse Hub | `res://Maps/Base/BaseMap.tscn` | `IntroStage.gd` | Không có | `safehouse_intro.json` |
+| **`quest_03_warehouse`** | Dọn dẹp Nhà Kho Bỏ Hoang | Mid-game (Phụ) | `res://Maps/Warehouse/WarehouseMap.tscn` | `IntroStage.gd` → `PostWarehouseStage.gd` | `DefaultScenario` | `warehouse.json` |
+| **`quest_04_post_warehouse`** | Nghỉ ngơi & Mở khóa Cảng | Safehouse Hub | `res://Maps/Base/BaseMap.tscn` | `PostWarehouseStage.gd` | `DefaultScenario` (Training) | `safehouse_post_warehouse.json` |
+| **`quest_05_harbor`** | Thâm nhập Bến Cảng & Boss Đội Trưởng | Mid-game (Chính) | `res://Maps/Harbor/HarborMap.tscn` | `PostWarehouseStage.gd` → `PostHarborStage.gd` | `HarborBossScenario`<br>`DefaultScenario` | `harbor.json`<br>`post_harbor.json` |
+| **`quest_06_post_harbor`** | Báo cáo Bến Cảng & Mizuki vs Mafuyu | Safehouse Hub | `res://Maps/Base/BaseMap.tscn` | `PostHarborStage.gd` | `ScriptedBattleScenario` | `post_harbor.json` |
+| **`quest_07_morning_cafe`** | Buổi sáng hỗn loạn & Sự kiện Quán Cafe | Character Arc | `res://Maps/Cafe/CafeMap.tscn` | `PostHarborMorningStage.gd` | `ScriptedBattleScenario` | `post_harbor_morning.json`<br>`cafe_sequence.json` |
+| **`quest_08_street_ambush`** | Phục kích Ngã tư & Cuộc chiến Sinh tồn | Main Quest | `res://Maps/Street/StreetMap.tscn` | `PostCafeStreetMissionStage.gd` | `StreetSurvivalScenario`<br>`DefaultScenario` | `lobby_street_mission.json`<br>`street_sequence.json` |
+| **`quest_09_honami_clinic`** | Căn cứ bị đột kích & Phòng khám Honami | Safehouse / Hub 2 | `res://Maps/HonamiHouse/HonamiHouseMap.tscn` | `PostStreetStage.gd` → `HonamiHouseUnlockedStage.gd` | `DefaultScenario` (Training) | `base_honami_invasion.json`<br>`honami_house.json` |
+| **`quest_10_finale`** | Chiến dịch Thủ Tướng & Trận chiến Xa Lộ | Finale Arc | `res://Maps/Highway/HighwayMap.tscn` | `HonamiHouseUnlockedStage.gd` → `FinaleStage.gd` | `PrimeMinisterBossScenario`<br>`ScriptedBattleScenario` | `defense_agency_ops.json`<br>`pm_boss_aftermath.json` |
+
+---
+
+## 6. Entities (Thực thể & Chỉ số)
 
 Thiết kế theo mô hình Hướng đối tượng (OOP). Mỗi nhân vật hoặc kẻ địch kế thừa từ một Base Class thống nhất. Tận dụng tính đa hình (Polymorphism) để tải ảnh thông qua `get_portrait_path()`.
 
-### 5.1. Base Class
+### 6.1. Base Class
 | File | Chức năng chính |
 | :--- | :--- |
 | **`Entity.gd`** | Nền tảng của vạn vật. Quản lý Stats (HP, ATK, SPD, DEF), Mảng Kỹ năng (Skills), Buffs/Debuffs (Status), và Hệ (Elements). Tích hợp logic nhận diện ảnh chân dung `get_portrait_path()`. |
 
-### 5.2. Characters (Phe ta)
+### 6.2. Characters (Phe ta)
 Các script nằm trong `Entities/Characters/`. Mỗi nhân vật (Ichika, Mafuyu, Ena, Mizuki, Kanade, Honami) có kỹ năng, chỉ số Hard Cap và cơ chế tương tác (Synergy) riêng biệt. Lớp nhân vật giờ đây tự động định tuyến đường dẫn Avatar UI của mình.
 
-### 5.3. Enemies (Kẻ địch)
+### 6.3. Enemies (Kẻ địch)
 Các script nằm trong `Entities/Enemies/`.
 *   **`Kidnapper.gd`**: Kẻ thù cơ bản ở Prologue.
 *   **`Guard.gd` / `Captain.gd`**: Lính gác và Boss Đội trưởng tại Bến cảng.
@@ -104,7 +131,7 @@ Các script nằm trong `Entities/Enemies/`.
 
 ---
 
-## 6. UI & Common Systems (Hệ thống UI & Hỗ trợ)
+## 7. UI & Common Systems (Hệ thống UI & Hỗ trợ)
 
 Quản lý các giao diện hỗ trợ tương tác người chơi, thiết kế dựa trên các lớp Builder để tránh nhồi nhét logic vào file trung tâm.
 
@@ -117,7 +144,7 @@ Quản lý các giao diện hỗ trợ tương tác người chơi, thiết kế
 
 ---
 
-## 7. Font & Theme System (Hệ thống Font & Theme)
+## 8. Font & Theme System (Hệ thống Font & Theme)
 
 SekaiRPG sử dụng hệ thống Font chữ phân lớp chuyên nghiệp để định hình phong cách đồ họa sang trọng và tăng khả năng tối ưu hóa trải nghiệm đọc của người chơi.
 
@@ -140,6 +167,11 @@ graph TD
         GM[GameManager] --> SS[StoryState]
         GM --> LM[LevelManager]
         GM --> SManager[SaveManager]
+    end
+
+    subgraph Quests
+        QR[QuestRegistry] --> QD[QuestDefinition]
+        QR --> SS
     end
 
     subgraph Battle
@@ -177,7 +209,7 @@ graph TD
     *   Đăng ký Class mới vào từ điển `character_classes` hoặc `enemy_classes` trong `BattleInitializer.gd`.
 
 2.  **Thêm Trận đánh Boss (Scripted Battle)**:
-    *   Tạo file Scenario mới trong `BattleSystem/Scenarios/` (kế thừa `BattleScenario.gd`).
+    *   Tạo file Scenario mới trong `BattleSystem/Scenarios/` (kế thừa `BattleScenario.gd` hoặc `DefaultScenario.gd`).
     *   Cập nhật `BattleInitializer.gd` (hàm `_setup_scripted_battle`) để trả về Scenario này cùng với đội hình tương ứng.
     *   Gọi `GameManager.is_scripted_battle = true` trước khi trigger trận.
 
@@ -186,18 +218,23 @@ graph TD
     *   Ghi đè các hàm như `get_npc_positions()`, `on_stage_start()` để đặt logic.
     *   Đăng ký Stage vào `BaseMap.gd`.
 
+4.  **Thêm Nhiệm vụ (Quest) mới**:
+    *   Tạo file tài nguyên `.tres` mới trong `res://Quests/Definitions/` kế thừa `QuestDefinition.gd`.
+    *   Điền các trường: `quest_id`, `linked_map_scene`, `battle_scenario_class`, `dialogue_files`, `pre_conditions`, `post_conditions`.
+    *   Đăng ký file vào hằng số `QUEST_FILES` trong `QuestRegistry.gd`.
+
 ---
 
-## 8. Game Flow & State Transitions (Luồng chuyển cảnh)
+## 9. Game Flow & State Transitions (Luồng chuyển cảnh)
 
 Trò chơi sử dụng cấu trúc State Machine đơn giản do `GameManager` (Autoload) quản lý để chuyển đổi giữa bản đồ (Overworld) và trận đánh (BattleScene).
 
-### 8.1. Kích hoạt trận đấu (Trigger Battle)
+### 9.1. Kích hoạt trận đấu (Trigger Battle)
 1. `GameManager.store_map_state()`: Lưu lại đường dẫn map hiện tại và vị trí người chơi.
 2. Kích hoạt cờ tương ứng: `is_scripted_battle` (nếu là trận cốt truyện), `is_training_mode` (nếu là trận huấn luyện), hoặc không có (trận quét map thông thường).
 3. `GameManager.trigger_battle()`: Gọi `get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")`.
 
-### 8.2. Kết thúc trận đấu (Battle Completion)
+### 9.2. Kết thúc trận đấu (Battle Completion)
 Tại `Main.gd` (Battle Engine), khi trận đấu phân định thắng thua:
 1. Gọi `scenario.get_victory_status()` để xác định kết quả (is_victory).
 2. Gọi `scenario.on_battle_completed(main, is_victory)` để dọn dẹp và xử lý cốt truyện.
@@ -206,7 +243,7 @@ Tại `Main.gd` (Battle Engine), khi trận đấu phân định thắng thua:
 - Nếu bạn tạo một Custom Scenario kế thừa trực tiếp từ `BattleScenario` (ví dụ `StreetSurvivalScenario`), **bạn BẮT BUỘC phải gọi `GameManager.finish_battle(is_victory, ...)`** ở cuối hàm `on_battle_completed`. Nếu không, game sẽ bị treo (đứng yên) tại giao diện chiến thắng do không có lệnh chuyển scene.
 - Nếu kế thừa từ `DefaultScenario`, hàm `on_battle_completed` của nó đã gọi sẵn `GameManager.finish_battle()`.
 
-### 8.3. Hậu trận đấu (Post-Battle)
+### 9.3. Hậu trận đấu (Post-Battle)
 1. `GameManager.finish_battle()` được gọi.
 2. Cộng EXP, Cập nhật Quest/Wave dựa trên cờ thắng/thua.
 3. Nếu thua (ở trận cốt truyện/map): Hồi máu đầy đủ và Dịch chuyển người chơi về Safehouse (`BaseMap.tscn`).
@@ -214,7 +251,7 @@ Tại `Main.gd` (Battle Engine), khi trận đấu phân định thắng thua:
 
 ---
 
-## 9. Tóm tắt Cốt truyện (Story Summary)
+## 10. Tóm tắt Cốt truyện (Story Summary)
 
 Tiến trình trò chơi được chia thành các chương (Arcs) chính, xoay quanh biệt đội Nightcord (Mafuyu, Kanade, Ena, Mizuki) và các nhân vật liên quan (Ichika, Honami):
 

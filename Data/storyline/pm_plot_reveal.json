@@ -1,14 +1,64 @@
 {
   "pm_plot_reveal": [
-    {"speaker": "Mafuyu", "text": "Mọi người nghe đây. Gã Thủ tướng đang lên kế hoạch trừ khử tôi và Nightcord."},
-    {"speaker": "Mafuyu", "text": "Hắn thuê chúng ta làm vệ sĩ để dễ bề đào tẩu, đồng thời mượn tay bọn khủng bố để giết chúng ta."},
-    {"speaker": "Kanade", "text": "Một kế hoạch khá bẩn thỉu. Cô định làm gì, Mafuyu?"},
-    {"speaker": "Mafuyu", "text": "Tôi sẽ thuận nước đẩy thuyền. Cứ để hắn nghĩ rằng mọi việc đang theo đúng kế hoạch."},
-    {"speaker": "Ichika", "text": "Chị Mafuyu, như vậy có quá nguy hiểm không? Em lo lắm..."},
-    {"speaker": "Mafuyu", "text": "Không sao. Tôi biết mình đang làm gì."},
-    {"speaker": "Honami", "text": "(Điện thoại reo) Mafuyu, là tôi đây. Cô có nghe rõ không?"},
-    {"speaker": "Mafuyu", "text": "Honami à? Mọi chuyện thế nào rồi?"},
-    {"speaker": "Honami", "text": "Tôi đã sắp xếp xong. Chúng ta sẽ làm theo thỏa thuận ngầm. Cô hãy cẩn thận."},
-    {"speaker": "Mafuyu", "text": "Tôi hiểu rồi. Trò chơi này, kẻ cười cuối cùng sẽ là tôi."}
+    {
+      "speaker": "right",
+      "text": "Mọi người nghe đây. Gã Thủ tướng đang lên kế hoạch trừ khử tôi và Nightcord.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "right",
+      "text": "Hắn thuê chúng ta làm vệ sĩ để dễ bề đào tẩu, đồng thời mượn tay bọn khủng bố để giết chúng ta.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "right",
+      "text": "Một kế hoạch khá bẩn thỉu. Cô định làm gì, Mafuyu?",
+      "type": "dialogue",
+      "name": "Kanade"
+    },
+    {
+      "speaker": "right",
+      "text": "Tôi sẽ thuận nước đẩy thuyền. Cứ để hắn nghĩ rằng mọi việc đang theo đúng kế hoạch.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "left",
+      "text": "Chị Mafuyu, như vậy có quá nguy hiểm không? Em lo lắm...",
+      "type": "dialogue",
+      "name": "Ichika"
+    },
+    {
+      "speaker": "right",
+      "text": "Không sao. Tôi biết mình đang làm gì.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "left",
+      "text": "(Điện thoại reo) Mafuyu, là tôi đây. Cô có nghe rõ không?",
+      "type": "dialogue",
+      "name": "Honami"
+    },
+    {
+      "speaker": "right",
+      "text": "Honami à? Mọi chuyện thế nào rồi?",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "left",
+      "text": "Tôi đã sắp xếp xong. Chúng ta sẽ làm theo thỏa thuận ngầm. Cô hãy cẩn thận.",
+      "type": "dialogue",
+      "name": "Honami"
+    },
+    {
+      "speaker": "right",
+      "text": "Tôi hiểu rồi. Trò chơi này, kẻ cười cuối cùng sẽ là tôi.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    }
   ]
 }

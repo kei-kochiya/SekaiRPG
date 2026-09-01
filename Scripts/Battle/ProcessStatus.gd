@@ -34,7 +34,7 @@ static func handle_turn_start(entity: Entity) -> bool:
 	# Xử lý Bleed riêng để tính sát thương gộp từ các stack
 	var bleed_count = entity.get_status_count("Bleed")
 	if bleed_count > 0:
-		var bleed_dmg = int(entity.current_hp * (0.1 * bleed_count))
+		var bleed_dmg = max(1, int(entity.current_hp * (0.1 * bleed_count)))
 		entity.take_damage(bleed_dmg, "dot")
 		print("[ProcessStatus] ", entity.entity_name, " chịu ", bleed_dmg, " sát thương Chảy máu (", bleed_count, " stacks)")
 
@@ -57,4 +57,7 @@ static func handle_turn_start(entity: Entity) -> bool:
 	
 	entity.remove_statuses(statuses_to_remove)
 	
+	if entity.current_hp <= 0:
+		return false
+		
 	return can_act

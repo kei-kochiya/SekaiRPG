@@ -1,12 +1,52 @@
 {
   "pm_boss_aftermath": [
-    {"speaker": "PM", "text": "Khốn kiếp... Các người dám chống lại ta? Ta là Thủ tướng!"},
-    {"speaker": "Mafuyu", "text": "Một kẻ cặn bã như ngươi không xứng đáng sống thêm một giây nào nữa."},
-    {"speaker": "PM", "text": "Cô... cô định làm gì?! Dừng lại!"},
-    {"speaker": "Mafuyu", "text": "Kết thúc thôi."},
-    {"speaker": "System", "text": "(Âm thanh của lưỡi kiếm xé gió, đầu của gã Thủ tướng lăn lông lốc trên đất)"},
-    {"speaker": "Ichika", "text": "(Chạy tới) Chị Mafuyu! Em... em đến rồi..."},
-    {"speaker": "Ichika", "text": "(Sững sờ nhìn cảnh tượng máu me) Chị... chị vừa làm gì vậy...?"},
-    {"speaker": "Mafuyu", "text": "Chỉ là dọn rác thôi. Cô không cần bận tâm."}
+    {
+      "speaker": "right",
+      "text": "Khốn kiếp... Các người dám chống lại ta? Ta là Thủ tướng!",
+      "type": "dialogue",
+      "name": "PM"
+    },
+    {
+      "speaker": "right",
+      "text": "Một kẻ cặn bã như ngươi không xứng đáng sống thêm một giây nào nữa.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "right",
+      "text": "Cô... cô định làm gì?! Dừng lại!",
+      "type": "dialogue",
+      "name": "PM"
+    },
+    {
+      "speaker": "right",
+      "text": "Kết thúc thôi.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "left",
+      "text": "(Âm thanh của lưỡi kiếm xé gió, đầu của gã Thủ tướng lăn lông lốc trên đất)",
+      "type": "dialogue",
+      "name": "System"
+    },
+    {
+      "speaker": "left",
+      "text": "(Chạy tới) Chị Mafuyu! Em... em đến rồi...",
+      "type": "dialogue",
+      "name": "Ichika"
+    },
+    {
+      "speaker": "left",
+      "text": "(Sững sờ nhìn cảnh tượng máu me) Chị... chị vừa làm gì vậy...?",
+      "type": "dialogue",
+      "name": "Ichika"
+    },
+    {
+      "speaker": "right",
+      "text": "Chỉ là dọn rác thôi. Cô không cần bận tâm.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    }
   ]
 }

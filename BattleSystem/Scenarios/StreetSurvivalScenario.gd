@@ -132,7 +132,7 @@ func _trigger_rescue_phase(main: Node):
 	
 	# Tráo đổi đội hình phe ta thành duy nhất Mafuyu
 	main.player_team = [mafuyu]
-	if not mafuyu.died.is_connected(main._on_entity_died):
+	if not mafuyu.died.is_connected(main._on_entity_died.bind(mafuyu)):
 		mafuyu.died.connect(main._on_entity_died.bind(mafuyu))
 		
 	# Dọn dẹp kẻ địch cũ, tạo mới 3 tên Level 25

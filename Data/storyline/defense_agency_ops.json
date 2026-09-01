@@ -1,18 +1,58 @@
 {
   "ops_intro": [
-    {"speaker": "Ichika", "text": "Báo cáo Cơ quan Phòng vệ. Chúng em đã sẵn sàng nhận lệnh."},
-    {"speaker": "Commander", "text": "Tốt lắm. Kanade, Ichika, Honami, ba cô sẽ được phân công tiêu diệt khủng bố ở 3 khu vực khác nhau."},
-    {"speaker": "Kanade", "text": "Tôi nhận nhiệm vụ ở Khu A. Tôi đi đây."},
-    {"speaker": "Honami", "text": "Tôi sẽ phụ trách Khu B. Mọi người cẩn thận nhé."},
-    {"speaker": "Ichika", "text": "Em sẽ dọn dẹp Khu C. Chị Kanade, chị Honami, bảo trọng!"}
+    {
+      "speaker": "left",
+      "text": "Báo cáo Cơ quan Phòng vệ. Chúng em đã sẵn sàng nhận lệnh.",
+      "type": "dialogue",
+      "name": "Ichika"
+    },
+    {
+      "speaker": "right",
+      "text": "Tốt lắm. Kanade, Ichika, Honami, ba cô sẽ được phân công tiêu diệt khủng bố ở 3 khu vực khác nhau.",
+      "type": "dialogue",
+      "name": "Commander"
+    },
+    {
+      "speaker": "right",
+      "text": "Tôi nhận nhiệm vụ ở Khu A. Tôi đi đây.",
+      "type": "dialogue",
+      "name": "Kanade"
+    },
+    {
+      "speaker": "left",
+      "text": "Tôi sẽ phụ trách Khu B. Mọi người cẩn thận nhé.",
+      "type": "dialogue",
+      "name": "Honami"
+    },
+    {
+      "speaker": "left",
+      "text": "Em sẽ dọn dẹp Khu C. Chị Kanade, chị Honami, bảo trọng!",
+      "type": "dialogue",
+      "name": "Ichika"
+    }
   ],
   "ops_kanade_done": [
-    {"speaker": "Kanade", "text": "Khu A đã được dọn sạch. Lũ chuột nhắt này không làm khó được tôi."}
+    {
+      "speaker": "right",
+      "text": "Khu A đã được dọn sạch. Lũ chuột nhắt này không làm khó được tôi.",
+      "type": "dialogue",
+      "name": "Kanade"
+    }
   ],
   "ops_ichika_done": [
-    {"speaker": "Ichika", "text": "Em đã tiêu diệt xong mục tiêu ở Khu C. Mọi thứ an toàn."}
+    {
+      "speaker": "left",
+      "text": "Em đã tiêu diệt xong mục tiêu ở Khu C. Mọi thứ an toàn.",
+      "type": "dialogue",
+      "name": "Ichika"
+    }
   ],
   "ops_honami_done": [
-    {"speaker": "Honami", "text": "Khu B đã hoàn tất. Chúng ta có thể rút lui được rồi."}
+    {
+      "speaker": "right",
+      "text": "Khu B đã hoàn tất. Chúng ta có thể rút lui được rồi.",
+      "type": "dialogue",
+      "name": "Honami"
+    }
   ]
 }

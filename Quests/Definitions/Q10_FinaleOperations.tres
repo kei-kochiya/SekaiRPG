@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_10_finale"
+quest_name = "Chiến dịch Thủ Tướng & Trận chiến Xa Lộ"
+arc_name = "Finale Arc (Hồi kết)"
+description = "Nhóm thực hiện 3 nhánh tác chiến phối hợp tại Cơ quan Quốc phòng (Kanade, Ichika, Honami), đuổi theo đoàn xe áp giải và bước vào trận tử chiến Boss cuối cùng với Thủ Tướng trên Xa lộ."
+linked_map_scene = "res://Maps/Highway/HighwayMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/HonamiHouseUnlockedStage.gd"
+battle_scenario_class = "PrimeMinisterBossScenario"
+dialogue_files = ["res://Data/storyline/defense_agency_ops.json", "res://Data/storyline/pm_car_ride.json", "res://Data/storyline/pm_boss_aftermath.json", "res://Data/storyline/base_celebration.json"]
+pre_conditions = {
+"finale_done": false,
+"pm_arc_started": true
+}
+post_conditions = {
+"finale_done": true,
+"pm_boss_defeated": true
+}

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_04_post_warehouse"
+quest_name = "Nghỉ ngơi, Mở khóa Nâng cấp & Nhận Bến Cảng"
+arc_name = "Safehouse Hub"
+description = "Sau khi dọn kho, nhóm trở về Safehouse nghỉ ngơi qua đêm. Sáng hôm sau, Kanade mở khóa hệ thống nâng cấp chỉ số (SP), Mafuyu mở khóa phòng tập luyện Nhà kho, và Kanade giao nhiệm vụ thâm nhập Bến Cảng."
+linked_map_scene = "res://Maps/Base/BaseMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/PostWarehouseStage.gd"
+battle_scenario_class = "DefaultScenario"
+dialogue_files = ["res://Data/storyline/safehouse_post_warehouse.json"]
+pre_conditions = {
+"harbor_mission_unlocked": false
+}
+post_conditions = {
+"accepted_harbor_mission": true,
+"harbor_mission_unlocked": true
+}
