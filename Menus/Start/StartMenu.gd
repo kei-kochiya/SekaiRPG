@@ -20,6 +20,14 @@ func _ready():
 		$CenterContainer/VBoxContainer.move_child(continue_btn, 1) # Put it after title/banner
 		_style_button(continue_btn)
 		continue_btn.pressed.connect(_on_continue)
+		
+		var load_btn = Button.new()
+		load_btn.text = "TẢI GAME (LOAD)"
+		load_btn.name = "LoadGameBtn"
+		$CenterContainer/VBoxContainer.add_child(load_btn)
+		$CenterContainer/VBoxContainer.move_child(load_btn, 2)
+		_style_button(load_btn)
+		load_btn.pressed.connect(_on_load_menu)
 	
 	$CenterContainer/VBoxContainer/NewGameBtn.pressed.connect(_on_new_game)
 	$CenterContainer/VBoxContainer/SandboxBtn.pressed.connect(_on_sandbox)
@@ -88,7 +96,11 @@ func _apply_kenney_styles():
 
 func _on_continue():
 	await ScreenFade.fade_out(0.5)
-	GameManager.load_game()
+	GameManager.load_game("")
+
+func _on_load_menu():
+	var save_load_scene = preload("res://Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
+	add_child(save_load_scene)
 
 func _on_new_game():
 	await ScreenFade.fade_out(1.0)

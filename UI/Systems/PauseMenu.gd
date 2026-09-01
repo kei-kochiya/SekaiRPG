@@ -39,8 +39,8 @@ func _build_ui():
 	var vbox = ui_nodes["vbox"]
 	
 	vbox.add_child(PauseMenuBuilder.create_button("Tiếp tục", _on_resume))
-	vbox.add_child(PauseMenuBuilder.create_button("Lưu nhanh (Quick Save)", _on_save))
-	vbox.add_child(PauseMenuBuilder.create_button("Lưu tùy chỉnh (Custom Save)", _on_custom_save))
+	vbox.add_child(PauseMenuBuilder.create_button("Lưu nhanh (Quick Save)", _on_quick_save))
+	vbox.add_child(PauseMenuBuilder.create_button("Quản lý Lưu / Tải (Save & Load)", _on_open_save_load_menu))
 	vbox.add_child(PauseMenuBuilder.create_button("Hướng dẫn", _on_guide))
 	vbox.add_child(PauseMenuBuilder.create_button("Tùy chọn", _on_options))
 	vbox.add_child(PauseMenuBuilder.create_button("Thoát ra Menu", _on_quit))
@@ -145,12 +145,6 @@ func _build_options_vbox(from_main_menu: bool):
 	)
 	hb_skip.add_child(btn_skip)
 	
-	if from_main_menu:
-		var btn_load = PauseMenuBuilder.create_button("Tải Game (Load Custom Save)", func():
-			_on_custom_load()
-		)
-		vbox.add_child(btn_load)
-		
 	var close = PauseMenuBuilder.create_button("Đóng", func():
 		_options_panel.visible = false
 		if from_main_menu:
@@ -160,39 +154,6 @@ func _build_options_vbox(from_main_menu: bool):
 	vbox.add_child(close)
 	
 	_options_panel.visible = true
-
-func _on_custom_load():
-	var file_dialog = FileDialog.new()
-	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
-	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-	file_dialog.add_filter("*.json", "JSON Save Files")
-	file_dialog.file_selected.connect(func(path):
-		var success = GameManager.load_game(path)
-		if success:
-			_options_panel.visible = false
-			visible = false
-			_root.visible = false
-	)
-	add_child(file_dialog)
-	file_dialog.popup_centered(Vector2i(700, 500))
-
-func _on_custom_save():
-	var player = get_tree().current_scene.find_child("OverworldPlayer", true, false)
-	if player:
-		GameManager.last_player_position = player.global_position
-		
-	var file_dialog = FileDialog.new()
-	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
-	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
-	file_dialog.add_filter("*.json", "JSON Save Files")
-	file_dialog.file_selected.connect(func(path):
-		if not path.ends_with(".json"):
-			path += ".json"
-		GameManager.save_game(path)
-		_on_resume()
-	)
-	add_child(file_dialog)
-	file_dialog.popup_centered(Vector2i(700, 500))
 
 # ── Tiện Ích Khác ──────────────────────────────────────────────────────────
 
@@ -283,19 +244,23 @@ func toggle():
 func _on_resume():
 	toggle()
 
-func _on_save():
+func _on_quick_save():
 	"""
-	Lưu lại vị trí hiện tại của người chơi và lưu game.
-	
-	Args: Không có
-	Returns: Không có
+	Lưu nhanh vào quicksave.json.
 	"""
 	var player = get_tree().current_scene.find_child("OverworldPlayer", true, false)
 	if player:
 		GameManager.last_player_position = player.global_position
 	
-	GameManager.save_game()
+	GameManager.quick_save()
 	_on_resume()
+
+func _on_open_save_load_menu():
+	"""
+	Mở menu quản lý Save & Load dạng Overlay.
+	"""
+	var save_load_scene = preload("res://Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
+	_root.add_child(save_load_scene)
 
 func _on_quit():
 	"""
