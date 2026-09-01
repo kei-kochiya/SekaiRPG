@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_06_post_harbor"
+quest_name = "Báo cáo Bến Cảng & Mizuki đối đầu Mafuyu"
+arc_name = "Safehouse Hub"
+description = "Sau trận Bến Cảng, Mizuki trở về Safehouse nộp báo cáo trinh sát và xảy ra màn so tài nội bộ với Mafuyu để kiểm tra thực lực."
+linked_map_scene = "res://Maps/Base/BaseMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/PostHarborStage.gd"
+battle_scenario_class = "ScriptedBattleScenario"
+dialogue_files = ["res://Data/storyline/post_harbor.json"]
+pre_conditions = {
+"harbor_mission_done": true,
+"mizuki_report_done": false
+}
+post_conditions = {
+"mafuyu_honami_talked": true,
+"mizuki_report_done": true,
+"mizuki_vs_mafuyu_done": true
+}

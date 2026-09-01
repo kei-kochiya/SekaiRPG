@@ -59,6 +59,8 @@ func _complete_training():
 		if p == "Honami": GameManager.set_flag("training_honami_done", true)
 	
 	GameManager.is_training_mode = false
+	# Hồi máu đầy cho party sau khi luyện tập xong
+	GameManager.full_heal_party()
 	DialogueManager.play_dialogue([{
 		"text": "Luyện tập hoàn tất. Bạn cảm thấy cơ thể linh hoạt hơn.",
 		"type": "narrator"

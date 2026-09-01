@@ -39,7 +39,13 @@ func on_turn_start(main: Node, actor: Entity):
 		return
 		
 	turns_elapsed += 1
-	var current_level = clamp(25 + int(turns_elapsed / 2), 25, 30)
+	var current_level = clamp(20 + int(turns_elapsed / 2), 20, 25)
+	
+	# Giới hạn số lượt sống sót tối đa (nếu quá trâu bò không chết thì tự động qua pha sau)
+	if turns_elapsed >= 10:
+		print("[StreetSurvivalScenario] Người chơi sống quá dai! Kích hoạt cứu viện tự động.")
+		_trigger_rescue_phase(main)
+		return
 	
 	# Tăng cấp cho kẻ địch đang hoạt động nếu level thấp hơn
 	for e in main.enemy_team:
@@ -51,7 +57,11 @@ func on_entity_died(main: Node, entity: Entity):
 	if not is_rescue_phase:
 		# Nếu là kẻ địch chết trong pha sinh tồn, lập tức spawn con mới thế chỗ
 		if entity in main.enemy_team:
-			var current_level = clamp(25 + int(turns_elapsed / 2), 25, 30)
+			main.enemy_team.erase(entity)
+			main.all_entities.erase(entity)
+			entity.queue_free()
+			
+			var current_level = clamp(20 + int(turns_elapsed / 2), 20, 25)
 			_spawn_terrorist(main, current_level)
 			print("[Infinite Spawn] Kẻ địch mới xuất hiện (Level ", current_level, ")")
 			
@@ -62,14 +72,18 @@ func on_entity_died(main: Node, entity: Entity):
 	else:
 		# Pha cứu viện:
 		if entity in main.enemy_team:
-			kill_count += 1
-			print("[Rescue Phase] Mafuyu hạ gục tên khủng bố thứ ", kill_count, "/10")
+			main.enemy_team.erase(entity)
+			main.all_entities.erase(entity)
+			entity.queue_free()
 			
-			# Nếu chưa đủ 10 mạng, tiếp tục spawn quái level 30
-			if kill_count < 10:
-				_spawn_terrorist(main, 30)
+			kill_count += 1
+			print("[Rescue Phase] Mafuyu hạ gục tên khủng bố thứ ", kill_count, "/5")
+			
+			# Nếu chưa đủ 5 mạng, tiếp tục spawn quái level 25
+			if kill_count < 5:
+				_spawn_terrorist(main, 25)
 			else:
-				# Đã hạ gục 10 tên, chiến thắng!
+				# Đã hạ gục 5 tên, chiến thắng!
 				print("[StreetSurvivalScenario] Mafuyu dẹp sạch vòng vây! Chiến thắng!")
 				main.hud.show_victory()
 				main.battle_over = true
@@ -118,16 +132,16 @@ func _trigger_rescue_phase(main: Node):
 	
 	# Tráo đổi đội hình phe ta thành duy nhất Mafuyu
 	main.player_team = [mafuyu]
-	if not mafuyu.died.is_connected(main._on_entity_died):
+	if not mafuyu.died.is_connected(main._on_entity_died.bind(mafuyu)):
 		mafuyu.died.connect(main._on_entity_died.bind(mafuyu))
 		
-	# Dọn dẹp kẻ địch cũ, tạo mới 3 tên Level 30
+	# Dọn dẹp kẻ địch cũ, tạo mới 3 tên Level 25
 	main.enemy_team.clear()
 	main.all_entities.clear()
 	main.all_entities.append_array(main.player_team)
 	
 	for i in range(3):
-		_spawn_terrorist(main, 30, false)
+		_spawn_terrorist(main, 25, false)
 		
 	# Cập nhật toàn bộ hệ thống Battle Engine
 	main._refresh_team_context()
@@ -161,8 +175,8 @@ func check_battle_end(main: Node) -> bool:
 		main.battle_over = true
 		return true
 		
-	# Phe ta thắng nếu hạ đủ 10 quái
-	if kill_count >= 10:
+	# Phe ta thắng nếu hạ đủ 5 quái
+	if kill_count >= 5:
 		main.hud.show_victory()
 		main.battle_over = true
 		return true
@@ -170,7 +184,7 @@ func check_battle_end(main: Node) -> bool:
 	return false
 
 func get_victory_status(main: Node) -> bool:
-	return kill_count >= 10
+	return kill_count >= 5
 
 func on_battle_completed(main: Node, is_victory: bool):
 	# Khôi phục chỉ số gốc của Mafuyu
@@ -188,4 +202,4 @@ func on_battle_completed(main: Node, is_victory: bool):
 	if is_victory:
 		GameManager.story.set_flag("street_survival_done", true)
 		
-	super.on_battle_completed(main, is_victory)
+	GameManager.finish_battle(is_victory, kill_count)

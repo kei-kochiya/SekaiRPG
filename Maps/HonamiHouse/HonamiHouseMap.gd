@@ -54,7 +54,11 @@ func _build_house():
 	# Tạo InteractableZone cho cửa
 	var zone = InteractableZone.new()
 	zone.position = Vector2(15 * TILE_SIZE, 15 * TILE_SIZE)
-	zone.size = Vector2(32, 32)
+	var col = CollisionShape2D.new()
+	var rect = RectangleShape2D.new()
+	rect.size = Vector2(32, 32)
+	col.shape = rect
+	zone.add_child(col)
 	zone.interacted.connect(func():
 		DialogueManager.show_choice(["[Trở về Nightcord]", "[Ở lại]"])
 		var idx = await DialogueManager.choice_made
@@ -66,23 +70,35 @@ func _build_house():
 	add_child(zone)
 	
 	# Giường bệnh, tủ thuốc (Dùng asset tạm)
-	_place_indoor_asset("bed_1.png", Vector2(8, 7), true, true, PI/2)
-	_place_indoor_asset("bed_1.png", Vector2(10, 7), true, true, PI/2)
+	_place_indoor_asset("green_bed_facing_right.png", Vector2(8, 7), true, true, PI/2)
+	_place_indoor_asset("green_bed_facing_right.png", Vector2(10, 7), true, true, PI/2)
 	_place_indoor_asset("kitchen_1.png", Vector2(20, 6), true)
 	_place_indoor_asset("kitchen_2.png", Vector2(21, 6), true)
 	_place_indoor_asset("kitchen_4.png", Vector2(22, 6), true)
 	
 	# Spawn NPCs
-	MapUtils.create_dummy_char(self, "Honami", Vector2(15, 8), Color(0.5, 0.35, 0.25))
+	var honami_pos = Vector2(15, 8)
+	MapUtils.create_dummy_char(self, "Honami", honami_pos, Color(0.5, 0.35, 0.25))
+	var honami_zone = InteractableZone.new()
+	honami_zone.position = honami_pos * TILE_SIZE
+	var honami_col = CollisionShape2D.new()
+	var honami_rect = RectangleShape2D.new()
+	honami_rect.size = Vector2(32, 32)
+	honami_col.shape = honami_rect
+	honami_zone.add_child(honami_col)
+	honami_zone.interacted.connect(func(): _on_npc_interacted("Honami"))
+	add_child(honami_zone)
 	
 	# Spawn Player
-	var player = load("res://Entities/Player/OverworldPlayer.tscn").instantiate()
-	player.position = Vector2(12 * TILE_SIZE, 8 * TILE_SIZE)
+	var player = OverworldPlayer.new()
+	player.name = "OverworldPlayer"
+	
+	if GameManager.last_player_position != Vector2.ZERO:
+		player.position = GameManager.last_player_position
+	else:
+		player.position = Vector2(12 * TILE_SIZE, 8 * TILE_SIZE)
 	player.character_color = Color(0.29, 0.62, 0.62)
 	add_child(player)
-	
-	# Add interaction handler for player interacting with NPCs
-	player.interacted_with_npc.connect(_on_npc_interacted)
 
 func _place_indoor_asset(file: String, grid_pos: Vector2, _has_collision: bool, flip_h: bool = false, rot: float = 0.0):
 	var tile_pos = grid_pos * TILE_SIZE

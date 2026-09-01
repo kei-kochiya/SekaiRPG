@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_07_morning_cafe"
+quest_name = "Buổi sáng hỗn loạn & Sự kiện Quán Cafe"
+arc_name = "Character Arc (Ena & Mizuki)"
+description = "Sáng hôm sau, Ena bị trói phạt và được tha sau khi đồng ý cùng Mizuki đi giải trí ở Quán Cafe. Tại đây diễn ra vụ ẩu đả với côn đồ đường phố và màn đọ sức giữa Ena và Mizuki."
+linked_map_scene = "res://Maps/Cafe/CafeMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/PostHarborMorningStage.gd"
+battle_scenario_class = "ScriptedBattleScenario"
+dialogue_files = ["res://Data/storyline/post_harbor_morning.json", "res://Data/storyline/cafe_sequence.json"]
+pre_conditions = {
+"ena_cafe_done": false,
+"mizuki_report_done": true
+}
+post_conditions = {
+"ena_cafe_done": true,
+"ena_released": true,
+"post_harbor_morning_done": true
+}

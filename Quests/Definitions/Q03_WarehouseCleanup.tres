@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_03_warehouse"
+quest_name = "Dọn dẹp Nhà Kho Bỏ Hoang"
+arc_name = "Mid-game (Nhiệm vụ phụ)"
+description = "Đội hình Ichika và Kanade tiến vào Nhà kho cũ, vượt qua 5 đợt công nhân nổi loạn/quái vật để giải phóng khu vực."
+linked_map_scene = "res://Maps/Warehouse/WarehouseMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/IntroStage.gd"
+battle_scenario_class = "DefaultScenario"
+dialogue_files = ["res://Data/storyline/warehouse.json"]
+pre_conditions = {
+"warehouse_mission_accepted": true
+}
+post_conditions = {
+"warehouse_wave": 6
+}

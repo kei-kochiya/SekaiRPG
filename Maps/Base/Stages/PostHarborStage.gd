@@ -14,6 +14,9 @@ func get_npc_positions() -> Dictionary:
 		
 	return pos
 
+func get_bgm_track() -> String:
+	return "night"
+
 func on_stage_start():
 	# Hiệu ứng ánh sáng buổi chiều ấm áp
 	var lighting = CanvasModulate.new()

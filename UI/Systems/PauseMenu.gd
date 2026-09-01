@@ -261,6 +261,10 @@ func _show_password_dialog(target_check: CheckButton):
 # Lắng nghe phím ESC để bật/tắt Menu
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
+		# Failsafe: Nếu cờ báo đang hội thoại nhưng UI không hiển thị, tự động reset
+		if GameManager.is_in_dialogue and not DialogueManager.visible:
+			GameManager.end_dialogue()
+			
 		if not GameManager.is_in_dialogue:
 			toggle()
 

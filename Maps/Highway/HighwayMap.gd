@@ -53,7 +53,7 @@ func _run_logic():
 			GameManager.last_player_position = Vector2.ZERO
 			GameManager.store_map_state("res://Maps/Highway/HighwayMap.tscn", Vector2.ZERO)
 			await ScreenFade.fade_out(1.0)
-			get_tree().change_scene_to_file("res://Main.tscn")
+			GameManager.trigger_battle()
 		)
 	elif not GameManager.get_flag("finale_done"):
 		# Đã thắng boss

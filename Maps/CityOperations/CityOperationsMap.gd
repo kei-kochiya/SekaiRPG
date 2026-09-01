@@ -62,4 +62,4 @@ func _start_battle(battle_key: String):
 	GameManager.store_map_state("res://Maps/CityOperations/CityOperationsMap.tscn", Vector2.ZERO)
 	
 	await ScreenFade.fade_out(1.0)
-	get_tree().change_scene_to_file("res://Main.tscn")
+	GameManager.trigger_battle()

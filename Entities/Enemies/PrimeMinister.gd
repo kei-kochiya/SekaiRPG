@@ -25,19 +25,19 @@ func _init():
 		{"name": "Khóa Quyền Bính", "method": "lock_power", "cooldown_turns": 4, "target": "all_enemies"}
 	]
 
-func snipe_order(targets: Array):
+func snipe_order(_target: Variant = null):
 	# Tấn công diện rộng gây sát thương vật lý
 	print(entity_name, " tung đòn [Lệnh Bắn Tỉa]!")
-	for t in targets:
+	for t in enemies:
 		if t.current_hp > 0:
 			var dmg = DamageCalculator.calculate_damage(self, t) * 0.8
 			t.take_damage(int(dmg))
 
-func lock_power(targets: Array):
+func lock_power(_target: Variant = null):
 	print(entity_name, " tung đòn [Khóa Quyền Bính]!")
-	for t in targets:
+	for t in enemies:
 		if t.current_hp > 0:
-			t.apply_status_effect("Stun", 1)
+			t.add_status({"type": "Stun", "duration": 1})
 			t.take_damage(50)
 
 func get_portrait_path() -> String:

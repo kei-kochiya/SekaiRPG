@@ -44,9 +44,10 @@ func _ready():
 
 # Kiểm tra và ẩn/hiện bộ phím ảo tùy theo ngữ cảnh game
 func _process(_delta):
-	if not _is_mobile: return
+	if not _is_mobile or _root == null: return
 	
-	var is_menu = GameManager.is_in_menu
+	var cur_scene = get_tree().current_scene
+	var is_menu = (cur_scene != null and cur_scene.name in ["StartMenu", "SandboxMenu", "SaveLoadMenu"])
 	
 	if is_menu:
 		if _root.visible:
@@ -56,7 +57,7 @@ func _process(_delta):
 	
 	var is_paused = get_tree().paused
 	var in_dialogue = GameManager.is_in_dialogue
-	var in_battle = GameManager.is_in_battle
+	var in_battle = (cur_scene != null and cur_scene.name == "BattleRoot")
 	
 	if (in_dialogue or is_paused) and _root.visible:
 		_root.visible = false

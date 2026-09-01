@@ -1,15 +1,70 @@
 {
   "pm_car_ride": [
-    {"speaker": "Mizuki", "text": "(Ngồi ở ghế lái) Hôm nay ngài muốn đi đâu, thưa Thủ tướng?"},
-    {"speaker": "PM", "text": "Cứ đi theo lộ trình cũ. Và cô Mafuyu, làm tốt nhiệm vụ bảo vệ tôi đấy."},
-    {"speaker": "Mafuyu", "text": "Tôi biết nhiệm vụ của mình. Hắn ta sẽ không thể đụng đến một sợi tóc của ngài."},
-    {"speaker": "Kanade", "text": "(Qua bộ đàm) Mafuyu, không xong rồi! Ichika đã bị bắt!"},
-    {"speaker": "Mafuyu", "text": "Cái gì? Tại sao lại bất cẩn như vậy?"},
-    {"speaker": "PM", "text": "(Cười khẩy) Chà, có vẻ như đồng đội của cô đang gặp rắc rối rồi, Mafuyu."},
-    {"speaker": "PM", "text": "(Rút súng chĩa vào Mafuyu) Nhưng cô nên lo cho bản thân mình trước đi. Kế hoạch của tôi hoàn hảo chứ?"},
-    {"speaker": "Mafuyu", "text": "Ngươi nghĩ ta không biết gì sao?"},
-    {"speaker": "Ena", "text": "(Chặn đầu xe) Đứng lại! (Đoàng! Đoàng!)"},
-    {"speaker": "Mizuki", "text": "Chà, tới lúc trổ tài rồi! Bám chặt vào nhé!"},
-    {"speaker": "PM", "text": "Cái quái gì vậy?! Lốp xe bị bắn thủng rồi!"}
+    {
+      "speaker": "right",
+      "text": "(Ngồi ở ghế lái) Hôm nay ngài muốn đi đâu, thưa Thủ tướng?",
+      "type": "dialogue",
+      "name": "Mizuki"
+    },
+    {
+      "speaker": "right",
+      "text": "Cứ đi theo lộ trình cũ. Và cô Mafuyu, làm tốt nhiệm vụ bảo vệ tôi đấy.",
+      "type": "dialogue",
+      "name": "PM"
+    },
+    {
+      "speaker": "left",
+      "text": "Tôi biết nhiệm vụ của mình. Hắn ta sẽ không thể đụng đến một sợi tóc của ngài.",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "right",
+      "text": "(Qua bộ đàm) Mafuyu, không xong rồi! Ichika đã bị bắt!",
+      "type": "dialogue",
+      "name": "Kanade"
+    },
+    {
+      "speaker": "left",
+      "text": "Cái gì? Tại sao lại bất cẩn như vậy?",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "right",
+      "text": "(Cười khẩy) Chà, có vẻ như đồng đội của cô đang gặp rắc rối rồi, Mafuyu.",
+      "type": "dialogue",
+      "name": "PM"
+    },
+    {
+      "speaker": "right",
+      "text": "(Rút súng chĩa vào Mafuyu) Nhưng cô nên lo cho bản thân mình trước đi. Kế hoạch của tôi hoàn hảo chứ?",
+      "type": "dialogue",
+      "name": "PM"
+    },
+    {
+      "speaker": "left",
+      "text": "Ngươi nghĩ ta không biết gì sao?",
+      "type": "dialogue",
+      "name": "Mafuyu"
+    },
+    {
+      "speaker": "left",
+      "text": "(Chặn đầu xe) Đứng lại! (Đoàng! Đoàng!)",
+      "type": "dialogue",
+      "name": "Ena"
+    },
+    {
+      "speaker": "right",
+      "text": "Chà, tới lúc trổ tài rồi! Bám chặt vào nhé!",
+      "type": "dialogue",
+      "name": "Mizuki"
+    },
+    {
+      "speaker": "right",
+      "text": "Cái quái gì vậy?! Lốp xe bị bắn thủng rồi!",
+      "type": "dialogue",
+      "name": "PM"
+    }
   ]
 }

@@ -103,6 +103,8 @@ func _revive_boss_p1(main: Node):
 	if not boss: return
 	
 	main.is_scripting = true
+	phase = 2
+	turns_in_phase = 0
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_boss_revive_p1"), func():
 		boss.current_hp = int(boss.max_hp * 0.5)
 		_sync_battle_state(main)
@@ -120,11 +122,13 @@ func _trigger_phase_3(main: Node):
 	var boss = main._get_entity("Đội Trưởng")
 	var ichika = GameManager.get_party_member("Ichika")
 	var ena = GameManager.get_party_member("Ena")
+	var mafuyu = GameManager.get_party_member("Mafuyu")
 	
-	if ichika and ena:
+	if ichika and ena and mafuyu:
 		if ichika.current_hp <= 0: ichika.current_hp = int(ichika.max_hp * 0.5)
 		if ena.current_hp <= 0: ena.current_hp = int(ena.max_hp * 0.5)
-		main.player_team = [ichika, ena, main.player_team[0]]
+		if mafuyu.current_hp <= 0: mafuyu.current_hp = int(mafuyu.max_hp * 0.5)
+		main.player_team = [ichika, ena, mafuyu]
 		
 	if boss:
 		boss.max_hp = 5000
@@ -141,7 +145,7 @@ func _sync_battle_state(main: Node):
 	main._refresh_team_context()
 	for e in main.all_entities:
 		e.action_gauge = 0.0 # Reset thanh hành động để bắt đầu Phase mới công bằng
-		if not e.died.is_connected(main._on_entity_died):
+		if not e.died.is_connected(main._on_entity_died.bind(e)):
 			e.died.connect(main._on_entity_died.bind(e))
 	main.hud.setup(main.player_team, main.enemy_team)
 	main._setup_gauge_teams()

@@ -260,7 +260,7 @@ func full_heal_party():
 	for key in party.keys():
 		var entity = party[key]
 		if entity:
-			entity.hp = entity.max_hp
+			entity.current_hp = entity.max_hp
 			if entity.has_method("clear_all_debuffs"):
 				entity.clear_all_debuffs()
 
@@ -287,11 +287,17 @@ func finish_battle(victory: bool, count: int = 1):
 		return
 
 	if not victory and is_training_mode:
+		# Thua training: thưởng EXP an ủi, hồi máu, rồi về base
 		var bonus_exp = int(last_battle_max_lv * 50)
 		for p_name in training_participants:
 			var entity = get_party_member(p_name)
 			if entity: LevelManager.gain_exp(entity, bonus_exp)
-		victory = true
+		is_training_mode = false
+		full_heal_party()
+		current_map_file = "res://Maps/Base/BaseMap.tscn"
+		last_player_position = Vector2.ZERO
+		get_tree().change_scene_to_file(current_map_file)
+		return
 
 	if victory:
 		_apply_victory_rewards(count)
