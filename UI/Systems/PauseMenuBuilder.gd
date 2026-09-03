@@ -5,7 +5,7 @@ const PANEL_BROWN_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/panel_brow
 const PANEL_GREY_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/panel_grey.svg"
 const BUTTON_BROWN_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg"
 const BUTTON_GREY_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg"
-const FONT_PATH = "res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"
+const FONT_PATH = "res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"
 
 static func build_base_ui(menu: Node) -> Dictionary:
 	var _root = Control.new()

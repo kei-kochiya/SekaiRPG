@@ -17,7 +17,7 @@ Chức năng chính:
 
 const SPEED = 250.0
 const ANIM_FRAME_TIME = 0.16
-const SPRITE_ROOT = "res://Art/Sprites/"
+const SPRITE_ROOT = "res://Assets/Sprites/"
 
 # Màu sắc đại diện cho nhân vật (Tự động map sang Sprite tương ứng)
 var character_color: Color = Color(0.29, 0.62, 0.62):

@@ -31,7 +31,7 @@ static func place_road_asset(parent: Node2D, file: String, grid_pos: Vector2):
 	sprite.position = tile_pos
 	parent.add_child(sprite)
 
-const SPRITE_ROOT = "res://Art/Sprites/"
+const SPRITE_ROOT = "res://Assets/Sprites/"
 
 static func get_character_sprite_path(c_name: String) -> String:
 	var clean_name = c_name.strip_edges().to_lower()

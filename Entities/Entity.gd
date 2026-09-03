@@ -202,4 +202,4 @@ func can_use_skill(skill_name: String) -> bool:
 	return cooldowns.get(skill_name, 0) <= 0
 
 func get_portrait_path() -> String:
-	return "res://Art/Portraits/%s.png" % entity_name.to_lower()
+	return "res://Assets/Portraits/%s.png" % entity_name.to_lower()

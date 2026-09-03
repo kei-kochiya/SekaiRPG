@@ -164,4 +164,4 @@ func _on_start():
 
 func _on_back():
 	await ScreenFade.fade_out(0.5)
-	get_tree().change_scene_to_file("res://Menus/Start/StartMenu.tscn")
+	get_tree().change_scene_to_file("res://UI/Menus/Start/StartMenu.tscn")

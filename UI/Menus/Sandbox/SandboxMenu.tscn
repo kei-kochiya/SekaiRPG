@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://8n7cgp2x7mc7"]
 
-[ext_resource type="Script" path="res://Menus/Sandbox/SandboxMenu.gd" id="1_sand"]
+[ext_resource type="Script" path="res://UI/Menus/Sandbox/SandboxMenu.gd" id="1_sand"]
 
 [node name="SandboxMenu" type="Control"]
 layout_mode = 3

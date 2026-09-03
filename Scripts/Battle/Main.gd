@@ -346,7 +346,7 @@ func _setup_sandbox_exit_button():
 	btn.pressed.connect(func():
 		print("[Sandbox] Kết thúc trận đấu sớm.")
 		GameManager.is_sandbox = false
-		get_tree().change_scene_to_file("res://Menus/Sandbox/SandboxMenu.tscn")
+		get_tree().change_scene_to_file("res://UI/Menus/Sandbox/SandboxMenu.tscn")
 	)
 
 func _names(team: Array) -> String:

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PJSK_RPG"
-run/main_scene="res://Menus/Start/StartMenu.tscn"
+run/main_scene="res://UI/Menus/Start/StartMenu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://bubsa2phqp7kb"
 
@@ -38,7 +38,7 @@ window/stretch/aspect="expand"
 [gui]
 
 theme/custom="res://default_theme.tres"
-theme/custom_font="res://Fonts/zhcn.ttf"
+theme/custom_font="res://Assets/Fonts/zhcn.ttf"
 
 [physics]
 

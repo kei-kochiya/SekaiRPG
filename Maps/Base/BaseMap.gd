@@ -243,7 +243,7 @@ func _spawn_shop_and_sim():
 	shop_root.position = Vector2(16 * TILE_SIZE, 15 * TILE_SIZE)
 	
 	var shop_vis = Sprite2D.new()
-	var shop_tex = load("res://Art/Sprites/chest_closed.svg")
+	var shop_tex = load("res://Assets/Sprites/chest_closed.svg")
 	if shop_tex:
 		shop_vis.texture = shop_tex
 		shop_vis.scale = Vector2(0.8, 0.8)
@@ -304,7 +304,7 @@ func _spawn_shop_and_sim():
 			var p_pos = p.global_position if p else Vector2.ZERO
 			GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", p_pos)
 			HoloSimManager.start_new_run()
-			get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")
+			get_tree().change_scene_to_file("res://Scripts/Battle/BattleScene.tscn")
 		elif idx == 1:
 			DialogueManager.play_dialogue([
 				{"text": "Kỷ lục leo tháp cao nhất của bạn: Tầng %d / 10." % HoloSimManager.high_score_floor, "type": "narrator"}

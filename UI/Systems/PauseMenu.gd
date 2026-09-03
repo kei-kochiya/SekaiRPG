@@ -259,7 +259,7 @@ func _on_open_save_load_menu():
 	"""
 	Mở menu quản lý Save & Load dạng Overlay.
 	"""
-	var save_load_scene = preload("res://Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
+	var save_load_scene = preload("res://UI/Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
 	_root.add_child(save_load_scene)
 
 func _on_quit():
@@ -271,5 +271,5 @@ func _on_quit():
 	"""
 	visible = false
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://Menus/Start/StartMenu.tscn")
+	get_tree().change_scene_to_file("res://UI/Menus/Start/StartMenu.tscn")
 

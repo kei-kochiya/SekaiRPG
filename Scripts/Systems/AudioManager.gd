@@ -16,7 +16,7 @@ Chức năng chính:
 var _player: AudioStreamPlayer
 var _current_track: String = ""
 
-const MUSIC_DIR = "res://Music/"
+const MUSIC_DIR = "res://Assets/Audio/"
 const TRACKS = {
 	"base": "base_music.mp3",
 	"battle": "battle_music.mp3",

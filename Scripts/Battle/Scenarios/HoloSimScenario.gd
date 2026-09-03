@@ -123,5 +123,5 @@ func _show_blessing_selection(battle: Node):
 		HoloSimManager.add_blessing(b_id)
 		# Chuyển sang trận đấu tiếp theo
 		await ScreenFade.fade_out(0.6)
-		GameManager.get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")
+		GameManager.get_tree().change_scene_to_file("res://Scripts/Battle/BattleScene.tscn")
 	)

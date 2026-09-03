@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c8y7m6b5a4d3e"]
 
-[ext_resource type="Script" path="res://Menus/SaveLoad/SaveLoadMenu.gd" id="1_x8y9z"]
+[ext_resource type="Script" path="res://UI/Menus/SaveLoad/SaveLoadMenu.gd" id="1_x8y9z"]
 
 [node name="SaveLoadMenu" type="Control"]
 layout_mode = 3

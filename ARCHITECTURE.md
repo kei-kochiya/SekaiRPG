@@ -4,79 +4,134 @@ Tài liệu này cung cấp cái nhìn tổng quan về kiến trúc của **Sek
 
 ---
 
+## 0. Cấu Trúc Thư Mục Tinh Gọn (Clean Directory Tree)
+
+Dự án đã được tổ chức lại tinh gọn thành **9 thư mục cốt lõi**, loại bỏ triệt để tình trạng phân mảnh, trùng lặp tài nguyên:
+
+```text
+SekaiRPG/
+├── Assets/                    # Toàn bộ tài nguyên nghe nhìn
+│   ├── Audio/                 # Nhạc nền (BGM mp3)
+│   ├── Fonts/                 # Phông chữ hệ thống (zhcn.ttf, #9Slide03...)
+│   ├── Icons/                 # Biểu tượng trạng thái, skill
+│   ├── Indoors/               # Gạch ngói nội thất nhà cửa
+│   ├── Person/                # Texture nhân vật legacy
+│   ├── Portraits/             # Chân dung nhân vật hội thoại (256x256)
+│   ├── Roads/                 # Gạch ngói đường xá
+│   ├── Sprites/               # Sprite sheet SVG hoạt họa 3x4, rương kho báu
+│   ├── kenney_micro-roguelike/# Tilemap gạch ngói môi trường
+│   └── kenney_ui-pack-adventure/ # Vector UI buttons, panels, minimap
+├── Data/                      # Cấu hình dữ liệu ngoài (JSON)
+│   ├── battles/               # Cấu hình đội hình trận đấu nhiệm vụ
+│   └── storyline/             # Toàn bộ kịch bản hội thoại theo chương
+├── Entities/                  # Mô hình thực thể hướng đối tượng (OOP)
+│   ├── Characters/            # 6 nhân vật chơi được (Ichika, Kanade, Mafuyu, Ena, Mizuki, Honami)
+│   ├── Enemies/               # 8 chủng loại quái vật và Boss
+│   └── Entity.gd              # Base class thực thể toàn diện
+├── Export/                    # Cấu hình và tệp xuất bản (PC, Android)
+├── Maps/                      # Không gian Overworld & kịch bản khám phá
+│   ├── Base/                  # Safehouse Hub & các BaseMapStage theo thời gian
+│   ├── Prologue/              # Hẻm mở màn
+│   ├── Warehouse/             # Nhà kho bỏ hoang (Wave battles)
+│   ├── Harbor/                # Bến cảng bí mật (Boss Đội Trưởng)
+│   ├── Cafe/                  # Quán Cafe nội đô
+│   ├── Street/                # Ngã tư đường phố (Street survival)
+│   ├── HonamiHouse/           # Phòng khám tư nhân của Honami
+│   ├── CityOperations/        # Chiến dịch chia cắt lực lượng
+│   └── Highway/               # Xa lộ đêm & Boss Thủ Tướng
+├── Quests/                    # Lớp siêu dữ liệu nhiệm vụ (Quest-driven Architecture)
+│   ├── Definitions/           # 10 Resource .tres cấu hình nhiệm vụ
+│   ├── QuestDefinition.gd     # Lớp định nghĩa siêu dữ liệu Quest
+│   └── QuestRegistry.gd       # Trình quản lý và tra cứu tiến trình nhiệm vụ
+├── Scripts/                   # Logic mã nguồn hệ thống
+│   ├── Battle/                # Main.gd, BattleScene.tscn, Scenarios/, HoloSim/, Calculators
+│   ├── Core/                  # GameManager.gd, SaveManager.gd, StoryState.gd
+│   ├── Overworld/             # OverworldPlayer.gd, MapUtils.gd, TreasureChest.gd, InteractableZone.gd
+│   └── Systems/               # AudioManager.gd, LevelManager.gd, DialogueLoader.gd
+├── Tests/                     # Hệ thống kiểm thử tự động toàn diện (Unit Test Suite)
+│   ├── Unit/                  # TestCore, TestCombat, TestEntities, TestEconomy, TestQuests, TestHoloSim
+│   ├── BaseTest.gd            # Base test class với assertions & tracking
+│   ├── TestRunner.gd          # Master test coordinator & formatted report
+│   └── TestRunnerScene.tscn   # Scene thực thi test runner
+└── UI/                        # Toàn bộ giao diện người dùng
+    ├── Battle/                # CharacterCard, CommandMenu, FloatingText, TimelineUI
+    ├── Effects/               # ScreenFade, ScreenShake
+    ├── HoloSim/               # HoloBlessingSelectUI (Chọn 3 thẻ bài Phước Lành)
+    ├── Menus/                 # StartMenu, SaveLoadMenu, SandboxMenu
+    ├── Popups/                # SkillDetailPopup, TargetSelector
+    └── Systems/               # DialogueUI, MobileControls, PauseMenu, ShopMenu, UpgradeUI
+```
+
+---
+
 ## 1. Core Engine (Bộ não trung tâm)
 
-Chịu trách nhiệm quản lý trạng thái toàn cục của trò chơi, bao gồm tiến trình cốt truyện, đội hình và dữ liệu lưu trữ.
+Chịu trách nhiệm quản lý trạng thái toàn cục của trò chơi, bao gồm tiến trình cốt truyện, đội hình, kinh tế và dữ liệu lưu trữ.
 
 | File | Chức năng chính | Phụ thuộc vào |
 | :--- | :--- | :--- |
-| **`GameManager.gd`** (Autoload) | Quản lý trạng thái toàn cục (Party, Scene Transition). Điều phối các `Scripted Battle`, bộ đếm Auto-save an toàn (5 phút), và xử lý Game Over. | `StoryState`, `LevelManager`, `SaveManager` |
-| **`SaveManager.gd`** | Quản lý lưu trữ chuyên biệt tại `user://saves/`, tự động đóng gói siêu dữ liệu (Quest Name, Map Name, Timestamp, Version), quản lý Quick Save, Auto-Save, và các file save tự do không giới hạn. | `StoryState`, `QuestRegistry` |
+| **`GameManager.gd`** (Autoload) | Quản lý trạng thái toàn cục (Party, Scene Transition). Điều phối các `Scripted Battle`, quản lý số dư `credits`, túi đồ `inventory`, ghi nhận rương `opened_chests`, bộ đếm Auto-save an toàn (5 phút), và xử lý Game Over. | `StoryState`, `LevelManager`, `SaveManager` |
+| **`SaveManager.gd`** | Quản lý lưu trữ chuyên biệt tại `user://saves/`, tự động đóng gói siêu dữ liệu (Quest Name, Map Name, Timestamp, Version), quản lý Quick Save, Auto-Save, lưu trữ trọn vẹn cả Party Stats, Credits, Inventory, Chest States. | `StoryState`, `QuestRegistry` |
 | **`StoryState.gd`** | Lưu trữ các cờ (flags) kịch bản và tiến độ nhiệm vụ (wave, quest). | Không có |
 | **`LevelManager.gd`** | Xử lý nhận EXP, tính toán chỉ số theo cấp độ (Soft/Hard Cap), và tự động phân bổ chỉ số (Auto-upgrade) cho quái vật. | `Entity` |
 
 ---
 
-## 2. Battle System (Hệ thống chiến đấu)
+## 2. Battle System (Hệ thống chiến đấu 2.0)
 
-Hệ thống chiến đấu theo lượt (Turn-based) phức tạp sử dụng cơ chế **Action Value (AV)** (tương tự Honkai: Star Rail).
+Hệ thống chiến đấu theo lượt (Turn-based) chuyên sâu sử dụng cơ chế **Action Value (AV)** kết hợp cơ chế điểm yếu và chí mạng.
 
 ### 2.1. Battle Engine (Lõi chiến đấu)
 | File | Chức năng chính | Phụ thuộc vào |
 | :--- | :--- | :--- |
-| **`Main.gd`** | Battle Engine cốt lõi. Quản lý Vòng lặp lượt đánh, AI, Timeline (AV), và UI trận đấu. | Nhiều hệ thống |
-| **`BattleInitializer.gd`** | Tự động đọc Map/Kịch bản để khởi tạo đội hình Phe ta - Phe địch và chọn Scenario phù hợp trước trận. | `GameManager`, `Scenarios` |
-| **`AIManager.gd`** | Trí tuệ nhân tạo của kẻ địch. Tính toán mục tiêu (Tanker, Low HP) và ra quyết định dùng kỹ năng. | `Entity` |
+| **`Scripts/Battle/Main.gd`** | Battle Engine cốt lõi. Quản lý Vòng lặp lượt đánh, AI, Timeline (AV), hiệu ứng rung chấn ScreenShake, dừng hình Hitstop, sử dụng vật phẩm và tiền thưởng hạ gục địch. | Nhiều hệ thống |
+| **`Scripts/Battle/BattleInitializer.gd`** | Tự động đọc Map/Kịch bản hoặc trạng thái HoloSim để khởi tạo đội hình Phe ta - Phe địch và chọn Scenario phù hợp trước trận. | `GameManager`, `Scenarios`, `HoloSimManager` |
+| **`Scripts/Battle/AIManager.gd`** | Trí tuệ nhân tạo của kẻ địch. Tính toán mục tiêu (Tanker, Low HP) và ra quyết định dùng kỹ năng dựa trên Timeline dự báo. | `Entity` |
 
-### 2.2. Battle Mechanics (Cơ chế tính toán)
+### 2.2. Battle Mechanics & Depth (Tính toán chiến đấu nâng cao)
 | File | Chức năng chính | Phụ thuộc vào |
 | :--- | :--- | :--- |
-| **`DamageCalculator.gd`** | Tính toán sát thương, bao gồm Buff, Debuff, và Tương khắc hệ (Cool, Pure, v.v.). | `Entity` |
+| **`DamageCalculator.gd`** | Tính toán sát thương chi tiết `calculate_damage_detailed`: Buff, Debuff, Tương khắc hệ (TypeChart), tỷ lệ và sát thương **Chí Mạng (Critical Hit)**, bào mòn **Thanh Điểm Yếu (Break Gauge)**, kích hoạt **Weakness Break** (Trễ 3000 AV + Choáng 1 lượt). | `Entity`, `TypeChart` |
 | **`TurnCalculator.gd`** | Tính toán Action Value (AV) dựa trên Tốc độ (Speed) và hành động để xác định thứ tự lượt đánh. | `Entity` |
-| **`ProcessStatus.gd`** | Xử lý logic tại đầu/cuối lượt (Trừ máu do Bleed/Poison, giảm Cooldown, Stun). | `Entity` |
+| **`ProcessStatus.gd`** | Xử lý logic tại đầu/cuối lượt (Trừ máu do Bleed/Poison, giảm Cooldown, Stun, Buffs). | `Entity` |
 
 ### 2.3. Scenarios (Kịch bản chiến đấu)
-Hệ thống sử dụng **Scenario Pattern** để can thiệp vào các "Hooks" của trận đấu (on_start, on_turn_start, on_entity_died). Nằm trong thư mục `BattleSystem/Scenarios/`.
+Nằm tập trung tại thư mục `Scripts/Battle/Scenarios/`:
 | File | Chức năng chính |
 | :--- | :--- |
-| **`BattleScenario.gd`** | Lớp cơ sở (Abstract) định nghĩa các hooks chiến đấu. |
+| **`BattleScenario.gd`** | Lớp cơ sở (Abstract) định nghĩa các hooks chiến đấu (`on_start`, `on_turn_start`, `on_entity_died`, `on_battle_completed`). |
 | **`DefaultScenario.gd`** | Logic chiến đấu mặc định (Đánh đến khi một bên hết máu). |
 | **`HarborBossScenario.gd`**| Kịch bản phức tạp 3 Phase của trận Đội Trưởng (Cảng), hồi sinh, đổi team. |
 | **`PrologueScenario.gd`** | Kịch bản trận mở màn (Ichika bị bao vây). |
-| **`StreetSurvivalScenario.gd`** | Kịch bản sinh tồn đặc biệt: Khóa kỹ năng nhân vật, quái spawn vô hạn và tăng cấp dần theo lượt. Khi phe ta gục ngã, kích hoạt pha Cứu viện của Mafuyu (buff 50% chỉ số) và quản lý điều kiện diệt 10 tên Khủng Bố để chiến thắng. |
+| **`StreetSurvivalScenario.gd`** | Kịch bản sinh tồn đặc biệt: Khóa kỹ năng, quái spawn vô hạn tăng cấp dần, pha Cứu viện của Mafuyu. |
+| **`PrimeMinisterBossScenario.gd`** | Trận Boss cuối Xa Lộ, gọi đệ bắn tỉa diện rộng và khóa quyền bính. |
+| **`HoloSimScenario.gd`** | Kịch bản mô phỏng Roguelite: Kích hoạt hiệu ứng Phước Lành (Thorns phản đòn, Bleed, Hồi sinh Undying), mở giao diện chọn thẻ bài sau chiến thắng tầng. |
 
 ---
 
-## 3. Dialogue System (Hệ thống hội thoại)
+## 3. Exploration, Economy & Items (Khám phá & Kinh tế)
 
-Tuân thủ chặt chẽ mô hình **MVC (Model-View-Controller)**, tách biệt hoàn toàn giữa dữ liệu, hiển thị và logic. Hỗ trợ hiển thị và tương tác rẽ nhánh cốt truyện (Branching Choices).
+Hệ thống bổ trợ giúp người chơi có mục tiêu khám phá các bản đồ và quản lý tài nguyên:
 
-| File | Vai trò | Chức năng chính |
-| :--- | :--- | :--- |
-| **`DialogueManager.gd`** | **Controller** | Điều phối luồng thoại, block input, hiển thị lựa chọn (`show_choice`) và chờ trả kết quả (`choice_made`). |
-| **`DialogueUI.gd`** | **View** | Vẽ giao diện khung thoại, chân dung NPC, tự động build UI nút lựa chọn (Choices). |
-| **`DialogueLoader.gd`** | **Model** | Nạp và phân tích dữ liệu hội thoại từ bộ nhớ hoặc thư mục JSON. |
+| File | Chức năng chính |
+| :--- | :--- |
+| **`Scripts/Overworld/TreasureChest.gd`** | Rương kho báu tương tác trong Overworld. Tự động chuyển đổi sprite rương đóng/mở (`chest_closed.svg` / `chest_open.svg`), thưởng Credits và vật phẩm, lưu trạng thái mở vĩnh viễn theo `chest_id`. |
+| **`UI/Systems/ShopMenu.gd`** | Giao diện máy bán hàng tự động tại Safehouse. Người chơi dùng Credits mua Bình máu, Nước tăng lực, Băng cứu thương. |
+| **`UI/Battle/CommandMenu.gd`** | Tích hợp nút **`[VẬT PHẨM]`** vào menu chiến đấu, cho phép dùng vật phẩm hỗ trợ đồng đội trong lượt đi. |
 
 ---
 
-## 4. World & Maps (Hệ thống bản đồ)
+## 4. Holo-Simulation Roguelite Mode (Chế độ Leo Tháp 10 Tầng)
 
-Quản lý không gian Overworld và luồng di chuyển của người chơi. Các Map được tối ưu bằng `MapUtils.gd` để sử dụng chung logic vẽ gạch ngói, spawn NPC. 
+Chế độ chơi lại vô tận (Endless / Roguelite Mode) có thể truy cập từ máy tính tại căn cứ Safehouse:
 
-| File/Thư mục | Chức năng chính | Trạng thái (Story) |
+| Thành phần | File | Chức năng |
 | :--- | :--- | :--- |
-| **`MapUtils.gd`** | Tiện ích hỗ trợ tạo hình nền, vẽ tường, spawn nhân vật giảm thiểu lặp code. | Hệ thống phụ |
-| **`PrologueMap.gd`** | Bản đồ mở đầu. Quản lý kịch bản Ichika bị bao vây và Mafuyu cứu viện. | Tutorial |
-| **`BaseMap.gd`** (Shell)| Vỏ bọc Safehouse. Chứa BaseMapStage để thay đổi không gian (sáng/tối/buổi sáng). | Hub/Safehouse |
-| **`WarehouseMap.gd`** | Bản đồ Nhà kho. Đánh theo dạng Wave liên tục. | Nhiệm vụ phụ |
-| **`TrainingWarehouseMap.gd`** | Bản đồ Luyện tập/Sandbox. Tự động spawn địch theo thành viên tham gia, có cờ giới hạn (limit). | Luyện tập |
-| **`CafeMap.gd`** | Bản đồ trang trí Quán Cafe. Cảnh hội thoại và phân nhánh kết cục sự kiện Ena say xỉn. | Nhiệm vụ phụ |
-| **`HarborMap.gd`** | Bản đồ Bến cảng. Quản lý đường đi (Đánh lính gác hoặc vào thẳng Boss). | Nhiệm vụ chính |
-| **`AlleywayMap.gd`** | Bản đồ Hẻm nhỏ. Trạm dừng chân và hội thoại sau khi đánh Boss. | Transition |
-| **`StreetMap.gd`** | Bản đồ Đường phố ngã tư đô thị. Dàn dựng bối cảnh xe cộ, trận phục kích, sinh tồn và pha cứu viện của Mafuyu. | Nhiệm vụ chính |
-| **`HonamiHouseMap.gd`** | Bản đồ Phòng khám tư nhân của Honami. Cung cấp Free Roam và tính năng Luyện tập với Honami. | Hub phụ |
-| **`CityOperationsMap.gd`** | Bản đồ chiến dịch của tổ chức phòng vệ, tự động tạo background Hẻm/Đường/Cảng để phục vụ chiến dịch chia cắt của Kanade, Ichika, Honami. | Sự kiện cuối |
-| **`HighwayMap.gd`** | Bản đồ xa lộ đêm. Kịch bản tẩu thoát trên xe và trận Boss cuối. | Sự kiện cuối |
+| **Trình điều phối** | `Scripts/Battle/HoloSim/HoloSimManager.gd` (Autoload) | Quản lý tiến trình 10 tầng thử thách, danh sách Phước Lành đã nhặt, lưu High Score. |
+| **Danh mục Phước Lành** | `Scripts/Battle/HoloSim/HoloBlessing.gd` | 8 Phước Lành Roguelite: Huyết Nguyệt (Bleed), Tốc Hành (SPD), Tâm Nhãn (Crit), Kích Nổ (Giảm CD), Giáp Gai (Thorns), Chấn Lực (Break x2), Hấp Thu (Hồi máu khi kill), Bất Tử (Hồi sinh 1 lần). |
+| **Giao diện chọn bài** | `UI/HoloSim/HoloBlessingSelectUI.gd` | Hiển thị 3 thẻ bài ngẫu nhiên để người chơi chọn sau mỗi tầng thắng. |
+| **Trạm nghỉ ngơi** | Tầng 4 & Tầng 9 | Tự động hồi phục 50% HP toàn đội + tặng 150 Credits. |
+| **Trùm Cuối** | Tầng 10 | Trận quyết đấu với Super Captain Boss Lv.35 nhận thưởng 1000 Credits. |
 
 ---
 
@@ -86,81 +141,49 @@ Quản lý không gian Overworld và luồng di chuyển của người chơi. C
 
 | File / Thư mục | Chức năng chính | Phụ thuộc vào |
 | :--- | :--- | :--- |
-| **`QuestDefinition.gd`** | Lớp Resource định nghĩa cấu trúc dữ liệu cho một nhiệm vụ: ID, Tên, Arc, Scene bản đồ liên kết, Entry Stage, Scenario chiến đấu, Dialogue file, và điều kiện StoryState trước/sau. | `Resource` |
+| **`QuestDefinition.gd`** | Lớp Resource định nghĩa cấu trúc dữ liệu cho một nhiệm vụ: ID, Tên, Arc, Scene bản đồ liên kết (`linked_map_scene`), Entry Stage, Scenario chiến đấu, Dialogue file, và điều kiện StoryState trước/sau. | `Resource` |
 | **`QuestRegistry.gd`** | Tiện ích tĩnh cung cấp API nạp và tra cứu danh sách toàn bộ nhiệm vụ (`get_all_quests`), tra cứu theo ID (`get_quest`), và tự động xác định nhiệm vụ hiện tại dựa trên cờ StoryState (`get_current_quest`). | `QuestDefinition`, `StoryState` |
 | **`Quests/Definitions/*.tres`** | 10 tài nguyên Resource tương ứng với 10 nhiệm vụ cốt truyện từ Prologue đến Finale. | `QuestDefinition` |
 
-### Bảng Mapping 10 Nhiệm Vụ (Quests)
+---
 
-| Quest ID | Tên Nhiệm Vụ | Chương (Arc) | Map Scene Liên Kết | Safehouse Stage | Battle Scenario | Dialogue Files Chính |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`quest_01_prologue`** | Mở màn: Cuộc giải cứu Ichika | Prologue | `res://Maps/Prologue/PrologueMap.tscn` | N/A | `PrologueScenario` | `prologue.json` |
-| **`quest_02_safehouse_intro`** | Căn cứ Nightcord & Nhận nhiệm vụ Kho | Safehouse Hub | `res://Maps/Base/BaseMap.tscn` | `IntroStage.gd` | Không có | `safehouse_intro.json` |
-| **`quest_03_warehouse`** | Dọn dẹp Nhà Kho Bỏ Hoang | Mid-game (Phụ) | `res://Maps/Warehouse/WarehouseMap.tscn` | `IntroStage.gd` → `PostWarehouseStage.gd` | `DefaultScenario` | `warehouse.json` |
-| **`quest_04_post_warehouse`** | Nghỉ ngơi & Mở khóa Cảng | Safehouse Hub | `res://Maps/Base/BaseMap.tscn` | `PostWarehouseStage.gd` | `DefaultScenario` (Training) | `safehouse_post_warehouse.json` |
-| **`quest_05_harbor`** | Thâm nhập Bến Cảng & Boss Đội Trưởng | Mid-game (Chính) | `res://Maps/Harbor/HarborMap.tscn` | `PostWarehouseStage.gd` → `PostHarborStage.gd` | `HarborBossScenario`<br>`DefaultScenario` | `harbor.json`<br>`post_harbor.json` |
-| **`quest_06_post_harbor`** | Báo cáo Bến Cảng & Mizuki vs Mafuyu | Safehouse Hub | `res://Maps/Base/BaseMap.tscn` | `PostHarborStage.gd` | `ScriptedBattleScenario` | `post_harbor.json` |
-| **`quest_07_morning_cafe`** | Buổi sáng hỗn loạn & Sự kiện Quán Cafe | Character Arc | `res://Maps/Cafe/CafeMap.tscn` | `PostHarborMorningStage.gd` | `ScriptedBattleScenario` | `post_harbor_morning.json`<br>`cafe_sequence.json` |
-| **`quest_08_street_ambush`** | Phục kích Ngã tư & Cuộc chiến Sinh tồn | Main Quest | `res://Maps/Street/StreetMap.tscn` | `PostCafeStreetMissionStage.gd` | `StreetSurvivalScenario`<br>`DefaultScenario` | `lobby_street_mission.json`<br>`street_sequence.json` |
-| **`quest_09_honami_clinic`** | Căn cứ bị đột kích & Phòng khám Honami | Safehouse / Hub 2 | `res://Maps/HonamiHouse/HonamiHouseMap.tscn` | `PostStreetStage.gd` → `HonamiHouseUnlockedStage.gd` | `DefaultScenario` (Training) | `base_honami_invasion.json`<br>`honami_house.json` |
-| **`quest_10_finale`** | Chiến dịch Thủ Tướng & Trận chiến Xa Lộ | Finale Arc | `res://Maps/Highway/HighwayMap.tscn` | `HonamiHouseUnlockedStage.gd` → `FinaleStage.gd` | `PrimeMinisterBossScenario`<br>`ScriptedBattleScenario` | `defense_agency_ops.json`<br>`pm_boss_aftermath.json` |
+## 6. Automated Unit Testing Framework (Hệ Thống Kiểm Thử Tự Động)
+
+Dự án trang bị bộ Unit Test chuẩn chỉ, phân tách rõ ràng theo module tại `Tests/Unit/`. Sau này khi thêm tính năng, lập trình viên chỉ cần thêm test method vào module tương ứng:
+
+```text
+Tests/
+├── Unit/
+│   ├── BaseTest.gd       # Base class cung cấp assert_true, assert_false, assert_eq, assert_gt, assert_lt
+│   ├── TestCore.gd       # Test GameManager flags, StoryState serialization, LevelManager EXP, SaveManager CRUD
+│   ├── TestCombat.gd     # Test DamageCalculator, TypeChart, Crits, Weakness Break, AV, ProcessStatus, AIManager
+│   ├── TestEntities.gd   # Test 6 Characters, skills, passives (Honami, Kanade), 8 Enemy classes
+│   ├── TestEconomy.gd    # Test Credits, Inventory add/use/cleanse, TreasureChests persistence
+│   ├── TestQuests.gd     # Test QuestRegistry load 10 quests, progression mapping
+│   └── TestHoloSim.gd    # Test HoloSim 10 floors, 8 blessings, rest stations, scenario flow
+├── TestRunner.gd         # Trình điều phối master runner, xuất bảng báo cáo console
+└── TestRunnerScene.tscn  # Scene thực thi kiểm thử
+```
+
+### Cách chạy kiểm thử:
+```bash
+godot --headless Tests/TestRunnerScene.tscn
+```
+- Nếu toàn bộ test case đạt: Console xuất báo cáo chi tiết và thoát với **Exit Code 0**.
+- Nếu có bất kỳ test nào thất bại: Console chỉ rõ file, dòng lỗi, giá trị mong đợi và thoát với **Exit Code 1** (tối ưu cho CI/CD).
+
+### Cách thêm bài test mới:
+Chỉ cần mở file module tương ứng trong `Tests/Unit/` (ví dụ `TestCombat.gd`) và viết thêm hàm bắt đầu bằng `test_`:
+```gdscript
+func test_new_combat_feature():
+    var result = my_new_calculation()
+    assert_gt(result, 100, "Kết quả tính toán phải vượt mức 100")
+```
+Bộ điều phối `TestRunner` sẽ tự động phát hiện và thực thi hàm test mới mà không cần đăng ký thủ công!
 
 ---
 
-## 6. Entities (Thực thể & Chỉ số)
-
-Thiết kế theo mô hình Hướng đối tượng (OOP). Mỗi nhân vật hoặc kẻ địch kế thừa từ một Base Class thống nhất. Tận dụng tính đa hình (Polymorphism) để tải ảnh thông qua `get_portrait_path()`.
-
-### 6.1. Base Class
-| File | Chức năng chính |
-| :--- | :--- |
-| **`Entity.gd`** | Nền tảng của vạn vật. Quản lý Stats (HP, ATK, SPD, DEF), Mảng Kỹ năng (Skills), Buffs/Debuffs (Status), và Hệ (Elements). Tích hợp logic nhận diện ảnh chân dung `get_portrait_path()`. |
-
-### 6.2. Characters (Phe ta)
-Các script nằm trong `Entities/Characters/`. Mỗi nhân vật (Ichika, Mafuyu, Ena, Mizuki, Kanade, Honami) có kỹ năng, chỉ số Hard Cap và cơ chế tương tác (Synergy) riêng biệt. Lớp nhân vật giờ đây tự động định tuyến đường dẫn Avatar UI của mình.
-
-### 6.3. Enemies (Kẻ địch)
-Các script nằm trong `Entities/Enemies/`.
-*   **`Kidnapper.gd`**: Kẻ thù cơ bản ở Prologue.
-*   **`Guard.gd` / `Captain.gd`**: Lính gác và Boss Đội trưởng tại Bến cảng.
-*   **`WarehouseWorker.gd`**: Quái vật ở Nhà kho.
-*   **`TrainingBot.gd`**: Dùng cho chế độ Sandbox/Training.
-*   **`Thug.gd`**: Kẻ địch giang hồ xuất hiện tại Quán Cafe (CafeMap).
-*   **`Terrorist.gd`**: Kẻ địch khủng bố xuất hiện tại khu vực Ngã tư đường phố (StreetMap) trong pha phục kích và sinh tồn, có kỹ năng xả súng liên thanh gây Bleed.
-*   **`PrimeMinister.gd`**: Trùm cuối siêu mạnh (12000 HP), có kỹ năng Lệnh Bắn Tỉa (AOE) và Khóa Quyền Bính (Stun), cơ chế gọi đệ.
-
----
-
-## 7. UI & Common Systems (Hệ thống UI & Hỗ trợ)
-
-Quản lý các giao diện hỗ trợ tương tác người chơi, thiết kế dựa trên các lớp Builder để tránh nhồi nhét logic vào file trung tâm.
-
-| File | Vai trò | Chức năng chính |
-| :--- | :--- | :--- |
-| **`MobileControls.gd`** (Autoload) | **Mobile Controller** | Tạo joystick ảo, các nút bấm (Menu, Interact) có bao viền gỗ tinh tế. Tự động ẩn/hiện thông minh tùy thuộc vào scene. |
-| **`PauseMenu.gd`** & **`PauseMenuBuilder.gd`** | **System Menu** | Menu tạm dừng tích hợp chỉnh âm lượng, Quick Save, truy cập Save/Load Menu, và tính năng Skip Battle. |
-| **`SaveLoadMenu.gd`** | **Save/Load View** | Giao diện quản lý danh sách file save in-game (Kenney UI): tạo file mới, xem badge Quest/Map/Timestamp, Tải, Ghi đè, Xóa kèm pop-up xác nhận. |
-| **`QuestHUDBuilder.gd`** | **UI Builder** | Lắp ráp bảng điều khiển hiển thị Quest tại các Map. |
-| **`UpgradeUI.gd`** | **Upgrade View** | Giao diện nâng cấp thuộc tính, chỉ số cho nhân vật bằng tài nguyên thu thập được. |
-
----
-
-## 8. Font & Theme System (Hệ thống Font & Theme)
-
-SekaiRPG sử dụng hệ thống Font chữ phân lớp chuyên nghiệp để định hình phong cách đồ họa sang trọng và tăng khả năng tối ưu hóa trải nghiệm đọc của người chơi.
-
-| Thành phần | Font chữ áp dụng | Mô tả & Cách hoạt động |
-| :--- | :--- | :--- |
-| **Global Theme** (`default_theme.tres`) | **`zhcn.ttf`** | Thiết lập làm Font mặc định cho toàn bộ dự án Godot. Mọi Node văn bản (`Label`, `RichTextLabel`...) nếu không ghi đè sẽ tự động sử dụng font này. |
-| **Global Buttons** (`default_theme.tres`) | **`#9Slide03 AMPLESOFT MEDIUM.ttf`** | Thiết lập ghi đè lớp `Button` trong Global Theme để mọi nút bấm trong trò chơi tự động mang kiểu chữ đậm cá tính này. |
-| **Title Banner** (`StartMenu.gd`) | **`zhcn.ttf`** | Dùng riêng cho tiêu đề trò chơi "SEKAI RPG" ở màn hình mở đầu. |
-| **Dialogue Narration** (`DialogueUI.gd`) | **`#9Slide03 AMPLESOFT MEDIUM.ttf`** | Gán cho thuộc tính `normal_font` của RichTextLabel trong hộp hội thoại người dẫn chuyện (Narrator) và thoại chính. |
-| **Dialogue Action** (`DialogueUI.gd`) | **`#9Slide03 AMPLESOFT MEDIUM.ttf`** | Tự động kích hoạt khi dùng thẻ `[i]` (thể hiện thoại hành động cốt truyện). |
-| **Character Name** (`DialogueUI.gd`) | **`#9Slide03 AMPLESOFT MEDIUM.ttf`** | Tự động kích hoạt khi dùng thẻ `[b]` (bọc quanh tên nhân vật phát ngôn cốt truyện). |
-
----
-
-## Sơ đồ phụ thuộc (Dependency Flow)
+## 7. Sơ đồ phụ thuộc tổng thể (Dependency Flow)
 
 ```mermaid
 graph TD
@@ -168,6 +191,13 @@ graph TD
         GM[GameManager] --> SS[StoryState]
         GM --> LM[LevelManager]
         GM --> SManager[SaveManager]
+    end
+
+    subgraph Economy_and_HoloSim
+        GM --> TC_Chest[TreasureChest]
+        GM --> SM_Shop[ShopMenu]
+        HSM[HoloSimManager] --> HB[HoloBlessing]
+        HSM --> HSS[HoloSimScenario]
     end
 
     subgraph Quests
@@ -181,6 +211,7 @@ graph TD
         M --> DC[DamageCalculator]
         M --> TC[TurnCalculator]
         BI --> SC[Specific Scenarios]
+        SC --> HSS
     end
 
     subgraph Overworld & Flow
@@ -188,89 +219,15 @@ graph TD
         MAP --> DM[DialogueManager]
         BM[BaseMap] --> BSt[BaseMapStages]
         MAP --> MU[MapUtils]
-        MAP --> MC[MobileControls]
+        MAP --> TC_Chest
     end
 
-    subgraph UI & Systems
-        DM --> DUI[DialogueUI]
-        DM --> DL[DialogueLoader]
-        GM --> PM[PauseMenu]
-        PM --> PMB[PauseMenuBuilder]
-        MAP --> QHB[QuestHUDBuilder]
+    subgraph Testing
+        TR[TestRunner] --> TCore[TestCore]
+        TR --> TCombat[TestCombat]
+        TR --> TEntities[TestEntities]
+        TR --> TEconomy[TestEconomy]
+        TR --> TQuests[TestQuests]
+        TR --> THoloSim[TestHoloSim]
     end
 ```
-
----
-
-## Hướng dẫn mở rộng cho Developer
-
-1.  **Thêm Nhân vật / Kẻ địch mới**:
-    *   Tạo script mới kế thừa `Entity.gd` trong thư mục `Entities/Characters/` hoặc `Entities/Enemies/`.
-    *   Định nghĩa Base Stats, Element và danh sách Kỹ năng (Skills array).
-    *   Đăng ký Class mới vào từ điển `character_classes` hoặc `enemy_classes` trong `BattleInitializer.gd`.
-
-2.  **Thêm Trận đánh Boss (Scripted Battle)**:
-    *   Tạo file Scenario mới trong `BattleSystem/Scenarios/` (kế thừa `BattleScenario.gd` hoặc `DefaultScenario.gd`).
-    *   Cập nhật `BattleInitializer.gd` (hàm `_setup_scripted_battle`) để trả về Scenario này cùng với đội hình tương ứng.
-    *   Gọi `GameManager.is_scripted_battle = true` trước khi trigger trận.
-
-3.  **Thêm Kịch bản tại Safehouse**:
-    *   Tạo file Stage mới trong `Maps/Base/Stages/` (kế thừa `BaseMapStage`).
-    *   Ghi đè các hàm như `get_npc_positions()`, `on_stage_start()` để đặt logic.
-    *   Đăng ký Stage vào `BaseMap.gd`.
-
-4.  **Thêm Nhiệm vụ (Quest) mới**:
-    *   Tạo file tài nguyên `.tres` mới trong `res://Quests/Definitions/` kế thừa `QuestDefinition.gd`.
-    *   Điền các trường: `quest_id`, `linked_map_scene`, `battle_scenario_class`, `dialogue_files`, `pre_conditions`, `post_conditions`.
-    *   Đăng ký file vào hằng số `QUEST_FILES` trong `QuestRegistry.gd`.
-
----
-
-## 9. Game Flow & State Transitions (Luồng chuyển cảnh)
-
-Trò chơi sử dụng cấu trúc State Machine đơn giản do `GameManager` (Autoload) quản lý để chuyển đổi giữa bản đồ (Overworld) và trận đánh (BattleScene).
-
-### 9.1. Kích hoạt trận đấu (Trigger Battle)
-1. `GameManager.store_map_state()`: Lưu lại đường dẫn map hiện tại và vị trí người chơi.
-2. Kích hoạt cờ tương ứng: `is_scripted_battle` (nếu là trận cốt truyện), `is_training_mode` (nếu là trận huấn luyện), hoặc không có (trận quét map thông thường).
-3. `GameManager.trigger_battle()`: Gọi `get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")`.
-
-### 9.2. Kết thúc trận đấu (Battle Completion)
-Tại `Main.gd` (Battle Engine), khi trận đấu phân định thắng thua:
-1. Gọi `scenario.get_victory_status()` để xác định kết quả (is_victory).
-2. Gọi `scenario.on_battle_completed(main, is_victory)` để dọn dẹp và xử lý cốt truyện.
-
-**LƯU Ý CỰC KỲ QUAN TRỌNG:**
-- Nếu bạn tạo một Custom Scenario kế thừa trực tiếp từ `BattleScenario` (ví dụ `StreetSurvivalScenario`), **bạn BẮT BUỘC phải gọi `GameManager.finish_battle(is_victory, ...)`** ở cuối hàm `on_battle_completed`. Nếu không, game sẽ bị treo (đứng yên) tại giao diện chiến thắng do không có lệnh chuyển scene.
-- Nếu kế thừa từ `DefaultScenario`, hàm `on_battle_completed` của nó đã gọi sẵn `GameManager.finish_battle()`.
-
-### 9.3. Hậu trận đấu (Post-Battle)
-1. `GameManager.finish_battle()` được gọi.
-2. Cộng EXP, Cập nhật Quest/Wave dựa trên cờ thắng/thua.
-3. Nếu thua (ở trận cốt truyện/map): Hồi máu đầy đủ và Dịch chuyển người chơi về Safehouse (`BaseMap.tscn`).
-4. Chuyển scene: `get_tree().change_scene_to_file(current_map_file)`.
-
----
-
-## 10. Tóm tắt Cốt truyện (Story Summary)
-
-Tiến trình trò chơi được chia thành các chương (Arcs) chính, xoay quanh biệt đội Nightcord (Mafuyu, Kanade, Ena, Mizuki) và các nhân vật liên quan (Ichika, Honami):
-
-### 9.1. Mở màn (Prologue)
-- **Sự kiện:** Ichika bị bắt cóc bởi một đám côn đồ. Nightcord (dẫn đầu bởi Mafuyu) xuất hiện giải cứu kịp thời.
-- **Bản đồ:** `PrologueMap` -> `BaseMap`.
-
-### 9.2. Các nhiệm vụ phụ & Xây dựng căn cứ (Mid-game)
-- **Nhà kho (Warehouse):** Nhóm dọn dẹp các đợt quái (công nhân biến chất) tại một nhà kho.
-- **Quán Cafe (Cafe):** Ena say xỉn, gây ra một cuộc ẩu đả nhỏ với giang hồ (`Thug`).
-- **Cảng (Harbor):** Nhóm thâm nhập bến cảng, tùy chọn đánh lính gác hoặc đối đầu trực tiếp với Boss Đội Trưởng (`Captain`).
-
-### 9.3. Vòng vây đường phố (Street Ambush)
-- **Sự kiện:** Ichika và Mizuki bị khủng bố (`Terrorist`) phục kích tại ngã tư. Bị vô hiệu hóa kỹ năng và ép vào đường cùng. Mafuyu xuất hiện ứng cứu, một mình dọn sạch vòng vây.
-- **Bản đồ:** `StreetMap`.
-
-### 9.4. Hồi Kết (Finale Arc: Chiến dịch Thủ Tướng)
-- **Tiết lộ (Plot Reveal):** Mafuyu phát hiện cấp trên của mình (Thủ tướng) là kẻ giật dây khủng bố để ám sát Nightcord, đồng thời thuê chính họ làm vệ sĩ để tẩu thoát. Cô bí mật liên minh với Honami và lật ngược thế cờ.
-- **Chiến dịch chia cắt (City Operations):** Kanade, Ichika, và Honami tỏa ra 3 hướng khác nhau để dẹp loạn khủng bố.
-- **Trận chiến Xa lộ (Highway):** Mizuki hóa trang thành tài xế của Thủ tướng. Mafuyu và Ena lật bài ngửa ngay trên xe. Trận đánh Boss cuối cùng diễn ra.
-- **Kết cục:** Thủ tướng bị Mafuyu hành quyết tàn nhẫn trước mặt Ichika. Nhóm Nightcord lui về ở ẩn tại phòng khám của Honami. Bộ trưởng Quốc phòng lên thay thế và bưng bít vụ việc.

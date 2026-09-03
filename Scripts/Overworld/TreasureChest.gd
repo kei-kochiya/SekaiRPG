@@ -18,8 +18,8 @@ Chức năng chính:
 var _sprite: Sprite2D
 var _zone: InteractableZone
 
-const CLOSED_PATH = "res://Art/Sprites/chest_closed.svg"
-const OPEN_PATH = "res://Art/Sprites/chest_open.svg"
+const CLOSED_PATH = "res://Assets/Sprites/chest_closed.svg"
+const OPEN_PATH = "res://Assets/Sprites/chest_open.svg"
 
 func _ready():
 	z_index = 2

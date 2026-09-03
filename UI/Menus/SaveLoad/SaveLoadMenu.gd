@@ -11,8 +11,8 @@ Chức năng:
 - Hoạt động linh hoạt cả ở dạng Cảnh độc lập (từ StartMenu) lẫn dạng Lớp phủ (Overlay từ PauseMenu).
 """
 
-const FONT_BODY = "res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"
-const FONT_TITLE = "res://Fonts/zhcn.ttf"
+const FONT_BODY = "res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"
+const FONT_TITLE = "res://Assets/Fonts/zhcn.ttf"
 const BTN_BROWN_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg"
 const BTN_GREY_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg"
 const BTN_RED_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_red.svg"
@@ -312,7 +312,7 @@ func _on_back_pressed():
 	if get_parent() != get_tree().root:
 		queue_free()
 		return
-	get_tree().change_scene_to_file("res://Menus/Start/StartMenu.tscn")
+	get_tree().change_scene_to_file("res://UI/Menus/Start/StartMenu.tscn")
 
 # ── Helper Nút Bấm Phong Cách Kenney ───────────────────────────────────────
 

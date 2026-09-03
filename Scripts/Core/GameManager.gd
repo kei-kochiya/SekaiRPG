@@ -374,7 +374,7 @@ func full_heal_party():
 # Chuyển cảnh đến trận chiến
 func trigger_battle():
 	AudioManager.play_music("battle")
-	get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")
+	get_tree().change_scene_to_file("res://Scripts/Battle/BattleScene.tscn")
 
 func finish_battle(victory: bool, count: int = 1):
 	"""
@@ -386,7 +386,7 @@ func finish_battle(victory: bool, count: int = 1):
 	Returns: Không có
 	"""
 	if is_sandbox:
-		get_tree().change_scene_to_file("res://Menus/Sandbox/SandboxMenu.tscn")
+		get_tree().change_scene_to_file("res://UI/Menus/Sandbox/SandboxMenu.tscn")
 		return
 
 	if is_scripted_battle:

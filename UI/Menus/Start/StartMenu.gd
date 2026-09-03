@@ -63,7 +63,7 @@ func _style_button(btn: Button):
 	
 	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
 	btn.add_theme_color_override("font_hover_color", Color(0.1, 0.1, 0.1))
-	btn.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
+	btn.add_theme_font_override("font", load("res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 
 func _apply_kenney_styles():
 	# Title Background using NinePatchRect for better stretching
@@ -89,7 +89,7 @@ func _apply_kenney_styles():
 	cc.add_child(title)
 	title.add_theme_font_size_override("font_size", 32)
 	title.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
-	title.add_theme_font_override("font", load("res://Fonts/zhcn.ttf"))
+	title.add_theme_font_override("font", load("res://Assets/Fonts/zhcn.ttf"))
 
 	for btn in [$CenterContainer/VBoxContainer/NewGameBtn, $CenterContainer/VBoxContainer/SandboxBtn, $CenterContainer/VBoxContainer/ExitBtn]:
 		_style_button(btn)
@@ -99,7 +99,7 @@ func _on_continue():
 	GameManager.load_game("")
 
 func _on_load_menu():
-	var save_load_scene = preload("res://Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
+	var save_load_scene = preload("res://UI/Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
 	add_child(save_load_scene)
 
 func _on_new_game():
@@ -109,7 +109,7 @@ func _on_new_game():
 
 func _on_sandbox():
 	await ScreenFade.fade_out(0.5)
-	get_tree().change_scene_to_file("res://Menus/Sandbox/SandboxMenu.tscn")
+	get_tree().change_scene_to_file("res://UI/Menus/Sandbox/SandboxMenu.tscn")
 
 func _on_open_options():
 	PauseMenu.show_options(true)

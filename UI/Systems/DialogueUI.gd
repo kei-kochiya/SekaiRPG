@@ -63,7 +63,7 @@ func _init_ui():
 	clicker.mouse_filter = Control.MOUSE_FILTER_STOP
 	d_layer.add_child(clicker)
 
-	var base_font = load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf")
+	var base_font = load("res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf")
 	var italic_font = FontVariation.new()
 	italic_font.base_font = base_font
 	italic_font.variation_transform = Transform2D(Vector2(1.0, 0.0), Vector2(-0.2, 1.0), Vector2.ZERO)
@@ -177,7 +177,7 @@ func display_choices(options: Array):
 		btn.add_theme_stylebox_override("normal", _get_style("button_brown.svg", 10, 10))
 		btn.add_theme_stylebox_override("hover", _get_style("button_grey.svg", 10, 10))
 		btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
-		btn.add_theme_font_override("font", load("res://Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
+		btn.add_theme_font_override("font", load("res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 		btn.pressed.connect(func(): choice_selected.emit(i))
 		choice_box.add_child(btn)
 	
@@ -198,7 +198,7 @@ func clear():
 
 # Cập nhật hình ảnh và animation cho chân dung nhân vật
 func _update_portraits(character_name: String, side: String):
-	var path = "res://Art/Portraits/%s.png" % character_name.to_lower()
+	var path = "res://Assets/Portraits/%s.png" % character_name.to_lower()
 	var tex = load(path) if ResourceLoader.exists(path) else null
 	
 	if side == "left":
