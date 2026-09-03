@@ -15,8 +15,13 @@ var _credits_label: Label
 var _items_container: VBoxContainer
 
 func _ready():
-	layer = 100
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	layer = 130
+	get_tree().paused = true
 	_build_ui()
+
+func _exit_tree():
+	get_tree().paused = false
 
 func _build_ui():
 	# Nền làm mờ
