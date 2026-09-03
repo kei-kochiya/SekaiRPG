@@ -68,9 +68,9 @@ func get_floor_info(floor_num: int) -> Dictionary:
 			}
 		3:
 			return {
-				"name": "Tầng 3: Đội Tuần Tra",
+				"name": "Tầng 3: Đội Tuần Tra Cơ Động",
 				"is_rest": false,
-				"enemies": ["Lính Cảng", "Lính Cảng", "Kidnapper"],
+				"enemies": ["Lính Cảng", "Drone Trinh Sát", "Kidnapper"],
 				"enemy_levels": [12, 12, 10]
 			}
 		4:
@@ -82,30 +82,30 @@ func get_floor_info(floor_num: int) -> Dictionary:
 			}
 		5:
 			return {
-				"name": "Tầng 5: Tinh Anh Du Côn (Mini-Boss)",
+				"name": "Tầng 5: Tinh Anh Du Côn & Nhiễu Sóng",
 				"is_rest": false,
-				"enemies": ["Thug", "Thug", "Kidnapper"],
+				"enemies": ["Thug", "Chuyên Viên Nhiễu Sóng", "Kidnapper"],
 				"enemy_levels": [16, 16, 14]
 			}
 		6:
 			return {
-				"name": "Tầng 6: Toán Khủng Bố Đột Kích",
+				"name": "Tầng 6: Toán Khủng Bố & Xạ Thủ Bắn Tỉa",
 				"is_rest": false,
-				"enemies": ["Terrorist", "Terrorist"],
-				"enemy_levels": [20, 20]
+				"enemies": ["Terrorist", "Xạ Thủ Bắn Tỉa"],
+				"enemy_levels": [20, 22]
 			}
 		7:
 			return {
-				"name": "Tầng 7: Đội Giáp Thép",
+				"name": "Tầng 7: Đội Giáp Thép Cơ Giới",
 				"is_rest": false,
-				"enemies": ["Lính Cảng", "Lính Cảng", "Terrorist"],
-				"enemy_levels": [24, 24, 22]
+				"enemies": ["Vệ Binh Cơ Giới", "Lính Cảng", "Drone Trinh Sát"],
+				"enemy_levels": [25, 24, 24]
 			}
 		8:
 			return {
-				"name": "Tầng 8: Biệt Đội Cảm Tử",
+				"name": "Tầng 8: Biệt Đội Tác Chiến Điện Tử",
 				"is_rest": false,
-				"enemies": ["Terrorist", "Nhân Viên Kho", "Lính Cảng"],
+				"enemies": ["Vệ Binh Cơ Giới", "Chuyên Viên Nhiễu Sóng", "Xạ Thủ Bắn Tỉa"],
 				"enemy_levels": [28, 28, 28]
 			}
 		9:
@@ -119,8 +119,8 @@ func get_floor_info(floor_num: int) -> Dictionary:
 			return {
 				"name": "Tầng 10: TRÙM CUỐI MÔ PHỎNG (SUPER CAPTAIN)",
 				"is_rest": false,
-				"enemies": ["Đội Trưởng (BOSS)", "Lính Cảng", "Lính Cảng"],
-				"enemy_levels": [35, 30, 30]
+				"enemies": ["Đội Trưởng (BOSS)", "Vệ Binh Cơ Giới", "Xạ Thủ Bắn Tỉa"],
+				"enemy_levels": [35, 32, 32]
 			}
 		_:
 			return {

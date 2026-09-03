@@ -20,7 +20,7 @@ func _init():
 	defense = 25
 	res = 5
 	spd = 90
-	type = "None"
+	type = "Mysterious"
 	is_character = false
 
 func get_portrait_path() -> String:

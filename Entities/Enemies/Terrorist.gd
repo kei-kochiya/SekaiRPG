@@ -20,7 +20,7 @@ func _init():
 	defense = 35
 	res = 10
 	spd = 98
-	type = "None"
+	type = "Cute"
 	is_character = false
 	gives_exp = false
 	

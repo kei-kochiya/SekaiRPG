@@ -41,20 +41,27 @@ static func calculate_damage_detailed(attacker: Entity, defender: Entity, skill_
 		var crit_dmg = attacker.get("crit_dmg") if "crit_dmg" in attacker else 1.50
 		final_damage *= crit_dmg
 		
-	# Tính toán Phá Điểm Yếu (Weakness Break) nếu đánh trúng hệ yếu của quái
+	# Tính toán Phá Điểm Yếu (Weakness Break)
 	var is_break = false
-	if is_weakness and "break_gauge" in defender and not defender.is_character:
-		var break_damage = int(final_damage * 0.4) + 25
-		defender.break_gauge = max(0, defender.break_gauge - break_damage)
-		if defender.break_gauge <= 0:
-			defender.break_gauge = defender.max_break_gauge
-			is_break = true
-			defender.set_meta("was_broken", true)
-			if "is_staggered" in defender:
-				defender.is_staggered = true
-			defender.action_gauge = max(0.0, defender.action_gauge - 3000.0)
-			defender.add_status({"type": "Stun", "duration": 1})
-			print("[Weakness Break] ", defender.entity_name, " bị phá vỡ điểm yếu! Choáng 1 lượt và trễ thanh hành động.")
+	if "break_gauge" in defender and not defender.is_character:
+		var break_damage = 0
+		if is_weakness:
+			var boost = 2.0 if (HoloSimManager and HoloSimManager.has_blessing("blessing_break")) else 1.0
+			break_damage = int((int(final_damage * 0.4) + 25) * boost)
+		elif defender.type == "None" or multiplier >= 1.0:
+			break_damage = int(final_damage * 0.15) + 10
+			
+		if break_damage > 0:
+			defender.break_gauge = max(0, defender.break_gauge - break_damage)
+			if defender.break_gauge <= 0:
+				defender.break_gauge = defender.max_break_gauge
+				is_break = true
+				defender.set_meta("was_broken", true)
+				if "is_staggered" in defender:
+					defender.is_staggered = true
+				defender.action_gauge = max(0.0, defender.action_gauge - 3000.0)
+				defender.add_status({"type": "Stun", "duration": 1})
+				print("[Weakness Break] ", defender.entity_name, " bị phá vỡ điểm yếu! Choáng 1 lượt và trễ thanh hành động.")
 
 	return {
 		"damage": int(final_damage),

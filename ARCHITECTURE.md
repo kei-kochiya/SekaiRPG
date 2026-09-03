@@ -107,6 +107,40 @@ Nằm tập trung tại thư mục `Scripts/Battle/Scenarios/`:
 | **`PrimeMinisterBossScenario.gd`** | Trận Boss cuối Xa Lộ, gọi đệ bắn tỉa diện rộng và khóa quyền bính. |
 | **`HoloSimScenario.gd`** | Kịch bản mô phỏng Roguelite: Kích hoạt hiệu ứng Phước Lành (Thorns phản đòn, Bleed, Hồi sinh Undying), mở giao diện chọn thẻ bài sau chiến thắng tầng. |
 
+### 2.4. Bảng Tương Khắc Hệ & Cơ Chế Phá Vỡ Điểm Yếu (Elements & Weakness Break)
+
+Mọi nhân vật và **100% kẻ địch trong SekaiRPG đều sở hữu một thuộc tính nguyên tố** thuộc ngũ hành:
+
+```text
+       ┌────────── Cool ──────────┐
+       ▼                          │ (khắc)
+     Happy ◄──────── Cute ◄───────┘
+```
+- **Hệ Vòng Tròn 3 Cạnh**: `Cool` khắc `Happy` (x1.25) -> `Happy` khắc `Cute` (x1.25) -> `Cute` khắc `Cool` (x1.25).
+- **Hệ Đối Lập Nhị Cực**: `Pure` và `Mysterious` khắc chế lẫn nhau (x1.25).
+
+#### Quy tắc Phá Điểm Yếu (Break Rules):
+1. **Đánh trúng hệ yếu (Weakness Hit - x1.25)**: Bào mòn cực mạnh thanh Break Gauge (`int(dmg * 0.4) + 25`, x2 nếu có Phước Lành Chấn Lực).
+2. **Đánh trung tính (Neutral Hit - x1.0)**: Vẫn bào mòn điểm yếu ở mức độ vừa phải (`int(dmg * 0.15) + 10`), đảm bảo ngay cả khi không có nhân vật khắc hệ vẫn có thể tích lũy làm choáng kẻ địch.
+3. **Khi Break Gauge về 0 (Weakness Break)**: Kẻ địch lập tức bị **Choáng (Stun 1 lượt)** và bị **đẩy lùi 3000 Action Value** trên thanh thời gian!
+
+### 2.5. Danh Mục Kẻ Địch (12 Enemy Archetypes)
+
+| Kẻ Địch | Hệ (Element) | Điểm Yếu (Khắc bởi) | Vai trò & Kỹ năng nổi bật |
+| :--- | :--- | :--- | :--- |
+| **`Kidnapper`** | `Happy` | `Cool` (Kanade) | Du côn mở màn, đâm lén gây sát thương cơ bản. |
+| **`Thug`** | `Happy` | `Cool` (Kanade) | Giang hồ quán cafe, chém ngang đơn mục tiêu. |
+| **`CyberJammer`** [MỚI] | `Happy` | `Cool` (Kanade) | Chuyên viên nhiễu sóng: Hack gây Stun 1 lượt, overclock buff 25 ATK và 3000 AV cho đồng minh. |
+| **`WarehouseWorker`** | `Cool` | `Cute` (Mizuki) | Công nhân nhà kho, ném cờ-lê gây choáng. |
+| **`ReconDrone`** [MỚI] | `Cool` | `Cute` (Mizuki) | Drone trinh sát cơ động: SPD cực cao (140), quét giảm 25 DEF, phóng xung EMP đẩy lùi 2500 AV. |
+| **`Terrorist`** | `Cute` | `Happy` (Ena) | Khủng bố đường phố, xả súng liên thanh gây tích dồn Bleed. |
+| **`CyborgEnforcer`** [MỚI] | `Cute` | `Happy` (Ena) | Vệ binh cơ giới giáp thép: Chống chịu cao (500 HP, 60 DEF, 180 Break Gauge), Nện khiên gây Stun, Bật khiên hồi 80 HP. |
+| **`Guard`** | `Mysterious` | `Pure` (Ichika, Honami) | Lính gác bến cảng, chém gươm phòng thủ. |
+| **`Captain`** (Boss) | `Mysterious` | `Pure` (Ichika, Honami) | Trùm bến cảng, lệnh xử tử sát thương diện rộng. |
+| **`Sniper`** [MỚI] | `Mysterious` | `Pure` (Ichika, Honami) | Xạ thủ bắn tỉa ngầm: Crit Rate 35%, Headshot chí mạng x2.0 kèm 2 stack Bleed, ném Lựu đạn khói buff DEF. |
+| **`TrainingBot`** | `Mysterious` | `Pure` (Ichika, Honami) | Robot huấn luyện sandbox. |
+| **`PrimeMinister`** (Final Boss) | `Pure` | `Mysterious` (Mafuyu) | Trùm cuối giả tạo: 12000 HP, 500 Break Gauge, gọi bắn tỉa diện rộng và khóa quyền bính làm choáng. |
+
 ---
 
 ## 3. Exploration, Economy & Items (Khám phá & Kinh tế)

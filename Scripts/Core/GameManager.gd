@@ -13,6 +13,11 @@ Chức năng chính:
 - Cung cấp các hàm hỗ trợ chung (filter, entity factory).
 """
 
+const ReconDroneClass = preload("res://Entities/Enemies/ReconDrone.gd")
+const SniperClass = preload("res://Entities/Enemies/Sniper.gd")
+const CyborgEnforcerClass = preload("res://Entities/Enemies/CyborgEnforcer.gd")
+const CyberJammerClass = preload("res://Entities/Enemies/CyberJammer.gd")
+
 # ── Tham chiếu đến các Manager thành phần ──────────────────────────────────
 var story: StoryState = StoryState.new()
 
@@ -35,7 +40,11 @@ var sandbox_player_team: Array = []
 var sandbox_enemy_team: Array = []
 
 var available_sandbox_chars = ["Ichika", "Kanade", "Mafuyu", "Ena", "Mizuki", "Honami"]
-var available_sandbox_monsters = ["Lính Cảng", "Kidnapper", "Target", "Nhân Viên Kho", "Đội Trưởng (BOSS)"]
+var available_sandbox_monsters = [
+	"Lính Cảng", "Kidnapper", "Giang Hồ", "Target", "Nhân Viên Kho", 
+	"Khủng Bố", "Drone Trinh Sát", "Xạ Thủ Bắn Tỉa", "Vệ Binh Cơ Giới", 
+	"Chuyên Viên Nhiễu Sóng", "Đội Trưởng (BOSS)", "Thủ Tướng (FINAL BOSS)"
+]
 
 var battle_speed: float = 1.2
 var master_volume: float = 1.0:
@@ -198,31 +207,18 @@ func create_sandbox_entity(e_name: String) -> Entity:
 		"Ena": return Ena.new()
 		"Mizuki": return Mizuki.new()
 		"Honami": return Honami.new()
-		"Lính Cảng":
-			var g = Entity.new()
-			g.entity_name = "Lính Cảng"
-			g.max_hp = 250; g.current_hp = 250; g.atk = 75; g.defense = 40; g.spd = 95; g.type = "Hard"
-			return g
-		"Kidnapper":
-			var k = Entity.new()
-			k.entity_name = "Kidnapper"
-			k.max_hp = 80; k.current_hp = 80; k.atk = 40; k.defense = 20; k.spd = 80; k.type = "None"
-			k.skills = [{"name": "Shank", "method": "basic_attack", "cooldown_turns": 1}]
-			return k
-		"Target":
-			var t = Entity.new()
-			t.entity_name = "Target"
-			t.max_hp = 100; t.current_hp = 100; t.atk = 45; t.defense = 25; t.spd = 90; t.type = "None"
-			return t
-		"Nhân Viên Kho":
-			var w = WarehouseWorker.new()
-			return w
-		"Đội Trưởng (BOSS)":
-			var b = Entity.new()
-			b.entity_name = "Đội Trưởng"
-			b.max_hp = 3500; b.current_hp = 3500; b.atk = 240; b.defense = 130; b.spd = 110; b.type = "Hard"
-			b.skills = [{"name": "Execution", "method": "basic_attack", "cooldown_turns": 1}]
-			return b
+		"Lính Cảng": return Guard.new()
+		"Kidnapper": return Kidnapper.new()
+		"Giang Hồ": return Thug.new()
+		"Target": return TrainingBot.new()
+		"Nhân Viên Kho": return WarehouseWorker.new()
+		"Khủng Bố": return Terrorist.new()
+		"Drone Trinh Sát": return ReconDroneClass.new()
+		"Xạ Thủ Bắn Tỉa": return SniperClass.new()
+		"Vệ Binh Cơ Giới": return CyborgEnforcerClass.new()
+		"Chuyên Viên Nhiễu Sóng": return CyberJammerClass.new()
+		"Đội Trưởng (BOSS)": return Captain.new()
+		"Thủ Tướng (FINAL BOSS)": return PrimeMinister.new()
 	return Entity.new()
 
 # ── Kết nối StoryState (Flags & Variables) ─────────────────────────────────

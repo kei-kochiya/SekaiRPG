@@ -17,8 +17,10 @@ func _init():
 	defense = 250
 	res = 50
 	spd = 130
-	type = "Corrupt"
+	type = "Pure"
 	is_character = false
+	max_break_gauge = 500
+	break_gauge = 500
 	
 	skills = [
 		{"name": "Lệnh Bắn Tỉa", "method": "snipe_order", "cooldown_turns": 2, "target": "all_enemies"},

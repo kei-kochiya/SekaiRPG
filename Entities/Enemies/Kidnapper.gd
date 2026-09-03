@@ -20,7 +20,7 @@ func _init():
 	defense = 20
 	res = 0
 	spd = 80
-	type = "None"
+	type = "Happy"
 	is_character = false
 	
 	skills = [
