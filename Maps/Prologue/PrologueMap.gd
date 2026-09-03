@@ -150,11 +150,15 @@ func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, line
 	var root = Node2D.new()
 	root.position = pos
 
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = color
-	root.add_child(vis)
+	var char_sprite = MapUtils.create_character_sprite(_npc_name)
+	if char_sprite:
+		root.add_child(char_sprite)
+	else:
+		var vis = ColorRect.new()
+		vis.size = Vector2(16, 24)
+		vis.position = Vector2(-8, -24)
+		vis.color = color
+		root.add_child(vis)
 
 	var static_body = StaticBody2D.new()
 	static_body.collision_layer = 2

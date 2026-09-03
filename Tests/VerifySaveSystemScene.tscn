@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cfomgp67yolac"]
+
+[ext_resource type="Script" path="res://Tests/VerifySaveSystem.gd" id="1_test"]
+
+[node name="TestRunner" type="Node"]
+script = ExtResource("1_test")

@@ -49,9 +49,37 @@ var skip_battle_enabled: bool = false
 # ── Đội Hình (Party) ───────────────────────────────────────────────────────
 var party: Dictionary = {}
 
-# Khởi tạo đội hình
+# Khởi tạo đội hình & Bộ đếm tự động lưu
 func _ready():
 	_init_party()
+	_setup_autosave_timer()
+
+var _autosave_timer: Timer
+
+func _setup_autosave_timer():
+	_autosave_timer = Timer.new()
+	_autosave_timer.wait_time = 300.0 # 5 phút
+	_autosave_timer.autostart = true
+	_autosave_timer.one_shot = false
+	_autosave_timer.timeout.connect(_on_autosave_timer_timeout)
+	add_child(_autosave_timer)
+
+func _on_autosave_timer_timeout():
+	if _can_autosave():
+		auto_save()
+
+func _can_autosave() -> bool:
+	if is_in_dialogue or is_sandbox or is_scripted_battle or is_training_mode:
+		return false
+	var cur_scene = get_tree().current_scene
+	if cur_scene == null:
+		return false
+	if cur_scene.name in ["StartMenu", "SandboxMenu", "BattleRoot", "SaveLoadMenu"]:
+		return false
+	var player = cur_scene.find_child("OverworldPlayer", true, false)
+	if player == null:
+		return false
+	return true
 
 func _init_party():
 	"""
@@ -219,22 +247,28 @@ func end_dialogue():
 	is_in_dialogue = false
 
 # ── Hệ Thống Lưu/Tải (Save/Load) ───────────────────────────────────────────
-const SAVE_PATH = "user://sekai_save.json"
 
-func save_game(path: String = SAVE_PATH):
-	SaveManager.save_game(path)
+func save_game(path_or_name: String = SaveManager.QUICK_SAVE_PATH) -> bool:
+	var player = get_tree().current_scene.find_child("OverworldPlayer", true, false) if get_tree().current_scene else null
+	if player:
+		last_player_position = player.global_position
+	return SaveManager.save_game(path_or_name)
 
-func get_current_save_path() -> String:
-	return SaveManager.get_current_save_path()
+func quick_save() -> bool:
+	return save_game(SaveManager.QUICK_SAVE_PATH)
 
-func load_game(path: String = SAVE_PATH) -> bool:
-	return SaveManager.load_game(path)
+func auto_save() -> bool:
+	print("[GameManager] Tự động lưu game định kỳ...")
+	return save_game(SaveManager.AUTOSAVE_PATH)
 
-func has_save(path: String = SAVE_PATH) -> bool:
-	return SaveManager.has_save(path)
+func load_game(path_or_name: String = "") -> bool:
+	return SaveManager.load_game(path_or_name)
+
+func has_save() -> bool:
+	return SaveManager.has_save()
 
 func get_save_files() -> Array:
-	return SaveManager.get_save_files()
+	return SaveManager.get_all_save_slots()
 
 # ── Quản Lý Chuyển Cảnh & Trận Chiến ───────────────────────────────────────
 # Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới

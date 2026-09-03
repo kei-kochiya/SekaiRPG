@@ -10,8 +10,8 @@ Chịu trách nhiệm quản lý trạng thái toàn cục của trò chơi, bao
 
 | File | Chức năng chính | Phụ thuộc vào |
 | :--- | :--- | :--- |
-| **`GameManager.gd`** (Autoload) | Quản lý trạng thái toàn cục (Party, Scene Transition). Điều phối các `Scripted Battle` và xử lý Game Over. | `StoryState`, `LevelManager`, `SaveManager` |
-| **`SaveManager.gd`** | Tách biệt logic mã hóa/giải mã, lưu và tải dữ liệu JSON, tách tải công việc từ GameManager. | `StoryState` |
+| **`GameManager.gd`** (Autoload) | Quản lý trạng thái toàn cục (Party, Scene Transition). Điều phối các `Scripted Battle`, bộ đếm Auto-save an toàn (5 phút), và xử lý Game Over. | `StoryState`, `LevelManager`, `SaveManager` |
+| **`SaveManager.gd`** | Quản lý lưu trữ chuyên biệt tại `user://saves/`, tự động đóng gói siêu dữ liệu (Quest Name, Map Name, Timestamp, Version), quản lý Quick Save, Auto-Save, và các file save tự do không giới hạn. | `StoryState`, `QuestRegistry` |
 | **`StoryState.gd`** | Lưu trữ các cờ (flags) kịch bản và tiến độ nhiệm vụ (wave, quest). | Không có |
 | **`LevelManager.gd`** | Xử lý nhận EXP, tính toán chỉ số theo cấp độ (Soft/Hard Cap), và tự động phân bổ chỉ số (Auto-upgrade) cho quái vật. | `Entity` |
 
@@ -138,7 +138,8 @@ Quản lý các giao diện hỗ trợ tương tác người chơi, thiết kế
 | File | Vai trò | Chức năng chính |
 | :--- | :--- | :--- |
 | **`MobileControls.gd`** (Autoload) | **Mobile Controller** | Tạo joystick ảo, các nút bấm (Menu, Interact) có bao viền gỗ tinh tế. Tự động ẩn/hiện thông minh tùy thuộc vào scene. |
-| **`PauseMenu.gd`** & **`PauseMenuBuilder.gd`** | **System Menu** | Menu tạm dừng tích hợp chỉnh âm lượng, bật/tắt Fast Battle, và tính năng Skip Battle. PauseMenuBuilder chịu trách nhiệm vẽ giao diện tĩnh. |
+| **`PauseMenu.gd`** & **`PauseMenuBuilder.gd`** | **System Menu** | Menu tạm dừng tích hợp chỉnh âm lượng, Quick Save, truy cập Save/Load Menu, và tính năng Skip Battle. |
+| **`SaveLoadMenu.gd`** | **Save/Load View** | Giao diện quản lý danh sách file save in-game (Kenney UI): tạo file mới, xem badge Quest/Map/Timestamp, Tải, Ghi đè, Xóa kèm pop-up xác nhận. |
 | **`QuestHUDBuilder.gd`** | **UI Builder** | Lắp ráp bảng điều khiển hiển thị Quest tại các Map. |
 | **`UpgradeUI.gd`** | **Upgrade View** | Giao diện nâng cấp thuộc tính, chỉ số cho nhân vật bằng tài nguyên thu thập được. |
 
