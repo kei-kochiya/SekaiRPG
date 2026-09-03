@@ -31,6 +31,33 @@ static func place_road_asset(parent: Node2D, file: String, grid_pos: Vector2):
 	sprite.position = tile_pos
 	parent.add_child(sprite)
 
+const SPRITE_ROOT = "res://Art/Sprites/"
+
+static func get_character_sprite_path(c_name: String) -> String:
+	var clean_name = c_name.strip_edges().to_lower()
+	var path = SPRITE_ROOT + clean_name + ".svg"
+	if ResourceLoader.exists(path):
+		return path
+	return ""
+
+static func create_character_sprite(c_name: String, direction: String = "down") -> Sprite2D:
+	var path = get_character_sprite_path(c_name)
+	if path == "":
+		return null
+	var sprite = Sprite2D.new()
+	sprite.texture = load(path)
+	sprite.hframes = 3
+	sprite.vframes = 4
+	var row = 0
+	match direction.to_lower():
+		"down": row = 0
+		"left": row = 1
+		"right": row = 2
+		"up": row = 3
+	sprite.frame = row * 3 + 1
+	sprite.position = Vector2(0, -16)
+	return sprite
+
 static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2, color: Color):
 	var root = Node2D.new()
 	root.position = grid_pos * TILE_SIZE
@@ -42,17 +69,21 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 		sprite.position = Vector2(0, -6)
 		root.add_child(sprite)
 	else:
-		var vis = ColorRect.new()
-		vis.size = Vector2(16, 24)
-		vis.position = Vector2(-8, -24)
-		vis.color = color
-		root.add_child(vis)
+		var char_sprite = create_character_sprite(p_name)
+		if char_sprite:
+			root.add_child(char_sprite)
+		else:
+			var vis = ColorRect.new()
+			vis.size = Vector2(16, 24)
+			vis.position = Vector2(-8, -24)
+			vis.color = color
+			root.add_child(vis)
 	
 	var lbl = Label.new()
 	lbl.text = p_name
 	lbl.add_theme_color_override("font_color", color)
 	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.position = Vector2(-20, -40)
+	lbl.position = Vector2(-20, -42)
 	root.add_child(lbl)
 	
 	parent.add_child(root)
@@ -60,11 +91,15 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 static func create_visual_npc(parent: Node2D, npc_name: String, pos: Vector2, color: Color):
 	var root = Node2D.new()
 	root.position = pos
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = color
-	root.add_child(vis)
+	var char_sprite = create_character_sprite(npc_name)
+	if char_sprite:
+		root.add_child(char_sprite)
+	else:
+		var vis = ColorRect.new()
+		vis.size = Vector2(16, 24)
+		vis.position = Vector2(-8, -24)
+		vis.color = color
+		root.add_child(vis)
 	root.z_index = 2
 	parent.add_child(root)
 

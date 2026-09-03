@@ -77,16 +77,20 @@ func _spawn_honami():
 	var root = Node2D.new()
 	root.position = Vector2(2 * TILE_SIZE, 8 * TILE_SIZE)
 	
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = Color(0.5, 0.35, 0.25) # Honami Brown
-	root.add_child(vis)
+	var char_sprite = MapUtils.create_character_sprite("Honami")
+	if char_sprite:
+		root.add_child(char_sprite)
+	else:
+		var vis = ColorRect.new()
+		vis.size = Vector2(16, 24)
+		vis.position = Vector2(-8, -24)
+		vis.color = Color(0.5, 0.35, 0.25)
+		root.add_child(vis)
 	
 	var lbl = Label.new()
 	lbl.text = "Honami"
 	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.position = Vector2(-20, -40)
+	lbl.position = Vector2(-20, -42)
 	root.add_child(lbl)
 	
 	_map_root.add_child(root)

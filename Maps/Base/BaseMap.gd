@@ -134,17 +134,21 @@ func _create_npc(npc_name: String, pos: Vector2, color: Color):
 	root.position = pos
 	root.set_meta("is_npc", true)
 	
-	var vis = ColorRect.new()
-	vis.size = Vector2(16, 24)
-	vis.position = Vector2(-8, -24)
-	vis.color = color
-	root.add_child(vis)
+	var char_sprite = MapUtils.create_character_sprite(npc_name)
+	if char_sprite:
+		root.add_child(char_sprite)
+	else:
+		var vis = ColorRect.new()
+		vis.size = Vector2(16, 24)
+		vis.position = Vector2(-8, -24)
+		vis.color = color
+		root.add_child(vis)
 	
 	var lbl = Label.new()
 	lbl.text = npc_name
 	lbl.add_theme_color_override("font_color", color)
 	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.position = Vector2(-20, -40)
+	lbl.position = Vector2(-20, -42)
 	root.add_child(lbl)
 	
 	var zone = InteractableZone.new()
