@@ -57,6 +57,8 @@ func _ready():
 	
 	for entity in all_entities:
 		entity.died.connect(_on_entity_died.bind(entity))
+		if entity.has_signal("damage_received_detailed"):
+			entity.damage_received_detailed.connect(_on_entity_damage_received.bind(entity))
 	
 	if GameManager.is_sandbox:
 		_setup_sandbox_exit_button()
@@ -212,7 +214,13 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 	"""
 	var had_bleed = (target != null and target.get_status_count("Bleed") > 0)
 	
-	if action == "attack":
+	if action.begins_with("item:"):
+		var item_id = action.substr(5)
+		var used = GameManager.use_item(item_id, target)
+		if used:
+			actor.action_gauge = 0.0
+		return
+	elif action == "attack":
 		var dmg = DamageCalculator.calculate_damage(actor, target)
 		target.take_damage(dmg)
 	elif actor.has_method(action):
@@ -284,9 +292,25 @@ func _on_entity_died(entity: Entity):
 		var exp_reward = LevelManager.get_exp_reward(entity.level)
 		for p in player_team:
 			LevelManager.gain_exp(p, exp_reward)
+		var credits_reward = entity.level * 25 + randi_range(15, 35)
+		if GameManager.has_method("add_credits"):
+			GameManager.add_credits(credits_reward)
+			print("[Battle Reward] Nhận được %d Credits từ %s!" % [credits_reward, entity.entity_name])
 	
 	if scenario:
 		scenario.on_entity_died(self, entity)
+
+func _on_entity_damage_received(amt: int, _type: String, is_crit: bool, is_break: bool, _entity: Entity):
+	"""Phản hồi hiệu ứng rung màn hình và dừng hình (Hitstop) khi có va chạm."""
+	if shaker:
+		if is_break:
+			shaker.shake(10.0, 0.28)
+			shaker.hitstop(0.06)
+		elif is_crit or amt >= 100:
+			shaker.shake(6.5, 0.2)
+			shaker.hitstop(0.04)
+		elif amt > 0:
+			shaker.shake(2.5, 0.1)
 
 func _check_battle_end() -> bool:
 	"""

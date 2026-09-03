@@ -18,6 +18,8 @@ signal died()
 signal cooldown_updated(skill_name: String, turns_left: int)
 signal status_changed(statuses: Array)
 signal damage_received(amount: int, damage_type: String)
+signal damage_received_detailed(amount: int, damage_type: String, is_crit: bool, is_break: bool)
+signal break_gauge_changed(current: int, max_val: int)
 @warning_ignore("unused_signal")
 signal level_changed(new_level: int)
 
@@ -35,6 +37,16 @@ signal level_changed(new_level: int)
 @export var is_character: bool = false
 @export var current_exp: int = 0
 @export var next_level_exp: int = 100
+
+# ── Chỉ số chiến đấu nâng cao (Chí mạng & Phá vỡ điểm yếu) ─────────────────
+@export var crit_rate: float = 0.10
+@export var crit_dmg: float = 1.50
+@export var max_break_gauge: int = 100
+@export var break_gauge: int = 100:
+	set(v):
+		break_gauge = clamp(v, 0, max_break_gauge)
+		break_gauge_changed.emit(break_gauge, max_break_gauge)
+@export var is_staggered: bool = false
 
 # ── Cơ chế lượt đi ─────────────────────────────────────────────────────────
 var action_gauge: float = 0.0 # Thanh hành động (0 - 10000)
@@ -58,21 +70,26 @@ var stat_caps: Dictionary = {
 
 # ── Phương thức chiến đấu cốt lõi ───────────────────────────────────────────
 
-func take_damage(amount: int, damage_type: String = "physical") -> bool:
+func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = false) -> bool:
 	"""
 	Xử lý việc thực thể nhận sát thương và kiểm tra trạng thái sống còn.
 	
 	Args:
 		amount (int): Lượng sát thương nhận vào.
 		damage_type (String): Loại sát thương (physical, pure, dot).
+		is_crit (bool): Có phải đòn đánh chí mạng không.
 	Returns: 
 		bool: True nếu thực thể chết (HP = 0), ngược lại False.
 	"""
 	current_hp -= amount
 	current_hp = clamp(current_hp, 0, max_hp)
 	
+	var is_break = get_meta("was_broken", false)
+	set_meta("was_broken", false)
+	
 	hp_changed.emit(current_hp, max_hp)
 	damage_received.emit(amount, damage_type)
+	damage_received_detailed.emit(amount, damage_type, is_crit, is_break)
 	
 	if current_hp == 0:
 		died.emit()

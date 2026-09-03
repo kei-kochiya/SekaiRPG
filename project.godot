@@ -25,6 +25,7 @@ UpgradeUI="*res://UI/Systems/UpgradeUI.tscn"
 PauseMenu="*res://UI/Systems/PauseMenu.gd"
 AudioManager="*res://Scripts/Systems/AudioManager.gd"
 MobileControls="*res://UI/Systems/MobileControls.gd"
+HoloSimManager="*res://Scripts/Battle/HoloSim/HoloSimManager.gd"
 
 [display]
 

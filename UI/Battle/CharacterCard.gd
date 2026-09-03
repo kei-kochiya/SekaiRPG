@@ -27,6 +27,7 @@ var is_player: bool = false
 # ── Khởi Tạo ───────────────────────────────────────────────────────────────
 
 var hp_bar: ProgressBar
+var break_bar: ProgressBar
 var hp_label: Label
 var name_label: Label
 var level_label: Label
@@ -69,6 +70,10 @@ func _build_ui():
 	hp_bar = _create_hp_bar()
 	vbox.add_child(hp_bar)
 	
+	if not is_player:
+		break_bar = _create_break_bar()
+		vbox.add_child(break_bar)
+	
 	var footer = HBoxContainer.new()
 	vbox.add_child(footer)
 	
@@ -78,6 +83,22 @@ func _build_ui():
 	if not entity.skills.is_empty():
 		var cd_row = _create_cooldown_row()
 		vbox.add_child(cd_row)
+
+func _create_break_bar() -> ProgressBar:
+	var bar = ProgressBar.new()
+	bar.custom_minimum_size = Vector2(0, 6)
+	bar.show_percentage = false
+	var fill = StyleBoxFlat.new()
+	fill.bg_color = Color(0.2, 0.85, 1.0) # Cyan break bar
+	fill.set_corner_radius_all(2)
+	bar.add_theme_stylebox_override("fill", fill)
+	var bg = StyleBoxFlat.new()
+	bg.bg_color = Color(0.1, 0.15, 0.2, 0.8)
+	bg.set_corner_radius_all(2)
+	bar.add_theme_stylebox_override("background", bg)
+	bar.max_value = entity.get("max_break_gauge") if "max_break_gauge" in entity else 100
+	bar.value = entity.get("break_gauge") if "break_gauge" in entity else 100
+	return bar
 
 func _create_header() -> HBoxContainer:
 	"""Khởi tạo phần đầu thẻ với chân dung, tên và cấp độ."""
@@ -166,19 +187,33 @@ func _connect_signals():
 	entity.died.connect(_on_died)
 	entity.cooldown_updated.connect(_on_cooldown_updated)
 	entity.status_changed.connect(_on_status_changed)
-	entity.damage_received.connect(_on_damage_received)
+	if entity.has_signal("damage_received_detailed"):
+		entity.damage_received_detailed.connect(_on_damage_received_detailed)
+	else:
+		entity.damage_received.connect(_on_damage_received)
 	entity.level_changed.connect(_on_level_changed)
+	if entity.has_signal("break_gauge_changed") and break_bar:
+		entity.break_gauge_changed.connect(_on_break_gauge_changed)
 
 func _refresh_all():
 	"""Làm mới toàn bộ dữ liệu hiển thị trên thẻ theo trạng thái hiện tại."""
 	_on_level_changed(entity.level)
 	_on_hp_changed(entity.current_hp, entity.max_hp)
 	_on_status_changed(entity.active_statuses)
+	if break_bar:
+		_on_break_gauge_changed(entity.break_gauge, entity.max_break_gauge)
 	if entity.current_hp <= 0: _on_died()
 
 func _on_level_changed(lv: int):
-	"""Cập nhật nhãn cấp độ."""
-	level_label.text = "Lv.%d" % lv
+	"""Cập nhật nhãn cấp độ và thuộc tính."""
+	level_label.text = "Lv.%d  [%s]" % [lv, entity.type]
+
+func _on_break_gauge_changed(cur: int, max_v: int):
+	"""Cập nhật thanh Break Gauge của kẻ địch."""
+	if not break_bar: return
+	break_bar.max_value = max_v
+	var tw = create_tween()
+	tw.tween_property(break_bar, "value", float(cur), 0.25)
 
 func _on_hp_changed(cur: int, m_hp: int):
 	"""Cập nhật giá trị thanh máu với hiệu ứng chuyển động mượt mà."""
@@ -226,7 +261,7 @@ func _on_status_changed(statuses: Array):
 		var color = Color(0.8, 0.2, 0.2) # Bleed: Đỏ
 		match type_name:
 			"Poison": color = Color(0.2, 0.8, 0.2) # Poison: Xanh lá
-			"Stun":   color = Color(1.0, 0.9, 0.2) # Stun: Vàng (đã đổi từ Xanh)
+			"Stun":   color = Color(1.0, 0.9, 0.2) # Stun: Vàng
 			"Slow":   color = Color(0.4, 0.4, 0.8) # Slow: Xanh dương
 			"Buff":   color = Color(0.2, 0.7, 1.0) # Buff: Xanh nhạt
 			
@@ -240,8 +275,12 @@ func _on_status_changed(statuses: Array):
 			lbl.add_theme_color_override("font_color", Color.WHITE)
 			container.add_child(lbl)
 
-func _on_damage_received(amt: int, type: String):
-	"""Kích hoạt hiệu ứng chữ nổi (Floating Text) khi thực thể chịu tác động."""
+func _on_damage_received_detailed(amt: int, type: String, is_crit: bool, is_break: bool):
+	"""Kích hoạt hiệu ứng chữ nổi chi tiết (Floating Text) khi thực thể chịu tác động."""
 	var spawn_pos = global_position + Vector2(size.x / 2, 0)
 	var overlay = get_tree().get_first_node_in_group("ui_overlay")
-	FloatingText.spawn(overlay if overlay else get_tree().root, amt, type, spawn_pos)
+	FloatingText.spawn(overlay if overlay else get_tree().root, amt, type, spawn_pos, is_crit, is_break)
+
+func _on_damage_received(amt: int, type: String):
+	"""Fallback cho signal thông thường."""
+	_on_damage_received_detailed(amt, type, false, false)

@@ -154,3 +154,12 @@ static func draw_corner_walls(parent: Node2D):
 	place_tile(parent, "top_right_wall.png", Vector2(27, 12))
 	place_tile(parent, "bottom_left_wall.png", Vector2(17, 17))
 	place_tile(parent, "bottom_right_wall.png", Vector2(27, 17))
+
+static func place_chest(parent: Node2D, chest_id: String, grid_pos: Vector2, credits: int = 150, item: String = "potion", count: int = 1):
+	var chest = TreasureChest.new()
+	chest.chest_id = chest_id
+	chest.position = grid_pos * TILE_SIZE
+	chest.reward_credits = credits
+	chest.reward_item = item
+	chest.reward_item_count = count
+	parent.add_child(chest)

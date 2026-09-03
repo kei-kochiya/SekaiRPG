@@ -115,6 +115,16 @@ func show_for(entity: Entity, enemies: Array):
 			
 		var btn = _make_btn(label, skill["method"], skill_ready)
 		action_container.add_child(btn)
+		
+	# Nút vật phẩm
+	var has_items = false
+	for item_id in GameManager.inventory:
+		if GameManager.inventory[item_id] > 0:
+			has_items = true
+			break
+	if has_items:
+		var item_btn = _make_btn("VẬT PHẨM", "menu_items", true)
+		action_container.add_child(item_btn)
 	
 	visible = true
 
@@ -128,6 +138,10 @@ func cancel():
 
 func _on_action_picked(action_name: String):
 	"""Xử lý sự kiện khi người chơi chọn một hành động cụ thể."""
+	if action_name == "menu_items":
+		_show_items()
+		return
+		
 	chosen_action = action_name
 	action_container.visible = false
 	
@@ -138,6 +152,40 @@ func _on_action_picked(action_name: String):
 		command_chosen.emit(chosen_action, current_entity)
 	else:
 		_show_targets(target_type)
+
+func _show_items():
+	"""Hiển thị danh sách các vật phẩm có thể dùng trong túi đồ."""
+	_clear(target_container)
+	action_container.visible = false
+	target_container.visible = true
+	
+	var header = Label.new()
+	header.text = "CHỌN VẬT PHẨM"
+	header.add_theme_font_size_override("font_size", 11)
+	header.add_theme_color_override("font_color", Color(0.3, 0.8, 1.0))
+	target_container.add_child(header)
+	
+	for item_id in GameManager.inventory:
+		var count = GameManager.inventory[item_id]
+		if count <= 0: continue
+		var item_info = GameManager.ITEM_CATALOG.get(item_id, {"name": item_id})
+		var btn = Button.new()
+		btn.text = "%s (x%d)" % [item_info["name"], count]
+		btn.custom_minimum_size = Vector2(0, 32)
+		btn.pressed.connect(func():
+			chosen_action = "item:" + item_id
+			_show_targets("ally")
+		)
+		target_container.add_child(btn)
+		
+	var back_btn = Button.new()
+	back_btn.text = "< QUAY LẠI"
+	back_btn.custom_minimum_size = Vector2(0, 28)
+	back_btn.pressed.connect(func():
+		action_container.visible = true
+		target_container.visible = false
+	)
+	target_container.add_child(back_btn)
 
 func _show_targets(target_type: String = "enemy"):
 	"""Hiển thị danh sách các mục tiêu hợp lệ để người chơi lựa chọn."""

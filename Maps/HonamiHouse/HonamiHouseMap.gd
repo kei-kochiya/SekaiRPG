@@ -89,6 +89,9 @@ func _build_house():
 	honami_zone.interacted.connect(func(): _on_npc_interacted("Honami"))
 	add_child(honami_zone)
 	
+	# Rương thuốc y tế của Honami
+	MapUtils.place_chest(self, "honami_clinic_chest", Vector2(18, 7), 200, "bandage", 2)
+	
 	# Spawn Player
 	var player = OverworldPlayer.new()
 	player.name = "OverworldPlayer"

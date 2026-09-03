@@ -120,6 +120,10 @@ func _build_map():
 	for spot in tree_spots:
 		_place_tile("tree.png", spot, true)
 		
+	# Rương kho báu trong nhà kho
+	MapUtils.place_chest(self, "warehouse_chest_01", Vector2(30, 7), 180, "potion", 2)
+	MapUtils.place_chest(self, "warehouse_chest_02", Vector2(52, 7), 250, "energy_drink", 1)
+		
 	# Richer Decor
 	_place_tile("sword.png", Vector2(7, 7), false)
 	_place_tile("axe.png", Vector2(13, 7), false)

@@ -33,6 +33,7 @@ func _ready() -> void:
 	_spawn_npcs()
 	_spawn_player()
 	_spawn_transitions()
+	_spawn_shop_and_sim()
 	_build_quest_hud()
 	
 	# Áp dụng ánh sáng TRUỚC fade_in để tránh flash sáng khi vào ban đêm
@@ -235,6 +236,82 @@ func _on_exit_interacted():
 		get_tree().change_scene_to_file("res://Maps/Warehouse/WarehouseMap.tscn")
 	else:
 		DialogueManager.play_dialogue([{"text": "Bạn chưa có lý do gì để ra ngoài lúc này.", "type": "narrator"}])
+
+func _spawn_shop_and_sim():
+	# 1. Máy bán hàng tự động (Shop)
+	var shop_root = Node2D.new()
+	shop_root.position = Vector2(16 * TILE_SIZE, 15 * TILE_SIZE)
+	
+	var shop_vis = Sprite2D.new()
+	var shop_tex = load("res://Art/Sprites/chest_closed.svg")
+	if shop_tex:
+		shop_vis.texture = shop_tex
+		shop_vis.scale = Vector2(0.8, 0.8)
+		shop_vis.position = Vector2(0, -10)
+	shop_root.add_child(shop_vis)
+	
+	var shop_lbl = Label.new()
+	shop_lbl.text = "Cửa Hàng (Shop)"
+	shop_lbl.add_theme_font_size_override("font_size", 9)
+	shop_lbl.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+	shop_lbl.position = Vector2(-36, -34)
+	shop_root.add_child(shop_lbl)
+	
+	var shop_zone = InteractableZone.new()
+	shop_zone.prompt_text = "Mở Cửa Hàng (Shop)"
+	var sz_col = CollisionShape2D.new()
+	var sz_shape = CircleShape2D.new()
+	sz_shape.radius = 38.0
+	sz_col.shape = sz_shape
+	shop_zone.add_child(sz_col)
+	shop_zone.interacted.connect(func():
+		var shop_menu = ShopMenu.new()
+		add_child(shop_menu)
+	)
+	shop_root.add_child(shop_zone)
+	add_child(shop_root)
+
+	# 2. Terminal Mô Phỏng Holo-Sim (Roguelite Leo Tháp)
+	var sim_root = Node2D.new()
+	sim_root.position = Vector2(20 * TILE_SIZE, 15 * TILE_SIZE)
+	
+	var sim_vis = ColorRect.new()
+	sim_vis.size = Vector2(20, 24)
+	sim_vis.position = Vector2(-10, -24)
+	sim_vis.color = Color(0.2, 0.8, 1.0)
+	sim_root.add_child(sim_vis)
+	
+	var sim_lbl = Label.new()
+	sim_lbl.text = "Holo-Sim (Leo Tháp)"
+	sim_lbl.add_theme_font_size_override("font_size", 9)
+	sim_lbl.add_theme_color_override("font_color", Color(0.3, 0.9, 1.0))
+	sim_lbl.position = Vector2(-46, -42)
+	sim_root.add_child(sim_lbl)
+	
+	var sim_zone = InteractableZone.new()
+	sim_zone.prompt_text = "Máy Mô Phỏng Holo-Sim"
+	var mz_col = CollisionShape2D.new()
+	var mz_shape = CircleShape2D.new()
+	mz_shape.radius = 38.0
+	mz_col.shape = mz_shape
+	sim_zone.add_child(mz_col)
+	sim_zone.interacted.connect(func():
+		DialogueManager.show_choice(["[Bắt đầu Leo Tháp (Tầng 1-10)]", "[Xem Kỷ Lục]", "[Rời khỏi]"])
+		var idx = await DialogueManager.choice_made
+		if idx == 0:
+			await ScreenFade.fade_out(0.8)
+			var p = get_node_or_null("OverworldPlayer")
+			var p_pos = p.global_position if p else Vector2.ZERO
+			GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", p_pos)
+			HoloSimManager.start_new_run()
+			get_tree().change_scene_to_file("res://BattleSystem/BattleScene.tscn")
+		elif idx == 1:
+			DialogueManager.play_dialogue([
+				{"text": "Kỷ lục leo tháp cao nhất của bạn: Tầng %d / 10." % HoloSimManager.high_score_floor, "type": "narrator"}
+			])
+	)
+	sim_root.add_child(sim_zone)
+	add_child(sim_root)
 
 # ── Quest HUD ────────────────────────────────────────────────────────────────
 

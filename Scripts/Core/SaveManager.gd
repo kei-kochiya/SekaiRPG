@@ -110,7 +110,10 @@ static func save_game(path_or_name: String = QUICK_SAVE_PATH) -> bool:
 			"y": GameManager.last_player_position.y
 		},
 		"story": GameManager.story.serialize(),
-		"party": party_data
+		"party": party_data,
+		"credits": GameManager.credits,
+		"inventory": GameManager.inventory,
+		"opened_chests": GameManager.opened_chests
 	}
 	
 	var save_package = {
@@ -176,6 +179,11 @@ static func load_game(path_or_name: String = "") -> bool:
 		GameManager.story.warehouse_wave = m_state.get("warehouse_wave", 1)
 		GameManager.story.harbor_wave = m_state.get("harbor_wave", 1)
 		GameManager.story.enemies_defeated = m_state.get("enemies_defeated", 0)
+	
+	# Khôi phục Kinh tế & Túi đồ
+	GameManager.credits = game_state.get("credits", 200)
+	GameManager.inventory = game_state.get("inventory", {"potion": 2, "energy_drink": 1, "bandage": 1})
+	GameManager.opened_chests = game_state.get("opened_chests", [])
 	
 	# Khôi phục Party Stats
 	var p_data = game_state.get("party", {})

@@ -46,6 +46,79 @@ var master_volume: float = 1.0:
 var skip_battle_unlocked: bool = false
 var skip_battle_enabled: bool = false
 
+# ── Kinh Tế & Túi Đồ (Economy & Inventory) ─────────────────────────────────
+var credits: int = 200
+var inventory: Dictionary = {
+	"potion": 2,
+	"energy_drink": 1,
+	"bandage": 1
+}
+var opened_chests: Array = []
+
+const ITEM_CATALOG := {
+	"potion": {
+		"name": "Bình Máu",
+		"desc": "Hồi phục 40% HP tối đa cho 1 mục tiêu.",
+		"price": 80,
+		"type": "heal"
+	},
+	"energy_drink": {
+		"name": "Nước Tăng Lực",
+		"desc": "Tăng 5000 thanh hành động (Hành động ngay lập tức).",
+		"price": 120,
+		"type": "energy"
+	},
+	"bandage": {
+		"name": "Băng Cứu Thương",
+		"desc": "Xóa toàn bộ hiệu ứng trạng thái bất lợi (Debuff).",
+		"price": 60,
+		"type": "cleanse"
+	}
+}
+
+func add_credits(amt: int):
+	credits = max(0, credits + amt)
+
+func spend_credits(amt: int) -> bool:
+	if credits >= amt:
+		credits -= amt
+		return true
+	return false
+
+func add_item(item_id: String, count: int = 1):
+	inventory[item_id] = inventory.get(item_id, 0) + count
+
+func get_item_count(item_id: String) -> int:
+	return inventory.get(item_id, 0)
+
+func use_item(item_id: String, target: Entity) -> bool:
+	if get_item_count(item_id) <= 0 or target == null:
+		return false
+	inventory[item_id] -= 1
+	if inventory[item_id] <= 0:
+		inventory.erase(item_id)
+		
+	match item_id:
+		"potion":
+			var heal_amt = int(target.max_hp * 0.4)
+			target.heal(heal_amt)
+			print("[Item] Sử dụng Bình Máu lên ", target.entity_name, ": +", heal_amt, " HP")
+		"energy_drink":
+			target.action_gauge = 10000.0
+			print("[Item] Sử dụng Nước Tăng Lực lên ", target.entity_name, ": Đầy thanh hành động!")
+		"bandage":
+			target.active_statuses.clear()
+			target.status_changed.emit(target.active_statuses)
+			print("[Item] Sử dụng Băng Cứu Thương lên ", target.entity_name, ": Xóa sạch debuff!")
+	return true
+
+func is_chest_opened(chest_id: String) -> bool:
+	return opened_chests.has(chest_id)
+
+func open_chest(chest_id: String):
+	if not opened_chests.has(chest_id):
+		opened_chests.append(chest_id)
+
 # ── Đội Hình (Party) ───────────────────────────────────────────────────────
 var party: Dictionary = {}
 

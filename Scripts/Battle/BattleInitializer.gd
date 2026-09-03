@@ -64,6 +64,9 @@ static func setup_battle(_main: Node) -> Dictionary:
 	"""
 	_ensure_data_loaded()
 	
+	if HoloSimManager and HoloSimManager.is_sim_active:
+		return _setup_holosim_battle()
+
 	if GameManager.is_sandbox:
 		return {
 			"player_team": GameManager.sandbox_player_team,
@@ -305,3 +308,38 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 		return registry[battle_id].call()
 	
 	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}
+
+static func _setup_holosim_battle() -> Dictionary:
+	"""Thiết lập đội hình và quái vật cho từng tầng trong chế độ Mô Phỏng Holo-Sim."""
+	var info = HoloSimManager.get_floor_info(HoloSimManager.current_floor)
+	var p_team = []
+	for p_name in ["Ichika", "Kanade", "Mafuyu"]:
+		var p = GameManager.get_party_member(p_name)
+		if p: p_team.append(p)
+		
+	HoloSimManager.apply_blessings_to_team(p_team)
+	
+	var e_team = []
+	var enemies = info.get("enemies", ["Lính Cảng"])
+	var levels = info.get("enemy_levels", [10])
+	for i in range(enemies.size()):
+		var e_type = enemies[i]
+		var e_lv = levels[i] if i < levels.size() else 10
+		var inst: Entity = null
+		match e_type:
+			"Kidnapper": inst = Kidnapper.new()
+			"Nhân Viên Kho": inst = WarehouseWorker.new()
+			"Lính Cảng": inst = Guard.new()
+			"Thug": inst = Thug.new()
+			"Terrorist": inst = Terrorist.new()
+			"Đội Trưởng (BOSS)": inst = Captain.new()
+			_: inst = Guard.new()
+		LevelManager.set_initial_level(inst, e_lv)
+		e_team.append(inst)
+		
+	var scenario = HoloSimScenario.new()
+	return {
+		"player_team": p_team,
+		"enemy_team": e_team,
+		"scenario": scenario
+	}

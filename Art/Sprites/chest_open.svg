@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" shape-rendering="crispEdges">
+  <!-- Shadow -->
+  <ellipse cx="24" cy="42" rx="18" ry="4" fill="rgba(15,23,42,0.3)" shape-rendering="geometricPrecision"/>
+  
+  <!-- Open Lid (Tilted Back) -->
+  <polygon points="8,10 40,10 38,2 10,2" fill="#451a03"/>
+  <polygon points="10,9 38,9 36,4 12,4" fill="#b45309"/>
+  <polygon points="12,8 36,8 35,5 13,5" fill="#d97706"/>
+  <!-- Gold Hinges/Trim on Lid -->
+  <rect x="9" y="3" width="2" height="7" fill="#facc15"/>
+  <rect x="37" y="3" width="2" height="7" fill="#facc15"/>
+  
+  <!-- Chest Interior Void -->
+  <rect x="8" y="10" width="32" height="12" fill="#1e1b4b"/>
+  <rect x="10" y="12" width="28" height="9" fill="#311042"/>
+  
+  <!-- Glowing Gold & Gem Treasures Inside -->
+  <rect x="12" y="16" width="24" height="6" fill="#f59e0b"/>
+  <rect x="14" y="15" width="20" height="5" fill="#fde047"/>
+  <rect x="18" y="13" width="4" height="4" fill="#38bdf8"/> <!-- Diamond/Gem -->
+  <rect x="26" y="14" width="4" height="4" fill="#ec4899"/> <!-- Ruby/Gem -->
+  <rect x="22" y="12" width="3" height="3" fill="#fef08a"/> <!-- Gold Sparkle -->
+  
+  <!-- Base Chest Body -->
+  <rect x="8" y="20" width="32" height="20" fill="#451a03"/>
+  <rect x="10" y="22" width="28" height="16" fill="#78350f"/>
+  <rect x="12" y="24" width="24" height="12" fill="#92400e"/>
+  
+  <!-- Gold Corners & Straps -->
+  <rect x="8" y="20" width="4" height="20" fill="#b45309"/>
+  <rect x="9" y="20" width="2" height="19" fill="#facc15"/>
+  <rect x="36" y="20" width="4" height="20" fill="#b45309"/>
+  <rect x="37" y="20" width="2" height="19" fill="#facc15"/>
+  
+  <!-- Open Latch Dropped Down -->
+  <rect x="22" y="21" width="4" height="6" fill="#fef08a"/>
+  
+  <!-- Bottom Rivets -->
+  <rect x="9" y="36" width="2" height="2" fill="#fef08a"/>
+  <rect x="37" y="36" width="2" height="2" fill="#fef08a"/>
+</svg>
