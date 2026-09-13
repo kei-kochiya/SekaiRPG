@@ -1,0 +1,15 @@
+{
+  "dirs": [
+    "res://tests/unit/",
+    "res://Tests/Unit/"
+  ],
+  "prefix": "test_",
+  "suffix": ".gd",
+  "include_subdirs": true,
+  "should_exit": true,
+  "should_exit_on_success": true,
+  "log_level": 1,
+  "ignore_pause": true,
+  "opacity": 100,
+  "color_output": true
+}
