@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "SekaiRPG",
+  "version": "1.0.0",
+  "engine": {
+    "name": "Godot Engine",
+    "version": "4.6.1-stable",
+    "compatibility_min": "4.2.0"
+  },
+  "asset_dependencies": [
+    {
+      "name": "Kenney UI Pack Adventure",
+      "path": "res://Assets/kenney_ui-pack-adventure/",
+      "author": "Kenney (Asset Forge)",
+      "license": "CC0 1.0 Universal (Public Domain)",
+      "url": "https://kenney.nl/assets/ui-pack-adventure"
+    },
+    {
+      "name": "Kenney Micro Roguelike",
+      "path": "res://Assets/kenney_micro-roguelike/",
+      "author": "Kenney (Asset Forge)",
+      "license": "CC0 1.0 Universal (Public Domain)",
+      "url": "https://kenney.nl/assets/micro-roguelike"
+    },
+    {
+      "name": "ZHCN Pixel Font",
+      "path": "res://Assets/Fonts/zhcn.ttf",
+      "license": "SIL Open Font License 1.1",
+      "type": "Bitmap / Pixel Font"
+    },
+    {
+      "name": "9Slide03 Amplesoft Medium Font",
+      "path": "res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf",
+      "license": "Personal & Educational Game Use",
+      "type": "Display / Heading Font"
+    }
+  ],
+  "testing_framework": {
+    "name": "GUT / Native Reflection Test Runner",
+    "config_file": ".gutconfig.json",
+    "test_directory": "Tests/Unit/",
+    "specs_count": 8,
+    "assertions_count": 216
+  }
+}

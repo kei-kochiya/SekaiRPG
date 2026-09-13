@@ -1,0 +1,25 @@
+{
+  "name": "SekaiRPG Godot 4 DevContainer",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "geequlim.godot-tools",
+        "ms-vscode.cpptools",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "godotTools.editorPath.godot4": "/usr/local/bin/godot",
+        "files.eol": "\n",
+        "editor.tabSize": 4,
+        "editor.insertSpaces": false
+      }
+    }
+  },
+  "postCreateCommand": "godot --headless --editor --quit || true",
+  "remoteUser": "root"
+}

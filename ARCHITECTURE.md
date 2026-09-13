@@ -71,7 +71,8 @@ Chịu trách nhiệm quản lý trạng thái toàn cục của trò chơi, bao
 | File | Chức năng chính | Phụ thuộc vào |
 | :--- | :--- | :--- |
 | **`GameManager.gd`** (Autoload) | Quản lý trạng thái toàn cục (Party, Scene Transition). Điều phối các `Scripted Battle`, quản lý số dư `credits`, túi đồ `inventory`, ghi nhận rương `opened_chests`, bộ đếm Auto-save an toàn (5 phút), và xử lý Game Over. | `StoryState`, `LevelManager`, `SaveManager` |
-| **`SaveManager.gd`** | Quản lý lưu trữ chuyên biệt tại `user://saves/`, tự động đóng gói siêu dữ liệu (Quest Name, Map Name, Timestamp, Version), quản lý Quick Save, Auto-Save, lưu trữ trọn vẹn cả Party Stats, Credits, Inventory, Chest States. | `StoryState`, `QuestRegistry` |
+| **`Logger.gd`** (`GameLogger`) | Framework ghi log có cấu trúc 4 cấp độ (`DEBUG`, `INFO`, `WARN`, `ERROR`), tích hợp cảnh báo engine và lưu đệm 200 bản ghi phục vụ chẩn đoán lỗi. | Không có |
+| **`SaveManager.gd`** | Quản lý lưu trữ chuyên biệt tại `user://saves/`, tự động đóng gói siêu dữ liệu (Quest Name, Map Name, Timestamp, Version), quản lý Quick Save, Auto-Save, lưu trữ trọn vẹn cả Party Stats, Credits, Inventory, Chest States. | `StoryState`, `QuestRegistry`, `GameLogger` |
 | **`StoryState.gd`** | Lưu trữ các cờ (flags) kịch bản và tiến độ nhiệm vụ (wave, quest). | Không có |
 | **`LevelManager.gd`** | Xử lý nhận EXP, tính toán chỉ số theo cấp độ (Soft/Hard Cap), và tự động phân bổ chỉ số (Auto-upgrade) cho quái vật. | `Entity` |
 
@@ -200,14 +201,23 @@ Tests/
 ```
 
 ### Cách chạy kiểm thử:
-```bash
-godot --headless Tests/TestRunnerScene.tscn
-```
-- Nếu toàn bộ test case đạt: Console xuất báo cáo chi tiết và thoát với **Exit Code 0**.
-- Nếu có bất kỳ test nào thất bại: Console chỉ rõ file, dòng lỗi, giá trị mong đợi và thoát với **Exit Code 1** (tối ưu cho CI/CD).
+- **Linux / macOS / DevContainer**:
+  ```bash
+  make test
+  # hoặc
+  ./scripts/run_tests.sh
+  ```
+- **Windows (PowerShell)**:
+  ```powershell
+  .\scripts\run_tests.ps1
+  # hoặc
+  godot --headless Tests/TestRunnerScene.tscn
+  ```
+- Nếu toàn bộ test case đạt: Console xuất báo cáo chi tiết và thoát với **Exit Code 0** (Hiện tại: **216/216 assertions Passed**).
+- Nếu có bất kỳ test nào thất bại: Console chỉ rõ file, dòng lỗi, giá trị mong đợi và thoát với **Exit Code 1** (tự động kích hoạt thất bại trên GitHub Actions CI/CD).
 
 ### Cách thêm bài test mới:
-Chỉ cần mở file module tương ứng trong `Tests/Unit/` (ví dụ `TestCombat.gd`) và viết thêm hàm bắt đầu bằng `test_`:
+Chỉ cần mở file module tương ứng trong `Tests/Unit/` (ví dụ `TestCombat.gd`) hoặc `tests/unit/` và viết thêm hàm bắt đầu bằng `test_`:
 ```gdscript
 func test_new_combat_feature():
     var result = my_new_calculation()
@@ -225,6 +235,8 @@ graph TD
         GM[GameManager] --> SS[StoryState]
         GM --> LM[LevelManager]
         GM --> SManager[SaveManager]
+        GM --> GL[GameLogger]
+        SManager --> GL
     end
 
     subgraph Economy_and_HoloSim
@@ -263,5 +275,6 @@ graph TD
         TR --> TEconomy[TestEconomy]
         TR --> TQuests[TestQuests]
         TR --> THoloSim[TestHoloSim]
+        TR --> TLogger[TestLogger]
     end
 ```
