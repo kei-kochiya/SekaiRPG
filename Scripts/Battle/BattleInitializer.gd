@@ -18,6 +18,7 @@ const ReconDroneClass = preload("res://Entities/Enemies/ReconDrone.gd")
 const SniperClass = preload("res://Entities/Enemies/Sniper.gd")
 const CyborgEnforcerClass = preload("res://Entities/Enemies/CyborgEnforcer.gd")
 const CyberJammerClass = preload("res://Entities/Enemies/CyberJammer.gd")
+const GameLogger = preload("res://Scripts/Core/Logger.gd")
 
 # Ánh xạ ID kẻ địch sang các Class tương ứng
 static var enemy_classes = {
@@ -51,7 +52,7 @@ static func _load_json(path: String) -> Dictionary:
 	Tải và giải mã tệp JSON.
 	"""
 	if not FileAccess.file_exists(path):
-		print("[BattleInitializer] Lỗi: Không tìm thấy tệp JSON tại ", path)
+		GameLogger.error("BattleInitializer", "Không tìm thấy tệp JSON tại %s" % path)
 		return {}
 		
 	var f := FileAccess.open(path, FileAccess.READ)

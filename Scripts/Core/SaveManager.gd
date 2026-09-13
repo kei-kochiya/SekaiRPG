@@ -16,6 +16,7 @@ const SAVES_DIR = "user://saves/"
 const QUICK_SAVE_PATH = "user://saves/quicksave.json"
 const AUTOSAVE_PATH = "user://saves/autosave.json"
 const SAVE_VERSION = "1.0"
+const GameLogger = preload("res://Scripts/Core/Logger.gd")
 
 const MAP_NAMES = {
 	"res://Maps/Prologue/PrologueMap.tscn": "Hẻm vắng (Mở màn)",
@@ -123,12 +124,12 @@ static func save_game(path_or_name: String = QUICK_SAVE_PATH) -> bool:
 	
 	var f = FileAccess.open(full_path, FileAccess.WRITE)
 	if f == null:
-		print("[SaveManager] Lỗi: Không thể ghi file save tại ", full_path)
+		GameLogger.error("SaveManager", "Không thể ghi file save tại %s" % full_path)
 		return false
 		
 	f.store_string(JSON.stringify(save_package, "\t"))
 	f.close()
-	print("[SaveManager] Đã lưu game thành công tại: ", full_path, " [", quest_name, " | ", map_display, "]")
+	GameLogger.info("SaveManager", "Đã lưu game thành công tại: %s [%s | %s]" % [full_path, quest_name, map_display])
 	return true
 
 # ── API Tải Dữ Liệu ────────────────────────────────────────────────────────
@@ -142,7 +143,7 @@ static func load_game(path_or_name: String = "") -> bool:
 		target_path = get_latest_save_path()
 		
 	if target_path == "":
-		print("[SaveManager] Lỗi: Không tìm thấy bất kỳ file save nào để tải.")
+		GameLogger.warn("SaveManager", "Không tìm thấy bất kỳ file save nào để tải.")
 		return false
 		
 	var full_path = _resolve_full_path(target_path)
@@ -287,6 +288,6 @@ static func delete_save(path_or_name: String) -> bool:
 		if dir:
 			var err = dir.remove(full_path.get_file())
 			if err == OK:
-				print("[SaveManager] Đã xóa file save: ", full_path)
+				GameLogger.info("SaveManager", "Đã xóa file save: %s" % full_path)
 				return true
 	return false
