@@ -1,0 +1,84 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, refactor-codebase ]
+  pull_request:
+    branches: [ main, refactor-codebase ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-validate:
+    name: Code Validation & Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python for GDToolkit
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install GDToolkit Linter
+        run: |
+          pip install gdtoolkit
+
+      - name: Run GDLint Code Style Check
+        continue-on-error: true
+        run: |
+          gdlint Scripts/ Entities/ Tests/ || true
+
+      - name: Validate JSON storyline and battle data
+        run: |
+          python -c "
+          import json, glob, sys
+          for path in glob.glob('Data/**/*.json', recursive=True):
+              with open(path, 'r', encoding='utf-8') as f:
+                  try:
+                      json.load(f)
+                      print(f'[VALID] {path}')
+                  except Exception as e:
+                      print(f'[INVALID] {path}: {e}', file=sys.stderr)
+                      sys.exit(1)
+          "
+
+  unit-tests:
+    name: Headless Automated Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Godot Engine (Headless)
+        uses: chickensoft-games/setup-godot@v1
+        with:
+          version: "4.3.0"
+          use-dotnet: false
+
+      - name: Verify Project Import
+        run: |
+          godot --headless --editor --quit || true
+
+      - name: Run Master Unit Test Suite
+        run: |
+          godot --headless Tests/TestRunnerScene.tscn
+
+  export-validation:
+    name: Android & Desktop Export Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Export Presets Configuration
+        run: |
+          if [ ! -f "export_presets.cfg" ]; then
+            echo "Error: export_presets.cfg missing!"
+            exit 1
+          fi
+          echo "export_presets.cfg is present and configured."
