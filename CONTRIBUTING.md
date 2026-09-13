@@ -48,7 +48,7 @@ Mọi thay đổi mã nguồn trước khi tạo Pull Request **BẮT BUỘC** p
 
 ## 📐 3. Quy Chuẩn Kiến Trúc & Mã Nguồn (Code Style)
 
-Đọc kỹ tài liệu **[`ARCHITECTURE.md`](ARCHITECTURE.md)** và **[`AGENTS.md`](AGENTS.md)** trước khi thay đổi logic:
+Đọc kỹ tài liệu **[`ARCHITECTURE.md`](ARCHITECTURE.md)** trước khi thay đổi logic:
 
 1. **Domain-Driven & Scenario Pattern**:
    - Mọi thực thể kế thừa từ `Entities/Entity.gd`.

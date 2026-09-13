@@ -106,7 +106,7 @@ godot --headless --export-debug "Android" Export/Android/SekaiRPG_debug.apk
 
 ## 🤝 Hướng Dẫn Đóng Góp
 
-Vui lòng đọc kỹ tài liệu **[CONTRIBUTING.md](CONTRIBUTING.md)**, **[ARCHITECTURE.md](ARCHITECTURE.md)** và **[AGENTS.md](AGENTS.md)** trước khi tạo Pull Request.
+Vui lòng đọc kỹ tài liệu **[CONTRIBUTING.md](CONTRIBUTING.md)** và **[ARCHITECTURE.md](ARCHITECTURE.md)** trước khi tạo Pull Request.
 
 ---
 
