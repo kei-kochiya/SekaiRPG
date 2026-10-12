@@ -64,12 +64,11 @@ func _ready():
 	
 	# Mũi tên chỉ mục tiêu
 	_objective_arrow = Sprite2D.new()
-	var arrow_tex = load("res://Assets/kenney_ui-pack-adventure/Vector/minimap_arrow_c.svg")
+	var arrow_tex = load("res://Assets/UI/arrow_objective_gold.svg")
 	if arrow_tex != null:
 		_objective_arrow.texture = arrow_tex
 		
-	_objective_arrow.modulate = Color(1.0, 0.9, 0.2, 0.9)
-	_objective_arrow.scale = Vector2(0.4, 0.4)
+	_objective_arrow.scale = Vector2(0.6, 0.6)
 	add_child(_objective_arrow)
 	
 	# Hitbox vật lý

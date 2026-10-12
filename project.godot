@@ -26,6 +26,7 @@ PauseMenu="*res://UI/Systems/PauseMenu.gd"
 AudioManager="*res://Scripts/Systems/AudioManager.gd"
 MobileControls="*res://UI/Systems/MobileControls.gd"
 HoloSimManager="*res://Scripts/Battle/HoloSim/HoloSimManager.gd"
+MCPRuntime="*uid://bknxubm4et8vn"
 
 [display]
 
@@ -34,7 +35,10 @@ window/size/viewport_height=720
 window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/handheld/orientation=0
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg")
 
 [gui]
 
@@ -44,7 +48,6 @@ theme/custom_font="res://Assets/Fonts/zhcn.ttf"
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
-pointing/emulate_mouse_from_touch=true
 
 [physics]
 

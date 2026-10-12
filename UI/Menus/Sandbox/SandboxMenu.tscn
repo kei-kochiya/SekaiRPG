@@ -27,54 +27,60 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 40
+theme_override_constants/separation = 30
 alignment = 1
 
-[node name="PlayerSide" type="VBoxContainer" parent="HBox"]
+[node name="PlayerPanel" type="PanelContainer" parent="HBox"]
+layout_mode = 2
+
+[node name="PlayerSide" type="VBoxContainer" parent="HBox/PlayerPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBox/PlayerSide"]
+[node name="Label" type="Label" parent="HBox/PlayerPanel/PlayerSide"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "PHE TA (Tối đa 4)"
 horizontal_alignment = 1
 
-[node name="Scroll" type="ScrollContainer" parent="HBox/PlayerSide"]
+[node name="Scroll" type="ScrollContainer" parent="HBox/PlayerPanel/PlayerSide"]
 custom_minimum_size = Vector2(250, 400)
 layout_mode = 2
 
-[node name="CharList" type="VBoxContainer" parent="HBox/PlayerSide/Scroll"]
+[node name="CharList" type="VBoxContainer" parent="HBox/PlayerPanel/PlayerSide/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SelectedLabel" type="Label" parent="HBox/PlayerSide"]
+[node name="SelectedLabel" type="Label" parent="HBox/PlayerPanel/PlayerSide"]
 layout_mode = 2
 text = "Đã chọn: 0/4"
 
-[node name="UpgradeBtn" type="Button" parent="HBox/PlayerSide"]
+[node name="UpgradeBtn" type="Button" parent="HBox/PlayerPanel/PlayerSide"]
 layout_mode = 2
 text = "NÂNG CẤP CHỈ SỐ"
 
-[node name="EnemySide" type="VBoxContainer" parent="HBox"]
+[node name="EnemyPanel" type="PanelContainer" parent="HBox"]
+layout_mode = 2
+
+[node name="EnemySide" type="VBoxContainer" parent="HBox/EnemyPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBox/EnemySide"]
+[node name="Label" type="Label" parent="HBox/EnemyPanel/EnemySide"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "PHE ĐỊCH (Tối đa 5)"
 horizontal_alignment = 1
 
-[node name="Scroll" type="ScrollContainer" parent="HBox/EnemySide"]
+[node name="Scroll" type="ScrollContainer" parent="HBox/EnemyPanel/EnemySide"]
 custom_minimum_size = Vector2(250, 400)
 layout_mode = 2
 
-[node name="EnemyList" type="VBoxContainer" parent="HBox/EnemySide/Scroll"]
+[node name="EnemyList" type="VBoxContainer" parent="HBox/EnemyPanel/EnemySide/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SelectedLabel" type="Label" parent="HBox/EnemySide"]
+[node name="SelectedLabel" type="Label" parent="HBox/EnemyPanel/EnemySide"]
 layout_mode = 2
 text = "Đã chọn: 0/5"
 

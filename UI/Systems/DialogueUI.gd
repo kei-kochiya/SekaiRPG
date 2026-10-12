@@ -78,7 +78,7 @@ func _build_narrator_box(parent: Control, font: Font):
 	narrator_box.set_anchors_preset(Control.PRESET_CENTER)
 	narrator_box.offset_left = -400; narrator_box.offset_right = 400
 	narrator_box.offset_top = -40; narrator_box.offset_bottom = 40
-	narrator_box.add_theme_stylebox_override("panel", _get_style("panel_brown_dark.svg", 12, 20))
+	narrator_box.add_theme_stylebox_override("panel", _get_style("res://Assets/UI/panel_angular_brown.svg", 20, 20))
 	narrator_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(narrator_box)
 	
@@ -102,7 +102,7 @@ func _build_dialogue_box(parent: Control, base_font: Font, italic_font: FontVari
 	dialogue_box.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	dialogue_box.offset_top = -200; dialogue_box.offset_bottom = -30
 	dialogue_box.offset_left = 100; dialogue_box.offset_right = -100
-	dialogue_box.add_theme_stylebox_override("panel", _get_style("panel_brown.svg", 12, 25))
+	dialogue_box.add_theme_stylebox_override("panel", _get_style("res://Assets/UI/panel_angular_brown.svg", 20, 25))
 	dialogue_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(dialogue_box)
 
@@ -110,7 +110,7 @@ func _build_dialogue_box(parent: Control, base_font: Font, italic_font: FontVari
 	text_label.bbcode_enabled = true
 	text_label.add_theme_font_size_override("normal_font_size", 22)
 	text_label.add_theme_font_size_override("bold_font_size", 28)
-	text_label.add_theme_color_override("default_color", Color(0.15, 0.08, 0.05))
+	text_label.add_theme_color_override("default_color", Color(0.95, 0.9, 0.82))
 	text_label.add_theme_font_override("normal_font", base_font)
 	text_label.add_theme_font_override("bold_font", base_font)
 	text_label.add_theme_font_override("italic_font", italic_font)
@@ -125,7 +125,7 @@ func _build_choice_panel(parent: Control):
 	choice_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	choice_panel.offset_top = -390; choice_panel.offset_bottom = -215
 	choice_panel.offset_left = 200; choice_panel.offset_right = -200
-	choice_panel.add_theme_stylebox_override("panel", _get_style("panel_border_brown.svg", 32, 16))
+	choice_panel.add_theme_stylebox_override("panel", _get_style("res://Assets/UI/panel_angular_brown.svg", 20, 16))
 	parent.add_child(choice_panel)
 	
 	choice_box = VBoxContainer.new()
@@ -174,9 +174,11 @@ func display_choices(options: Array):
 	for i in options.size():
 		var btn = Button.new()
 		btn.text = options[i]
-		btn.add_theme_stylebox_override("normal", _get_style("button_brown.svg", 10, 10))
-		btn.add_theme_stylebox_override("hover", _get_style("button_grey.svg", 10, 10))
-		btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+		btn.add_theme_stylebox_override("normal", _get_style("res://Assets/UI/btn_angular_brown.svg", 8, 8))
+		btn.add_theme_stylebox_override("hover", _get_style("res://Assets/UI/btn_angular_brown_hover.svg", 8, 8))
+		btn.add_theme_stylebox_override("pressed", _get_style("res://Assets/UI/btn_angular_brown_hover.svg", 8, 8))
+		btn.add_theme_color_override("font_color", Color(0.95, 0.9, 0.82))
+		btn.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
 		btn.add_theme_font_override("font", load("res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 		btn.pressed.connect(func(): choice_selected.emit(i))
 		choice_box.add_child(btn)
@@ -218,7 +220,8 @@ func _update_portraits(character_name: String, side: String):
 # Tạo StyleBoxTexture với các thông số truyền vào
 func _get_style(tex: String, margin: int, padding: int) -> StyleBoxTexture:
 	var s = StyleBoxTexture.new()
-	s.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/" + tex)
+	var full_path = tex if tex.begins_with("res://") else ("res://Assets/UI/" + tex)
+	s.texture = load(full_path)
 	s.texture_margin_left = margin; s.texture_margin_right = margin
 	s.texture_margin_top = margin; s.texture_margin_bottom = margin
 	s.set_content_margin_all(padding)

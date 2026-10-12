@@ -40,17 +40,17 @@ func _ready():
 	prompt_label.position = Vector2(-60, -50)
 	prompt_label.custom_minimum_size = Vector2(120, 40)
 	prompt_label.add_theme_font_size_override("font_size", 12)
-	prompt_label.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+	prompt_label.add_theme_color_override("font_color", Color(0.96, 0.92, 0.85))
 	prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	
 	var pb = StyleBoxTexture.new()
-	pb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/banner_modern.svg")
+	pb.texture = load("res://Assets/UI/btn_angular_brown.svg")
 	
-	pb.texture_margin_left = 10
-	pb.texture_margin_right = 10
-	pb.texture_margin_top = 10
-	pb.texture_margin_bottom = 10
+	pb.texture_margin_left = 8
+	pb.texture_margin_right = 8
+	pb.texture_margin_top = 8
+	pb.texture_margin_bottom = 8
 	prompt_label.add_theme_stylebox_override("normal", pb)
 	
 	add_child(prompt_label)

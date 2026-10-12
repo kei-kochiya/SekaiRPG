@@ -91,9 +91,9 @@ func _setup_phase_0():
 	add_child(player)
 
 	# Kidnappers surrounding Ichika (repositioned horizontally and center-back)
-	_create_enemy_npc(Vector2(9 * TILE_SIZE, 9 * TILE_SIZE), "kidnapper.png")
-	_create_enemy_npc(Vector2(15 * TILE_SIZE, 9 * TILE_SIZE), "kidnapper.png")
-	_create_enemy_npc(Vector2(12 * TILE_SIZE, 7 * TILE_SIZE), "kidnapper.png")
+	_create_enemy_npc(Vector2(9 * TILE_SIZE, 9 * TILE_SIZE), "kidnapper.svg")
+	_create_enemy_npc(Vector2(15 * TILE_SIZE, 9 * TILE_SIZE), "kidnapper.svg")
+	_create_enemy_npc(Vector2(12 * TILE_SIZE, 7 * TILE_SIZE), "kidnapper.svg")
 
 	# Mafuyu visible outside the door
 	_create_visual_npc("Mafuyu", Vector2(12 * TILE_SIZE, 18 * TILE_SIZE), Color(0.4, 0.3, 0.5))
@@ -201,8 +201,8 @@ func _create_dead_body(pos: Vector2):
 	var root = Node2D.new()
 	root.position = pos
 	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/Person/kidnapper.png")
-	sprite.scale = Vector2(4, 4)
+	sprite.texture = load("res://Assets/Person/kidnapper.svg")
+	sprite.scale = Vector2(1, 1)
 	sprite.rotation = PI / 2 # Rotate to look like they are lying down
 	sprite.position = Vector2(0, 0)
 	root.add_child(sprite)

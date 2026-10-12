@@ -64,9 +64,9 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 	
 	if p_name.begins_with("Khủng Bố") or p_name.begins_with("Terrorist"):
 		var sprite = Sprite2D.new()
-		sprite.texture = load(PERSON_ROOT + "terrorist.png")
-		sprite.scale = Vector2(2, 2)
-		sprite.position = Vector2(0, -6)
+		sprite.texture = load(PERSON_ROOT + "terrorist.svg")
+		sprite.scale = Vector2(1, 1)
+		sprite.position = Vector2(0, -16)
 		root.add_child(sprite)
 	else:
 		var char_sprite = create_character_sprite(p_name)
@@ -108,8 +108,8 @@ static func create_enemy_npc(parent: Node2D, pos: Vector2, sprite_file: String):
 	root.position = pos
 	var sprite = Sprite2D.new()
 	sprite.texture = load(PERSON_ROOT + sprite_file)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = Vector2(0, -12)
+	sprite.scale = Vector2(1, 1)
+	sprite.position = Vector2(0, -16)
 	root.add_child(sprite)
 	root.z_index = 2
 	parent.add_child(root)

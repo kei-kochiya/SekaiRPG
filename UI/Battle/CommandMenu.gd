@@ -42,10 +42,10 @@ func _ready():
 func _build_shell():
 	"""Xây dựng khung giao diện chính cho menu lệnh."""
 	var ps = StyleBoxTexture.new()
-	ps.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_brown.svg")
-	ps.texture_margin_left = 12; ps.texture_margin_right = 12
-	ps.texture_margin_top = 12; ps.texture_margin_bottom = 12
-	ps.set_content_margin_all(16)
+	ps.texture = load("res://Assets/UI/panel_angular_brown.svg")
+	ps.texture_margin_left = 20; ps.texture_margin_right = 20
+	ps.texture_margin_top = 20; ps.texture_margin_bottom = 20
+	ps.set_content_margin_all(18)
 	add_theme_stylebox_override("panel", ps)
 	
 	var root = VBoxContainer.new()
@@ -58,18 +58,16 @@ func _build_shell():
 	root.add_child(title_row)
 	
 	var info_btn = TextureButton.new()
-	info_btn.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/minimap_icon_exclamation_white.svg")
+	info_btn.texture_normal = load("res://Assets/UI/icon_exclamation_gold.svg")
 	info_btn.ignore_texture_size = true
 	info_btn.custom_minimum_size = Vector2(20, 20)
-	info_btn.flip_v = true
-	info_btn.modulate = Color(0.7, 0.7, 0.7)
 	info_btn.pressed.connect(func(): if current_entity: _skill_detail_popup.display_entity_skills(current_entity))
 	title_row.add_child(info_btn)
 	
 	title_label = Label.new()
 	title_label.text = "LỆNH CHIẾN ĐẤU"
-	title_label.add_theme_font_size_override("font_size", 12)
-	title_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+	title_label.add_theme_font_size_override("font_size", 13)
+	title_label.add_theme_color_override("font_color", Color(0.95, 0.8, 0.45))
 	title_row.add_child(title_label)
 	
 	action_container = VBoxContainer.new()
@@ -169,9 +167,7 @@ func _show_items():
 		var count = GameManager.inventory[item_id]
 		if count <= 0: continue
 		var item_info = GameManager.ITEM_CATALOG.get(item_id, {"name": item_id})
-		var btn = Button.new()
-		btn.text = "%s (x%d)" % [item_info["name"], count]
-		btn.custom_minimum_size = Vector2(0, 32)
+		var btn = _make_btn("%s (x%d)" % [item_info["name"], count], "", true)
 		btn.pressed.connect(func():
 			chosen_action = "item:" + item_id
 			_show_targets("ally")
@@ -180,7 +176,20 @@ func _show_items():
 		
 	var back_btn = Button.new()
 	back_btn.text = "< QUAY LẠI"
-	back_btn.custom_minimum_size = Vector2(0, 28)
+	back_btn.custom_minimum_size = Vector2(230, 34)
+	var rb = StyleBoxTexture.new()
+	rb.texture = load("res://Assets/UI/btn_angular_red.svg")
+	rb.texture_margin_left = 8; rb.texture_margin_right = 8
+	rb.texture_margin_top = 8; rb.texture_margin_bottom = 8
+	back_btn.add_theme_stylebox_override("normal", rb)
+	var rbh = StyleBoxTexture.new()
+	rbh.texture = load("res://Assets/UI/btn_angular_red_hover.svg")
+	rbh.texture_margin_left = 8; rbh.texture_margin_right = 8
+	rbh.texture_margin_top = 8; rbh.texture_margin_bottom = 8
+	back_btn.add_theme_stylebox_override("hover", rbh)
+	back_btn.add_theme_stylebox_override("pressed", rbh)
+	back_btn.add_theme_color_override("font_color", Color(1.0, 0.9, 0.9))
+	back_btn.add_theme_font_size_override("font_size", 13)
 	back_btn.pressed.connect(func():
 		action_container.visible = true
 		target_container.visible = false
@@ -194,8 +203,8 @@ func _show_targets(target_type: String = "enemy"):
 	
 	var header = Label.new()
 	header.text = "CHỌN MỤC TIÊU"
-	header.add_theme_font_size_override("font_size", 11)
-	header.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+	header.add_theme_font_size_override("font_size", 12)
+	header.add_theme_color_override("font_color", Color(0.9, 0.75, 0.45))
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	target_container.add_child(header)
 	
@@ -213,36 +222,39 @@ func _on_target_picked(target: Entity):
 	command_chosen.emit(chosen_action, target)
 
 func _make_btn(label: String, action_name: String, enabled: bool) -> Button:
-	"""Khởi tạo một nút bấm trong menu với phong cách Kenney."""
+	"""Khởi tạo một nút bấm trong menu với phong cách Angular Brown."""
 	var btn = Button.new()
 	btn.text = label
 	btn.disabled = not enabled
-	btn.custom_minimum_size = Vector2(220, 32)
+	btn.custom_minimum_size = Vector2(230, 36)
 	
 	var ns = StyleBoxTexture.new()
-	ns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
-	ns.texture_margin_left = 10; ns.texture_margin_right = 10
-	ns.texture_margin_top = 10; ns.texture_margin_bottom = 14
-	ns.set_content_margin_all(6)
+	ns.texture = load("res://Assets/UI/btn_angular_brown.svg")
+	ns.texture_margin_left = 8; ns.texture_margin_right = 8
+	ns.texture_margin_top = 8; ns.texture_margin_bottom = 8
+	ns.set_content_margin_all(8)
 	btn.add_theme_stylebox_override("normal", ns)
 	
 	var hs = StyleBoxTexture.new()
-	hs.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg")
-	hs.texture_margin_left = 10; hs.texture_margin_right = 10
-	hs.texture_margin_top = 10; hs.texture_margin_bottom = 14
-	hs.set_content_margin_all(6)
+	hs.texture = load("res://Assets/UI/btn_angular_brown_hover.svg")
+	hs.texture_margin_left = 8; hs.texture_margin_right = 8
+	hs.texture_margin_top = 8; hs.texture_margin_bottom = 8
+	hs.set_content_margin_all(8)
 	btn.add_theme_stylebox_override("hover", hs)
+	btn.add_theme_stylebox_override("pressed", hs)
 	
 	var ds = StyleBoxTexture.new()
-	ds.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg")
-	ds.texture_margin_left = 10; ds.texture_margin_right = 10
-	ds.texture_margin_top = 10; ds.texture_margin_bottom = 14
-	ds.modulate_color = Color(0.5, 0.5, 0.5, 0.6)
-	ds.set_content_margin_all(6)
+	ds.texture = load("res://Assets/UI/btn_angular_brown.svg")
+	ds.texture_margin_left = 8; ds.texture_margin_right = 8
+	ds.texture_margin_top = 8; ds.texture_margin_bottom = 8
+	ds.modulate_color = Color(0.5, 0.45, 0.4, 0.5)
+	ds.set_content_margin_all(8)
 	btn.add_theme_stylebox_override("disabled", ds)
 	
-	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
-	btn.add_theme_color_override("font_disabled_color", Color(0.4, 0.4, 0.4))
+	btn.add_theme_color_override("font_color", Color(0.95, 0.9, 0.82))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
+	btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.95, 0.75))
+	btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.5, 0.45))
 	btn.add_theme_font_size_override("font_size", 14)
 	
 	if action_name != "":

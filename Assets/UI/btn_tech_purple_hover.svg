@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="44" viewBox="0 0 120 44">
+  <defs>
+    <linearGradient id="bg_p_hov" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#48276b"/>
+      <stop offset="100%" stop-color="#2a1640"/>
+    </linearGradient>
+    <linearGradient id="stroke_p_hov" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e085ff"/>
+      <stop offset="100%" stop-color="#a843d9"/>
+    </linearGradient>
+  </defs>
+  <rect x="1.5" y="1.5" width="117" height="41" rx="6" fill="url(#bg_p_hov)" stroke="url(#stroke_p_hov)" stroke-width="2"/>
+  <line x1="8" y1="5" x2="112" y2="5" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+</svg>

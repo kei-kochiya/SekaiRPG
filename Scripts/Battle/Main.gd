@@ -323,30 +323,42 @@ func _check_battle_end() -> bool:
 	return false
 
 func _setup_sandbox_exit_button():
-	# Tạo nút X ở góc phải màn hình để thoát Sandbox
+	# Tạo nút thoát ở góc phải màn hình cho Sandbox
 	var cl = CanvasLayer.new()
 	add_child(cl)
 	
-	# Control node làm vật chứa để dùng anchors
 	var ctrl = Control.new()
 	ctrl.set_anchors_preset(Control.PRESET_FULL_RECT)
+	ctrl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cl.add_child(ctrl)
 	
-	var btn = TextureButton.new()
-	var tex = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey_close.svg")
-	btn.texture_normal = tex
-	
-	# Đặt vào góc trên bên phải
+	var btn = Button.new()
+	btn.text = "THOÁT TRẬN"
 	btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	btn.position = Vector2(-70, 20) # Cách lề phải 70px, lề trên 20px
-	btn.scale = Vector2(0.8, 0.8)
+	btn.position = Vector2(-120, 16)
+	btn.custom_minimum_size = Vector2(100, 32)
+	
+	var rb = StyleBoxTexture.new()
+	rb.texture = load("res://Assets/UI/btn_angular_red.svg")
+	rb.texture_margin_left = 6; rb.texture_margin_right = 6
+	rb.texture_margin_top = 6; rb.texture_margin_bottom = 6
+	btn.add_theme_stylebox_override("normal", rb)
+	
+	var rbh = StyleBoxTexture.new()
+	rbh.texture = load("res://Assets/UI/btn_angular_red_hover.svg")
+	rbh.texture_margin_left = 6; rbh.texture_margin_right = 6
+	rbh.texture_margin_top = 6; rbh.texture_margin_bottom = 6
+	btn.add_theme_stylebox_override("hover", rbh)
+	btn.add_theme_stylebox_override("pressed", rbh)
+	
+	btn.add_theme_color_override("font_color", Color(1.0, 0.9, 0.9))
+	btn.add_theme_font_size_override("font_size", 12)
 	ctrl.add_child(btn)
 	
 	btn.pressed.connect(func():
-		print("[Sandbox] Kết thúc trận đấu sớm.")
-		GameManager.is_sandbox = false
-		get_tree().change_scene_to_file("res://UI/Menus/Sandbox/SandboxMenu.tscn")
+		print("[Sandbox] Thoát trận đấu sớm.")
+		GameManager.finish_battle(false)
 	)
 
 func _names(team: Array) -> String:

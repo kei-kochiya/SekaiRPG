@@ -18,17 +18,12 @@ func _init():
 	custom_minimum_size = Vector2(400, 250)
 	
 	var sb = StyleBoxTexture.new()
-	sb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_border_brown.svg")
-	sb.texture_margin_left = 32; sb.texture_margin_right = 32
-	sb.texture_margin_top = 32; sb.texture_margin_bottom = 32
-	sb.set_content_margin_all(24)
+	sb.texture = load("res://Assets/UI/panel_angular_brown.svg")
+	sb.texture_margin_left = 20; sb.texture_margin_right = 20
+	sb.texture_margin_top = 20; sb.texture_margin_bottom = 20
+	sb.content_margin_left = 24; sb.content_margin_right = 24
+	sb.content_margin_top = 20; sb.content_margin_bottom = 20
 	add_theme_stylebox_override("panel", sb)
-	
-	var bg = ColorRect.new()
-	bg.color = Color(0.05, 0.04, 0.03, 0.95)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.show_behind_parent = true
-	add_child(bg)
 	
 	_content_vbox = VBoxContainer.new()
 	_content_vbox.add_theme_constant_override("separation", 15)
@@ -51,10 +46,7 @@ func display_skill(skill: Dictionary):
 	title.add_theme_font_size_override("font_size", 18)
 	header.add_child(title)
 	
-	var close_btn = Button.new()
-	close_btn.icon = load("res://Assets/kenney_ui-pack-adventure/Vector/checkbox_brown_cross.svg")
-	close_btn.flat = true
-	close_btn.pressed.connect(func(): visible = false)
+	var close_btn = _create_close_button()
 	header.add_child(close_btn)
 	
 	# Nội dung tên chiêu
@@ -89,10 +81,7 @@ func display_entity_skills(entity: Entity):
 	title.add_theme_font_size_override("font_size", 18)
 	header.add_child(title)
 	
-	var close_btn = Button.new()
-	close_btn.icon = load("res://Assets/kenney_ui-pack-adventure/Vector/checkbox_brown_cross.svg")
-	close_btn.flat = true
-	close_btn.pressed.connect(func(): visible = false)
+	var close_btn = _create_close_button()
 	header.add_child(close_btn)
 	
 	var scroll = ScrollContainer.new()
@@ -122,3 +111,18 @@ func display_entity_skills(entity: Entity):
 		item.add_child(details)
 	
 	visible = true
+
+func _create_close_button() -> Button:
+	var close_btn = Button.new()
+	close_btn.text = " ✕ "
+	close_btn.add_theme_color_override("font_color", Color(1.0, 0.88, 0.88))
+	var cb_sb = StyleBoxTexture.new()
+	cb_sb.texture = load("res://Assets/UI/btn_angular_red.svg")
+	cb_sb.texture_margin_left = 6
+	cb_sb.texture_margin_right = 6
+	cb_sb.texture_margin_top = 4
+	cb_sb.texture_margin_bottom = 6
+	close_btn.add_theme_stylebox_override("normal", cb_sb)
+	close_btn.add_theme_stylebox_override("hover", cb_sb)
+	close_btn.pressed.connect(func(): visible = false)
+	return close_btn

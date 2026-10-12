@@ -43,32 +43,36 @@ func _ready():
 	
 	ScreenFade.fade_in(1.0)
 
-func _style_button(btn: Button):
+func _style_button(btn: Button, normal_svg: String = "res://Assets/UI/btn_angular_brown.svg", hover_svg: String = "res://Assets/UI/btn_angular_brown_hover.svg", text_color: Color = Color(0.96, 0.92, 0.85)):
 	var ns = StyleBoxTexture.new()
-	ns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+	ns.texture = load(normal_svg)
 	ns.texture_margin_left = 10
 	ns.texture_margin_right = 10
 	ns.texture_margin_top = 10
 	ns.texture_margin_bottom = 14
 	btn.add_theme_stylebox_override("normal", ns)
 	
-	var hs = StyleBoxTexture.new()
-	hs.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg")
-	hs.texture_margin_left = 10
-	hs.texture_margin_right = 10
-	hs.texture_margin_top = 10
-	hs.texture_margin_bottom = 14
-	btn.add_theme_stylebox_override("hover", hs)
-	btn.add_theme_stylebox_override("focus", hs)
+	if hover_svg != "":
+		var hs = StyleBoxTexture.new()
+		hs.texture = load(hover_svg)
+		hs.texture_margin_left = 10
+		hs.texture_margin_right = 10
+		hs.texture_margin_top = 10
+		hs.texture_margin_bottom = 14
+		btn.add_theme_stylebox_override("hover", hs)
+		btn.add_theme_stylebox_override("focus", hs)
+	else:
+		btn.add_theme_stylebox_override("hover", ns)
+		btn.add_theme_stylebox_override("focus", ns)
 	
-	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
-	btn.add_theme_color_override("font_hover_color", Color(0.1, 0.1, 0.1))
+	btn.add_theme_color_override("font_color", text_color)
+	btn.add_theme_color_override("font_hover_color", Color(1, 1, 1))
 	btn.add_theme_font_override("font", load("res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
 
 func _apply_kenney_styles():
-	# Title Background using NinePatchRect for better stretching
+	# Title Background using angular brown banner
 	var banner = NinePatchRect.new()
-	banner.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/banner_modern.svg")
+	banner.texture = load("res://Assets/UI/banner_angular_title.svg")
 	banner.patch_margin_left = 20
 	banner.patch_margin_right = 20
 	banner.patch_margin_top = 20
@@ -88,11 +92,14 @@ func _apply_kenney_styles():
 	$CenterContainer/VBoxContainer.remove_child(title)
 	cc.add_child(title)
 	title.add_theme_font_size_override("font_size", 32)
-	title.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+	title.add_theme_color_override("font_color", Color(0.96, 0.85, 0.62))
 	title.add_theme_font_override("font", load("res://Assets/Fonts/zhcn.ttf"))
 
-	for btn in [$CenterContainer/VBoxContainer/NewGameBtn, $CenterContainer/VBoxContainer/SandboxBtn, $CenterContainer/VBoxContainer/ExitBtn]:
-		_style_button(btn)
+	_style_button($CenterContainer/VBoxContainer/NewGameBtn, "res://Assets/UI/btn_angular_brown.svg", "res://Assets/UI/btn_angular_brown_hover.svg", Color(0.96, 0.92, 0.85))
+	_style_button($CenterContainer/VBoxContainer/SandboxBtn, "res://Assets/UI/btn_angular_amber.svg", "res://Assets/UI/btn_angular_amber_hover.svg", Color(0.98, 0.90, 0.80))
+	_style_button($CenterContainer/VBoxContainer/ExitBtn, "res://Assets/UI/btn_angular_red.svg", "", Color(1.0, 0.88, 0.88))
+
+
 
 func _on_continue():
 	await ScreenFade.fade_out(0.5)

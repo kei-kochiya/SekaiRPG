@@ -3,7 +3,6 @@
 /android/
 /build/
 *.tmp
-*.import
 
 # Asset zips
 Assets/*.zip
@@ -17,3 +16,8 @@ Assets/*.zip
 # Build exports
 export/
 Export/
+
+# Local / temporary
+screenshots/
+tools/
+node_modules/

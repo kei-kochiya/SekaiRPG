@@ -24,4 +24,4 @@ func _init():
 	is_character = false
 
 func get_portrait_path() -> String:
-	return "res://Assets/Person/warehouse_worker.png"
+	return "res://Assets/Person/training_bot.svg"

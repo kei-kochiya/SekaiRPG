@@ -46,4 +46,4 @@ func smoke_screen(_target: Variant = null):
 			ally.defense += 20
 
 func get_portrait_path() -> String:
-	return "res://Assets/Person/thug.png"
+	return "res://Assets/Person/sniper.svg"

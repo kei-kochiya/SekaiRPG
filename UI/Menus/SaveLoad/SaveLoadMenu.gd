@@ -13,10 +13,13 @@ Chức năng:
 
 const FONT_BODY = "res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"
 const FONT_TITLE = "res://Assets/Fonts/zhcn.ttf"
-const BTN_BROWN_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg"
-const BTN_GREY_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg"
-const BTN_RED_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_red.svg"
-const PANEL_BROWN_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/panel_brown.svg"
+const BTN_BROWN_TEX = "res://Assets/UI/btn_angular_brown.svg"
+const BTN_BROWN_HOVER_TEX = "res://Assets/UI/btn_angular_brown_hover.svg"
+const BTN_GREY_TEX = "res://Assets/UI/btn_angular_amber.svg"
+const BTN_GREY_HOVER_TEX = "res://Assets/UI/btn_angular_amber_hover.svg"
+const BTN_RED_TEX = "res://Assets/UI/btn_angular_red.svg"
+const BTN_RED_HOVER_TEX = "res://Assets/UI/btn_angular_red_hover.svg"
+const PANEL_BROWN_TEX = "res://Assets/UI/panel_angular_brown.svg"
 
 var slot_container: VBoxContainer
 var new_save_edit: LineEdit
@@ -262,11 +265,10 @@ func _show_confirmation(title_text: String, msg_text: String, on_confirm: Callab
 	_confirm_dialog.custom_minimum_size = Vector2(380, 180)
 	_confirm_dialog.set_anchors_preset(Control.PRESET_CENTER)
 	
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(0.12, 0.1, 0.08, 0.98)
-	sb.set_border_width_all(3)
-	sb.border_color = Color(0.9, 0.6, 0.2)
-	sb.set_corner_radius_all(8)
+	var sb = StyleBoxTexture.new()
+	sb.texture = load(PANEL_BROWN_TEX)
+	sb.texture_margin_left = 20; sb.texture_margin_right = 20
+	sb.texture_margin_top = 20; sb.texture_margin_bottom = 20
 	sb.set_content_margin_all(20)
 	_confirm_dialog.add_theme_stylebox_override("panel", sb)
 	add_child(_confirm_dialog)
@@ -314,7 +316,7 @@ func _on_back_pressed():
 		return
 	get_tree().change_scene_to_file("res://UI/Menus/Start/StartMenu.tscn")
 
-# ── Helper Nút Bấm Phong Cách Kenney ───────────────────────────────────────
+# ── Helper Nút Bấm Phong Cách Angular Brown ─────────────────────────────────
 
 func _create_styled_button(txt: String, callback: Callable, tex_path: String) -> Button:
 	var btn = Button.new()
@@ -322,20 +324,35 @@ func _create_styled_button(txt: String, callback: Callable, tex_path: String) ->
 	btn.add_theme_font_override("font", load(FONT_BODY))
 	btn.add_theme_font_size_override("font_size", 14)
 	
+	var hover_tex = BTN_BROWN_HOVER_TEX
+	var text_color = Color(0.95, 0.9, 0.82)
+	var hover_color = Color(1.0, 0.95, 0.75)
+	
+	if tex_path == BTN_GREY_TEX:
+		hover_tex = BTN_GREY_HOVER_TEX
+		text_color = Color(0.18, 0.12, 0.05)
+		hover_color = Color(0.1, 0.06, 0.02)
+	elif tex_path == BTN_RED_TEX:
+		hover_tex = BTN_RED_HOVER_TEX
+		text_color = Color(1.0, 0.9, 0.9)
+		hover_color = Color(1.0, 1.0, 1.0)
+	
 	var ns = StyleBoxTexture.new()
 	ns.texture = load(tex_path)
 	ns.texture_margin_left = 8; ns.texture_margin_right = 8
-	ns.texture_margin_top = 8; ns.texture_margin_bottom = 12
+	ns.texture_margin_top = 8; ns.texture_margin_bottom = 8
 	btn.add_theme_stylebox_override("normal", ns)
 	
 	var hs = StyleBoxTexture.new()
-	hs.texture = load(BTN_GREY_TEX)
+	hs.texture = load(hover_tex)
 	hs.texture_margin_left = 8; hs.texture_margin_right = 8
-	hs.texture_margin_top = 8; hs.texture_margin_bottom = 12
+	hs.texture_margin_top = 8; hs.texture_margin_bottom = 8
 	btn.add_theme_stylebox_override("hover", hs)
 	btn.add_theme_stylebox_override("focus", hs)
+	btn.add_theme_stylebox_override("pressed", hs)
 	
-	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
-	btn.add_theme_color_override("font_hover_color", Color.BLACK)
+	btn.add_theme_color_override("font_color", text_color)
+	btn.add_theme_color_override("font_hover_color", hover_color)
+	btn.add_theme_color_override("font_pressed_color", hover_color)
 	btn.pressed.connect(callback)
 	return btn

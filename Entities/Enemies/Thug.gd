@@ -40,4 +40,4 @@ func slash_attack(target: Entity):
 		target.add_status({"type": "Bleed", "duration": 2})
 
 func get_portrait_path() -> String:
-	return "res://Assets/Person/thug.png"
+	return "res://Assets/Person/thug.svg"

@@ -86,12 +86,12 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 	root.add_to_group("objectives")
 	
 	var sprite = Sprite2D.new()
-	var texture_path = "res://Assets/Person/guard.png"
+	var texture_path = "res://Assets/Person/guard.svg"
 	if route == "boss" or GameManager.harbor_wave > 3:
-		texture_path = "res://Assets/Person/captain.png"
+		texture_path = "res://Assets/Person/captain.svg"
 	sprite.texture = load(texture_path)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = Vector2(0, -12)
+	sprite.scale = Vector2(1, 1)
+	sprite.position = Vector2(0, -16)
 	root.add_child(sprite)
 	
 	var lbl = Label.new()

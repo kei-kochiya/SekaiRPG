@@ -51,13 +51,13 @@ func setup(e: Entity, player: bool):
 # ── Xây Dựng Component ─────────────────────────────────────────────────────
 
 func _build_ui():
-	"""Xây dựng cấu trúc cây Node và áp dụng phong cách hình ảnh (Kenney Style)."""
+	"""Xây dựng cấu trúc cây Node và áp dụng phong cách Angular Brown."""
 	var ps = StyleBoxTexture.new()
-	ps.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_brown.svg")
-	ps.texture_margin_left = 12
-	ps.texture_margin_right = 12
-	ps.texture_margin_top = 12
-	ps.texture_margin_bottom = 12
+	ps.texture = load("res://Assets/UI/panel_angular_brown.svg")
+	ps.texture_margin_left = 16
+	ps.texture_margin_right = 16
+	ps.texture_margin_top = 16
+	ps.texture_margin_bottom = 16
 	ps.set_content_margin_all(12)
 	add_theme_stylebox_override("panel", ps)
 	custom_minimum_size = Vector2(220, 0)
@@ -138,15 +138,15 @@ func _create_hp_bar() -> ProgressBar:
 	bar.show_percentage = false
 	
 	var fill = StyleBoxTexture.new()
-	fill.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/progress_green.svg")
-	fill.texture_margin_left = 6
-	fill.texture_margin_right = 6
+	fill.texture = load("res://Assets/UI/progress_hp_fill.svg")
+	fill.texture_margin_left = 4
+	fill.texture_margin_right = 4
 	bar.add_theme_stylebox_override("fill", fill)
 	
 	var bg = StyleBoxTexture.new()
-	bg.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/progress_transparent.svg")
-	bg.texture_margin_left = 6
-	bg.texture_margin_right = 6
+	bg.texture = load("res://Assets/UI/progress_hp_bg.svg")
+	bg.texture_margin_left = 4
+	bg.texture_margin_right = 4
 	bar.add_theme_stylebox_override("background", bg)
 	
 	hp_label = Label.new()

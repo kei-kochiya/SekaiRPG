@@ -43,4 +43,4 @@ func lock_power(_target: Variant = null):
 			t.take_damage(50)
 
 func get_portrait_path() -> String:
-	return "res://Assets/Person/suit.png"
+	return "res://Assets/Person/suit.svg"

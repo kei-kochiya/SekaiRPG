@@ -112,7 +112,7 @@ func _build_joystick():
 
 func _build_menu_button():
 	_btn_menu = TextureButton.new()
-	_btn_menu.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+	_btn_menu.texture_normal = load("res://Assets/UI/btn_angular_brown.svg")
 	_btn_menu.custom_minimum_size = MENU_BUTTON_SIZE
 	_btn_menu.ignore_texture_size = true
 	_btn_menu.stretch_mode = TextureButton.STRETCH_SCALE
@@ -130,7 +130,7 @@ func _build_menu_button():
 	menu_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	menu_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	menu_lbl.set_anchors_preset(Control.PRESET_FULL_RECT)
-	menu_lbl.add_theme_color_override("font_color", Color(0.15, 0.1, 0.05))
+	menu_lbl.add_theme_color_override("font_color", Color(0.95, 0.9, 0.82))
 	menu_lbl.add_theme_font_size_override("font_size", 16)
 	menu_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_btn_menu.add_child(menu_lbl)
@@ -139,7 +139,7 @@ func _build_menu_button():
 
 func _build_interact_button():
 	_btn_interact = TextureButton.new()
-	_btn_interact.texture_normal = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
+	_btn_interact.texture_normal = load("res://Assets/UI/btn_angular_amber.svg")
 	_btn_interact.custom_minimum_size = INTERACT_BUTTON_SIZE
 	_btn_interact.ignore_texture_size = true
 	_btn_interact.stretch_mode = TextureButton.STRETCH_SCALE

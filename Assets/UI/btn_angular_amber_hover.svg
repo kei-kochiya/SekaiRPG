@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="44" viewBox="0 0 120 44">
+  <defs>
+    <linearGradient id="btn_bg_amber_hov" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#593623"/>
+      <stop offset="100%" stop-color="#361f14"/>
+    </linearGradient>
+    <linearGradient id="stroke_amber_hov" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb86c"/>
+      <stop offset="100%" stop-color="#d97523"/>
+    </linearGradient>
+  </defs>
+  <polygon points="5,1 115,1 119,5 119,39 115,43 5,43 1,39 1,5" fill="url(#btn_bg_amber_hov)" stroke="url(#stroke_amber_hov)" stroke-width="2"/>
+  <line x1="8" y1="4" x2="112" y2="4" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1"/>
+  <line x1="1" y1="10" x2="1" y2="34" stroke="#ffb86c" stroke-width="2"/>
+  <line x1="119" y1="10" x2="119" y2="34" stroke="#ffb86c" stroke-width="2"/>
+</svg>

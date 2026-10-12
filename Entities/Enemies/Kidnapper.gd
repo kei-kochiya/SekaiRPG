@@ -36,4 +36,4 @@ func basic_attack(target: Entity):
 	target.take_damage(dmg)
 
 func get_portrait_path() -> String:
-	return "res://Assets/Person/kidnapper.png"
+	return "res://Assets/Person/kidnapper.svg"

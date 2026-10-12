@@ -1,10 +1,11 @@
 class_name PauseMenuBuilder
 extends RefCounted
 
-const PANEL_BROWN_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/panel_brown.svg"
-const PANEL_GREY_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/panel_grey.svg"
-const BUTTON_BROWN_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg"
-const BUTTON_GREY_TEX = "res://Assets/kenney_ui-pack-adventure/Vector/button_grey.svg"
+const PANEL_BROWN_TEX = "res://Assets/UI/panel_angular_brown.svg"
+const PANEL_GREY_TEX = "res://Assets/UI/panel_angular_brown.svg"
+const BUTTON_BROWN_TEX = "res://Assets/UI/btn_angular_brown.svg"
+const BUTTON_BROWN_HOVER_TEX = "res://Assets/UI/btn_angular_brown_hover.svg"
+const BUTTON_GREY_TEX = "res://Assets/UI/btn_angular_amber.svg"
 const FONT_PATH = "res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"
 
 static func build_base_ui(menu: Node) -> Dictionary:
@@ -14,21 +15,21 @@ static func build_base_ui(menu: Node) -> Dictionary:
 	
 	var dim = ColorRect.new()
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-	dim.color = Color(0, 0, 0, 0.5)
+	dim.color = Color(0.04, 0.03, 0.02, 0.7)
 	_root.add_child(dim)
 	
 	var _panel = PanelContainer.new()
 	_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_panel.offset_left = -200
-	_panel.offset_right = 200
-	_panel.offset_top = -220
-	_panel.offset_bottom = 220
+	_panel.offset_left = -210
+	_panel.offset_right = 210
+	_panel.offset_top = -230
+	_panel.offset_bottom = 230
 	
 	var sb = StyleBoxTexture.new()
 	sb.texture = load(PANEL_BROWN_TEX)
-	sb.texture_margin_left = 12; sb.texture_margin_right = 12
-	sb.texture_margin_top = 12; sb.texture_margin_bottom = 12
-	sb.set_content_margin_all(20)
+	sb.texture_margin_left = 20; sb.texture_margin_right = 20
+	sb.texture_margin_top = 20; sb.texture_margin_bottom = 20
+	sb.set_content_margin_all(24)
 	_panel.add_theme_stylebox_override("panel", sb)
 	_root.add_child(_panel)
 	
@@ -40,6 +41,7 @@ static func build_base_ui(menu: Node) -> Dictionary:
 	title.text = "TẠM DỪNG"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 24)
+	title.add_theme_color_override("font_color", Color(0.95, 0.82, 0.45))
 	title.add_theme_font_override("font", load(FONT_PATH))
 	vbox.add_child(title)
 	
@@ -83,24 +85,27 @@ static func build_base_ui(menu: Node) -> Dictionary:
 static func create_button(txt: String, callback: Callable) -> Button:
 	var btn = Button.new()
 	btn.text = txt
-	btn.add_theme_font_size_override("font_size", 18)
+	btn.add_theme_font_size_override("font_size", 16)
+	btn.custom_minimum_size = Vector2(220, 38)
 	
 	var normal = StyleBoxTexture.new()
 	normal.texture = load(BUTTON_BROWN_TEX)
 	normal.texture_margin_left = 8; normal.texture_margin_right = 8
-	normal.texture_margin_top = 8; normal.texture_margin_bottom = 12
+	normal.texture_margin_top = 8; normal.texture_margin_bottom = 8
 	btn.add_theme_stylebox_override("normal", normal)
 	
 	var hover = StyleBoxTexture.new()
-	hover.texture = load(BUTTON_GREY_TEX)
+	hover.texture = load(BUTTON_BROWN_HOVER_TEX)
 	hover.texture_margin_left = 8; hover.texture_margin_right = 8
-	hover.texture_margin_top = 8; hover.texture_margin_bottom = 12
+	hover.texture_margin_top = 8; hover.texture_margin_bottom = 8
 	btn.add_theme_stylebox_override("hover", hover)
 	btn.add_theme_stylebox_override("focus", hover)
+	btn.add_theme_stylebox_override("pressed", hover)
 	
-	btn.add_theme_color_override("font_color", Color(0.15, 0.08, 0.05))
-	btn.add_theme_color_override("font_hover_color", Color(0, 0, 0))
-	btn.add_theme_color_override("font_focus_color", Color(0, 0, 0))
+	btn.add_theme_color_override("font_color", Color(0.95, 0.9, 0.82))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
+	btn.add_theme_color_override("font_focus_color", Color(1.0, 0.95, 0.75))
+	btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.95, 0.75))
 	
 	btn.pressed.connect(callback)
 	return btn

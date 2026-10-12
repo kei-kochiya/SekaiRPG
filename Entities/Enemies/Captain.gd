@@ -36,4 +36,4 @@ func execution(target: Entity):
 	target.take_damage(dmg)
 
 func get_portrait_path() -> String:
-	return "res://Assets/Person/captain.png"
+	return "res://Assets/Person/captain.svg"

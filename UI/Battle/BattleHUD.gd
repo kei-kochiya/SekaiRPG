@@ -133,7 +133,7 @@ func show_turn_indicator(entity: Entity):
 
 func show_victory():
 	"""Hiển thị banner thông báo chiến thắng."""
-	var banner = _create_banner("CHIẾN THẮNG!", Color(1, 0.9, 0.2))
+	var banner = _create_banner("CHIẾN THẮNG!", Color(1.0, 0.9, 0.25), Vector2(380, 56))
 	add_child(banner)
 	banner.position.y -= 100
 	var tw = create_tween()
@@ -141,7 +141,17 @@ func show_victory():
 
 func show_defeat():
 	"""Hiển thị banner thông báo thất bại."""
-	var banner = _create_banner("THẤT BẠI...\nĐang rút lui về Safehouse...", Color(0.6, 0.2, 0.2))
+	var defeat_msg: String
+	if GameManager.is_sandbox:
+		defeat_msg = "THẤT BẠI...\nĐang quay lại Sandbox..."
+	elif HoloSimManager and HoloSimManager.is_sim_active:
+		defeat_msg = "KẾT THÚC MÔ PHỎNG..."
+	elif GameManager.is_training_mode:
+		defeat_msg = "HOÀN THÀNH HUẤN LUYỆN..."
+	else:
+		defeat_msg = "THẤT BẠI...\nĐang rút lui về Safehouse..."
+
+	var banner = _create_banner(defeat_msg, Color(1.0, 0.45, 0.4), Vector2(460, 86))
 	add_child(banner)
 	banner.position.y -= 100
 	var tw = create_tween()
@@ -149,16 +159,14 @@ func show_defeat():
 
 # ── Helpers ────────────────────────────────────────────────────────────────
 
-func _create_banner(txt: String, color: Color) -> PanelContainer:
+func _create_banner(txt: String, color: Color, min_size: Vector2 = Vector2(360, 56)) -> PanelContainer:
 	"""
-	Khởi tạo một dải banner thông báo chuẩn hóa.
-	
-	Sử dụng texture 'banner_modern' dẹt và cố định kích thước 280x42 
-	để đảm bảo tính thẩm mỹ.
+	Khởi tạo một dải banner thông báo chuẩn hóa theo phong cách Angular Brown.
 
 	Args:
 		txt (String): Nội dung chữ hiển thị trên banner.
 		color (Color): Màu sắc của phông chữ.
+		min_size (Vector2): Kích thước tối thiểu của banner.
 		
 	Returns:
 		PanelContainer: Đối tượng banner đã được cấu hình.
@@ -168,16 +176,19 @@ func _create_banner(txt: String, color: Color) -> PanelContainer:
 	p.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	p.grow_vertical = Control.GROW_DIRECTION_BOTH
 	
-	p.custom_minimum_size = Vector2(280, 42)
+	p.custom_minimum_size = min_size
 	p.modulate.a = 0
 	
 	var sb = StyleBoxTexture.new()
-	sb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/banner_modern.svg")
-	
-	sb.texture_margin_left = 20
-	sb.texture_margin_right = 20
-	sb.texture_margin_top = 4
-	sb.texture_margin_bottom = 4
+	sb.texture = load("res://Assets/UI/banner_angular_title.svg")
+	sb.texture_margin_left = 24
+	sb.texture_margin_right = 24
+	sb.texture_margin_top = 16
+	sb.texture_margin_bottom = 16
+	sb.content_margin_left = 24
+	sb.content_margin_right = 24
+	sb.content_margin_top = 12
+	sb.content_margin_bottom = 12
 	
 	p.add_theme_stylebox_override("panel", sb)
 	

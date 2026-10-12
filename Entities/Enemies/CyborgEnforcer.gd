@@ -42,4 +42,4 @@ func barrier_boost(_target: Variant = null):
 	heal(80)
 
 func get_portrait_path() -> String:
-	return "res://Assets/Person/suit.png"
+	return "res://Assets/Person/cyborg_enforcer.svg"

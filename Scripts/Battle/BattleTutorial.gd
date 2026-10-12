@@ -94,13 +94,24 @@ static func _show_tutorial_step(_main: Node, vbox: VBoxContainer, title: String,
 	btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	
 	var bns = StyleBoxTexture.new()
-	bns.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/button_brown.svg")
-	bns.texture_margin_left = 10
-	bns.texture_margin_right = 10
-	bns.texture_margin_top = 10
-	bns.texture_margin_bottom = 14
+	bns.texture = load("res://Assets/UI/btn_angular_brown.svg")
+	bns.texture_margin_left = 8
+	bns.texture_margin_right = 8
+	bns.texture_margin_top = 8
+	bns.texture_margin_bottom = 8
 	btn.add_theme_stylebox_override("normal", bns)
-	btn.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+	
+	var bhs = StyleBoxTexture.new()
+	bhs.texture = load("res://Assets/UI/btn_angular_brown_hover.svg")
+	bhs.texture_margin_left = 8
+	bhs.texture_margin_right = 8
+	bhs.texture_margin_top = 8
+	bhs.texture_margin_bottom = 8
+	btn.add_theme_stylebox_override("hover", bhs)
+	btn.add_theme_stylebox_override("pressed", bhs)
+	
+	btn.add_theme_color_override("font_color", Color(0.95, 0.9, 0.82))
+	btn.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
 	
 	vbox.add_child(btn)
 	
@@ -120,24 +131,24 @@ static func _build_tutorial_panel(main: Node) -> PanelContainer:
 	canvas.layer = 150
 	main.add_child(canvas)
 	
+	var dim = ColorRect.new()
+	dim.color = Color(0.04, 0.03, 0.02, 0.7)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	canvas.add_child(dim)
+	
 	var panel = PanelContainer.new()
 	panel.custom_minimum_size = Vector2(500, 300)
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	canvas.add_child(panel)
-	
-	var bg = ColorRect.new()
-	bg.color = Color(0.1, 0.08, 0.05, 1.0)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	panel.add_child(bg)
 
 	var sb = StyleBoxTexture.new()
-	sb.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/panel_border_brown.svg")
-	sb.texture_margin_left = 32
-	sb.texture_margin_right = 32
-	sb.texture_margin_top = 32
-	sb.texture_margin_bottom = 32
+	sb.texture = load("res://Assets/UI/panel_angular_brown.svg")
+	sb.texture_margin_left = 20
+	sb.texture_margin_right = 20
+	sb.texture_margin_top = 20
+	sb.texture_margin_bottom = 20
 	sb.set_content_margin_all(24)
 	panel.add_theme_stylebox_override("panel", sb)
 	

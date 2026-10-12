@@ -84,7 +84,7 @@ func refresh(timeline: Array, current_actor: Entity = null):
 		row.add_child(num)
 		
 		var icon = TextureRect.new()
-		icon.texture = load("res://Assets/kenney_ui-pack-adventure/Vector/round_grey.svg")
+		icon.texture = load("res://Assets/UI/marker_gauge_diamond.svg")
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.custom_minimum_size = Vector2(16, 16)
 		icon.modulate = PLAYER_COLOR if is_player else ENEMY_COLOR

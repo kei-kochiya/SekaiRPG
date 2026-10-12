@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" shape-rendering="crispEdges">
+  <!-- Ground shadow -->
+  <ellipse cx="24" cy="45" rx="11" ry="3" fill="rgba(15,23,42,0.3)" shape-rendering="geometricPrecision"/>
+  <!-- Combat Boots -->
+  <rect x="16" y="40" width="6" height="5" fill="#0f172a"/>
+  <rect x="26" y="40" width="6" height="5" fill="#0f172a"/>
+  <!-- Navy Security Trousers -->
+  <rect x="17" y="31" width="5" height="10" fill="#1e293b"/>
+  <rect x="26" y="31" width="5" height="10" fill="#1e293b"/>
+  <!-- Duty Belt with Buckle -->
+  <rect x="15" y="29" width="18" height="3" fill="#0f172a"/>
+  <rect x="22" y="29.5" width="4" height="2" fill="#eab308"/>
+  <!-- Radio pouch on belt -->
+  <rect x="16" y="28" width="3" height="4" fill="#334155"/>
+  <!-- Navy Uniform Jacket Body -->
+  <rect x="15" y="19" width="18" height="11" fill="#1e3a8a"/>
+  <rect x="17" y="20" width="14" height="9" fill="#1d4ed8"/>
+  <!-- Epaulets (Cầu vai vàng) -->
+  <rect x="14" y="19" width="4" height="2" fill="#fbbf24"/>
+  <rect x="30" y="19" width="4" height="2" fill="#fbbf24"/>
+  <!-- Uniform Tie & Badge -->
+  <rect x="23" y="19" width="2" height="7" fill="#0f172a"/>
+  <rect x="18" y="22" width="2.5" height="2.5" fill="#fbbf24"/>
+  <!-- Sleeves & Arms -->
+  <rect x="12" y="20" width="4" height="10" fill="#1e3a8a"/>
+  <rect x="32" y="20" width="4" height="10" fill="#1e3a8a"/>
+  <rect x="12" y="29" width="4" height="3" fill="#fed7aa"/>
+  <rect x="32" y="29" width="4" height="3" fill="#fed7aa"/>
+  <!-- Head & Face -->
+  <rect x="16" y="11" width="16" height="9" fill="#ffedd5"/>
+  <!-- Determined Eyes -->
+  <rect x="18" y="14" width="3" height="2" fill="#0f172a"/>
+  <rect x="27" y="14" width="3" height="2" fill="#0f172a"/>
+  <!-- Eyebrows -->
+  <line x1="17" y1="13" x2="21" y2="14" stroke="#475569" stroke-width="1"/>
+  <line x1="31" y1="13" x2="27" y2="14" stroke="#475569" stroke-width="1"/>
+  <!-- Security Cap (Mũ bảo vệ quân đoàn) -->
+  <rect x="15" y="7" width="18" height="5" fill="#1e3a8a"/>
+  <rect x="13" y="10" width="22" height="2.5" fill="#0f172a"/>
+  <rect x="22.5" y="7.5" width="3" height="3" fill="#fbbf24"/>
+</svg>

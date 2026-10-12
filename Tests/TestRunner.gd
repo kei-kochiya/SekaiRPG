@@ -17,6 +17,7 @@ const TestEconomyClass = preload("res://Tests/Unit/TestEconomy.gd")
 const TestQuestsClass = preload("res://Tests/Unit/TestQuests.gd")
 const TestHoloSimClass = preload("res://Tests/Unit/TestHoloSim.gd")
 const TestLoggerClass = preload("res://Tests/Unit/TestLogger.gd")
+const TestSandboxClass = preload("res://Tests/Unit/TestSandbox.gd")
 
 func _ready():
 	print("\n" + "=".repeat(65))
@@ -30,7 +31,8 @@ func _ready():
 		TestEconomyClass.new(),
 		TestQuestsClass.new(),
 		TestHoloSimClass.new(),
-		TestLoggerClass.new()
+		TestLoggerClass.new(),
+		TestSandboxClass.new()
 	]
 	
 	var total_tests = 0

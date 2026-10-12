@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16">
+  <defs>
+    <linearGradient id="hpGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="30%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </linearGradient>
+    <linearGradient id="hpInnerGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Background fill -->
+  <rect x="1" y="1" width="30" height="14" fill="url(#hpGrad)"/>
+  <!-- Top specular highlight -->
+  <rect x="2" y="2" width="28" height="4" fill="url(#hpInnerGlow)"/>
+  <!-- Crisp inner border -->
+  <rect x="1" y="1" width="30" height="14" fill="none" stroke="#86efac" stroke-width="1" stroke-opacity="0.6"/>
+</svg>

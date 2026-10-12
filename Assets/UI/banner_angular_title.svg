@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="80" viewBox="0 0 400 80">
+  <defs>
+    <linearGradient id="b_bg_brown" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a1d17" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#170f0b" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="b_accent_gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e8b168" stop-opacity="0"/>
+      <stop offset="20%" stop-color="#e8b168" stop-opacity="1"/>
+      <stop offset="80%" stop-color="#f59e42" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#f59e42" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Sharp cut-corner banner shape -->
+  <polygon points="16,4 384,4 396,16 396,64 384,76 16,76 4,64 4,16" fill="url(#b_bg_brown)" stroke="#593b29" stroke-width="2"/>
+  
+  <!-- Sharp gold bottom underline -->
+  <line x1="20" y1="74" x2="380" y2="74" stroke="url(#b_accent_gold)" stroke-width="3"/>
+  <line x1="60" y1="6" x2="340" y2="6" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1"/>
+</svg>

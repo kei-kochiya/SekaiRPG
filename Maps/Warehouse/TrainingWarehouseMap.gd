@@ -79,9 +79,9 @@ func _create_enemy_zone(pos: Vector2):
 	root.add_to_group("objectives")
 	
 	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/Person/warehouse_worker.png")
-	sprite.scale = Vector2(4, 4)
-	sprite.position = Vector2(0, -12)
+	sprite.texture = load("res://Assets/Person/warehouse_worker.svg")
+	sprite.scale = Vector2(1, 1)
+	sprite.position = Vector2(0, -16)
 	root.add_child(sprite)
 	
 	var zone = InteractableZone.new()
