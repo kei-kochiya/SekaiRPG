@@ -47,6 +47,8 @@ signal level_changed(new_level: int)
 		break_gauge = clamp(v, 0, max_break_gauge)
 		break_gauge_changed.emit(break_gauge, max_break_gauge)
 @export var is_staggered: bool = false
+# Kẻ địch AI bỏ qua thực thể này khi chọn mục tiêu (vd. Ichika đang đóng băng trong trận kịch bản).
+var untargetable: bool = false
 
 # ── Cơ chế lượt đi ─────────────────────────────────────────────────────────
 var action_gauge: float = 0.0 # Thanh hành động (0 - 10000)
@@ -221,6 +223,7 @@ func reset_battle_state():
 	action_gauge = 0.0
 	skills_disabled = false
 	is_staggered = false
+	untargetable = false
 	break_gauge = max_break_gauge
 	remove_meta("was_broken")
 	remove_meta("was_crit")

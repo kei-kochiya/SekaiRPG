@@ -141,6 +141,11 @@ func run_battle():
 		
 		_update_gauge_display(actor)
 		
+		if scenario.skips_turn(self, actor):
+			await scenario.on_turn_skipped(self, actor)
+			await get_tree().create_timer(0.8, false).timeout
+			continue
+		
 		if not _process_turn_status(actor) or actor.current_hp <= 0:
 			await get_tree().create_timer(0.8, false).timeout
 			continue
@@ -185,7 +190,15 @@ func _player_turn(actor: Entity):
 	if GameManager.is_tutorial:
 		await _show_tutorial()
 
-	hud.command_menu.show_for(actor, enemy_team)
+	await scenario.on_before_action(self, actor)
+	var forced = scenario.get_forced_action(self, actor)
+	if not forced.is_empty():
+		# Hành động bị ép buộc (vd. Mizuki bị Kanade điều khiển): không hiện menu lệnh
+		await get_tree().create_timer(GameManager.battle_speed, false).timeout
+		await _execute_action(actor, forced["action"], forced["target"])
+		return
+	
+	hud.command_menu.show_for(actor, enemy_team, scenario.get_allowed_actions(self, actor))
 	var result = await hud.command_menu.command_chosen
 	if battle_over or result[0] == "cancel": return
 	var action: String = result[0]
@@ -207,6 +220,7 @@ func _on_skip_requested():
 
 func _ai_turn(actor: Entity):
 	# Xử lý lượt đi của AI đối thủ (Đã làm chậm để người chơi kịp quan sát).
+	await scenario.on_before_action(self, actor)
 	await get_tree().create_timer(GameManager.battle_speed, false).timeout
 	
 	var decision = AIManager.pick_action(actor, actor.enemies, actor.allies, timeline)

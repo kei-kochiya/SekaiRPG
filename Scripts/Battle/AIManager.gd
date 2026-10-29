@@ -33,6 +33,9 @@ static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) ->
 		Entity: Thực thể mục tiêu được chọn.
 	"""
 	var alive_targets = get_alive_targets(enemy_team)
+	var targetable = alive_targets.filter(func(t): return not t.untargetable)
+	if not targetable.is_empty():
+		alive_targets = targetable
 	if alive_targets.is_empty():
 		return null
 

@@ -24,6 +24,33 @@ func on_turn_end(_main: Node, _actor: Entity):
 	"""Gọi khi một thực thể kết thúc lượt."""
 	pass
 
+func on_before_action(_main: Node, _actor: Entity):
+	"""Gọi (có thể await) ngay trước khi một thực thể chọn/thực hiện hành động, vd. để chèn thoại giữa trận."""
+	pass
+
+func skips_turn(_main: Node, _actor: Entity) -> bool:
+	"""true: thực thể này bị bỏ qua lượt (đóng băng, không chống cự...)."""
+	return false
+
+func on_turn_skipped(_main: Node, _actor: Entity):
+	"""Gọi (có thể await) khi một lượt bị bỏ qua, để hiện thông báo/thoại."""
+	pass
+
+func get_forced_action(_main: Node, _actor: Entity) -> Dictionary:
+	"""Trả về {"action": String, "target": Entity} nếu hành động của người chơi bị ép buộc; rỗng nếu không."""
+	return {}
+
+func get_allowed_actions(_main: Node, _actor: Entity) -> Array:
+	"""Danh sách hành động người chơi được chọn ("attack" hoặc tên method kỹ năng); rỗng = không giới hạn."""
+	return []
+
+# Phát một đoạn hội thoại và chờ tới khi xong (dùng trong các hook có thể await).
+func say_lines(key: String):
+	var done := [false]
+	DialogueManager.play_dialogue(DialogueLoader.get_lines(key), func(): done[0] = true)
+	while not done[0]:
+		await (Engine.get_main_loop() as SceneTree).process_frame
+
 func on_action_executed(_main: Node, _actor: Entity, _action: String, _target: Entity):
 	"""Gọi sau khi một hành động (đòn đánh/kỹ năng/vật phẩm) được thực thi xong."""
 	pass

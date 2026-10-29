@@ -68,7 +68,39 @@ const DEFAULT_FLAGS := {
 	"ops_honami_done": false,
 	"pm_car_scene_done": false,
 	"pm_boss_defeated": false,
-	"finale_done": false
+	"finale_done": false,
+	# ── Hồi kết 2: Sự sụp đổ của Nightcord (sau khi Thủ Tướng chết) ──
+	"ena_left_nightcord": false,
+	"bounty_intro_done": false,
+	"bounty_1_done": false,
+	"bounty_2_done": false,
+	"bounty_3_done": false,
+	"ena_captured": false,
+	"interrogation_seen": false,
+	"ena_kill_ordered": false,
+	"mizuki_police_done": false,
+	"warehouse_arrival_done": false,
+	"ena_killed": false,
+	"kanade_fled": false,
+	"kanade_unmasked": false,
+	"mizuki_killed": false,
+	"kanade_killed": false,
+	"mafuyu_reveal_done": false,
+	"honami_rescue_done": false,
+	"honami_options_intro_done": false,
+	"final_confront_started": false,
+	"final_mafuyu_defeated": false,
+	"game_completed": false,
+	"epilogue_intro_done": false,
+	# Tiến độ nội bộ của BountyMap / InterrogationMap (để hội thoại không phát lại khi tải save)
+	"bounty_posts_played": 0,
+	"mizuki_police_wins": 0,
+	"warehouse_mizuki_arrive_seen": false,
+	"kanade_confront_seen": false,
+	"kanade_slow_pre_seen": false,
+	# Kết quả trận kịch bản gần nhất (GameManager ghi, map đọc để biết thắng/thua); chuỗi rỗng = không có
+	"last_scripted_win": "",
+	"last_scripted_loss": ""
 }
 
 var flags: Dictionary = DEFAULT_FLAGS.duplicate(true)

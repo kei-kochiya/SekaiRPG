@@ -28,8 +28,14 @@ static var enemy_classes = {
 	"recon_drone": ReconDrone,
 	"sniper": Sniper,
 	"cyborg_enforcer": CyborgEnforcer,
-	"cyber_jammer": CyberJammer
+	"cyber_jammer": CyberJammer,
+	"police": PoliceOfficer
 }
+
+# Mafuyu ở trận cuối phản chiếu chỉ số người chơi đã dồn vào Mafuyu đồng đội; không bao giờ yếu hơn bản cấp này.
+# Đây là các "núm vặn" độ khó: tăng HP boss, giảm tốc độ để Ichika/Honami còn lượt hành động giữa hai đòn của cô ta.
+const FINAL_BOSS_FLOOR_LEVEL = 25
+const FINAL_BOSS_MIRROR = {"max_hp": 1.3, "atk": 1.0, "defense": 1.0, "res": 1.0, "spd": 0.85}
 
 static var mission_battles: Dictionary = {}
 
@@ -141,6 +147,12 @@ static func _setup_mission_battle(cfg: Dictionary, battle_key: String = "") -> D
 		"scenario": scenario
 	}
 
+# Đặt tên riêng cho các kẻ địch trong trận kịch bản (thẻ chiến đấu hiện tên thay vì tên loại quái).
+static func _named(enemies: Array, names: Array) -> Array:
+	for i in range(mini(enemies.size(), names.size())):
+		enemies[i].entity_name = names[i]
+	return enemies
+
 static func _create_enemies(type_id: String, count: int, lv: int) -> Array:
 	"""
 	Tạo danh sách kẻ địch bằng cách khởi tạo các Class tương ứng.
@@ -200,7 +212,8 @@ static func _setup_training_battle() -> Dictionary:
 		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika", "Honami"]
 		var candidates = []
 		for p_name in pool:
-			if p_name not in GameManager.training_participants and p_name not in GameManager.training_used_opponents:
+			var gone = not GameManager.is_member_alive_in_story(p_name) # đã chết trong cốt truyện
+			if p_name not in GameManager.training_participants and p_name not in GameManager.training_used_opponents and not gone:
 				candidates.append(p_name)
 		candidates.shuffle()
 		
@@ -222,6 +235,31 @@ static func _setup_training_battle() -> Dictionary:
 	GameManager.last_battle_max_lv = target_lv
 	
 	return {"player_team": player_team, "enemy_team": enemies, "scenario": DefaultScenario.new()}
+
+static func build_final_mafuyu() -> Entity:
+	"""
+	Mafuyu ở trận cuối: sao chép chỉ số (kể cả mọi điểm nâng cấp) của Mafuyu đồng đội nhân hệ số FINAL_BOSS_MIRROR.
+	Nâng cấp cho Mafuyu suốt game cuối cùng sẽ quay lại cắn chính người chơi; luyện tập Ichika/Honami thì không giới hạn.
+	"""
+	var boss = Mafuyu.new()
+	boss.entity_name = "Mafuyu"
+	var floor_ref = Mafuyu.new()
+	LevelManager.set_initial_level(floor_ref, FINAL_BOSS_FLOOR_LEVEL)
+	var ally = GameManager.get_party_member("Mafuyu")
+	
+	boss.level = maxi(floor_ref.level, ally.level if ally else 1)
+	for stat in FINAL_BOSS_MIRROR:
+		# Lấy chỉ số cao hơn giữa bản sàn và Mafuyu đồng đội (đã nâng cấp), rồi mới áp hệ số độ khó
+		var base_value = maxi(floor_ref.get(stat), ally.get(stat) if ally else 0)
+		boss.set(stat, int(base_value * FINAL_BOSS_MIRROR[stat]))
+	if ally:
+		boss.crit_rate = maxf(boss.crit_rate, ally.crit_rate)
+		boss.crit_dmg = maxf(boss.crit_dmg, ally.crit_dmg)
+	boss.max_break_gauge = 400
+	boss.break_gauge = 400
+	boss.current_hp = boss.max_hp
+	floor_ref.free()
+	return boss
 
 static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 	"""
@@ -294,6 +332,77 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 				"player_team": [GameManager.get_party_member("Mafuyu"), GameManager.get_party_member("Ena"), GameManager.get_party_member("Mizuki")],
 				"enemy_team": [pm],
 				"scenario": PrimeMinisterBossScenario.new()
+			},
+		"bounty_1": func():
+			# Chủ nợ chợ cá và tay chân của hắn
+			return {
+				"player_team": [GameManager.get_party_member("Ena")],
+				"enemy_team": _named(_create_enemies("warehouse_worker", 2, 22), ["Chủ Nợ", "Tay Chân"]),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"bounty_2": func():
+			# Họa sĩ làm tranh giả và bảo vệ xưởng
+			return {
+				"player_team": [GameManager.get_party_member("Ena")],
+				"enemy_team": _named(_create_enemies("terrorist", 2, 22), ["Họa Sĩ Giả", "Bảo Vệ Xưởng"]),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"bounty_3": func():
+			# Chủ kho bến Đông: ngồi một mình, không vệ sĩ (đúng như lời thoại)
+			return {
+				"player_team": [GameManager.get_party_member("Ena")],
+				"enemy_team": _named(_create_enemies("guard", 1, 27), ["Chủ Kho"]),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"bounty_ambush": func():
+			return {
+				"player_team": [GameManager.get_party_member("Ena")],
+				"enemy_team": _create_enemies("police", 4, 27),
+				"scenario": ForcedLossScenario.new()
+			},
+		"mizuki_police_1": func():
+			return {
+				"player_team": [GameManager.get_party_member("Mizuki")],
+				"enemy_team": _create_enemies("police", 2, 20),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"mizuki_police_2": func():
+			return {
+				"player_team": [GameManager.get_party_member("Mizuki")],
+				"enemy_team": _create_enemies("police", 3, 22),
+				"scenario": ScriptedBattleScenario.new()
+			},
+		"mizuki_vs_ena_forced": func():
+			var ena_enemy = Ena.new()
+			var party_ena = GameManager.get_party_member("Ena")
+			LevelManager.set_initial_level(ena_enemy, party_ena.level if party_ena else 20)
+			ena_enemy.current_hp = int(ena_enemy.max_hp * 0.4) # đã bị tra tấn nhiều ngày
+			return {
+				"player_team": [GameManager.get_party_member("Mizuki")],
+				"enemy_team": [ena_enemy],
+				"scenario": ForcedDuelScenario.new()
+			},
+		"mizuki_vs_kanade": func():
+			var kanade_enemy = Kanade.new()
+			LevelManager.set_initial_level(kanade_enemy, 100)
+			return {
+				"player_team": [GameManager.get_party_member("Mizuki"), GameManager.get_party_member("Ichika")],
+				"enemy_team": [kanade_enemy],
+				"scenario": FrozenAllyScenario.new()
+			},
+		"ichika_vs_kanade_slow": func():
+			var kanade_enemy = Kanade.new()
+			LevelManager.set_initial_level(kanade_enemy, 60)
+			return {
+				"player_team": [GameManager.get_party_member("Ichika")],
+				"enemy_team": [kanade_enemy],
+				"scenario": SlowStrikeScenario.new()
+			},
+		"final_mafuyu": func():
+			return {
+				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Honami")],
+				"enemy_team": [build_final_mafuyu()],
+				"scenario": DefaultScenario.new()
 			},
 		"street_skirmish": func():
 			return {

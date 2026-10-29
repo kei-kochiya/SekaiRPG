@@ -282,6 +282,16 @@ var harbor_intro_done: bool:
 func get_party_member(m_name: String) -> Entity:
 	return party.get(m_name)
 
+# Thành viên còn sống trong cốt truyện? (Hồi kết 2 giết dần các thành viên Nightcord cũ.)
+# Chỉ ảnh hưởng NPC trong map, danh sách luyện tập và đối thủ luyện tập; Sandbox và Holo-Sim vẫn dùng đủ mọi người.
+func is_member_alive_in_story(m_name: String) -> bool:
+	match m_name:
+		"Ena": return not story.get_flag("ena_killed")
+		"Mizuki": return not story.get_flag("mizuki_killed")
+		"Kanade": return not story.get_flag("kanade_killed")
+		"Mafuyu": return not story.get_flag("final_mafuyu_defeated")
+	return true
+
 # Bắt đầu trạng thái hội thoại
 func start_dialogue():
 	is_in_dialogue = true
@@ -441,10 +451,37 @@ func finish_battle(victory: bool, count: int = 1):
 	else:
 		get_tree().change_scene_to_file(current_map_file)
 
+# Các trận kịch bản có kết cục cố định theo cốt truyện: cờ được ghi dù thắng hay thua (thua là chủ ý).
+const FATED_BATTLES = {
+	"bounty_ambush": "ena_captured",
+	"mizuki_vs_ena_forced": "ena_killed",
+	"mizuki_vs_kanade": "mizuki_killed",
+	"ichika_vs_kanade_slow": "kanade_killed",
+}
+
+# Các trận chỉ ghi cờ khi thắng; thua thì map phát lại để đánh lại.
+const WIN_FLAG_BATTLES = {
+	"bounty_1": "bounty_1_done",
+	"bounty_2": "bounty_2_done",
+	"bounty_3": "bounty_3_done",
+	"final_mafuyu": "final_mafuyu_defeated",
+}
+
 func _handle_scripted_battle_finish(victory: bool):
 	# Thua trận kịch bản: hồi đầy máu để lần đánh lại không bắt đầu với đồng đội đã gục
-	if not victory:
+	if not victory or FATED_BATTLES.has(scripted_battle_id):
 		full_heal_party()
+	
+	# Map đọc hai cờ này để biết trận vừa rồi thắng hay thua (map cần phân biệt khi cờ riêng không đủ)
+	story.set_flag("last_scripted_win", scripted_battle_id if victory else "")
+	story.set_flag("last_scripted_loss", "" if victory else scripted_battle_id)
+	
+	if FATED_BATTLES.has(scripted_battle_id):
+		story.set_flag(FATED_BATTLES[scripted_battle_id], true)
+	elif victory and WIN_FLAG_BATTLES.has(scripted_battle_id):
+		story.set_flag(WIN_FLAG_BATTLES[scripted_battle_id], true)
+	elif victory and scripted_battle_id == "mizuki_police_2":
+		story.set_flag("mizuki_police_done", true)
 	
 	if scripted_battle_id == "harbor_boss":
 		is_scripted_battle = false

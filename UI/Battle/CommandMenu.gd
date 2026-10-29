@@ -75,13 +75,14 @@ func _build_shell():
 
 # ── API Công khai ──────────────────────────────────────────────────────────
 
-func show_for(entity: Entity, enemies: Array):
+func show_for(entity: Entity, enemies: Array, allowed: Array = []):
 	"""
 	Hiển thị menu và liệt kê các hành động khả dụng cho thực thể chỉ định.
 
 	Args:
 		entity (Entity): Nhân vật đang thực hiện lượt.
 		enemies (Array): Danh sách kẻ địch trên sân.
+		allowed (Array): Nếu không rỗng, chỉ hiện các hành động trong danh sách (kịch bản giới hạn lựa chọn).
 	"""
 	current_entity = entity
 	enemy_team = enemies
@@ -95,9 +96,12 @@ func show_for(entity: Entity, enemies: Array):
 	action_container.visible = true
 	target_container.visible = false
 	
-	action_container.add_child(_make_btn("TẤN CÔNG", "attack", true, UITheme.Kind.PRIMARY))
+	if allowed.is_empty() or allowed.has("attack"):
+		action_container.add_child(_make_btn("TẤN CÔNG", "attack", true, UITheme.Kind.PRIMARY))
 	
 	for skill in entity.skills:
+		if not allowed.is_empty() and not allowed.has(skill["method"]):
+			continue
 		var skill_ready = entity.can_use_skill(skill["method"])
 		var cd = entity.cooldowns.get(skill["method"], 0)
 		var label = skill["name"]
@@ -114,7 +118,7 @@ func show_for(entity: Entity, enemies: Array):
 		if GameManager.inventory[item_id] > 0:
 			has_items = true
 			break
-	if has_items:
+	if has_items and allowed.is_empty():
 		var item_btn = _make_btn("VẬT PHẨM", "menu_items", true)
 		action_container.add_child(item_btn)
 	
