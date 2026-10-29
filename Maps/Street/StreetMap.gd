@@ -14,7 +14,6 @@ Thiết kế ngã tư chuyên nghiệp (Level Design & Set Dressing):
 """
 
 const TILE_SIZE = 32
-const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 var _lighting: CanvasModulate
 
@@ -142,53 +141,69 @@ func _place_characters():
 		add_child(exit)
 		return
 		
-	MapUtils.create_dummy_char(self, "Ichika", Vector2(14, 11), Color(0.29, 0.62, 0.62))
-	MapUtils.create_dummy_char(self, "Mizuki", Vector2(15, 11), Color(0.85, 0.65, 0.8))
+	_spawn_dummy("Ichika", Vector2(14, 11), Color(0.29, 0.62, 0.62))
+	_spawn_dummy("Mizuki", Vector2(15, 11), Color(0.85, 0.65, 0.8))
 
 	if not GameManager.get_flag("street_skirmish_done"):
-		MapUtils.create_dummy_char(self, "Khủng Bố 1", Vector2(11, 10), Color.DARK_RED)
-		MapUtils.create_dummy_char(self, "Khủng Bố 2", Vector2(18, 10), Color.DARK_RED)
-		MapUtils.create_dummy_char(self, "Khủng Bố 3", Vector2(16, 13), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 1", Vector2(11, 10), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 2", Vector2(18, 10), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 3", Vector2(16, 13), Color.DARK_RED)
 	elif not GameManager.get_flag("street_survival_done"):
-		MapUtils.create_dummy_char(self, "Khủng Bố 1", Vector2(11, 9), Color.DARK_RED)
-		MapUtils.create_dummy_char(self, "Khủng Bố 2", Vector2(18, 9), Color.DARK_RED)
-		MapUtils.create_dummy_char(self, "Khủng Bố 3", Vector2(14, 6), Color.DARK_RED)
-		MapUtils.create_dummy_char(self, "Khủng Bố 4", Vector2(16, 6), Color.DARK_RED)
-		MapUtils.create_dummy_char(self, "Khủng Bố 5", Vector2(13, 13), Color.DARK_RED)
-		MapUtils.create_dummy_char(self, "Khủng Bố 6", Vector2(17, 13), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 1", Vector2(11, 9), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 2", Vector2(18, 9), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 3", Vector2(14, 6), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 4", Vector2(16, 6), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 5", Vector2(13, 13), Color.DARK_RED)
+		_spawn_dummy("Khủng Bố 6", Vector2(17, 13), Color.DARK_RED)
 
-func _fill_floor(x1, y1, x2, y2):
-	for x in range(x1, x2 + 1):
-		for y in range(y1, y2 + 1):
-			MapUtils.place_tile(self, "floor.png", Vector2(x, y))
+# MapUtils.create_dummy_char không đặt meta nên tự gắn "is_npc"/"npc_name" lên node vừa tạo
+# (cảnh Honami gặp Ichika cần dọn Mizuki đi dựa vào các meta này)
+func _spawn_dummy(p_name: String, grid_pos: Vector2, color: Color):
+	MapUtils.create_dummy_char(self, p_name, grid_pos, color)
+	var node = get_child(get_child_count() - 1)
+	node.set_meta("is_npc", true)
+	node.set_meta("npc_name", p_name)
 
 func _draw_corner_walls():
+	var first_new = get_child_count()
 	MapUtils.draw_corner_walls(self)
+	# MapUtils.draw_corner_walls không tạo va chạm nên thêm thân tĩnh cho từng ô tường vừa vẽ (để người chơi không đi xuyên tường)
+	for i in range(first_new, get_child_count()):
+		var tile = get_child(i)
+		if tile is Sprite2D:
+			var body = StaticBody2D.new()
+			body.position = tile.position
+			var col = CollisionShape2D.new()
+			var shape = RectangleShape2D.new()
+			shape.size = Vector2(TILE_SIZE, TILE_SIZE)
+			col.shape = shape
+			body.add_child(col)
+			add_child(body)
 
 func _draw_street_walls():
 	# 1. Tường trên viền map (Y = 3, chừa lối đi X ∈ [14, 16])
 	for x in range(4, 13):
-		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 3))
+		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 3), true)
 	for x in range(18, 27):
-		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 3))
+		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 3), true)
 		
 	# 2. Tường dưới viền map (Y = 17, chừa lối đi X ∈ [14, 16])
 	for x in range(4, 13):
-		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 17))
+		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 17), true)
 	for x in range(18, 27):
-		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 17))
+		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 17), true)
 		
 	# 3. Tường trái viền map (X = 3, chừa lối đi Y ∈ [9, 11])
 	for y in range(4, 8):
-		MapUtils.place_tile(self, "left_vertical_wall.png", Vector2(3, y))
+		MapUtils.place_tile(self, "left_vertical_wall.png", Vector2(3, y), true)
 	for y in range(13, 17):
-		MapUtils.place_tile(self, "left_vertical_wall.png", Vector2(3, y))
+		MapUtils.place_tile(self, "left_vertical_wall.png", Vector2(3, y), true)
 		
 	# 4. Tường phải viền map (X = 27, chừa lối đi Y ∈ [9, 11])
 	for y in range(4, 8):
-		MapUtils.place_tile(self, "right_vertical_wall.png", Vector2(27, y))
+		MapUtils.place_tile(self, "right_vertical_wall.png", Vector2(27, y), true)
 	for y in range(13, 17):
-		MapUtils.place_tile(self, "right_vertical_wall.png", Vector2(27, y))
+		MapUtils.place_tile(self, "right_vertical_wall.png", Vector2(27, y), true)
 
 func _run_logic():
 	if GameManager.get_flag("street_mission_fully_done"):

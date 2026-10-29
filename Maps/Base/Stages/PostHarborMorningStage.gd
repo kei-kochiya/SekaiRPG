@@ -41,7 +41,6 @@ func on_stage_start():
 			player.character_color = map.NPC_COLORS["Ena"]
 		else:
 			player.character_color = map.NPC_COLORS["Ichika"]
-		player.queue_redraw()
 	
 	# Reset training flags
 	if not GameManager.get_flag("post_harbor_training_reset"):
@@ -82,7 +81,6 @@ func _check_ena_phase_trigger():
 				var player = map.get_node_or_null("OverworldPlayer")
 				if player:
 					player.character_color = map.NPC_COLORS["Ena"]
-					player.queue_redraw()
 				map._spawn_npcs()
 				map._refresh_quest_label()
 			)
@@ -229,9 +227,7 @@ func _show_training_menu():
 	var idx: int = await DialogueManager.choice_made
 	if opts[idx] == "Để sau.": return
 	
-	GameManager.is_training_mode = true
-	GameManager.warehouse_wave = 1
-	GameManager.training_participants = [mapping[idx]]
+	GameManager.begin_training([mapping[idx]])
 	
 	await ScreenFade.fade_out(1.0)
 	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)

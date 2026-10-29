@@ -6,17 +6,25 @@ Tóm tắt: SaveManager quản lý toàn bộ hệ thống Lưu & Tải (Save/Lo
 
 Chức năng chính:
 - Lưu trữ các file save vào thư mục chuyên biệt `user://saves/`.
-- Hỗ trợ số lượng file lưu không giới hạn với tên file tự do, cùng Quick Save và Auto-Save.
+- Hỗ trợ số lượng file lưu không giới hạn với tên file tự do (được làm sạch), cùng Quick Save và Auto-Save.
+- Ghi file an toàn (ghi `.tmp` rồi đổi tên) để một lần lưu hỏng không phá file save cũ.
 - Tự động đóng gói siêu dữ liệu (Metadata: Quest Name, Map Name, Timestamp, Version) cùng Game State.
 - Đọc siêu dữ liệu nhanh (get_save_metadata, get_all_save_slots) để hiển thị danh sách trực quan trên UI.
-- Cung cấp API tải game an toàn (load_game), xóa file (delete_save), và tìm file save mới nhất.
+- Cung cấp API tải game an toàn (load_game: kiểm tra hợp lệ trước, chỉ ghi vào GameManager khi file hợp lệ),
+  xóa file (delete_save), và tìm file save mới nhất. Lỗi gần nhất nằm trong `last_error`.
 """
 
 const SAVES_DIR = "user://saves/"
 const QUICK_SAVE_PATH = "user://saves/quicksave.json"
 const AUTOSAVE_PATH = "user://saves/autosave.json"
 const SAVE_VERSION = "1.0"
-const GameLogger = preload("res://Scripts/Core/Logger.gd")
+
+# Tên slot dành riêng cho Quick Save / Auto-Save: người chơi không được đặt trùng khi lưu thủ công
+const RESERVED_SLOT_NAMES = ["quicksave", "autosave"]
+
+const FALLBACK_MAP = "res://Maps/Base/BaseMap.tscn"
+# Map luyện tập không thể khôi phục từ save (cần training_participants...), nên lưu như đang đứng ở Base
+const TRAINING_MAP = "res://Maps/Warehouse/TrainingWarehouseMap.tscn"
 
 const MAP_NAMES = {
 	"res://Maps/Prologue/PrologueMap.tscn": "Hẻm vắng (Mở màn)",
@@ -31,6 +39,9 @@ const MAP_NAMES = {
 	"res://Maps/CityOperations/CityOperationsMap.tscn": "Khu tác chiến phòng vệ",
 	"res://Maps/Highway/HighwayMap.tscn": "Xa lộ đêm"
 }
+
+# Mô tả lỗi của lần save_game/load_game gần nhất ("" nếu thành công); GameManager sao chép ra last_save_error/last_load_error
+static var last_error: String = ""
 
 # ── Khởi Tạo Thư Mục ────────────────────────────────────────────────────────
 
@@ -52,23 +63,66 @@ static func _get_timestamp_string() -> String:
 		dt["hour"], dt["minute"], dt["second"]
 	]
 
-static func _resolve_full_path(path_or_name: String) -> String:
+# Làm sạch tên file (bỏ đường dẫn, ký tự cấm, đuôi .json); trả về "" nếu không còn tên hợp lệ
+static func _clean_file_name(raw_name: String) -> String:
+	var base = raw_name.strip_edges().get_file().validate_filename().strip_edges()
+	if base.to_lower().ends_with(".json"):
+		base = base.substr(0, base.length() - 5).strip_edges()
+	# Chuỗi rỗng hoặc chỉ toàn dấu chấm ("." / "..") không phải tên file
+	if base == "" or base.replace(".", "") == "":
+		return ""
+	return base
+
+static func sanitize_save_name(raw_name: String) -> String:
+	"""
+	Làm sạch tên save do người chơi nhập (get_file + validate_filename).
+	Trả về "" nếu tên rỗng/không hợp lệ hoặc trùng tên slot dành riêng (quicksave, autosave).
+	"""
+	var clean = _clean_file_name(raw_name)
+	if clean.to_lower() in RESERVED_SLOT_NAMES:
+		return ""
+	return clean
+
+# Trả về đường dẫn đầy đủ trong user://saves/ hoặc "" nếu tên/đường dẫn không hợp lệ.
+# for_save = true: tên nhập tay không được trùng slot dành riêng (đường dẫn user:// đầy đủ như QUICK_SAVE_PATH thì được).
+static func _resolve_full_path(path_or_name: String, for_save: bool = false) -> String:
 	if path_or_name.begins_with("user://"):
-		return path_or_name
-	var file_name = path_or_name
-	if not file_name.ends_with(".json"):
-		file_name += ".json"
-	return SAVES_DIR + file_name
+		# Đường dẫn đầy đủ (từ danh sách slot, QUICK_SAVE_PATH...) chỉ được nằm trực tiếp trong thư mục saves
+		if not path_or_name.begins_with(SAVES_DIR):
+			return ""
+		var file_name = path_or_name.substr(SAVES_DIR.length())
+		if file_name == "" or file_name.begins_with(".") or file_name.contains("/") or file_name.contains("\\"):
+			return ""
+		if not file_name.ends_with(".json"):
+			file_name += ".json"
+		return SAVES_DIR + file_name
+
+	var clean = sanitize_save_name(path_or_name) if for_save else _clean_file_name(path_or_name)
+	if clean == "":
+		return ""
+	return SAVES_DIR + clean + ".json"
+
+static func _fail(message: String, as_warning: bool = false) -> bool:
+	last_error = message
+	if as_warning:
+		GameLogger.warn("SaveManager", message)
+	else:
+		GameLogger.error("SaveManager", message)
+	return false
 
 # ── API Lưu Dữ Liệu ────────────────────────────────────────────────────────
 
 static func save_game(path_or_name: String = QUICK_SAVE_PATH) -> bool:
 	"""
 	Lưu trạng thái trò chơi hiện tại kèm siêu dữ liệu (Quest, Map, Timestamp).
+	Trả về false (và điền last_error) nếu tên không hợp lệ hoặc không ghi được file.
 	"""
+	last_error = ""
+	var full_path = _resolve_full_path(path_or_name, true)
+	if full_path == "":
+		return _fail("Tên file save không hợp lệ hoặc trùng tên dành riêng: \"%s\"" % path_or_name, true)
 	ensure_saves_dir()
-	var full_path = _resolve_full_path(path_or_name)
-	
+
 	# Trích xuất Quest hiện tại từ QuestRegistry nếu có
 	var quest_id = "unknown_quest"
 	var quest_name = "Nhiệm vụ chưa xác định"
@@ -76,59 +130,78 @@ static func save_game(path_or_name: String = QUICK_SAVE_PATH) -> bool:
 	if current_q:
 		quest_id = current_q.quest_id
 		quest_name = current_q.quest_name
-		
-	var map_display = get_map_display_name(GameManager.current_map_file)
+
+	var map_file: String = GameManager.current_map_file
+	var player_pos: Vector2 = GameManager.last_player_position
+	if map_file == TRAINING_MAP:
+		map_file = FALLBACK_MAP
+		player_pos = Vector2.ZERO
+	var map_display = get_map_display_name(map_file)
 	var timestamp = _get_timestamp_string()
-	
+
 	var metadata = {
 		"version": SAVE_VERSION,
 		"timestamp": timestamp,
 		"unix_time": Time.get_unix_time_from_system(),
 		"quest_id": quest_id,
 		"quest_name": quest_name,
-		"map_file": GameManager.current_map_file,
+		"map_file": map_file,
 		"map_name": map_display,
 		"file_name": full_path.get_file()
 	}
-	
+
 	var party_data = {}
 	for p_name in GameManager.party:
 		var e = GameManager.party[p_name]
 		party_data[p_name] = {
 			"level": e.level,
 			"exp": e.current_exp,
+			"next_level_exp": e.next_level_exp,
 			"skill_points": e.skill_points,
 			"atk": e.atk,
 			"defense": e.defense,
 			"spd": e.spd,
 			"max_hp": e.max_hp
 		}
-	
+
 	var game_state = {
-		"current_map": GameManager.current_map_file,
+		"current_map": map_file,
 		"player_pos": {
-			"x": GameManager.last_player_position.x,
-			"y": GameManager.last_player_position.y
+			"x": player_pos.x,
+			"y": player_pos.y
 		},
 		"story": GameManager.story.serialize(),
 		"party": party_data,
 		"credits": GameManager.credits,
-		"inventory": GameManager.inventory,
-		"opened_chests": GameManager.opened_chests
+		"inventory": GameManager.inventory.duplicate(),
+		"opened_chests": GameManager.opened_chests.duplicate()
 	}
-	
+
 	var save_package = {
 		"metadata": metadata,
 		"game_state": game_state
 	}
-	
-	var f = FileAccess.open(full_path, FileAccess.WRITE)
+
+	# Ghi ra file .tmp trước rồi đổi tên đè lên file save, để lỗi giữa chừng không làm hỏng save cũ
+	var tmp_path = full_path + ".tmp"
+	var f = FileAccess.open(tmp_path, FileAccess.WRITE)
 	if f == null:
-		GameLogger.error("SaveManager", "Không thể ghi file save tại %s" % full_path)
-		return false
-		
+		return _fail("Không thể ghi file save tại %s (lỗi %d)" % [tmp_path, FileAccess.get_open_error()])
+
 	f.store_string(JSON.stringify(save_package, "\t"))
+	var write_err = f.get_error()
 	f.close()
+
+	var dir = DirAccess.open(SAVES_DIR)
+	if write_err != OK or dir == null:
+		if dir: dir.remove(tmp_path.get_file())
+		return _fail("Ghi file save thất bại tại %s (lỗi %d)" % [full_path, write_err])
+
+	var rename_err = dir.rename(tmp_path.get_file(), full_path.get_file())
+	if rename_err != OK:
+		dir.remove(tmp_path.get_file())
+		return _fail("Không thể hoàn tất việc ghi file save %s (lỗi %d)" % [full_path, rename_err])
+
 	GameLogger.info("SaveManager", "Đã lưu game thành công tại: %s [%s | %s]" % [full_path, quest_name, map_display])
 	return true
 
@@ -137,111 +210,182 @@ static func save_game(path_or_name: String = QUICK_SAVE_PATH) -> bool:
 static func load_game(path_or_name: String = "") -> bool:
 	"""
 	Tải dữ liệu từ file save chỉ định. Nếu để trống, tự động tải file save mới nhất.
+	File được đọc và kiểm tra hợp lệ vào biến cục bộ trước; chỉ khi hợp lệ mới ghi vào GameManager.
+	Thất bại thì trả về false, điền last_error và KHÔNG thay đổi trạng thái game.
 	"""
+	last_error = ""
 	var target_path = path_or_name
 	if target_path == "":
 		target_path = get_latest_save_path()
-		
+
 	if target_path == "":
-		GameLogger.warn("SaveManager", "Không tìm thấy bất kỳ file save nào để tải.")
-		return false
-		
+		return _fail("Không tìm thấy bất kỳ file save nào để tải.", true)
+
 	var full_path = _resolve_full_path(target_path)
+	if full_path == "":
+		return _fail("Tên hoặc đường dẫn file save không hợp lệ: %s" % target_path)
 	if not FileAccess.file_exists(full_path):
-		print("[SaveManager] Lỗi: File không tồn tại tại ", full_path)
-		return false
-		
+		return _fail("File save không tồn tại tại %s" % full_path)
+
 	var f = FileAccess.open(full_path, FileAccess.READ)
 	if f == null:
-		print("[SaveManager] Lỗi: Không thể mở file tại ", full_path)
-		return false
-		
+		return _fail("Không thể mở file save tại %s (lỗi %d)" % [full_path, FileAccess.get_open_error()])
+
 	var json_str = f.get_as_text()
 	f.close()
-	
+
 	var data = JSON.parse_string(json_str)
 	if not data is Dictionary:
-		print("[SaveManager] Lỗi: File save bị hỏng hoặc không đúng định dạng JSON.")
+		return _fail("File save bị hỏng hoặc không đúng định dạng JSON: %s" % full_path)
+
+	var parsed = _parse_save_data(data)
+	if parsed.is_empty():
 		return false
-		
-	var game_state = data.get("game_state", data)
-	
-	# Khôi phục Map & Vị trí người chơi
-	GameManager.current_map_file = game_state.get("current_map", "res://Maps/Base/BaseMap.tscn")
-	var pos = game_state.get("player_pos", {"x": 0, "y": 0})
-	GameManager.last_player_position = Vector2(pos.x, pos.y)
-	
-	# Khôi phục StoryState
-	if game_state.has("story"):
-		GameManager.story.deserialize(game_state["story"])
-	else:
-		GameManager.story.flags = game_state.get("flags", GameManager.story.flags.duplicate())
-		var m_state = game_state.get("mission_state", {})
-		GameManager.story.warehouse_wave = m_state.get("warehouse_wave", 1)
-		GameManager.story.harbor_wave = m_state.get("harbor_wave", 1)
-		GameManager.story.enemies_defeated = m_state.get("enemies_defeated", 0)
-	
-	# Khôi phục Kinh tế & Túi đồ
-	GameManager.credits = game_state.get("credits", 200)
-	GameManager.inventory = game_state.get("inventory", {"potion": 2, "energy_drink": 1, "bandage": 1})
-	GameManager.opened_chests = game_state.get("opened_chests", [])
-	
-	# Khôi phục Party Stats
-	var p_data = game_state.get("party", {})
-	for p_name in p_data:
-		if GameManager.party.has(p_name):
-			var e = GameManager.party[p_name]
-			var d = p_data[p_name]
-			e.level = d.get("level", 1)
-			e.current_exp = d.get("exp", 0)
-			e.skill_points = d.get("skill_points", 0)
-			e.atk = d.get("atk", e.atk)
-			e.defense = d.get("defense", e.defense)
-			e.spd = d.get("spd", e.spd)
-			e.max_hp = d.get("max_hp", e.max_hp)
-			e.current_hp = e.max_hp
-			
-	print("[SaveManager] Tải game thành công từ: ", full_path)
+
+	var meta = data.get("metadata", {})
+	var version = str(meta.get("version", "")) if meta is Dictionary else ""
+	if version != SAVE_VERSION:
+		GameLogger.warn("SaveManager", "Phiên bản save (%s) khác phiên bản hiện tại (%s): %s" % [version, SAVE_VERSION, full_path])
+
+	_commit_save_data(parsed)
+
+	GameLogger.info("SaveManager", "Tải game thành công từ: %s" % full_path)
 	GameManager.get_tree().change_scene_to_file.call_deferred(GameManager.current_map_file)
 	return true
+
+static func _is_number(value: Variant) -> bool:
+	return value is int or value is float
+
+static func _int_or(value: Variant, fallback: int) -> int:
+	return int(value) if _is_number(value) else fallback
+
+static func _parse_save_data(data: Dictionary) -> Dictionary:
+	"""
+	Kiểm tra và chuẩn hóa dữ liệu save vào một Dictionary cục bộ (không đụng tới GameManager).
+	Trả về {} (và điền last_error) nếu file không hợp lệ.
+	"""
+	var game_state = data.get("game_state")
+	if not game_state is Dictionary:
+		_fail("File save thiếu hoặc sai định dạng mục game_state.")
+		return {}
+
+	# Map & vị trí người chơi (vị trí null/thiếu thì về gốc; map không còn tồn tại thì về Base)
+	var map_file = game_state.get("current_map", FALLBACK_MAP)
+	var pos = Vector2.ZERO
+	var pos_data = game_state.get("player_pos")
+	if not (map_file is String and ResourceLoader.exists(map_file)):
+		GameLogger.warn("SaveManager", "Map trong save không tồn tại (%s), chuyển về Base." % str(map_file))
+		map_file = FALLBACK_MAP
+	elif pos_data is Dictionary and _is_number(pos_data.get("x")) and _is_number(pos_data.get("y")):
+		pos = Vector2(float(pos_data["x"]), float(pos_data["y"]))
+
+	var story_data = game_state.get("story", {})
+	if not story_data is Dictionary:
+		_fail("File save có mục story sai định dạng.")
+		return {}
+
+	# Kinh tế & túi đồ (JSON trả số dạng float nên ép về int)
+	var credits = max(0, _int_or(game_state.get("credits"), GameManager.DEFAULT_CREDITS))
+	var inventory = {}
+	var raw_inventory = game_state.get("inventory")
+	if raw_inventory is Dictionary:
+		for item_id in raw_inventory:
+			var amount = _int_or(raw_inventory[item_id], 0)
+			if amount > 0:
+				inventory[str(item_id)] = amount
+	else:
+		inventory = GameManager.DEFAULT_INVENTORY.duplicate()
+
+	var opened_chests = []
+	var raw_chests = game_state.get("opened_chests")
+	if raw_chests is Array:
+		for chest_id in raw_chests:
+			opened_chests.append(str(chest_id))
+
+	# Party Stats (save cũ thiếu next_level_exp thì tính lại theo level)
+	var party = {}
+	var raw_party = game_state.get("party")
+	if raw_party is Dictionary:
+		for p_name in raw_party:
+			if not (GameManager.party.has(p_name) and raw_party[p_name] is Dictionary):
+				continue
+			var e = GameManager.party[p_name]
+			var d = raw_party[p_name]
+			var lv = clampi(_int_or(d.get("level"), 1), 1, LevelManager.MAX_LEVEL)
+			var next_exp = _int_or(d.get("next_level_exp"), 0)
+			if next_exp <= 0:
+				next_exp = LevelManager.exp_needed_for_level(lv)
+			party[p_name] = {
+				"level": lv,
+				"exp": max(0, _int_or(d.get("exp"), 0)),
+				"next_level_exp": next_exp,
+				"skill_points": max(0, _int_or(d.get("skill_points"), 0)),
+				"atk": _int_or(d.get("atk"), e.atk),
+				"defense": _int_or(d.get("defense"), e.defense),
+				"spd": _int_or(d.get("spd"), e.spd),
+				"max_hp": max(1, _int_or(d.get("max_hp"), e.max_hp))
+			}
+
+	return {
+		"map": map_file,
+		"pos": pos,
+		"story": story_data,
+		"credits": credits,
+		"inventory": inventory,
+		"opened_chests": opened_chests,
+		"party": party
+	}
+
+static func _commit_save_data(parsed: Dictionary) -> void:
+	"""Ghi dữ liệu đã kiểm tra hợp lệ vào GameManager (bước duy nhất làm thay đổi trạng thái khi tải)."""
+	GameManager.current_map_file = parsed["map"]
+	GameManager.last_player_position = parsed["pos"]
+	GameManager.story.deserialize(parsed["story"])
+	GameManager.credits = parsed["credits"]
+	GameManager.inventory = parsed["inventory"]
+	GameManager.opened_chests = parsed["opened_chests"]
+
+	for p_name in parsed["party"]:
+		var e = GameManager.party[p_name]
+		var d = parsed["party"][p_name]
+		e.level = d["level"]
+		e.current_exp = d["exp"]
+		e.next_level_exp = d["next_level_exp"]
+		e.skill_points = d["skill_points"]
+		e.atk = d["atk"]
+		e.defense = d["defense"]
+		e.spd = d["spd"]
+		e.max_hp = d["max_hp"]
+		e.current_hp = e.max_hp
+
+	# Sau khi nạp story (có training_wave) mới xóa trạng thái tạm của phiên trước (training, sandbox, trận kịch bản...)
+	GameManager.clear_transient_state()
 
 # ── API Đọc Siêu Dữ Liệu & Danh Sách ───────────────────────────────────────
 
 static func get_save_metadata(path_or_name: String) -> Dictionary:
 	"""
 	Đọc siêu dữ liệu preview của 1 file save mà không tải game_state.
+	Trả về {} nếu file không tồn tại, hỏng hoặc không có mục metadata.
 	"""
 	var full_path = _resolve_full_path(path_or_name)
-	if not FileAccess.file_exists(full_path):
+	if full_path == "" or not FileAccess.file_exists(full_path):
 		return {}
-		
+
 	var f = FileAccess.open(full_path, FileAccess.READ)
 	if f == null: return {}
-	
+
 	var json_str = f.get_as_text()
 	f.close()
-	
+
 	var data = JSON.parse_string(json_str)
 	if not data is Dictionary: return {}
-	
-	if data.has("metadata"):
-		var meta = data["metadata"]
-		meta["path"] = full_path
-		return meta
-		
-	# Fallback cho file định dạng cũ nếu có
-	var map_f = data.get("current_map", "res://Maps/Base/BaseMap.tscn")
-	return {
-		"version": "legacy",
-		"timestamp": "(Save cũ)",
-		"unix_time": FileAccess.get_modified_time(full_path),
-		"quest_id": "legacy",
-		"quest_name": "Tiến trình lưu trước đó",
-		"map_file": map_f,
-		"map_name": get_map_display_name(map_f),
-		"file_name": full_path.get_file(),
-		"path": full_path
-	}
+
+	var meta = data.get("metadata")
+	if not meta is Dictionary:
+		return {}
+	meta["path"] = full_path
+	return meta
 
 static func get_all_save_slots() -> Array[Dictionary]:
 	"""
@@ -253,7 +397,7 @@ static func get_all_save_slots() -> Array[Dictionary]:
 	var dir = DirAccess.open(SAVES_DIR)
 	if not dir:
 		return slots
-		
+
 	dir.list_dir_begin()
 	var file_name = dir.get_next()
 	while file_name != "":
@@ -263,7 +407,7 @@ static func get_all_save_slots() -> Array[Dictionary]:
 			if not meta.is_empty():
 				slots.append(meta)
 		file_name = dir.get_next()
-		
+
 	# Sắp xếp theo unix_time giảm dần (mới nhất lên đầu)
 	slots.sort_custom(func(a, b):
 		return a.get("unix_time", 0) > b.get("unix_time", 0)
@@ -283,6 +427,8 @@ static func has_save() -> bool:
 static func delete_save(path_or_name: String) -> bool:
 	"""Xóa một file save khỏi thư mục."""
 	var full_path = _resolve_full_path(path_or_name)
+	if full_path == "":
+		return false
 	if FileAccess.file_exists(full_path):
 		var dir = DirAccess.open(SAVES_DIR)
 		if dir:

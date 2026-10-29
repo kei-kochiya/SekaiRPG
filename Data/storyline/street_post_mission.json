@@ -68,14 +68,14 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Ơ...? Chị là..."
+      "text": "Ơ...? Chị là... người đã xuất hiện ở bến cảng hôm đó...?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Chân cô đang chảy máu kìa. Ngồi yên đó, để tôi xem nào."
+      "text": "Lại gặp nhau rồi, cô bé tóc xanh. Chân cô đang chảy máu kìa. Ngồi yên đó, để tôi xem nào."
     },
     {
       "type": "narrator",
@@ -125,14 +125,14 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Ôi... tuyệt quá! Chị tìm ra nhanh thật đấy! Cảm ơn chị... chị tên là gì vậy ạ?"
+      "text": "Ôi... tuyệt quá! Chị tìm ra nhanh thật đấy! Cảm ơn chị... Chị là bác sĩ Honami, đúng không ạ? Em nhớ chị Mafuyu có nhắc tên chị."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Gọi tôi là Honami. Tôi chỉ là một bác sĩ qua đường thôi."
+      "text": "Trí nhớ cô tốt đấy. Cứ gọi tôi là Honami, tôi chỉ là một bác sĩ qua đường thôi."
     },
     {
       "type": "dialogue",

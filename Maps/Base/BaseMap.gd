@@ -6,7 +6,6 @@ Chứa toàn bộ logic xây dựng bản đồ (Visual) và điều phối các
 """
 
 const TILE_SIZE = 32
-const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 const NPC_COLORS := {
 	"Mafuyu": Color(0.4,  0.3,  0.5),
@@ -19,6 +18,7 @@ const NPC_COLORS := {
 var current_stage: BaseMapStage
 var _quest_label: Label
 var _quest_panel: PanelContainer
+var _leaving: bool = false
 
 func _ready() -> void:
 	_init_stage()
@@ -205,37 +205,42 @@ func _spawn_transitions():
 	exit.interacted.connect(_on_exit_interacted)
 
 func _on_exit_interacted():
+	# Chặn gọi lại trong lúc đang chọn/đang fade_out (tránh đổi scene hai lần)
+	if _leaving:
+		return
+	_leaving = true
+	
 	# Ưu tiên đi Harbor nếu đã nhận nhiệm vụ và chưa hoàn thành
 	if GameManager.get_flag("honami_house_unlocked"):
 		DialogueManager.show_choice(["[Đến nhà Honami]", "[Đi dạo (Khu phố)]", "[Hủy]"])
 		var idx = await DialogueManager.choice_made
 		if idx == 0:
-			await ScreenFade.fade_out(1.0)
-			GameManager.store_map_state("res://Maps/HonamiHouse/HonamiHouseMap.tscn", Vector2.ZERO)
-			get_tree().change_scene_to_file("res://Maps/HonamiHouse/HonamiHouseMap.tscn")
+			_leave_to("res://Maps/HonamiHouse/HonamiHouseMap.tscn")
 		elif idx == 1:
-			await ScreenFade.fade_out(1.0)
-			GameManager.store_map_state("res://Maps/Street/StreetMap.tscn", Vector2.ZERO)
-			get_tree().change_scene_to_file("res://Maps/Street/StreetMap.tscn")
+			_leave_to("res://Maps/Street/StreetMap.tscn")
+		else:
+			_leaving = false
 	elif (GameManager.accepted_harbor_mission or GameManager.get_flag("harbor_mission_unlocked")) and not GameManager.harbor_mission_done:
-		await ScreenFade.fade_out(1.0)
-		GameManager.store_map_state("res://Maps/Harbor/HarborMap.tscn", Vector2.ZERO)
-		get_tree().change_scene_to_file("res://Maps/Harbor/HarborMap.tscn")
+		_leave_to("res://Maps/Harbor/HarborMap.tscn")
 	# Kiểm tra chuyển cảnh sang StreetMap
 	elif GameManager.get_flag("ena_cafe_done") and not GameManager.get_flag("street_survival_done"):
 		if GameManager.get_flag("street_mission_ready"):
-			await ScreenFade.fade_out(1.0)
-			GameManager.store_map_state("res://Maps/Street/StreetMap.tscn", Vector2.ZERO)
-			get_tree().change_scene_to_file("res://Maps/Street/StreetMap.tscn")
+			_leave_to("res://Maps/Street/StreetMap.tscn")
 		else:
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("lobby_street_mission_not_ready"))
+			_leaving = false
 	# Chỉ đi Warehouse nếu chưa xong 5 wave
 	elif GameManager.warehouse_mission_accepted and GameManager.warehouse_wave <= 5:
-		await ScreenFade.fade_out(1.0)
-		GameManager.store_map_state("res://Maps/Warehouse/WarehouseMap.tscn", Vector2.ZERO)
-		get_tree().change_scene_to_file("res://Maps/Warehouse/WarehouseMap.tscn")
+		_leave_to("res://Maps/Warehouse/WarehouseMap.tscn")
 	else:
 		DialogueManager.play_dialogue([{"text": "Bạn chưa có lý do gì để ra ngoài lúc này.", "type": "narrator"}])
+		_leaving = false
+
+func _leave_to(scene_path: String):
+	_leaving = true
+	await ScreenFade.fade_out(1.0)
+	GameManager.store_map_state(scene_path, Vector2.ZERO)
+	get_tree().change_scene_to_file(scene_path)
 
 func _spawn_shop_and_sim():
 	# 1. Máy bán hàng tự động (Shop)

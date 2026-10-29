@@ -6,7 +6,7 @@ Tóm tắt: GameManager là bộ não trung tâm (Autoload) quản lý toàn b�
 Chức năng chính:
 - Lưu trữ và cung cấp đối tượng đội hình (Party).
 - Quản lý bộ đệm trạng thái cốt truyện thông qua StoryState (cờ sự kiện, tiến độ map).
-- Xử lý hệ thống lưu và tải game (Save/Load) qua JSON.
+- Xử lý hệ thống lưu và tải game (Save/Load) qua JSON (lỗi gần nhất nằm trong last_save_error / last_load_error).
 - Điều phối các chế độ chơi đặc biệt: Sandbox, Training, Scripted Battle.
 - Xử lý luồng sau khi trận chiến kết thúc (tính exp, kích hoạt sự kiện, chuyển cảnh).
 - Quản lý tùy chọn cài đặt hệ thống (Volume, Battle Speed, Skip Battle).
@@ -30,6 +30,10 @@ var is_training_mode: bool = false
 var training_participants: Array = []
 var training_used_opponents: Array = []
 var last_battle_max_lv: int = 1
+
+# Thông báo lỗi của lần Lưu/Tải gần nhất ("" nếu thành công) để UI hiển thị cho người chơi
+var last_save_error: String = ""
+var last_load_error: String = ""
 
 var is_in_dialogue: bool = false
 var is_tutorial: bool = false
@@ -56,12 +60,15 @@ var skip_battle_unlocked: bool = false
 var skip_battle_enabled: bool = false
 
 # ── Kinh Tế & Túi Đồ (Economy & Inventory) ─────────────────────────────────
-var credits: int = 200
-var inventory: Dictionary = {
+const DEFAULT_CREDITS := 200
+const DEFAULT_INVENTORY := {
 	"potion": 2,
 	"energy_drink": 1,
 	"bandage": 1
 }
+
+var credits: int = DEFAULT_CREDITS
+var inventory: Dictionary = DEFAULT_INVENTORY.duplicate()
 var opened_chests: Array = []
 
 const ITEM_CATALOG := {
@@ -192,13 +199,6 @@ func get_skill_target_type(entity: Entity, action_name: String) -> String:
 			return s.get("target", "enemy")
 	return "enemy"
 
-func get_alive_targets(team: Array) -> Array:
-	var alive_units = []
-	for unit in team:
-		if unit.current_hp > 0:
-			alive_units.append(unit)
-	return alive_units
-
 func create_sandbox_entity(e_name: String) -> Entity:
 	match e_name:
 		"Ichika": return Ichika.new()
@@ -222,20 +222,19 @@ func create_sandbox_entity(e_name: String) -> Entity:
 	return Entity.new()
 
 # ── Kết nối StoryState (Flags & Variables) ─────────────────────────────────
-var flags: Dictionary:
-	get: return story.flags
 var warehouse_wave: int:
 	get: return story.warehouse_wave
 	set(v): story.warehouse_wave = v
 var harbor_wave: int:
 	get: return story.harbor_wave
 	set(v): story.harbor_wave = v
+# Wave của chế độ luyện tập (tách biệt với warehouse_wave của cốt truyện)
+var training_wave: int:
+	get: return story.training_wave
+	set(v): story.training_wave = v
 var enemies_defeated: int:
 	get: return story.enemies_defeated
 	set(v): story.enemies_defeated = v
-var harbor_guards_defeated: int:
-	get: return story.harbor_guards_defeated
-	set(v): story.harbor_guards_defeated = v
 var harbor_route: String:
 	get: return story.harbor_route
 	set(v): story.harbor_route = v
@@ -278,30 +277,6 @@ var accepted_harbor_mission: bool:
 var harbor_intro_done: bool:
 	get: return story.get_flag("harbor_intro_done", false)
 	set(v): story.set_flag("harbor_intro_done", v)
-var upgrade_tutorial_done: bool:
-	get: return story.get_flag("upgrade_tutorial_done", false)
-	set(v): story.set_flag("upgrade_tutorial_done", v)
-var guards_defeated: bool:
-	get: return story.get_flag("guards_defeated", false)
-	set(v): story.set_flag("guards_defeated", v)
-var training_ichika_done: bool:
-	get: return story.get_flag("training_ichika_done", false)
-	set(v): story.set_flag("training_ichika_done", v)
-var training_kanade_done: bool:
-	get: return story.get_flag("training_kanade_done", false)
-	set(v): story.set_flag("training_kanade_done", v)
-var harbor_meeting_p1_done: bool:
-	get: return story.get_flag("harbor_meeting_p1_done", false)
-	set(v): story.set_flag("harbor_meeting_p1_done", v)
-var mafuyu_honami_talked: bool:
-	get: return story.get_flag("mafuyu_honami_talked", false)
-	set(v): story.set_flag("mafuyu_honami_talked", v)
-var mizuki_control_phase: bool:
-	get: return story.get_flag("mizuki_control_phase", false)
-	set(v): story.set_flag("mizuki_control_phase", v)
-var harbor_mizuki_snack_done: bool:
-	get: return story.get_flag("harbor_mizuki_snack_done", false)
-	set(v): story.set_flag("harbor_mizuki_snack_done", v)
 
 # ── Tiện Ích Trò Chơi ──────────────────────────────────────────────────────
 func get_party_member(m_name: String) -> Entity:
@@ -318,10 +293,21 @@ func end_dialogue():
 # ── Hệ Thống Lưu/Tải (Save/Load) ───────────────────────────────────────────
 
 func save_game(path_or_name: String = SaveManager.QUICK_SAVE_PATH) -> bool:
-	var player = get_tree().current_scene.find_child("OverworldPlayer", true, false) if get_tree().current_scene else null
-	if player:
-		last_player_position = player.global_position
-	return SaveManager.save_game(path_or_name)
+	last_save_error = ""
+	var cur_scene = get_tree().current_scene
+	if cur_scene:
+		var player = cur_scene.find_child("OverworldPlayer", true, false)
+		if player:
+			last_player_position = player.global_position
+		# current_map_file chỉ được ghi khi rời map (store_map_state) nên có thể đã cũ
+		# (vd: quay về Base từ Cafe/HonamiHouse). Luôn lấy map thật đang chạy khi lưu.
+		var scene_path: String = cur_scene.scene_file_path
+		if scene_path.begins_with("res://Maps/"):
+			current_map_file = scene_path
+	var ok := SaveManager.save_game(path_or_name)
+	if not ok:
+		last_save_error = SaveManager.last_error
+	return ok
 
 func quick_save() -> bool:
 	return save_game(SaveManager.QUICK_SAVE_PATH)
@@ -330,14 +316,16 @@ func auto_save() -> bool:
 	print("[GameManager] Tự động lưu game định kỳ...")
 	return save_game(SaveManager.AUTOSAVE_PATH)
 
+# Trả về false (và điền last_load_error) nếu file không đọc được/hỏng; khi đó trạng thái game KHÔNG bị thay đổi.
 func load_game(path_or_name: String = "") -> bool:
-	return SaveManager.load_game(path_or_name)
+	last_load_error = ""
+	var ok := SaveManager.load_game(path_or_name)
+	if not ok:
+		last_load_error = SaveManager.last_error
+	return ok
 
 func has_save() -> bool:
 	return SaveManager.has_save()
-
-func get_save_files() -> Array:
-	return SaveManager.get_all_save_slots()
 
 # ── Quản Lý Chuyển Cảnh & Trận Chiến ───────────────────────────────────────
 # Thiết lập lại toàn bộ trạng thái để bắt đầu trò chơi mới
@@ -345,10 +333,45 @@ func reset_game():
 	story.reset()
 	last_player_position = Vector2.ZERO
 	current_map_file = "res://Maps/Prologue/PrologueMap.tscn"
-	is_sandbox = false
-	is_tutorial = false
-	is_scripted_battle = false
+	last_load_error = ""
+	last_save_error = ""
+	last_battle_max_lv = 1
+	credits = DEFAULT_CREDITS
+	inventory = DEFAULT_INVENTORY.duplicate()
+	opened_chests = []
+	clear_transient_state()
 	_init_party()
+
+# Xóa các trạng thái tạm của phiên chơi (luyện tập, trận kịch bản, sandbox, hội thoại, Holo-Sim)
+# để chúng không rò sang game mới / game vừa tải. Gọi từ reset_game() và khi tải save thành công.
+func clear_transient_state():
+	is_training_mode = false
+	training_participants = []
+	training_used_opponents = []
+	story.training_wave = 0
+	is_scripted_battle = false
+	scripted_battle_id = ""
+	is_sandbox = false
+	sandbox_player_team = []
+	sandbox_enemy_team = []
+	is_in_dialogue = false
+	is_tutorial = false
+	if HoloSimManager:
+		HoloSimManager.is_sim_active = false
+
+# Bắt đầu một phiên luyện tập (dùng bộ đếm training_wave riêng, không đụng warehouse_wave của cốt truyện)
+func begin_training(participants: Array):
+	is_training_mode = true
+	story.training_wave = 1
+	training_participants = participants.duplicate()
+	training_used_opponents = []
+
+# Kết thúc phiên luyện tập (hoàn thành, thua hoặc bỏ dở)
+func end_training():
+	is_training_mode = false
+	story.training_wave = 0
+	training_participants = []
+	training_used_opponents = []
 
 # Ghi nhớ bản đồ và vị trí hiện tại
 func store_map_state(map_path: String, player_pos: Vector2):
@@ -395,7 +418,7 @@ func finish_battle(victory: bool, count: int = 1):
 		for p_name in training_participants:
 			var entity = get_party_member(p_name)
 			if entity: LevelManager.gain_exp(entity, bonus_exp)
-		is_training_mode = false
+		end_training()
 		full_heal_party()
 		current_map_file = "res://Maps/Base/BaseMap.tscn"
 		last_player_position = Vector2.ZERO
@@ -419,6 +442,10 @@ func finish_battle(victory: bool, count: int = 1):
 		get_tree().change_scene_to_file(current_map_file)
 
 func _handle_scripted_battle_finish(victory: bool):
+	# Thua trận kịch bản: hồi đầy máu để lần đánh lại không bắt đầu với đồng đội đã gục
+	if not victory:
+		full_heal_party()
+	
 	if scripted_battle_id == "harbor_boss":
 		is_scripted_battle = false
 		scripted_battle_id = ""
@@ -440,8 +467,10 @@ func _handle_scripted_battle_finish(victory: bool):
 		story.set_flag("ena_vs_thugs_done", true)
 		story.set_flag("ena_vs_thugs_won", victory)
 	elif scripted_battle_id == "street_skirmish":
-		story.set_flag("street_skirmish_done", true)
-		story.set_flag("street_skirmish_won", victory)
+		# Chỉ tính xong khi thắng; thua thì StreetMap phát lại đoạn mở đầu để đánh lại
+		if victory:
+			story.set_flag("street_skirmish_done", true)
+			story.set_flag("street_skirmish_won", true)
 	elif scripted_battle_id == "street_survival":
 		story.set_flag("street_survival_done", true)
 		story.set_flag("street_survival_won", victory)
@@ -460,8 +489,11 @@ func _handle_scripted_battle_finish(victory: bool):
 
 func _apply_victory_rewards(count: int):
 	story.enemies_defeated += count
-	if current_map_file.contains("Warehouse"): story.warehouse_wave += 1
+	if is_training_mode:
+		# Luyện tập dùng bộ đếm riêng, không làm tiến trình Nhà kho của cốt truyện
+		story.training_wave += 1
+	elif current_map_file.contains("Warehouse"):
+		story.warehouse_wave += 1
 	if current_map_file == "res://Maps/Harbor/HarborMap.tscn":
+		# Trận Boss Bến Cảng luôn là trận kịch bản (xử lý ở _handle_scripted_battle_finish) nên ở đây chỉ đếm wave lính gác
 		story.harbor_wave += 1
-		if story.harbor_wave > 4 or harbor_route == "boss":
-			story.set_flag("harbor_boss_defeated", true)

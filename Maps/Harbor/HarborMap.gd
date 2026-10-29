@@ -10,20 +10,18 @@ Sau khi Boss thua, chuyển sang AlleywayMap.
 """
 
 const TILE_SIZE = 32
-const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
 	AudioManager.play_music("map")
-	ScreenFade.fade_in(0.8)
 	
 	_build_map()
 	_spawn_player()
 	_spawn_interactables()
 	_build_mission_hud()
 	
+	# Chờ màn hình sáng hẳn để Dialogue UI (Layer 100) không bị ScreenFade (Layer 200) che
+	await ScreenFade.fade_in(0.8)
 	if not GameManager.harbor_intro_done:
-		# Brief delay to let fade-in finish
-		await get_tree().create_timer(0.5).timeout
 		_play_intro()
 
 func _play_intro():

@@ -30,29 +30,5 @@
       "type": "dialogue",
       "name": "Ichika"
     }
-  ],
-  "ops_kanade_done": [
-    {
-      "speaker": "right",
-      "text": "Khu A đã được dọn sạch. Lũ chuột nhắt này không làm khó được tôi.",
-      "type": "dialogue",
-      "name": "Kanade"
-    }
-  ],
-  "ops_ichika_done": [
-    {
-      "speaker": "left",
-      "text": "Em đã tiêu diệt xong mục tiêu ở Khu C. Mọi thứ an toàn.",
-      "type": "dialogue",
-      "name": "Ichika"
-    }
-  ],
-  "ops_honami_done": [
-    {
-      "speaker": "right",
-      "text": "Khu B đã hoàn tất. Chúng ta có thể rút lui được rồi.",
-      "type": "dialogue",
-      "name": "Honami"
-    }
   ]
 }

@@ -248,11 +248,6 @@
     },
     {
       "type": "narrator",
-      "name": "Hệ thống",
-      "text": "(Hệ thống: Nhận được 3000 XP)"
-    },
-    {
-      "type": "narrator",
       "name": "Narrator",
       "text": "..."
     },

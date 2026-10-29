@@ -50,7 +50,6 @@ func _play_mizuki_snack_sequence():
 		if player:
 			player.character_color = map.NPC_COLORS["Mizuki"]
 			player.position = Vector2(35 * map.TILE_SIZE, 13 * map.TILE_SIZE)
-			player.queue_redraw()
 		map._spawn_npcs() 
 		map._refresh_quest_label()
 	)

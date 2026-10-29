@@ -9,7 +9,6 @@ kết cục sau trận đấu trước khi quay trở lại căn cứ.
 """
 
 const TILE_SIZE = 32
-const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
 	AudioManager.play_music("map")

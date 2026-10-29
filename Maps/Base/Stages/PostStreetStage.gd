@@ -15,7 +15,6 @@ func on_stage_start():
 	var player = map.get_node_or_null("OverworldPlayer")
 	if player:
 		player.character_color = map.NPC_COLORS["Ichika"]
-		player.queue_redraw()
 		
 	var lighting = CanvasModulate.new()
 	map.add_child(lighting)
@@ -58,9 +57,7 @@ func _show_training_menu():
 	
 	GameManager.set_flag("post_street_trained_once", true)
 	
-	GameManager.is_training_mode = true
-	GameManager.warehouse_wave = 1
-	GameManager.training_participants = [mapping[idx]]
+	GameManager.begin_training([mapping[idx]])
 	
 	await ScreenFade.fade_out(1.0)
 	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)

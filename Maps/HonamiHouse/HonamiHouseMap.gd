@@ -33,16 +33,16 @@ func _build_house():
 			MapUtils.place_tile(self, "floor.png", Vector2(x, y))
 	
 	for x in range(5, 26):
-		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 4))
-		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 16))
+		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 4), true)
+		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 16), true)
 	for y in range(4, 17):
-		MapUtils.place_tile(self, "left_vertical_wall.png", Vector2(5, y))
-		MapUtils.place_tile(self, "right_vertical_wall.png", Vector2(25, y))
+		MapUtils.place_tile(self, "left_vertical_wall.png", Vector2(5, y), true)
+		MapUtils.place_tile(self, "right_vertical_wall.png", Vector2(25, y), true)
 		
-	MapUtils.place_tile(self, "top_left_wall.png", Vector2(5, 4))
-	MapUtils.place_tile(self, "top_right_wall.png", Vector2(25, 4))
-	MapUtils.place_tile(self, "bottom_left_wall.png", Vector2(5, 16))
-	MapUtils.place_tile(self, "bottom_right_wall.png", Vector2(25, 16))
+	MapUtils.place_tile(self, "top_left_wall.png", Vector2(5, 4), true)
+	MapUtils.place_tile(self, "top_right_wall.png", Vector2(25, 4), true)
+	MapUtils.place_tile(self, "bottom_left_wall.png", Vector2(5, 16), true)
+	MapUtils.place_tile(self, "bottom_right_wall.png", Vector2(25, 16), true)
 	
 	# Cửa ra ngoài (về Nightcord) - Dùng Sprite giả hoặc Tile
 	var door = Sprite2D.new()
@@ -142,9 +142,7 @@ func _show_training_menu():
 	var idx: int = await DialogueManager.choice_made
 	if opts[idx] == "Để sau.": return
 	
-	GameManager.is_training_mode = true
-	GameManager.warehouse_wave = 1
-	GameManager.training_participants = [mapping[idx]]
+	GameManager.begin_training([mapping[idx]])
 	
 	await ScreenFade.fade_out(1.0)
 	GameManager.store_map_state("res://Maps/HonamiHouse/HonamiHouseMap.tscn", Vector2.ZERO)

@@ -21,30 +21,32 @@ func _ready():
 func _run_logic():
 	if not GameManager.get_flag("ops_kanade_done"):
 		_setup_scene("Kanade", "Hẻm tối", Color(0.2, 0.2, 0.25))
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_intro"), func():
-			_start_battle("ops_kanade")
-		)
+		_briefing_then_battle("ops_kanade")
 	elif not GameManager.get_flag("ops_ichika_done"):
 		_setup_scene("Ichika", "Đường phố", Color(0.15, 0.2, 0.2))
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_intro"), func():
-			_start_battle("ops_ichika")
-		)
+		_briefing_then_battle("ops_ichika")
 	elif not GameManager.get_flag("ops_honami_done"):
 		_setup_scene("Honami", "Bến cảng", Color(0.1, 0.15, 0.25))
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_intro"), func():
-			_start_battle("ops_honami")
-		)
+		_briefing_then_battle("ops_honami")
 	else:
 		# All done, transition to Highway Map
 		await ScreenFade.fade_out(1.0)
 		GameManager.store_map_state("res://Maps/Highway/HighwayMap.tscn", Vector2.ZERO)
 		get_tree().change_scene_to_file("res://Maps/Highway/HighwayMap.tscn")
 
+# ops_intro chỉ phát một lần (lần đầu vào map); các trận sau và khi đánh lại sau khi thua thì vào thẳng trận sau một nhịp chờ
+func _briefing_then_battle(battle_key: String):
+	if GameManager.get_flag("ops_intro_done"):
+		await get_tree().create_timer(1.0).timeout
+		_start_battle(battle_key)
+		return
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_intro"), func():
+		GameManager.set_flag("ops_intro_done", true)
+		_start_battle(battle_key)
+	)
+
+# Mỗi trận kết thúc sẽ nạp lại cả map nên _setup_scene luôn chạy trên map trống, không cần dọn node cũ
 func _setup_scene(char_name: String, _location: String, light_color: Color):
-	for child in get_children():
-		if child.has_meta("is_npc") or child is CanvasModulate or child is StaticBody2D:
-			child.queue_free()
-			
 	var lighting = CanvasModulate.new()
 	lighting.color = light_color
 	add_child(lighting)

@@ -58,13 +58,9 @@ static func get_current_quest() -> QuestDef:
 	"""
 	Xác định Quest đang hoạt động dựa trên các mốc cờ StoryState hiện tại.
 	"""
-	if GameManager.story.get_flag("finale_done"):
+	if GameManager.story.get_flag("finale_done") or GameManager.story.get_flag("pm_arc_started"):
 		return get_quest("quest_10_finale")
-	elif GameManager.story.get_flag("pm_arc_started"):
-		return get_quest("quest_10_finale")
-	elif GameManager.story.get_flag("honami_house_unlocked"):
-		return get_quest("quest_09_honami_clinic")
-	elif GameManager.story.get_flag("street_mission_fully_done"):
+	elif GameManager.story.get_flag("honami_house_unlocked") or GameManager.story.get_flag("street_mission_fully_done"):
 		return get_quest("quest_09_honami_clinic")
 	elif GameManager.story.get_flag("ena_cafe_done"):
 		return get_quest("quest_08_street_ambush")
@@ -78,7 +74,7 @@ static func get_current_quest() -> QuestDef:
 		return get_quest("quest_04_post_warehouse")
 	elif GameManager.story.get_flag("warehouse_mission_accepted"):
 		return get_quest("quest_03_warehouse")
-	elif GameManager.story.get_flag("prologue_phase") >= 1:
+	elif GameManager.story.get_flag("prologue_phase", 0) >= 1:
 		return get_quest("quest_02_safehouse_intro")
 	else:
 		return get_quest("quest_01_prologue")

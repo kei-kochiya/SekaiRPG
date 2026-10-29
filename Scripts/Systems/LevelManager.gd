@@ -40,6 +40,14 @@ static func gain_exp(entity: Entity, amount: int):
 		entity.current_exp -= entity.next_level_exp
 		process_level_up(entity)
 
+# EXP cần để lên cấp kế tiếp ở một level cho trước (mô phỏng lại đường cong của process_level_up,
+# dùng để tính lại next_level_exp cho các file save cũ chưa lưu giá trị này)
+static func exp_needed_for_level(level: int) -> int:
+	var needed = 100
+	for lv in range(2, level + 1):
+		needed = int(needed * (1.5 if lv >= SOFT_CAP_LEVEL else 1.2))
+	return needed
+
 # ── Xử Lý Lên Cấp ──────────────────────────────────────────────────────────
 
 static func process_level_up(entity: Entity):

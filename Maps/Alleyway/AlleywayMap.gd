@@ -15,13 +15,7 @@ var _map_root: Node2D
 var _lighting: CanvasModulate
 
 func _ready():
-	# F6 Debug: If running directly, default to the first phase (Honami Monologue p1)
-	if GameManager.story.harbor_wave <= 1:
-		GameManager.story.harbor_wave = 5
-		GameManager.story.set_flag("mafuyu_honami_talked", false)
-		
 	AudioManager.play_music("map")
-	ScreenFade.fade_in(1.0)
 	
 	_lighting = CanvasModulate.new()
 	_lighting.color = Color(0.1, 0.1, 0.15) # Dark Night
@@ -34,7 +28,8 @@ func _ready():
 	_build_map()
 	_spawn_honami()
 	
-	await get_tree().create_timer(1.0).timeout
+	# Chờ màn hình sáng hẳn để Dialogue UI (Layer 100) không bị ScreenFade (Layer 200) che
+	await ScreenFade.fade_in(1.0)
 	# Phần hội thoại: Honami tự lựa chọn kết thúc khác nhau tùy theo tiến độ câu chuyện.
 	_play_sequence()
 

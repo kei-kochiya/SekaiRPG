@@ -9,7 +9,6 @@ Hoàn thành chuyển về BaseMap_PostWarehouse.
 """
 
 const TILE_SIZE = 32
-const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
 	AudioManager.play_music("map")

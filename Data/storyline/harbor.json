@@ -1,13 +1,4 @@
 {
-  "harbor_ena_ready": [
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Ena",
-      "color": "#b86028",
-      "text": "Chuẩn bị tinh thần chưa, Ichika? Chỗ này không phải công viên giải trí đâu."
-    }
-  ],
   "harbor_arrival": [
     {
       "type": "dialogue",

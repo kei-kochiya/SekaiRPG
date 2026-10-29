@@ -14,7 +14,6 @@ func on_stage_start():
 	if player:
 		player.character_color = map.NPC_COLORS["Ichika"]
 		player.position = Vector2(20 * map.TILE_SIZE, 16 * map.TILE_SIZE)
-		player.queue_redraw()
 		
 	var lighting = CanvasModulate.new()
 	map.add_child(lighting)

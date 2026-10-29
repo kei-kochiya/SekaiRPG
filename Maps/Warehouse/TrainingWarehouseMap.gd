@@ -9,13 +9,16 @@ Hoàn thành chuyển về BaseMap_PostWarehouse.
 """
 
 const TILE_SIZE = 32
-const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 var max_waves = 5
 
 func _ready():
 	AudioManager.play_music("map")
-	ScreenFade.fade_in(0.8)
+	
+	# Vào map luyện tập khi không ở chế độ luyện tập (vd: save cũ) thì không có trận nào để đánh -> về Base
+	if not GameManager.is_training_mode:
+		_return_to_base()
+		return
 	
 	if GameManager.training_participants.size() > 1:
 		max_waves = 10
@@ -25,13 +28,16 @@ func _ready():
 	_build_map()
 	_spawn_player()
 	
-	# Check Completion
-	if GameManager.warehouse_wave > max_waves:
-		_complete_training()
-		return
+	# Check Completion (luyện tập dùng training_wave riêng, không đụng warehouse_wave của cốt truyện)
+	var training_done: bool = GameManager.training_wave > max_waves
+	if not training_done:
+		_build_mission_hud()
+		_spawn_enemy_wave()
 	
-	_build_mission_hud()
-	_spawn_enemy_wave()
+	# Chờ màn hình sáng hẳn để Dialogue UI (Layer 100) không bị ScreenFade (Layer 200) che
+	await ScreenFade.fade_in(0.8)
+	if training_done:
+		_complete_training()
 
 func _spawn_player():
 	var player = OverworldPlayer.new()
@@ -58,7 +64,7 @@ func _complete_training():
 		if p == "Mafuyu": GameManager.set_flag("training_mafuyu_done", true)
 		if p == "Honami": GameManager.set_flag("training_honami_done", true)
 	
-	GameManager.is_training_mode = false
+	GameManager.end_training()
 	# Hồi máu đầy cho party sau khi luyện tập xong
 	GameManager.full_heal_party()
 	DialogueManager.play_dialogue([{
@@ -85,7 +91,7 @@ func _create_enemy_zone(pos: Vector2):
 	root.add_child(sprite)
 	
 	var zone = InteractableZone.new()
-	zone.prompt_text = "Nhấn ENTER để bắt đầu lượt tập (Wave " + str(GameManager.warehouse_wave) + ")"
+	zone.prompt_text = "Nhấn ENTER để bắt đầu lượt tập (Wave " + str(GameManager.training_wave) + ")"
 	var zcol = CollisionShape2D.new()
 	var zsha = CircleShape2D.new()
 	zsha.radius = 40
@@ -111,11 +117,15 @@ func _build_map():
 	_remove_wall_at(Vector2(15, 15))
 	_place_tile("door_1.png", Vector2(15, 15), false)
 	
-	# Decor
-	for i in range(10):
+	# Decor: cây ngẫu nhiên, chừa lối đi từ chỗ xuất hiện (15,18) tới cửa (15,15) (kèm đệm 1 ô quanh lối đi)
+	var trees_placed = 0
+	while trees_placed < 10:
 		var rx = randi_range(2, 28)
 		var ry = randi_range(16, 21)
+		if rx >= 14 and rx <= 16 and ry <= 19:
+			continue
 		_place_tile("tree.png", Vector2(rx, ry), true)
+		trees_placed += 1
 
 	# Some internal decor
 	_place_tile("sword.png", Vector2(7, 7), false)
@@ -164,5 +174,5 @@ func _build_mission_hud():
 	panel.add_theme_stylebox_override("panel", sb)
 	var label = Label.new()
 	label.add_theme_font_size_override("font_size", 16)
-	label.text = "LUYỆN TẬP: " + ", ".join(GameManager.training_participants) + "\nTiến độ: Wave " + str(GameManager.warehouse_wave) + " / " + str(max_waves)
+	label.text = "LUYỆN TẬP: " + ", ".join(GameManager.training_participants) + "\nTiến độ: Wave " + str(GameManager.training_wave) + " / " + str(max_waves)
 	panel.add_child(label)
