@@ -34,6 +34,10 @@ func test_element_colors_cover_type_chart():
 	for element in TypeChart.chart:
 		assert_true(UITheme.ELEMENT_COLORS.has(element), "Element color defined for " + element)
 
+func test_every_status_has_an_existing_icon():
+	for status_name in UITheme.STATUS_INFO:
+		assert_true(UITheme.status_icon(status_name) != null, "Status icon loads for " + status_name)
+
 func test_theme_builds_and_buttons_are_touch_sized():
 	var theme := UITheme.make_theme()
 	assert_true(theme.has_stylebox("normal", "Button"), "Theme styles Button")

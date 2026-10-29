@@ -45,9 +45,9 @@ const ELEMENT_COLORS := {
 	"Pure": Color("e8edf3"),
 }
 const STATUS_INFO := {
-	"Bleed": {"label": "Máu", "color": Color("e5484d")},
-	"Poison": {"label": "Độc", "color": Color("5ac46e")},
-	"Stun": {"label": "Choáng", "color": Color("f2c94c")},
+	"Bleed": {"label": "Máu", "color": Color("e5484d"), "icon": "res://Assets/Icons/bleed.png"},
+	"Poison": {"label": "Độc", "color": Color("5ac46e"), "icon": "res://Assets/Icons/poison.png"},
+	"Stun": {"label": "Choáng", "color": Color("f2c94c"), "icon": "res://Assets/Icons/stun.png"},
 }
 
 # ── Cỡ chữ (thang 6 bậc, sàn 14 để đọc được trên điện thoại) ───────────────────────────────────────────────────
@@ -168,15 +168,34 @@ static func style_panel(ctrl: Control, accent: Color = Color.TRANSPARENT, bg: Co
 	ctrl.add_theme_stylebox_override("panel", panel(bg, INK_600, accent))
 
 # Nhãn nhỏ dạng "chip" (hệ nguyên tố, hiệu ứng trạng thái...). Nền là màu chủ đạo pha tối, chữ là chính màu đó.
-static func chip(text: String, color: Color, size: int = FS_CAPTION) -> PanelContainer:
+static func chip(text: String, color: Color, size: int = FS_CAPTION, icon: Texture2D = null) -> PanelContainer:
 	var p := PanelContainer.new()
 	p.add_theme_stylebox_override("panel", box(Color(color.r, color.g, color.b, 0.18), Color(color.r, color.g, color.b, 0.55), RADIUS_SM, SP_2, 2))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", SP_1)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(row)
+	if icon:
+		var tex := TextureRect.new()
+		tex.texture = icon
+		tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tex.custom_minimum_size = Vector2(16, 16)
+		tex.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS # icon 32px thu về 16px
+		tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(tex)
 	var l := Label.new()
 	l.text = text
 	style_label(l, size, color)
-	p.add_child(l)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(l)
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return p
+
+# Icon của một hiệu ứng trạng thái (Bleed/Poison/Stun); null nếu loại đó không có icon.
+static func status_icon(type_name: String) -> Texture2D:
+	var path: String = STATUS_INFO.get(type_name, {}).get("icon", "")
+	return load(path) if path != "" and ResourceLoader.exists(path) else null
 
 static func make_label(text: String, size: int = FS_BODY, color: Color = TEXT, align: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> Label:
 	var l := Label.new()

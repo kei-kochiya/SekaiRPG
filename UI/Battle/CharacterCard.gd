@@ -163,7 +163,7 @@ func _on_status_changed(statuses: Array):
 	for type_name in counts:
 		var info: Dictionary = UITheme.STATUS_INFO.get(type_name, {"label": type_name, "color": UITheme.TEXT_MUTED})
 		var text: String = info["label"] if counts[type_name] == 1 else "%s x%d" % [info["label"], counts[type_name]]
-		status_row.add_child(UITheme.chip(text, info["color"]))
+		status_row.add_child(UITheme.chip(text, info["color"], UITheme.FS_CAPTION, UITheme.status_icon(type_name)))
 	status_row.visible = not counts.is_empty()
 
 func _on_damage_received_detailed(amt: int, type: String, is_crit: bool, is_break: bool):

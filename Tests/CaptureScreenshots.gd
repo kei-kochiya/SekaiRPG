@@ -226,6 +226,11 @@ func _build_cards() -> Node:
 		var card = CharacterCardClass.new()
 		row.add_child(card)
 		card.setup(pair[0], pair[1])
+	# Gắn vài hiệu ứng để kiểm tra chip trạng thái có icon
+	entities[0][0].add_status({"type": "Bleed", "duration": 3})
+	entities[0][0].add_status({"type": "Bleed", "duration": 3})
+	entities[0][0].add_status({"type": "Stun", "duration": 1})
+	entities[1][0].add_status({"type": "Poison", "duration": 2})
 	return row
 
 func _build_battle() -> Node:
