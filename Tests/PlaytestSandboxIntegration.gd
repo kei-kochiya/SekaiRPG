@@ -11,7 +11,7 @@ func _ready():
 	print("[STEP 1] Đã tải và khởi tạo SandboxMenu scene thành công.")
 	
 	# 2. Test chọn 4 nhân vật
-	var char_list_container = sandbox_scene.get_node("HBox/PlayerSide/Scroll/CharList")
+	var char_list_container = sandbox_scene.get_node("HBox/PlayerPanel/PlayerSide/Scroll/CharList")
 	var checkboxes = char_list_container.get_children()
 	assert(checkboxes.size() >= 4, "Phải có ít nhất 4 checkbox nhân vật")
 	

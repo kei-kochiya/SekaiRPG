@@ -10,9 +10,6 @@ Chức năng chính:
 - Hỗ trợ nút Info (Tooltip) để xem mô tả chi tiết của kỹ năng thông qua `SkillDetailPopup`.
 """
 
-# ── Tham Chiếu UI ──────────────────────────────────────────────────────────
-
-
 signal command_chosen(action: String, target: Entity)
 
 var current_entity: Entity
@@ -21,6 +18,8 @@ var chosen_action: String = ""
 
 # ── Tham chiếu UI ──────────────────────────────────────────────────────────
 const SkillDetailPopupClass = preload("res://UI/Popups/SkillDetailPopup.gd")
+
+const MENU_WIDTH = 340
 
 var action_container: VBoxContainer
 var target_container: VBoxContainer
@@ -41,41 +40,35 @@ func _ready():
 
 func _build_shell():
 	"""Xây dựng khung giao diện chính cho menu lệnh."""
-	var ps = StyleBoxTexture.new()
-	ps.texture = load("res://Assets/UI/panel_angular_brown.svg")
-	ps.texture_margin_left = 20; ps.texture_margin_right = 20
-	ps.texture_margin_top = 20; ps.texture_margin_bottom = 20
-	ps.set_content_margin_all(18)
-	add_theme_stylebox_override("panel", ps)
+	custom_minimum_size = Vector2(MENU_WIDTH, 0)
+	add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.PLAYER, UITheme.SP_4))
 	
 	var root = VBoxContainer.new()
-	root.add_theme_constant_override("separation", 8)
+	root.add_theme_constant_override("separation", UITheme.SP_2)
 	add_child(root)
 	
 	var title_row = HBoxContainer.new()
-	title_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	title_row.add_theme_constant_override("separation", 6)
+	title_row.add_theme_constant_override("separation", UITheme.SP_2)
 	root.add_child(title_row)
 	
-	var info_btn = TextureButton.new()
-	info_btn.texture_normal = load("res://Assets/UI/icon_exclamation_gold.svg")
-	info_btn.ignore_texture_size = true
-	info_btn.custom_minimum_size = Vector2(20, 20)
+	title_label = UITheme.make_label("LỆNH CHIẾN ĐẤU", UITheme.FS_HEADING, UITheme.TEXT)
+	title_label.add_theme_font_override("font", UITheme.font_display_bold())
+	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_row.add_child(title_label)
+	
+	var info_btn = Button.new()
+	info_btn.text = "Kỹ năng"
+	UITheme.style_button(info_btn, UITheme.Kind.GHOST, UITheme.FS_BODY)
+	info_btn.custom_minimum_size.y = 32
 	info_btn.pressed.connect(func(): if current_entity: _skill_detail_popup.display_entity_skills(current_entity))
 	title_row.add_child(info_btn)
 	
-	title_label = Label.new()
-	title_label.text = "LỆNH CHIẾN ĐẤU"
-	title_label.add_theme_font_size_override("font_size", 13)
-	title_label.add_theme_color_override("font_color", Color(0.95, 0.8, 0.45))
-	title_row.add_child(title_label)
-	
 	action_container = VBoxContainer.new()
-	action_container.add_theme_constant_override("separation", 4)
+	action_container.add_theme_constant_override("separation", UITheme.SP_2)
 	root.add_child(action_container)
 	
 	target_container = VBoxContainer.new()
-	target_container.add_theme_constant_override("separation", 4)
+	target_container.add_theme_constant_override("separation", UITheme.SP_2)
 	target_container.visible = false
 	root.add_child(target_container)
 
@@ -95,20 +88,21 @@ func show_for(entity: Entity, enemies: Array):
 	chosen_action = ""
 	
 	title_label.text = entity.entity_name.to_upper()
+	title_label.add_theme_color_override("font_color", UITheme.PLAYER)
 	
 	_clear(action_container)
 	_clear(target_container)
 	action_container.visible = true
 	target_container.visible = false
 	
-	action_container.add_child(_make_btn("TẤN CÔNG", "attack", true))
+	action_container.add_child(_make_btn("TẤN CÔNG", "attack", true, UITheme.Kind.PRIMARY))
 	
 	for skill in entity.skills:
 		var skill_ready = entity.can_use_skill(skill["method"])
 		var cd = entity.cooldowns.get(skill["method"], 0)
 		var label = skill["name"]
 		
-		if cd >= 99: label += " [Hết lượt]"
+		if cd >= CooldownManager.LOCKED_FOR_BATTLE: label += " [Hết lượt]"
 		elif cd > 0: label += " (Hồi: %d)" % cd
 			
 		var btn = _make_btn(label, skill["method"], skill_ready)
@@ -125,6 +119,7 @@ func show_for(entity: Entity, enemies: Array):
 		action_container.add_child(item_btn)
 	
 	visible = true
+	_focus_first_enabled(action_container)
 
 func cancel():
 	"""Đóng menu và phát tín hiệu hủy lệnh để tránh treo game khi skip."""
@@ -157,11 +152,7 @@ func _show_items():
 	action_container.visible = false
 	target_container.visible = true
 	
-	var header = Label.new()
-	header.text = "CHỌN VẬT PHẨM"
-	header.add_theme_font_size_override("font_size", 11)
-	header.add_theme_color_override("font_color", Color(0.3, 0.8, 1.0))
-	target_container.add_child(header)
+	target_container.add_child(UITheme.make_label("CHỌN VẬT PHẨM", UITheme.FS_BODY, UITheme.BREAK))
 	
 	for item_id in GameManager.inventory:
 		var count = GameManager.inventory[item_id]
@@ -175,92 +166,55 @@ func _show_items():
 		target_container.add_child(btn)
 		
 	var back_btn = Button.new()
-	back_btn.text = "< QUAY LẠI"
-	back_btn.custom_minimum_size = Vector2(230, 34)
-	var rb = StyleBoxTexture.new()
-	rb.texture = load("res://Assets/UI/btn_angular_red.svg")
-	rb.texture_margin_left = 8; rb.texture_margin_right = 8
-	rb.texture_margin_top = 8; rb.texture_margin_bottom = 8
-	back_btn.add_theme_stylebox_override("normal", rb)
-	var rbh = StyleBoxTexture.new()
-	rbh.texture = load("res://Assets/UI/btn_angular_red_hover.svg")
-	rbh.texture_margin_left = 8; rbh.texture_margin_right = 8
-	rbh.texture_margin_top = 8; rbh.texture_margin_bottom = 8
-	back_btn.add_theme_stylebox_override("hover", rbh)
-	back_btn.add_theme_stylebox_override("pressed", rbh)
-	back_btn.add_theme_color_override("font_color", Color(1.0, 0.9, 0.9))
-	back_btn.add_theme_font_size_override("font_size", 13)
+	back_btn.text = "‹ Quay lại"
+	UITheme.style_button(back_btn, UITheme.Kind.GHOST)
 	back_btn.pressed.connect(func():
 		action_container.visible = true
 		target_container.visible = false
+		_focus_first_enabled(action_container)
 	)
 	target_container.add_child(back_btn)
+	_focus_first_enabled(target_container)
 
 func _show_targets(target_type: String = "enemy"):
 	"""Hiển thị danh sách các mục tiêu hợp lệ để người chơi lựa chọn."""
 	_clear(target_container)
 	target_container.visible = true
 	
-	var header = Label.new()
-	header.text = "CHỌN MỤC TIÊU"
-	header.add_theme_font_size_override("font_size", 12)
-	header.add_theme_color_override("font_color", Color(0.9, 0.75, 0.45))
-	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	target_container.add_child(header)
+	target_container.add_child(UITheme.make_label("CHỌN MỤC TIÊU", UITheme.FS_BODY, UITheme.ACCENT))
 	
 	var team = enemy_team if target_type == "enemy" else current_entity.allies
-	var alive = GameManager.get_alive_targets(team)
+	var alive = AIManager.get_alive_targets(team)
 	for member in alive:
 		var label = "%s  HP %d/%d" % [member.entity_name, member.current_hp, member.max_hp]
 		var btn = _make_btn(label, "", true)
 		btn.pressed.connect(_on_target_picked.bind(member))
 		target_container.add_child(btn)
+	_focus_first_enabled(target_container)
 
 func _on_target_picked(target: Entity):
 	"""Xác nhận mục tiêu cuối cùng và phát tín hiệu hoàn thành lệnh."""
 	visible = false
 	command_chosen.emit(chosen_action, target)
 
-func _make_btn(label: String, action_name: String, enabled: bool) -> Button:
-	"""Khởi tạo một nút bấm trong menu với phong cách Angular Brown."""
+func _make_btn(label: String, action_name: String, enabled: bool, kind: UITheme.Kind = UITheme.Kind.SECONDARY) -> Button:
+	"""Khởi tạo một nút bấm trong menu."""
 	var btn = Button.new()
 	btn.text = label
 	btn.disabled = not enabled
-	btn.custom_minimum_size = Vector2(230, 36)
-	
-	var ns = StyleBoxTexture.new()
-	ns.texture = load("res://Assets/UI/btn_angular_brown.svg")
-	ns.texture_margin_left = 8; ns.texture_margin_right = 8
-	ns.texture_margin_top = 8; ns.texture_margin_bottom = 8
-	ns.set_content_margin_all(8)
-	btn.add_theme_stylebox_override("normal", ns)
-	
-	var hs = StyleBoxTexture.new()
-	hs.texture = load("res://Assets/UI/btn_angular_brown_hover.svg")
-	hs.texture_margin_left = 8; hs.texture_margin_right = 8
-	hs.texture_margin_top = 8; hs.texture_margin_bottom = 8
-	hs.set_content_margin_all(8)
-	btn.add_theme_stylebox_override("hover", hs)
-	btn.add_theme_stylebox_override("pressed", hs)
-	
-	var ds = StyleBoxTexture.new()
-	ds.texture = load("res://Assets/UI/btn_angular_brown.svg")
-	ds.texture_margin_left = 8; ds.texture_margin_right = 8
-	ds.texture_margin_top = 8; ds.texture_margin_bottom = 8
-	ds.modulate_color = Color(0.5, 0.45, 0.4, 0.5)
-	ds.set_content_margin_all(8)
-	btn.add_theme_stylebox_override("disabled", ds)
-	
-	btn.add_theme_color_override("font_color", Color(0.95, 0.9, 0.82))
-	btn.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
-	btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.95, 0.75))
-	btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.5, 0.45))
-	btn.add_theme_font_size_override("font_size", 14)
+	UITheme.style_button(btn, kind)
 	
 	if action_name != "":
 		btn.pressed.connect(_on_action_picked.bind(action_name))
 	
 	return btn
+
+func _focus_first_enabled(container: Container):
+	"""Đưa focus bàn phím/tay cầm vào nút khả dụng đầu tiên của danh sách."""
+	for c in container.get_children():
+		if c is Button and not c.disabled and not c.is_queued_for_deletion():
+			c.call_deferred("grab_focus")
+			return
 
 func _clear(container: Container):
 	"""Xóa sạch các Node con trong một Container chỉ định."""

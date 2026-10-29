@@ -19,7 +19,14 @@ signal interacted
 var prompt_label: Label
 var is_player_inside: bool = false
 
-@export var prompt_text: String = "Press ENTER"
+# Khoảng cách từ gốc vùng tới đáy nhãn gợi ý (đủ cao để không che sprite và tên NPC)
+const PROMPT_GAP = 56
+
+# Đổi text sau khi vùng đã tạo (vd. TreasureChest: "Mở rương" -> "Rương trống") thì nhãn cập nhật theo
+@export var prompt_text: String = "Press ENTER":
+	set(value):
+		prompt_text = value
+		_refresh_prompt()
 
 # ── Khởi Tạo ───────────────────────────────────────────────────────────────
 
@@ -28,35 +35,31 @@ func _ready():
 	Khởi tạo cấu hình cho vùng tương tác và nhãn gợi ý hiển thị.
 	
 	Thiết lập Collision Layer để không cản trở và Collision Mask để phát hiện 
-	người chơi (Layer 1). Tạo nhãn gợi ý sử dụng StyleBox từ bộ Assets Kenney.
+	người chơi (Layer 1). Nhãn gợi ý dùng UITheme (chip nền tối, viền hổ phách).
 	"""
 	collision_layer = 0
 	collision_mask = 1 
 	z_index = 10
 	
 	prompt_label = Label.new()
-	prompt_label.text = prompt_text
 	prompt_label.visible = false
-	prompt_label.position = Vector2(-60, -50)
-	prompt_label.custom_minimum_size = Vector2(120, 40)
-	prompt_label.add_theme_font_size_override("font_size", 12)
-	prompt_label.add_theme_color_override("font_color", Color(0.96, 0.92, 0.85))
 	prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	
-	var pb = StyleBoxTexture.new()
-	pb.texture = load("res://Assets/UI/btn_angular_brown.svg")
-	
-	pb.texture_margin_left = 8
-	pb.texture_margin_right = 8
-	pb.texture_margin_top = 8
-	pb.texture_margin_bottom = 8
-	prompt_label.add_theme_stylebox_override("normal", pb)
-	
+	UITheme.style_label(prompt_label, UITheme.FS_BODY, UITheme.TEXT)
+	prompt_label.add_theme_stylebox_override("normal", UITheme.box(UITheme.INK_800, UITheme.ACCENT, UITheme.RADIUS_SM, UITheme.SP_3, UITheme.SP_1))
 	add_child(prompt_label)
+	_refresh_prompt()
 	
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+
+# Cập nhật nội dung nhãn, co theo chữ và canh giữa phía trên vùng
+func _refresh_prompt():
+	if prompt_label == null:
+		return
+	prompt_label.text = prompt_text
+	prompt_label.reset_size()
+	prompt_label.position = Vector2(-prompt_label.size.x / 2.0, -PROMPT_GAP - prompt_label.size.y)
 
 # ── Xử Lý Va Chạm ──────────────────────────────────────────────────────────
 

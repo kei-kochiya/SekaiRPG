@@ -1,170 +1,117 @@
 class_name PauseMenuBuilder
 extends RefCounted
 
-const PANEL_BROWN_TEX = "res://Assets/UI/panel_angular_brown.svg"
-const PANEL_GREY_TEX = "res://Assets/UI/panel_angular_brown.svg"
-const BUTTON_BROWN_TEX = "res://Assets/UI/btn_angular_brown.svg"
-const BUTTON_BROWN_HOVER_TEX = "res://Assets/UI/btn_angular_brown_hover.svg"
-const BUTTON_GREY_TEX = "res://Assets/UI/btn_angular_amber.svg"
-const FONT_PATH = "res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"
+"""
+PauseMenuBuilder: dựng khung giao diện cho PauseMenu (menu tạm dừng, cẩm nang, tùy chọn) bằng UITheme.
+"""
+
+const PAUSE_WIDTH = 400
+const OPTIONS_WIDTH = 460
+
+const GUIDE_SECTIONS = [
+	["Công thức sát thương", "Sát thương = (ATK × hệ số kỹ năng − DEF) × (1 − RES/100) × hệ số hệ.\nSát thương tối thiểu luôn bằng 5% ATK của người đánh. Chí mạng nhân thêm Crit DMG."],
+	["Hệ nguyên tố", "Cool > Happy > Cute > Cool. Mysterious và Pure khắc chế lẫn nhau.\nĐánh trúng hệ khắc gây 125% sát thương, đánh vào hệ bị khắc chỉ còn 80%."],
+	["Phá điểm yếu (Break)", "Mỗi đòn đánh làm giảm thanh Break của kẻ địch, mạnh nhất khi đánh trúng hệ yếu.\nKhi thanh Break cạn: kẻ địch bị Choáng 1 lượt và bị đẩy lùi trên thanh thứ tự lượt."],
+	["Thứ tự lượt", "Tốc độ (SPD) càng cao thì càng tới lượt thường xuyên. Dải thứ tự lượt nằm ở giữa mép trên màn hình.\nDùng Choáng hoặc làm cạn thanh Break để chiếm lượt."],
+	["Nâng cấp chỉ số", "Nói chuyện với Kanade tại căn cứ để dùng Điểm Kỹ Năng (SP) nâng cấp vĩnh viễn chỉ số cho cả đội."],
+]
 
 static func build_base_ui(menu: Node) -> Dictionary:
-	var _root = Control.new()
-	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
-	menu.add_child(_root)
-	
-	var dim = ColorRect.new()
-	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-	dim.color = Color(0.04, 0.03, 0.02, 0.7)
-	_root.add_child(dim)
-	
-	var _panel = PanelContainer.new()
-	_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_panel.offset_left = -210
-	_panel.offset_right = 210
-	_panel.offset_top = -230
-	_panel.offset_bottom = 230
-	
-	var sb = StyleBoxTexture.new()
-	sb.texture = load(PANEL_BROWN_TEX)
-	sb.texture_margin_left = 20; sb.texture_margin_right = 20
-	sb.texture_margin_top = 20; sb.texture_margin_bottom = 20
-	sb.set_content_margin_all(24)
-	_panel.add_theme_stylebox_override("panel", sb)
-	_root.add_child(_panel)
-	
-	var vbox = VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 15)
-	_panel.add_child(vbox)
-	
-	var title = Label.new()
-	title.text = "TẠM DỪNG"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 24)
-	title.add_theme_color_override("font_color", Color(0.95, 0.82, 0.45))
-	title.add_theme_font_override("font", load(FONT_PATH))
-	vbox.add_child(title)
-	
-	var _guide_panel = PanelContainer.new()
-	_guide_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_guide_panel.offset_left = 50
-	_guide_panel.offset_right = -50
-	_guide_panel.offset_top = 50
-	_guide_panel.offset_bottom = -50
-	_guide_panel.visible = false
-	
-	var gsb = StyleBoxFlat.new()
-	gsb.bg_color = Color(0.05, 0.05, 0.1, 0.95)
-	gsb.border_width_left = 4
-	gsb.border_color = Color(0.4, 1.0, 0.7)
-	_guide_panel.add_theme_stylebox_override("panel", gsb)
-	_root.add_child(_guide_panel)
+	var root := Control.new()
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	menu.add_child(root)
 
-	var _options_panel = PanelContainer.new()
-	_options_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_options_panel.offset_left = -200; _options_panel.offset_right = 200
-	_options_panel.offset_top = -150; _options_panel.offset_bottom = 150
-	_options_panel.visible = false
-	
-	var osb = StyleBoxTexture.new()
-	osb.texture = load(PANEL_GREY_TEX)
-	osb.texture_margin_left = 12; osb.texture_margin_right = 12
-	osb.texture_margin_top = 12; osb.texture_margin_bottom = 12
-	osb.set_content_margin_all(20)
-	_options_panel.add_theme_stylebox_override("panel", osb)
-	_root.add_child(_options_panel)
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = UITheme.overlay_dim(0.78)
+	root.add_child(dim)
+
+	var panel := _centered_panel(PAUSE_WIDTH)
+	root.add_child(panel)
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", UITheme.SP_3)
+	panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "Tạm dừng"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	UITheme.style_title(title, UITheme.FS_TITLE, UITheme.ACCENT)
+	vbox.add_child(title)
+
+	var guide_panel := PanelContainer.new()
+	guide_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	guide_panel.offset_left = 120; guide_panel.offset_right = -120
+	guide_panel.offset_top = 60; guide_panel.offset_bottom = -60
+	guide_panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.BREAK, UITheme.SP_6))
+	guide_panel.visible = false
+	root.add_child(guide_panel)
+
+	var options_panel := _centered_panel(OPTIONS_WIDTH)
+	options_panel.visible = false
+	root.add_child(options_panel)
 
 	return {
-		"root": _root,
-		"panel": _panel,
+		"root": root,
+		"panel": panel,
 		"vbox": vbox,
-		"guide_panel": _guide_panel,
-		"options_panel": _options_panel
+		"guide_panel": guide_panel,
+		"options_panel": options_panel,
 	}
 
-static func create_button(txt: String, callback: Callable) -> Button:
-	var btn = Button.new()
+static func _centered_panel(width: int) -> PanelContainer:
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+	panel.custom_minimum_size.x = width
+	panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.ACCENT, UITheme.SP_6))
+	return panel
+
+static func create_button(txt: String, callback: Callable, kind: UITheme.Kind = UITheme.Kind.SECONDARY) -> Button:
+	var btn := Button.new()
 	btn.text = txt
-	btn.add_theme_font_size_override("font_size", 16)
-	btn.custom_minimum_size = Vector2(220, 38)
-	
-	var normal = StyleBoxTexture.new()
-	normal.texture = load(BUTTON_BROWN_TEX)
-	normal.texture_margin_left = 8; normal.texture_margin_right = 8
-	normal.texture_margin_top = 8; normal.texture_margin_bottom = 8
-	btn.add_theme_stylebox_override("normal", normal)
-	
-	var hover = StyleBoxTexture.new()
-	hover.texture = load(BUTTON_BROWN_HOVER_TEX)
-	hover.texture_margin_left = 8; hover.texture_margin_right = 8
-	hover.texture_margin_top = 8; hover.texture_margin_bottom = 8
-	btn.add_theme_stylebox_override("hover", hover)
-	btn.add_theme_stylebox_override("focus", hover)
-	btn.add_theme_stylebox_override("pressed", hover)
-	
-	btn.add_theme_color_override("font_color", Color(0.95, 0.9, 0.82))
-	btn.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
-	btn.add_theme_color_override("font_focus_color", Color(1.0, 0.95, 0.75))
-	btn.add_theme_color_override("font_pressed_color", Color(1.0, 0.95, 0.75))
-	
-	btn.pressed.connect(callback)
+	UITheme.style_button(btn, kind)
+	if callback.is_valid():
+		btn.pressed.connect(callback)
 	return btn
 
-static func build_guide_panel(_guide_panel: PanelContainer) -> void:
-	for child in _guide_panel.get_children():
+static func build_guide_panel(guide_panel: PanelContainer, on_close: Callable = Callable()) -> void:
+	for child in guide_panel.get_children():
+		guide_panel.remove_child(child)
 		child.queue_free()
-		
-	var scroll = ScrollContainer.new()
-	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_guide_panel.add_child(scroll)
-	
-	var margin = MarginContainer.new()
-	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	margin.add_theme_constant_override("margin_left", 20)
-	margin.add_theme_constant_override("margin_right", 20)
-	margin.add_theme_constant_override("margin_top", 20)
-	margin.add_theme_constant_override("margin_bottom", 20)
-	scroll.add_child(margin)
-	
-	var vbox = VBoxContainer.new()
-	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vbox.add_theme_constant_override("separation", 15)
-	margin.add_child(vbox)
-	
-	var close = Button.new()
-	close.text = "[ ĐÓNG HƯỚNG DẪN ]"
-	close.pressed.connect(func(): _guide_panel.visible = false)
-	vbox.add_child(close)
-	
-	var title = Label.new()
-	title.text = "CẨM NANG CHIẾN ĐẤU NÂNG CAO"
-	title.add_theme_font_size_override("font_size", 22)
-	vbox.add_child(title)
-	
-	var text = Label.new()
-	text.text = """
-1. CÔNG THỨC TÍNH SÁT THƯƠNG:
-   Sát thương = (ATK - DEF) * (1 - RES/100) * Hệ số hệ
-   - ATK: Tấn công của bạn.
-   - DEF: Phòng thủ của kẻ địch (giảm trực tiếp sát thương).
-   - RES: Kháng (giảm theo % sát thương sau khi trừ DEF).
-   * Sát thương tối thiểu luôn bằng 5% ATK của người đánh.
 
-2. HỆ THỐNG HỆ (TYPE CHART):
-   - Cool > Happy
-   - Happy > Cute
-   - Cute > Cool
-   - Mysterious <> Pure
-   * Hệ khắc chế gây 125% sát thương. Hệ bị khắc gây 80%.
+	var outer := VBoxContainer.new()
+	outer.add_theme_constant_override("separation", UITheme.SP_3)
+	guide_panel.add_child(outer)
 
-3. THỨ TỰ LƯỢT (ACTION GAUGE):
-   - Tốc độ (SPD) càng cao, bạn càng xuất hiện nhiều lần trong thanh hành động bên trái.
-   - Sử dụng các kỹ năng Stun hoặc giảm tốc kẻ địch để chiếm ưu thế lượt đánh.
+	var header := HBoxContainer.new()
+	outer.add_child(header)
+	var title := UITheme.make_label("Cẩm nang chiến đấu", UITheme.FS_TITLE, UITheme.BREAK)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(title)
+	var close_btn := create_button("Đóng", on_close, UITheme.Kind.GHOST)
+	if not on_close.is_valid():
+		close_btn.pressed.connect(func(): guide_panel.visible = false)
+	header.add_child(close_btn)
+	close_btn.call_deferred("grab_focus")
 
-4. NÂNG CẤP CHỈ SỐ:
-   - Nói chuyện với Kanade tại căn cứ để dùng Điểm Kỹ Năng (SP) nâng cấp vĩnh viễn các chỉ số cho cả đội.
-"""
-	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vbox.add_child(text)
-	
-	_guide_panel.visible = true
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	outer.add_child(scroll)
+
+	var column := VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.add_theme_constant_override("separation", UITheme.SP_4)
+	scroll.add_child(column)
+
+	for section in GUIDE_SECTIONS:
+		var block := VBoxContainer.new()
+		block.add_theme_constant_override("separation", UITheme.SP_1)
+		block.add_child(UITheme.make_label(section[0], UITheme.FS_HEADING, UITheme.ACCENT))
+		var body := UITheme.make_label(section[1], UITheme.FS_LABEL, UITheme.TEXT)
+		body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		block.add_child(body)
+		column.add_child(block)
+
+	guide_panel.visible = true

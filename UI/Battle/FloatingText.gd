@@ -17,12 +17,12 @@ Chức năng chính:
 # ── Cấu Hình ───────────────────────────────────────────────────────────────
 
 const COLORS = {
-	"physical": Color(1.0, 0.35, 0.35),
-	"pure":     Color(1.0, 1.0, 1.0),
-	"dot":      Color(0.75, 0.35, 0.9),
-	"heal":     Color(0.25, 1.0, 0.4),
-	"crit":     Color(1.0, 0.85, 0.2),
-	"break":    Color(0.2, 0.95, 1.0),
+	"physical": UITheme.DANGER_TEXT,
+	"pure":     UITheme.TEXT,
+	"dot":      UITheme.ELEMENT_COLORS["Mysterious"],
+	"heal":     UITheme.SUCCESS,
+	"crit":     UITheme.ACCENT,
+	"break":    UITheme.BREAK,
 }
 
 var float_color: Color = Color.RED
@@ -35,15 +35,18 @@ func _ready():
 	Khởi tạo hiệu ứng hoạt ảnh nảy (Scale Bounce) và bay lên (Tween).
 	"""
 	add_theme_color_override("font_color", float_color)
-	var outline_col = Color(0.6, 0.1, 0.1) if is_crit else Color.BLACK
+	var outline_col = UITheme.DANGER.darkened(0.4) if is_crit else UITheme.INK_900
 	add_theme_color_override("font_outline_color", outline_col)
 	add_theme_constant_override("outline_size", 6 if is_crit else 4)
-	add_theme_font_size_override("font_size", 28 if is_crit else 22)
+	add_theme_font_size_override("font_size", UITheme.FS_TITLE if is_crit else UITheme.FS_HEADING)
 	
 	horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	z_index = 120
+	# Co nhãn theo chữ rồi canh giữa theo `pos` để số nằm giữa thẻ và scale-pop xoay quanh tâm
+	size = get_minimum_size()
 	pivot_offset = size / 2.0
+	position.x -= size.x / 2.0
 	
 	# Độ lệch ngẫu nhiên nhẹ tránh đè số
 	position.x += randf_range(-16, 16)
@@ -79,7 +82,7 @@ static func spawn(parent: Node, amount: int, damage_type: String, pos: Vector2, 
 		var break_lbl = FloatingText.new()
 		break_lbl.text = "WEAKNESS BREAK!"
 		break_lbl.float_color = COLORS["break"]
-		break_lbl.position = pos + Vector2(0, -28)
+		break_lbl.position = pos + Vector2(0, -(UITheme.FS_TITLE + UITheme.SP_2))
 		parent.add_child(break_lbl)
 
 	var ft = FloatingText.new()

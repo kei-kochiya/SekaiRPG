@@ -79,11 +79,10 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 			vis.color = color
 			root.add_child(vis)
 	
-	var lbl = Label.new()
-	lbl.text = p_name
-	lbl.add_theme_color_override("font_color", color)
-	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.position = Vector2(-20, -42)
+	var lbl = UITheme.make_label(p_name, UITheme.FS_CAPTION, color)
+	lbl.add_theme_color_override("font_outline_color", UITheme.INK_900)
+	lbl.add_theme_constant_override("outline_size", 4)
+	lbl.position = Vector2(-lbl.get_minimum_size().x / 2.0, -48)
 	root.add_child(lbl)
 	
 	parent.add_child(root)

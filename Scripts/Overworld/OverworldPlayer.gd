@@ -87,6 +87,13 @@ func _ready():
 
 # ── Cập Nhật Sprite & Hoạt Ảnh ─────────────────────────────────────────────
 
+# Đặt hướng nhìn ("down", "left", "right", "up"); dùng được cả trước khi add_child
+func set_facing(dir: String) -> void:
+	if dir not in ["down", "left", "right", "up"]:
+		return
+	_facing = dir
+	_update_sprite_frame()
+
 func _update_sprite_texture():
 	if not _sprite:
 		return
@@ -142,7 +149,8 @@ func _process(_delta):
 
 func _update_objective_arrow():
 	var objectives = get_tree().get_nodes_in_group("objectives")
-	if objectives.is_empty():
+	# Đang hội thoại (vd. NPC vừa kích hoạt xong cảnh kết) thì không chỉ mũi tên vào mục tiêu nữa
+	if objectives.is_empty() or GameManager.is_in_dialogue:
 		_objective_arrow.visible = false
 		return
 	

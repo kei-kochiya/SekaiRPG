@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://0br3ahvsar6b"
-path="res://.godot/imported/zhcn.ttf-c6e5107c9e5deb51cda1a1e24bb7b047.fontdata"
+uid="uid://dns5gxd1tpxgw"
+path="res://.godot/imported/BeVietnamPro-SemiBold.ttf-8453be9ed30ce6632e8fb26ae7b2197c.fontdata"
 
 [deps]
 
-source_file="res://Assets/Fonts/zhcn.ttf"
-dest_files=["res://.godot/imported/zhcn.ttf-c6e5107c9e5deb51cda1a1e24bb7b047.fontdata"]
+source_file="res://Assets/Fonts/BeVietnamPro-SemiBold.ttf"
+dest_files=["res://.godot/imported/BeVietnamPro-SemiBold.ttf-8453be9ed30ce6632e8fb26ae7b2197c.fontdata"]
 
 [params]
 

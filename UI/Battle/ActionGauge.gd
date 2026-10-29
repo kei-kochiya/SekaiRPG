@@ -1,105 +1,56 @@
-extends VBoxContainer
+extends PanelContainer
 class_name ActionGauge
 
 """
-Tóm tắt: ActionGauge hiển thị danh sách thứ tự hành động (Timeline) trong trận đấu.
+ActionGauge: dải thứ tự lượt nằm ngang ở giữa mép trên màn hình.
 
-Chức năng chính:
-- Trực quan hóa danh sách các lượt đánh sắp tới (tối đa 10 lượt).
-- Sử dụng màu sắc để phân biệt giữa phe người chơi (Xanh) và phe địch (Đỏ).
-- Cập nhật linh hoạt thông qua hàm `refresh` mỗi khi có thay đổi trong timeline.
+- Ô đầu tiên là thực thể đang hành động (viền vàng), các ô sau là lượt sắp tới.
+- Màu vạch trên mỗi ô phân biệt phe ta (teal) và phe địch (san hô).
 """
 
-# ── Cấu Hình & Biến ────────────────────────────────────────────────────────
+const MAX_ENTRIES = 8
+const CHIP_WIDTH = 104
 
-
-const PLAYER_COLOR = Color(0.0, 0.8, 0.8)
-const ENEMY_COLOR  = Color(1.0, 0.3, 0.3)
-
-# Danh sách các thực thể phe ta (Dùng để so sánh Object)
 var player_team: Array = []
+var _row: HBoxContainer
 
 func _ready():
-	add_theme_constant_override("separation", 2)
-	custom_minimum_size = Vector2(140, 0)
-
-# ── Khởi Tạo & Cập Nhật ────────────────────────────────────────────────────
+	add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, Color.TRANSPARENT, UITheme.SP_2))
+	_row = HBoxContainer.new()
+	_row.add_theme_constant_override("separation", UITheme.SP_1)
+	add_child(_row)
 
 func set_player_team(team: Array):
-	"""
-	Thiết lập danh sách thực thể phe người chơi để phục vụ việc tô màu.
-
-	Args:
-		team (Array): Mảng các thực thể Entity thuộc phe ta.
-	"""
 	player_team = team
 
 func refresh(timeline: Array, current_actor: Entity = null):
-	"""
-	Cập nhật và vẽ lại toàn bộ danh sách thứ tự lượt.
-
-	Args:
-		timeline (Array): Mảng các Dictionary chứa thông tin lượt (entity, tick).
-		current_actor (Entity): Thực thể đang thực hiện lượt hiện tại.
-	"""
-	for c in get_children():
+	for c in _row.get_children():
 		c.queue_free()
-	
-	var header = Label.new()
-	header.text = "THỨ TỰ LƯỢT"
-	header.add_theme_font_size_override("font_size", 11)
-	header.add_theme_color_override("font_color", Color(0.45, 0.45, 0.45))
-	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	add_child(header)
-	
-	var sep = HSeparator.new()
-	sep.add_theme_constant_override("separation", 4)
-	add_child(sep)
-	
-	# Chuẩn bị danh sách hiển thị (bao gồm lượt hiện tại nếu có)
-	var display_list = []
+
+	var entries: Array = []
 	if current_actor:
-		display_list.append({"entity": current_actor, "is_current": true})
-	
+		entries.append({"entity": current_actor, "is_current": true})
 	for turn in timeline:
-		display_list.append({"entity": turn["entity"], "is_current": false})
-	
-	# Giới hạn hiển thị 10 lượt
-	for i in range(min(display_list.size(), 10)):
-		var data = display_list[i]
-		var entity = data["entity"]
-		var is_current = data["is_current"]
-		var entry_name = entity.entity_name
-		
-		var is_player = player_team.has(entity)
-		
-		var row = HBoxContainer.new()
-		row.add_theme_constant_override("separation", 6)
-		
-		var num = Label.new()
-		num.text = "NOW" if is_current else "%d." % i
-		num.add_theme_font_size_override("font_size", 9 if is_current else 11)
-		num.add_theme_color_override("font_color", Color(1, 0.8, 0.2) if is_current else Color(0.35, 0.35, 0.35))
-		num.custom_minimum_size = Vector2(22, 0)
-		row.add_child(num)
-		
-		var icon = TextureRect.new()
-		icon.texture = load("res://Assets/UI/marker_gauge_diamond.svg")
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.custom_minimum_size = Vector2(16, 16)
-		icon.modulate = PLAYER_COLOR if is_player else ENEMY_COLOR
-		row.add_child(icon)
-		
-		var lbl = Label.new()
-		lbl.text = entry_name
-		lbl.add_theme_font_size_override("font_size", 12)
-		lbl.add_theme_color_override("font_color",
-			PLAYER_COLOR if is_player else ENEMY_COLOR)
-		
-		if is_current:
-			lbl.add_theme_font_size_override("font_size", 13)
-			lbl.add_theme_color_override("font_outline_color", Color.BLACK)
-			lbl.add_theme_constant_override("outline_size", 2)
-			
-		row.add_child(lbl)
-		add_child(row)
+		entries.append({"entity": turn["entity"], "is_current": false})
+
+	for i in range(mini(entries.size(), MAX_ENTRIES)):
+		_row.add_child(_make_chip(entries[i]["entity"], entries[i]["is_current"]))
+
+func _make_chip(entity: Entity, is_current: bool) -> PanelContainer:
+	var faction := UITheme.PLAYER if player_team.has(entity) else UITheme.ENEMY
+	var chip := PanelContainer.new()
+	chip.custom_minimum_size = Vector2(CHIP_WIDTH, 30)
+	var sb: StyleBoxFlat
+	if is_current:
+		sb = UITheme.box(UITheme.INK_700, UITheme.ACCENT, UITheme.RADIUS_SM, UITheme.SP_2, 4, 2)
+	else:
+		sb = UITheme.box(UITheme.INK_900, faction, UITheme.RADIUS_SM, UITheme.SP_2, 4, 0)
+		sb.border_width_top = 3
+	chip.add_theme_stylebox_override("panel", sb)
+
+	var label := UITheme.make_label(entity.entity_name, UITheme.FS_CAPTION, faction, HORIZONTAL_ALIGNMENT_CENTER)
+	label.add_theme_font_override("font", UITheme.font_display_medium())
+	label.clip_text = true
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	chip.add_child(label)
+	return chip

@@ -3,126 +3,155 @@ class_name SkillDetailPopup
 
 """
 SkillDetailPopup: Cửa sổ hiển thị thông tin chuyên sâu của một kỹ năng.
-Bao gồm mô tả, tỉ lệ sát thương và các hiệu ứng đi kèm. 
+Bao gồm mô tả, tỉ lệ sát thương và các hiệu ứng đi kèm.
 Tách ra từ CommandMenu để giữ code điều khiển gọn gàng.
+
+Gốc là lớp mờ phủ toàn màn hình (top_level), bên trong là một bảng giữa màn hình. ESC hoặc nút Đóng để thoát.
 """
 
+const PANEL_WIDTH = 560
+const MAX_LIST_HEIGHT = 420
+const MAX_SKILLS_UNSCROLLED = 4
+
 var _content_vbox: VBoxContainer
+var _close_btn: Button
+var _prev_focus: Control = null
+var _modal_pushed: bool = false
 
 func _init():
 	visible = false
 	top_level = true
-	set_anchors_preset(Control.PRESET_CENTER)
-	grow_horizontal = Control.GROW_DIRECTION_BOTH
-	grow_vertical = Control.GROW_DIRECTION_BOTH
-	custom_minimum_size = Vector2(400, 250)
-	
-	var sb = StyleBoxTexture.new()
-	sb.texture = load("res://Assets/UI/panel_angular_brown.svg")
-	sb.texture_margin_left = 20; sb.texture_margin_right = 20
-	sb.texture_margin_top = 20; sb.texture_margin_bottom = 20
-	sb.content_margin_left = 24; sb.content_margin_right = 24
-	sb.content_margin_top = 20; sb.content_margin_bottom = 20
-	add_theme_stylebox_override("panel", sb)
-	
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	add_theme_stylebox_override("panel", UITheme.box(UITheme.overlay_dim(0.78), Color.TRANSPARENT, 0, 0, 0))
+
+	var center = CenterContainer.new()
+	add_child(center)
+
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size.x = PANEL_WIDTH
+	panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.PLAYER, UITheme.SP_6))
+	center.add_child(panel)
+
 	_content_vbox = VBoxContainer.new()
-	_content_vbox.add_theme_constant_override("separation", 15)
-	add_child(_content_vbox)
+	_content_vbox.add_theme_constant_override("separation", UITheme.SP_3)
+	panel.add_child(_content_vbox)
+
+func _exit_tree():
+	_set_modal(false)
+
+func _input(event):
+	if visible and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		_close()
 
 func display_skill(skill: Dictionary):
 	"""
 	Cập nhật nội dung và hiển thị bảng chi tiết kỹ năng.
 	"""
-	for c in _content_vbox.get_children():
-		c.queue_free()
-	
-	# Header (Tiêu đề + Nút đóng)
-	var header = HBoxContainer.new()
-	_content_vbox.add_child(header)
-	
-	var title = Label.new()
-	title.text = "CHI TIẾT KỸ NĂNG"
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.add_theme_font_size_override("font_size", 18)
-	header.add_child(title)
-	
-	var close_btn = _create_close_button()
-	header.add_child(close_btn)
-	
+	_reset("Chi tiết kỹ năng")
+
 	# Nội dung tên chiêu
-	var name_lbl = Label.new()
-	name_lbl.text = skill["name"]
-	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.9, 0.2))
-	name_lbl.add_theme_font_size_override("font_size", 22)
-	_content_vbox.add_child(name_lbl)
-	
+	_content_vbox.add_child(UITheme.make_label(skill["name"], UITheme.FS_HEADING, UITheme.ACCENT))
+
 	# Nội dung mô tả chi tiết (scaling, effects)
-	var details = Label.new()
-	details.text = skill.get("details", "Không có thông tin chi tiết.")
-	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	details.add_theme_font_size_override("font_size", 16)
-	_content_vbox.add_child(details)
-	
-	visible = true
+	_content_vbox.add_child(_make_details(skill.get("details", "Không có thông tin chi tiết."), UITheme.FS_LABEL))
+
+	_open()
 
 func display_entity_skills(entity: Entity):
 	"""
 	Hiển thị toàn bộ danh sách kỹ năng của một thực thể.
 	"""
-	for c in _content_vbox.get_children():
-		c.queue_free()
-	
-	var header = HBoxContainer.new()
-	_content_vbox.add_child(header)
-	
-	var title = Label.new()
-	title.text = "THÔNG TIN KỸ NĂNG: " + entity.entity_name.to_upper()
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.add_theme_font_size_override("font_size", 18)
-	header.add_child(title)
-	
-	var close_btn = _create_close_button()
-	header.add_child(close_btn)
-	
-	var scroll = ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_content_vbox.add_child(scroll)
-	
+	_reset("Kỹ năng: " + entity.entity_name)
+
 	var list = VBoxContainer.new()
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	list.add_theme_constant_override("separation", 20)
-	scroll.add_child(list)
-	
-	for skill in entity.skills:
-		var item = VBoxContainer.new()
-		list.add_child(item)
-		
-		var name_lbl = Label.new()
-		name_lbl.text = "✦ " + skill["name"]
-		name_lbl.add_theme_color_override("font_color", Color(1.0, 0.9, 0.2))
-		name_lbl.add_theme_font_size_override("font_size", 18)
-		item.add_child(name_lbl)
-		
-		var details = Label.new()
-		details.text = skill.get("details", "Không có thông tin chi tiết.")
-		details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		details.add_theme_font_size_override("font_size", 14)
-		item.add_child(details)
-	
-	visible = true
+	list.add_theme_constant_override("separation", UITheme.SP_3)
+	# Danh sách ngắn thì hiện thẳng; chỉ dùng khung cuộn khi nhiều kỹ năng
+	if entity.skills.size() > MAX_SKILLS_UNSCROLLED:
+		var scroll = ScrollContainer.new()
+		scroll.custom_minimum_size.y = MAX_LIST_HEIGHT
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll.follow_focus = true
+		_content_vbox.add_child(scroll)
+		scroll.add_child(list)
+	else:
+		_content_vbox.add_child(list)
 
-func _create_close_button() -> Button:
-	var close_btn = Button.new()
-	close_btn.text = " ✕ "
-	close_btn.add_theme_color_override("font_color", Color(1.0, 0.88, 0.88))
-	var cb_sb = StyleBoxTexture.new()
-	cb_sb.texture = load("res://Assets/UI/btn_angular_red.svg")
-	cb_sb.texture_margin_left = 6
-	cb_sb.texture_margin_right = 6
-	cb_sb.texture_margin_top = 4
-	cb_sb.texture_margin_bottom = 6
-	close_btn.add_theme_stylebox_override("normal", cb_sb)
-	close_btn.add_theme_stylebox_override("hover", cb_sb)
-	close_btn.pressed.connect(func(): visible = false)
-	return close_btn
+	for i in range(entity.skills.size()):
+		var skill = entity.skills[i]
+		if i > 0:
+			list.add_child(HSeparator.new())
+
+		var item = VBoxContainer.new()
+		item.add_theme_constant_override("separation", UITheme.SP_1)
+		list.add_child(item)
+		item.add_child(UITheme.make_label(skill["name"], UITheme.FS_LABEL, UITheme.ACCENT))
+		item.add_child(_make_details(skill.get("details", "Không có thông tin chi tiết."), UITheme.FS_BODY))
+
+	_open()
+
+# ── Dựng nội dung ──────────────────────────────────────────────────────────
+
+# Xóa nội dung cũ và dựng hàng tiêu đề (tiêu đề + nút Đóng)
+func _reset(title_text: String):
+	for c in _content_vbox.get_children():
+		_content_vbox.remove_child(c)
+		c.queue_free()
+
+	var header = HBoxContainer.new()
+	header.add_theme_constant_override("separation", UITheme.SP_3)
+	_content_vbox.add_child(header)
+
+	var title = Label.new()
+	title.text = title_text
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title.clip_text = true
+	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	UITheme.style_title(title, UITheme.FS_HEADING, UITheme.TEXT)
+	header.add_child(title)
+
+	_close_btn = Button.new()
+	_close_btn.text = "Đóng"
+	UITheme.style_button(_close_btn, UITheme.Kind.GHOST)
+	_close_btn.custom_minimum_size.x = 96
+	_close_btn.pressed.connect(_close)
+	header.add_child(_close_btn)
+
+func _make_details(text: String, size: int) -> Label:
+	var details = UITheme.make_label(text, size, UITheme.TEXT)
+	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	return details
+
+# ── Mở / đóng ──────────────────────────────────────────────────────────────
+
+func _open():
+	if not visible and is_inside_tree():
+		_prev_focus = get_viewport().gui_get_focus_owner()
+	visible = true
+	_set_modal(true)
+	_focus_later.call_deferred(_close_btn)
+
+func _close():
+	visible = false
+	_set_modal(false)
+	# Trả focus về nút đã mở popup (nút "Kỹ năng" của CommandMenu)
+	if is_instance_valid(_prev_focus) and _prev_focus.is_visible_in_tree():
+		_focus_later.call_deferred(_prev_focus)
+	_prev_focus = null
+
+# Báo PauseMenu để ESC đóng popup thay vì mở menu tạm dừng; push/pop luôn cân bằng nhờ cờ `_modal_pushed`
+func _set_modal(on: bool):
+	if on == _modal_pushed:
+		return
+	_modal_pushed = on
+	if on:
+		PauseMenu.push_modal()
+	else:
+		PauseMenu.pop_modal()
+
+# Focus trễ một nhịp (sau khi các node queue_free() đã dọn); bỏ qua nếu nút đã bị xóa/gỡ khỏi cây trước đó
+func _focus_later(ctrl):
+	if is_instance_valid(ctrl) and ctrl.is_inside_tree():
+		ctrl.grab_focus()

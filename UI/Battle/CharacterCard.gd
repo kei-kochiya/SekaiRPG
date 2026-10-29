@@ -2,285 +2,171 @@ extends PanelContainer
 class_name CharacterCard
 
 """
-Tóm tắt: CharacterCard hiển thị thẻ trạng thái của nhân vật hoặc kẻ địch.
+CharacterCard: thẻ trạng thái của một nhân vật hoặc kẻ địch trong trận.
 
-Chức năng chính:
-- Hiển thị thông tin trực quan: Ảnh chân dung, Tên, Cấp độ, Thanh máu (HP).
-- Cập nhật thời gian thực các hiệu ứng trạng thái (Status Dots) và biểu tượng hồi chiêu (Cooldown Icons).
-- Tích hợp hệ thống Tween để tạo hiệu ứng mượt mà khi thanh máu thay đổi hoặc khi thực thể tử trận.
-- Lắng nghe tự động thông qua hệ thống Signal của Entity.
+- Hiển thị chân dung, tên, cấp, hệ nguyên tố, thanh máu, thanh Break (kẻ địch) và các hiệu ứng trạng thái.
+- Tự cập nhật qua signal của Entity; `set_active()` đánh dấu thực thể đang tới lượt.
 """
 
-# ── Biến Giao Diện ─────────────────────────────────────────────────────────
-
-
-const COLORS = {
-	"player": Color(0.29, 0.62, 0.62),
-	"enemy": Color(0.72, 0.38, 0.16),
-	"hp_fill": Color(0.2, 0.8, 0.2),
-	"bg": Color(0.12, 0.12, 0.12, 0.9)
-}
+const CARD_WIDTH = 264
+const PORTRAIT_SIZE = 48
 
 var entity: Entity
 var is_player: bool = false
 
-# ── Khởi Tạo ───────────────────────────────────────────────────────────────
-
 var hp_bar: ProgressBar
 var break_bar: ProgressBar
 var hp_label: Label
-var name_label: Label
 var level_label: Label
 var status_row: HBoxContainer
-var cooldown_icons: Dictionary = {}
 
 func setup(e: Entity, player: bool):
-	"""
-	Khởi tạo và cấu hình dữ liệu cho thẻ thực thể.
-
-	Args:
-		e (Entity): Thực thể mục tiêu cần hiển thị.
-		player (bool): Xác định phe của thực thể (Ta/Địch).
-	"""
 	entity = e
 	is_player = player
 	_build_ui()
 	_connect_signals()
 	_refresh_all()
 
-# ── Xây Dựng Component ─────────────────────────────────────────────────────
+# ── Xây dựng ───────────────────────────────────────────────────────────────
+
+func _faction_color() -> Color:
+	return UITheme.PLAYER if is_player else UITheme.ENEMY
 
 func _build_ui():
-	"""Xây dựng cấu trúc cây Node và áp dụng phong cách Angular Brown."""
-	var ps = StyleBoxTexture.new()
-	ps.texture = load("res://Assets/UI/panel_angular_brown.svg")
-	ps.texture_margin_left = 16
-	ps.texture_margin_right = 16
-	ps.texture_margin_top = 16
-	ps.texture_margin_bottom = 16
-	ps.set_content_margin_all(12)
-	add_theme_stylebox_override("panel", ps)
-	custom_minimum_size = Vector2(220, 0)
-	
-	var vbox = VBoxContainer.new()
-	add_child(vbox)
-	
-	vbox.add_child(_create_header())
-	
-	hp_bar = _create_hp_bar()
-	vbox.add_child(hp_bar)
-	
-	if not is_player:
-		break_bar = _create_break_bar()
-		vbox.add_child(break_bar)
-	
-	var footer = HBoxContainer.new()
-	vbox.add_child(footer)
-	
-	status_row = HBoxContainer.new()
-	footer.add_child(status_row)
-	
-	if not entity.skills.is_empty():
-		var cd_row = _create_cooldown_row()
-		vbox.add_child(cd_row)
+	custom_minimum_size = Vector2(CARD_WIDTH, 0)
+	add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, _faction_color(), UITheme.SP_3))
 
-func _create_break_bar() -> ProgressBar:
-	var bar = ProgressBar.new()
-	bar.custom_minimum_size = Vector2(0, 6)
-	bar.show_percentage = false
-	var fill = StyleBoxFlat.new()
-	fill.bg_color = Color(0.2, 0.85, 1.0) # Cyan break bar
-	fill.set_corner_radius_all(2)
-	bar.add_theme_stylebox_override("fill", fill)
-	var bg = StyleBoxFlat.new()
-	bg.bg_color = Color(0.1, 0.15, 0.2, 0.8)
-	bg.set_corner_radius_all(2)
-	bar.add_theme_stylebox_override("background", bg)
-	bar.max_value = entity.get("max_break_gauge") if "max_break_gauge" in entity else 100
-	bar.value = entity.get("break_gauge") if "break_gauge" in entity else 100
-	return bar
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", UITheme.SP_2)
+	add_child(vbox)
+
+	vbox.add_child(_create_header())
+
+	hp_bar = ProgressBar.new()
+	UITheme.style_bar(hp_bar, UITheme.SUCCESS, 16)
+	hp_label = UITheme.make_label("", UITheme.FS_CAPTION, UITheme.TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	hp_label.add_theme_font_override("font", UITheme.font_display_medium())
+	hp_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	hp_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hp_label.add_theme_color_override("font_outline_color", UITheme.INK_900)
+	hp_label.add_theme_constant_override("outline_size", 3)
+	hp_bar.add_child(hp_label)
+	vbox.add_child(hp_bar)
+
+	if not is_player:
+		break_bar = ProgressBar.new()
+		UITheme.style_bar(break_bar, UITheme.BREAK, 6)
+		vbox.add_child(break_bar)
+
+	status_row = HBoxContainer.new()
+	status_row.add_theme_constant_override("separation", UITheme.SP_1)
+	vbox.add_child(status_row)
 
 func _create_header() -> HBoxContainer:
-	"""Khởi tạo phần đầu thẻ với chân dung, tên và cấp độ."""
-	var h = HBoxContainer.new()
-	h.add_theme_constant_override("separation", 10)
-	
-	var portrait = TextureRect.new()
-	portrait.custom_minimum_size = Vector2(44, 44)
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", UITheme.SP_3)
+
+	var frame := PanelContainer.new()
+	frame.add_theme_stylebox_override("panel", UITheme.box(UITheme.INK_900, UITheme.INK_600, UITheme.RADIUS_SM, 0, 0))
+	frame.custom_minimum_size = Vector2(PORTRAIT_SIZE, PORTRAIT_SIZE)
+	var portrait := TextureRect.new()
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	var p_path = entity.get_portrait_path()
-		
-	if ResourceLoader.exists(p_path): portrait.texture = load(p_path)
-	h.add_child(portrait)
-	
-	var info = VBoxContainer.new()
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var p_path := entity.get_portrait_path()
+	if ResourceLoader.exists(p_path):
+		portrait.texture = load(p_path)
+	frame.add_child(portrait)
+	h.add_child(frame)
+
+	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.add_theme_constant_override("separation", 2)
 	h.add_child(info)
-	
-	name_label = Label.new()
-	name_label.text = entity.entity_name.to_upper()
-	name_label.add_theme_color_override("font_color", COLORS.player if is_player else COLORS.enemy)
-	name_label.add_theme_font_size_override("font_size", 14)
+
+	var name_label := UITheme.make_label(entity.entity_name, UITheme.FS_LABEL, UITheme.TEXT)
+	name_label.add_theme_font_override("font", UITheme.font_display_bold())
+	name_label.clip_text = true
+	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	info.add_child(name_label)
-	
-	level_label = Label.new()
-	level_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-	level_label.add_theme_font_size_override("font_size", 11)
-	info.add_child(level_label)
-	
+
+	var meta := HBoxContainer.new()
+	meta.add_theme_constant_override("separation", UITheme.SP_2)
+	info.add_child(meta)
+	level_label = UITheme.make_label("", UITheme.FS_CAPTION, UITheme.TEXT_MUTED)
+	meta.add_child(level_label)
+	if entity.type != "None":
+		meta.add_child(UITheme.chip(entity.type, UITheme.element_color(entity.type)))
 	return h
 
-func _create_hp_bar() -> ProgressBar:
-	"""Khởi tạo thanh máu với giao diện tùy chỉnh."""
-	var bar = ProgressBar.new()
-	bar.custom_minimum_size = Vector2(0, 16)
-	bar.show_percentage = false
-	
-	var fill = StyleBoxTexture.new()
-	fill.texture = load("res://Assets/UI/progress_hp_fill.svg")
-	fill.texture_margin_left = 4
-	fill.texture_margin_right = 4
-	bar.add_theme_stylebox_override("fill", fill)
-	
-	var bg = StyleBoxTexture.new()
-	bg.texture = load("res://Assets/UI/progress_hp_bg.svg")
-	bg.texture_margin_left = 4
-	bg.texture_margin_right = 4
-	bar.add_theme_stylebox_override("background", bg)
-	
-	hp_label = Label.new()
-	hp_label.set_anchors_preset(Control.PRESET_FULL_RECT)
-	hp_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hp_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	hp_label.add_theme_font_size_override("font_size", 10)
-	bar.add_child(hp_label)
-	
-	return bar
+# ── Trạng thái lượt ────────────────────────────────────────────────────────
 
-func _create_cooldown_row() -> HBoxContainer:
-	"""Khởi tạo hàng biểu tượng theo dõi thời gian hồi kỹ năng."""
-	var row = HBoxContainer.new()
-	row.add_theme_constant_override("separation", 4)
-	for skill in entity.skills:
-		var panel = PanelContainer.new()
-		panel.custom_minimum_size = Vector2(24, 20)
-		var sb = StyleBoxFlat.new()
-		sb.bg_color = Color(0.15, 0.15, 0.15)
-		sb.set_corner_radius_all(2)
-		panel.add_theme_stylebox_override("panel", sb)
-		
-		var l = Label.new()
-		l.text = skill["name"].substr(0, 2)
-		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		l.add_theme_font_size_override("font_size", 10)
-		panel.add_child(l)
-		row.add_child(panel)
-		cooldown_icons[skill["method"]] = {"label": l, "panel": panel, "style": sb}
-	return row
+func set_active(active: bool):
+	var border := UITheme.ACCENT if active else UITheme.INK_600
+	var sb := UITheme.panel(UITheme.INK_700 if active else UITheme.INK_800, border, _faction_color(), UITheme.SP_3)
+	if active:
+		sb.border_width_left = 2
+		sb.border_width_right = 2
+		sb.border_width_bottom = 2
+		sb.border_blend = false
+		sb.border_color = UITheme.ACCENT
+	add_theme_stylebox_override("panel", sb)
 
-# ── Cập Nhật UI ────────────────────────────────────────────────────────────
+# ── Signal ─────────────────────────────────────────────────────────────────
 
 func _connect_signals():
-	"""Kết nối các tín hiệu của thực thể để đảm bảo UI cập nhật tự động."""
 	entity.hp_changed.connect(_on_hp_changed)
 	entity.died.connect(_on_died)
-	entity.cooldown_updated.connect(_on_cooldown_updated)
 	entity.status_changed.connect(_on_status_changed)
-	if entity.has_signal("damage_received_detailed"):
-		entity.damage_received_detailed.connect(_on_damage_received_detailed)
-	else:
-		entity.damage_received.connect(_on_damage_received)
+	entity.damage_received_detailed.connect(_on_damage_received_detailed)
 	entity.level_changed.connect(_on_level_changed)
-	if entity.has_signal("break_gauge_changed") and break_bar:
+	if break_bar:
 		entity.break_gauge_changed.connect(_on_break_gauge_changed)
 
 func _refresh_all():
-	"""Làm mới toàn bộ dữ liệu hiển thị trên thẻ theo trạng thái hiện tại."""
 	_on_level_changed(entity.level)
 	_on_hp_changed(entity.current_hp, entity.max_hp)
 	_on_status_changed(entity.active_statuses)
 	if break_bar:
 		_on_break_gauge_changed(entity.break_gauge, entity.max_break_gauge)
-	if entity.current_hp <= 0: _on_died()
+	if entity.current_hp <= 0:
+		_on_died()
 
 func _on_level_changed(lv: int):
-	"""Cập nhật nhãn cấp độ và thuộc tính."""
-	level_label.text = "Lv.%d  [%s]" % [lv, entity.type]
+	level_label.text = "Lv.%d" % lv
 
 func _on_break_gauge_changed(cur: int, max_v: int):
-	"""Cập nhật thanh Break Gauge của kẻ địch."""
-	if not break_bar: return
+	if not break_bar:
+		return
 	break_bar.max_value = max_v
-	var tw = create_tween()
-	tw.tween_property(break_bar, "value", float(cur), 0.25)
+	create_tween().tween_property(break_bar, "value", float(cur), 0.25)
 
 func _on_hp_changed(cur: int, m_hp: int):
-	"""Cập nhật giá trị thanh máu với hiệu ứng chuyển động mượt mà."""
 	hp_bar.max_value = m_hp
-	var tw = create_tween()
-	tw.tween_property(hp_bar, "value", cur, 0.3).set_trans(Tween.TRANS_CUBIC)
+	create_tween().tween_property(hp_bar, "value", cur, 0.3).set_trans(Tween.TRANS_CUBIC)
 	hp_label.text = "%d / %d" % [cur, m_hp]
+	var ratio := float(cur) / maxf(1.0, float(m_hp))
+	var fill_color := UITheme.SUCCESS if ratio > 0.5 else (UITheme.WARNING if ratio > 0.25 else UITheme.DANGER_TEXT)
+	hp_bar.add_theme_stylebox_override("fill", UITheme.box(fill_color, Color.TRANSPARENT, UITheme.RADIUS_SM, 0, 0))
 
 func _on_died():
-	"""Xử lý hiệu ứng thị giác khi thực thể bị hạ gục."""
-	modulate = Color(0.5, 0.5, 0.5, 0.7)
-
-func _on_cooldown_updated(skill: String, turns: int):
-	"""Cập nhật thông số hồi chiêu trên từng biểu tượng kỹ năng tương ứng."""
-	if not cooldown_icons.has(skill): return
-	var icon = cooldown_icons[skill]
-	if turns > 0:
-		icon.label.text = str(turns)
-		icon.label.add_theme_color_override("font_color", Color(1, 0.8, 0.2))
-		icon.style.bg_color = Color(0.3, 0.2, 0.1)
-	else:
-		icon.label.text = "OK"
-		icon.label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-		icon.style.bg_color = Color(0.15, 0.15, 0.15)
+	modulate = Color(0.55, 0.55, 0.55, 0.65)
 
 func _on_status_changed(statuses: Array):
-	"""Cập nhật hiển thị hiệu ứng trạng thái. Gom nhóm các stack cùng loại thành 1 icon kèm số."""
-	for c in status_row.get_children(): c.queue_free()
-	
-	var counts = {}
+	for c in status_row.get_children():
+		c.queue_free()
+
+	var counts := {}
 	for s in statuses:
-		var type_name = s.get("type", "Unknown")
+		var type_name: String = s.get("type", "Unknown")
 		counts[type_name] = counts.get(type_name, 0) + 1
-		
+
 	for type_name in counts:
-		var count = counts[type_name]
-		var container = HBoxContainer.new()
-		container.add_theme_constant_override("separation", 2)
-		status_row.add_child(container)
-		
-		var dot = ColorRect.new()
-		dot.custom_minimum_size = Vector2(10, 10)
-		
-		# Phân loại màu sắc hiệu ứng
-		var color = Color(0.8, 0.2, 0.2) # Bleed: Đỏ
-		match type_name:
-			"Poison": color = Color(0.2, 0.8, 0.2) # Poison: Xanh lá
-			"Stun":   color = Color(1.0, 0.9, 0.2) # Stun: Vàng
-			"Slow":   color = Color(0.4, 0.4, 0.8) # Slow: Xanh dương
-			"Buff":   color = Color(0.2, 0.7, 1.0) # Buff: Xanh nhạt
-			
-		dot.color = color
-		container.add_child(dot)
-		
-		if count > 1:
-			var lbl = Label.new()
-			lbl.text = str(count)
-			lbl.add_theme_font_size_override("font_size", 10)
-			lbl.add_theme_color_override("font_color", Color.WHITE)
-			container.add_child(lbl)
+		var info: Dictionary = UITheme.STATUS_INFO.get(type_name, {"label": type_name, "color": UITheme.TEXT_MUTED})
+		var text: String = info["label"] if counts[type_name] == 1 else "%s x%d" % [info["label"], counts[type_name]]
+		status_row.add_child(UITheme.chip(text, info["color"]))
+	status_row.visible = not counts.is_empty()
 
 func _on_damage_received_detailed(amt: int, type: String, is_crit: bool, is_break: bool):
-	"""Kích hoạt hiệu ứng chữ nổi chi tiết (Floating Text) khi thực thể chịu tác động."""
-	var spawn_pos = global_position + Vector2(size.x / 2, 0)
-	var overlay = get_tree().get_first_node_in_group("ui_overlay")
+	var spawn_pos := global_position + Vector2(size.x / 2, 0)
+	var overlay := get_tree().get_first_node_in_group("ui_overlay")
 	FloatingText.spawn(overlay if overlay else get_tree().root, amt, type, spawn_pos, is_crit, is_break)
-
-func _on_damage_received(amt: int, type: String):
-	"""Fallback cho signal thông thường."""
-	_on_damage_received_detailed(amt, type, false, false)

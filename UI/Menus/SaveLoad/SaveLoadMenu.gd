@@ -1,358 +1,428 @@
 extends Control
 
 """
-SaveLoadMenu: Giao diện Lưu & Tải game toàn diện của SekaiRPG.
+SaveLoadMenu: Giao diện Lưu & Tải game của SekaiRPG, dạng hộp thoại modal phủ lên StartMenu hoặc PauseMenu.
 
 Chức năng:
-- Đồng bộ phong cách Kenney UI (Brown Panel, Adventure Buttons).
-- Quản lý danh sách file save trong `user://saves/` với tên file tự do, Quick Save và Auto-Save.
-- Hiển thị đầy đủ siêu dữ liệu: Tên Quest hiện tại (QuestRegistry), Tên Map, Ngày giờ lưu.
-- Hỗ trợ Lưu file mới, Tải game, Ghi đè, và Xóa file kèm hộp thoại xác nhận.
-- Hoạt động linh hoạt cả ở dạng Cảnh độc lập (từ StartMenu) lẫn dạng Lớp phủ (Overlay từ PauseMenu).
+- Liệt kê file save trong `user://saves/` kèm siêu dữ liệu: Tên Quest (QuestRegistry), Tên Map, Ngày giờ lưu.
+- Từ màn hình tiêu đề chỉ cho Tải và Xóa; Lưu mới / Ghi đè chỉ có khi đang chơi (tránh ghi đè save thật bằng trạng thái mặc định).
+- Xóa và Ghi đè đều qua hộp thoại xác nhận; lỗi lưu/tải hiện ngay trong hộp thoại.
+- Báo PauseMenu qua push_modal/pop_modal để ESC đóng hộp thoại này thay vì mở menu tạm dừng bên dưới.
 """
 
-const FONT_BODY = "res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"
-const FONT_TITLE = "res://Assets/Fonts/zhcn.ttf"
-const BTN_BROWN_TEX = "res://Assets/UI/btn_angular_brown.svg"
-const BTN_BROWN_HOVER_TEX = "res://Assets/UI/btn_angular_brown_hover.svg"
-const BTN_GREY_TEX = "res://Assets/UI/btn_angular_amber.svg"
-const BTN_GREY_HOVER_TEX = "res://Assets/UI/btn_angular_amber_hover.svg"
-const BTN_RED_TEX = "res://Assets/UI/btn_angular_red.svg"
-const BTN_RED_HOVER_TEX = "res://Assets/UI/btn_angular_red_hover.svg"
-const PANEL_BROWN_TEX = "res://Assets/UI/panel_angular_brown.svg"
+const PANEL_WIDTH = 760
+const LIST_HEIGHT = 320
+const DIALOG_WIDTH = 460
 
 var slot_container: VBoxContainer
 var new_save_edit: LineEdit
 var is_in_game_mode: bool = false
-var _confirm_dialog: PanelContainer = null
+
+var _panel: PanelContainer
+var _status_label: Label
+var _new_save_btn: Button
+var _close_btn: Button
+var _confirm_layer: Control = null
+var _confirm_origin: Control = null
+var _prev_focus: Control = null
+var _busy: bool = false
+var _modal_pushed: bool = false
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_prev_focus = get_viewport().gui_get_focus_owner()
 	_check_mode()
 	_build_ui()
 	_refresh_slots()
-	ScreenFade.fade_in(0.3)
+	PauseMenu.push_modal()
+	_modal_pushed = true
+	_focus_default()
+
+func _exit_tree():
+	if _modal_pushed:
+		_modal_pushed = false
+		PauseMenu.pop_modal()
 
 func _check_mode():
-	# Kiểm tra xem có đang ở trong game (Overworld / Map) hay từ StartMenu
+	# Từ StartMenu chưa có trạng thái game thật nên không cho Lưu mới / Ghi đè
 	var cur_scene = get_tree().current_scene
-	if cur_scene != null and cur_scene.name == "StartMenu" and get_parent() == get_tree().root:
-		is_in_game_mode = false
+	is_in_game_mode = not (cur_scene != null and cur_scene.name == "StartMenu")
+
+func _input(event):
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	get_viewport().set_input_as_handled()
+	if _busy:
+		return
+	if _confirm_layer != null:
+		_close_confirmation()
 	else:
-		is_in_game_mode = true
+		_on_back_pressed()
 
 # ── Xây dựng Giao diện ─────────────────────────────────────────────────────
 
 func _build_ui():
-	for c in get_children(): c.queue_free()
-	
-	# Lớp nền mờ
-	var bg = ColorRect.new()
-	bg.color = Color(0, 0, 0, 0.75)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(bg)
-	
+	for c in get_children():
+		c.queue_free()
+
+	var dim = ColorRect.new()
+	dim.color = UITheme.overlay_dim(0.85)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(dim)
+
 	var center = CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
-	
-	var main_panel = PanelContainer.new()
-	main_panel.custom_minimum_size = Vector2(650, 520)
-	center.add_child(main_panel)
-	
-	var sb = StyleBoxTexture.new()
-	sb.texture = load(PANEL_BROWN_TEX)
-	sb.texture_margin_left = 16; sb.texture_margin_right = 16
-	sb.texture_margin_top = 16; sb.texture_margin_bottom = 16
-	sb.set_content_margin_all(20)
-	main_panel.add_theme_stylebox_override("panel", sb)
-	
+
+	_panel = PanelContainer.new()
+	_panel.custom_minimum_size.x = PANEL_WIDTH
+	_panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.ACCENT, UITheme.SP_6))
+	center.add_child(_panel)
+
 	var vbox = VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 12)
-	main_panel.add_child(vbox)
-	
-	# Tiêu đề
+	vbox.add_theme_constant_override("separation", UITheme.SP_3)
+	_panel.add_child(vbox)
+
 	var title = Label.new()
-	title.text = "HỆ THỐNG LƯU TRỮ & TẢI GAME"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 22)
-	title.add_theme_font_override("font", load(FONT_TITLE))
-	title.add_theme_color_override("font_color", Color(0.2, 0.1, 0.05))
+	title.text = "Lưu / Tải game" if is_in_game_mode else "Tải game"
+	UITheme.style_title(title, UITheme.FS_TITLE, UITheme.ACCENT)
 	vbox.add_child(title)
-	
-	# Thanh nhập file lưu mới (Chỉ hiện khi đang trong game)
+
+	var hint = "Lưu tiến trình hiện tại hoặc tải lại một file đã lưu." if is_in_game_mode else "Chọn một file đã lưu để tiếp tục."
+	vbox.add_child(UITheme.make_label(hint, UITheme.FS_BODY, UITheme.TEXT_MUTED))
+
 	if is_in_game_mode:
 		var new_save_box = HBoxContainer.new()
-		new_save_box.add_theme_constant_override("separation", 8)
+		new_save_box.add_theme_constant_override("separation", UITheme.SP_2)
 		vbox.add_child(new_save_box)
-		
+
 		new_save_edit = LineEdit.new()
 		new_save_edit.placeholder_text = "Nhập tên file lưu mới..."
+		new_save_edit.max_length = 40
 		new_save_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		new_save_edit.custom_minimum_size = Vector2(0, 36)
-		new_save_edit.add_theme_font_override("font", load(FONT_BODY))
-		new_save_box.add_child(new_save_edit)
+		new_save_edit.custom_minimum_size.y = UITheme.MIN_TOUCH
+		new_save_edit.add_theme_font_size_override("font_size", UITheme.FS_LABEL)
 		new_save_edit.text_submitted.connect(func(_t): _on_create_new_save())
-		
-		var btn_new = _create_styled_button(" + LƯU MỚI ", _on_create_new_save, BTN_BROWN_TEX)
-		btn_new.custom_minimum_size = Vector2(130, 36)
-		new_save_box.add_child(btn_new)
-	
-	# Danh sách file save (Scroll Area)
+		new_save_box.add_child(new_save_edit)
+
+		_new_save_btn = _make_button("Lưu mới", _on_create_new_save, UITheme.Kind.PRIMARY)
+		_new_save_btn.custom_minimum_size.x = 128
+		new_save_box.add_child(_new_save_btn)
+
 	var scroll = ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.custom_minimum_size = Vector2(0, 320)
+	scroll.custom_minimum_size.y = LIST_HEIGHT
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
 	vbox.add_child(scroll)
-	
+
 	slot_container = VBoxContainer.new()
 	slot_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	slot_container.add_theme_constant_override("separation", 10)
+	slot_container.add_theme_constant_override("separation", UITheme.SP_2)
 	scroll.add_child(slot_container)
+
+	vbox.add_child(HSeparator.new())
 	
-	# Nút đóng / quay lại
-	var back_btn = _create_styled_button("ĐÓNG", _on_back_pressed, BTN_GREY_TEX)
-	back_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	back_btn.custom_minimum_size = Vector2(180, 38)
-	vbox.add_child(back_btn)
+	# Hàng cuối: thông báo trạng thái bên trái, nút đóng bên phải
+	var footer = HBoxContainer.new()
+	footer.add_theme_constant_override("separation", UITheme.SP_4)
+	vbox.add_child(footer)
+
+	_status_label = UITheme.make_label("", UITheme.FS_BODY, UITheme.TEXT_MUTED)
+	_status_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_status_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	footer.add_child(_status_label)
+
+	_close_btn = _make_button("Đóng", _on_back_pressed, UITheme.Kind.GHOST, UITheme.FS_LABEL)
+	_close_btn.custom_minimum_size.x = 128
+	footer.add_child(_close_btn)
+
+func _set_status(msg: String, color: Color = UITheme.TEXT_MUTED):
+	if _status_label == null:
+		return
+	_status_label.text = msg
+	_status_label.add_theme_color_override("font_color", color)
 
 # ── Cập nhật Danh sách Slots ───────────────────────────────────────────────
 
-func _refresh_slots():
+# `focus_kind`/`focus_path`: nút cần giữ focus sau khi dựng lại danh sách (rỗng = không đổi focus)
+func _refresh_slots(focus_kind: String = "", focus_path: String = ""):
 	for c in slot_container.get_children():
+		slot_container.remove_child(c)
 		c.queue_free()
-		
-	var slots = SaveManager.get_all_save_slots()
-	
-	if slots.is_empty():
-		var empty_lbl = Label.new()
-		empty_lbl.text = "(Chưa có file lưu nào trong hệ thống)"
-		empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		empty_lbl.add_theme_color_override("font_color", Color(0.4, 0.35, 0.3))
-		empty_lbl.add_theme_font_override("font", load(FONT_BODY))
-		slot_container.add_child(empty_lbl)
-		return
-		
-	for slot_data in slots:
-		_create_slot_card(slot_data)
 
-func _create_slot_card(data: Dictionary):
-	var card = PanelContainer.new()
-	var csb = StyleBoxFlat.new()
-	csb.bg_color = Color(0.15, 0.12, 0.1, 0.85)
-	csb.set_border_width_all(2)
-	csb.border_color = Color(0.6, 0.5, 0.3)
-	csb.set_corner_radius_all(6)
-	csb.set_content_margin_all(10)
-	card.add_theme_stylebox_override("panel", csb)
-	slot_container.add_child(card)
-	
-	var main_vbox = VBoxContainer.new()
-	main_vbox.add_theme_constant_override("separation", 6)
-	card.add_child(main_vbox)
-	
-	# Hàng 1: Tên file & Thời gian
-	var header_hbox = HBoxContainer.new()
-	main_vbox.add_child(header_hbox)
-	
-	var file_name = data.get("file_name", "save.json")
+	var slots = SaveManager.get_all_save_slots()
+	if slots.is_empty():
+		var empty_hint = "Chưa có file lưu nào. Nhập tên và bấm Lưu mới để tạo file đầu tiên." if is_in_game_mode else "Chưa có file lưu nào trong hệ thống."
+		var empty_lbl = UITheme.make_label(empty_hint, UITheme.FS_LABEL, UITheme.TEXT_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		empty_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty_lbl.custom_minimum_size.y = LIST_HEIGHT / 2
+		empty_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		slot_container.add_child(empty_lbl)
+	else:
+		for i in range(slots.size()):
+			if i > 0:
+				slot_container.add_child(HSeparator.new())
+			_create_slot_row(slots[i], i == 0)
+
+	if focus_kind != "":
+		call_deferred("_restore_focus", focus_kind, focus_path)
+
+func _create_slot_row(data: Dictionary, is_first: bool):
+	var full_path: String = data.get("path", "")
+	var file_name: String = data.get("file_name", "save.json")
 	var is_auto = (file_name == "autosave.json")
 	var is_quick = (file_name == "quicksave.json")
-	
-	var name_lbl = Label.new()
-	name_lbl.text = "💾 " + file_name
-	if is_auto: name_lbl.text = "⚡ [TỰ ĐỘNG] " + file_name
-	elif is_quick: name_lbl.text = "⚡ [LƯU NHANH] " + file_name
-	
+
+	var row = HBoxContainer.new()
+	row.add_theme_constant_override("separation", UITheme.SP_4)
+	slot_container.add_child(row)
+
+	var info = VBoxContainer.new()
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	info.add_theme_constant_override("separation", UITheme.SP_1)
+	row.add_child(info)
+
+	# Hàng 1: tên file (+ nhãn Tự động/Lưu nhanh) và thời gian
+	var header = HBoxContainer.new()
+	header.add_theme_constant_override("separation", UITheme.SP_2)
+	info.add_child(header)
+
+	var name_lbl = UITheme.make_label(file_name.get_basename(), UITheme.FS_LABEL, UITheme.TEXT)
 	name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	name_lbl.add_theme_font_size_override("font_size", 16)
-	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.85, 0.4) if (is_auto or is_quick) else Color.WHITE)
-	name_lbl.add_theme_font_override("font", load(FONT_BODY))
-	header_hbox.add_child(name_lbl)
-	
-	var time_lbl = Label.new()
-	time_lbl.text = "🕒 " + data.get("timestamp", "")
-	time_lbl.add_theme_font_size_override("font_size", 12)
-	time_lbl.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
-	time_lbl.add_theme_font_override("font", load(FONT_BODY))
-	header_hbox.add_child(time_lbl)
-	
-	# Hàng 2: Badges Nhiệm vụ & Bản đồ
-	var info_hbox = HBoxContainer.new()
-	info_hbox.add_theme_constant_override("separation", 15)
-	main_vbox.add_child(info_hbox)
-	
-	var quest_name = data.get("quest_name", "Nhiệm vụ chưa xác định")
-	var map_name = data.get("map_name", "Bản đồ chưa xác định")
-	
-	var quest_lbl = Label.new()
-	quest_lbl.text = "📜 Nhiệm vụ: " + quest_name
-	quest_lbl.add_theme_font_size_override("font_size", 13)
-	quest_lbl.add_theme_color_override("font_color", Color(0.4, 0.8, 1.0))
-	quest_lbl.add_theme_font_override("font", load(FONT_BODY))
-	info_hbox.add_child(quest_lbl)
-	
-	var map_lbl = Label.new()
-	map_lbl.text = "📍 Địa điểm: " + map_name
-	map_lbl.add_theme_font_size_override("font_size", 13)
-	map_lbl.add_theme_color_override("font_color", Color(0.6, 1.0, 0.6))
-	map_lbl.add_theme_font_override("font", load(FONT_BODY))
-	info_hbox.add_child(map_lbl)
-	
-	# Hàng 3: Cụm nút bấm hành động
-	var actions_hbox = HBoxContainer.new()
-	actions_hbox.alignment = BoxContainer.ALIGNMENT_END
-	actions_hbox.add_theme_constant_override("separation", 8)
-	main_vbox.add_child(actions_hbox)
-	
-	var full_path = data.get("path", "")
-	
-	# Nút Tải
-	var btn_load = _create_styled_button("TẢI GAME", func(): _on_load_save(full_path), BTN_BROWN_TEX)
-	btn_load.custom_minimum_size = Vector2(100, 30)
-	actions_hbox.add_child(btn_load)
-	
-	# Nút Ghi đè (chỉ khi in-game)
+	name_lbl.clip_text = true
+	name_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	header.add_child(name_lbl)
+
+	if is_auto:
+		header.add_child(UITheme.chip("Tự động", UITheme.ACCENT))
+	elif is_quick:
+		header.add_child(UITheme.chip("Lưu nhanh", UITheme.ACCENT))
+	header.add_child(UITheme.make_label(data.get("timestamp", ""), UITheme.FS_CAPTION, UITheme.TEXT_MUTED))
+
+	# Hàng 2-3: Nhiệm vụ & Bản đồ
+	var quest_name: String = data.get("quest_name", "Nhiệm vụ chưa xác định")
+	var map_name: String = data.get("map_name", "Bản đồ chưa xác định")
+	info.add_child(_make_meta_label("Nhiệm vụ: " + quest_name))
+	info.add_child(_make_meta_label("Địa điểm: " + map_name))
+
+	# Cụm nút: từ StartMenu thì nút Tải của file mới nhất là hành động chính
+	var actions = HBoxContainer.new()
+	actions.add_theme_constant_override("separation", UITheme.SP_2)
+	actions.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(actions)
+
+	var load_kind = UITheme.Kind.PRIMARY if (is_first and not is_in_game_mode) else UITheme.Kind.SECONDARY
+	var btn_load = _make_button("Tải game", func(): _on_load_save(full_path), load_kind, UITheme.FS_BODY)
+	_tag_button(btn_load, "load", full_path)
+	actions.add_child(btn_load)
+
 	if is_in_game_mode:
-		var btn_overwrite = _create_styled_button("GHI ĐÈ", func(): _confirm_overwrite(full_path), BTN_GREY_TEX)
-		btn_overwrite.custom_minimum_size = Vector2(90, 30)
-		actions_hbox.add_child(btn_overwrite)
-		
-	# Nút Xóa
-	var btn_del = _create_styled_button("XÓA", func(): _confirm_delete(full_path), BTN_RED_TEX)
-	btn_del.custom_minimum_size = Vector2(70, 30)
-	actions_hbox.add_child(btn_del)
+		var btn_overwrite = _make_button("Ghi đè", func(): _confirm_overwrite(full_path), UITheme.Kind.SECONDARY, UITheme.FS_BODY)
+		_tag_button(btn_overwrite, "overwrite", full_path)
+		actions.add_child(btn_overwrite)
+
+	var btn_del = _make_button("Xóa", func(): _confirm_delete(full_path), UITheme.Kind.GHOST, UITheme.FS_BODY)
+	for color_name in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		btn_del.add_theme_color_override(color_name, UITheme.DANGER_TEXT)
+	_tag_button(btn_del, "delete", full_path)
+	actions.add_child(btn_del)
+
+func _make_meta_label(text: String) -> Label:
+	var lbl = UITheme.make_label(text, UITheme.FS_BODY, UITheme.TEXT_MUTED)
+	lbl.clip_text = true
+	lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	return lbl
+
+func _make_button(text: String, callback: Callable, kind: UITheme.Kind = UITheme.Kind.SECONDARY, size: int = UITheme.FS_LABEL) -> Button:
+	var btn = Button.new()
+	btn.text = text
+	UITheme.style_button(btn, kind, size)
+	btn.pressed.connect(callback)
+	return btn
+
+func _tag_button(btn: Button, kind: String, path: String):
+	btn.set_meta("slot_kind", kind)
+	btn.set_meta("slot_path", path)
+
+# ── Focus ──────────────────────────────────────────────────────────────────
+
+func _focus_default():
+	if is_in_game_mode and new_save_edit != null:
+		# Trên điện thoại, focus vào ô nhập sẽ bật bàn phím ảo nên dừng ở nút Lưu mới
+		var target: Control = _new_save_btn if OS.has_feature("mobile") else new_save_edit
+		_focus_later.call_deferred(target)
+		return
+	_focus_first_slot_or_close()
+
+func _focus_first_slot_or_close():
+	for c in slot_container.find_children("*", "Button", true, false):
+		if not c.disabled:
+			_focus_later.call_deferred(c)
+			return
+	_focus_later.call_deferred(_close_btn)
+
+func _restore_focus(kind: String, path: String):
+	for c in slot_container.find_children("*", "Button", true, false):
+		if c.get_meta("slot_kind", "") == kind and c.get_meta("slot_path", "") == path and not c.disabled:
+			c.grab_focus()
+			return
+	_focus_first_slot_or_close()
 
 # ── Xử Lý Hành Động ────────────────────────────────────────────────────────
 
 func _on_create_new_save():
-	if not new_save_edit: return
+	if new_save_edit == null or _busy:
+		return
 	var fname = new_save_edit.text.strip_edges()
 	if fname == "":
 		var dt = Time.get_datetime_dict_from_system()
 		fname = "save_%02d%02d_%02d%02d" % [dt["day"], dt["month"], dt["hour"], dt["minute"]]
-	
-	new_save_edit.text = ""
-	GameManager.save_game(fname)
-	_refresh_slots()
+
+	if GameManager.save_game(fname):
+		new_save_edit.text = ""
+		_set_status("Đã lưu file \"%s\"." % fname, UITheme.SUCCESS)
+		_refresh_slots()
+	else:
+		_set_status(_save_error_text(), UITheme.DANGER_TEXT)
+
+func _save_error_text() -> String:
+	var err = GameManager.get("last_save_error")
+	if err is String and err != "":
+		return err
+	return "Không thể lưu game. Tên file không hợp lệ hoặc không ghi được."
 
 func _on_load_save(path: String):
+	if _busy:
+		return
+	_busy = true
 	print("[SaveLoadMenu] Đang tải game từ: ", path)
+	_set_status("Đang tải game...", UITheme.TEXT_MUTED)
 	await ScreenFade.fade_out(0.5)
-	GameManager.load_game(path)
+	if not is_inside_tree():
+		return
+	if not GameManager.load_game(path):
+		ScreenFade.fade_in(0.3)
+		var err = GameManager.get("last_load_error")
+		_set_status(err if (err is String and err != "") else "Không thể tải file save.", UITheme.DANGER_TEXT)
+		_busy = false
+		return
+	# Tải thành công: nếu mở từ PauseMenu thì ẩn nó và bỏ pause để cảnh mới chạy được
+	PauseMenu.visible = false
+	get_tree().paused = false
+	queue_free()
 
 func _confirm_overwrite(path: String):
 	_show_confirmation(
-		"XÁC NHẬN GHI ĐÈ",
+		"Xác nhận ghi đè",
 		"Bạn có chắc chắn muốn ghi đè lên file:\n[" + path.get_file() + "] không?",
+		"Ghi đè",
 		func():
-			GameManager.save_game(path)
-			_refresh_slots()
+			if GameManager.save_game(path):
+				_set_status("Đã ghi đè file \"%s\"." % path.get_file(), UITheme.SUCCESS)
+			else:
+				_set_status(_save_error_text(), UITheme.DANGER_TEXT)
+			_refresh_slots("overwrite", path)
 	)
 
 func _confirm_delete(path: String):
 	_show_confirmation(
-		"XÁC NHẬN XÓA FILE",
+		"Xác nhận xóa file",
 		"Bạn có chắc chắn muốn xóa vĩnh viễn file:\n[" + path.get_file() + "] không?",
+		"Xóa vĩnh viễn",
 		func():
-			SaveManager.delete_save(path)
-			_refresh_slots()
+			if SaveManager.delete_save(path):
+				_set_status("Đã xóa file \"%s\"." % path.get_file(), UITheme.TEXT_MUTED)
+			else:
+				_set_status("Không thể xóa file \"%s\"." % path.get_file(), UITheme.DANGER_TEXT)
+			_refresh_slots("load", "")
 	)
 
-func _show_confirmation(title_text: String, msg_text: String, on_confirm: Callable):
-	if _confirm_dialog: _confirm_dialog.queue_free()
-	
-	_confirm_dialog = PanelContainer.new()
-	_confirm_dialog.custom_minimum_size = Vector2(380, 180)
-	_confirm_dialog.set_anchors_preset(Control.PRESET_CENTER)
-	
-	var sb = StyleBoxTexture.new()
-	sb.texture = load(PANEL_BROWN_TEX)
-	sb.texture_margin_left = 20; sb.texture_margin_right = 20
-	sb.texture_margin_top = 20; sb.texture_margin_bottom = 20
-	sb.set_content_margin_all(20)
-	_confirm_dialog.add_theme_stylebox_override("panel", sb)
-	add_child(_confirm_dialog)
-	
+# Hộp thoại xác nhận nằm trên một lớp mờ riêng; trong lúc mở, các nút phía sau không nhận focus bàn phím.
+func _show_confirmation(title_text: String, msg_text: String, confirm_text: String, on_confirm: Callable):
+	if _confirm_layer != null:
+		_close_confirmation(false)
+	_confirm_origin = get_viewport().gui_get_focus_owner()
+	_set_background_focusable(false)
+
+	_confirm_layer = Control.new()
+	_confirm_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(_confirm_layer)
+
+	var dim = ColorRect.new()
+	dim.color = UITheme.overlay_dim(0.7)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_confirm_layer.add_child(dim)
+
+	var center = CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_confirm_layer.add_child(center)
+
+	var dialog = PanelContainer.new()
+	dialog.custom_minimum_size.x = DIALOG_WIDTH
+	dialog.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_500, UITheme.DANGER, UITheme.SP_6))
+	center.add_child(dialog)
+
 	var vbox = VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 15)
-	_confirm_dialog.add_child(vbox)
-	
-	var t_lbl = Label.new()
-	t_lbl.text = title_text
-	t_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	t_lbl.add_theme_font_size_override("font_size", 18)
-	t_lbl.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
-	t_lbl.add_theme_font_override("font", load(FONT_BODY))
-	vbox.add_child(t_lbl)
-	
-	var m_lbl = Label.new()
-	m_lbl.text = msg_text
-	m_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	m_lbl.add_theme_font_size_override("font_size", 14)
-	m_lbl.add_theme_font_override("font", load(FONT_BODY))
+	vbox.add_theme_constant_override("separation", UITheme.SP_4)
+	dialog.add_child(vbox)
+
+	vbox.add_child(UITheme.make_label(title_text, UITheme.FS_HEADING, UITheme.TEXT))
+	var m_lbl = UITheme.make_label(msg_text, UITheme.FS_LABEL, UITheme.TEXT)
+	m_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vbox.add_child(m_lbl)
-	
+
 	var hbox = HBoxContainer.new()
-	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	hbox.add_theme_constant_override("separation", 20)
+	hbox.alignment = BoxContainer.ALIGNMENT_END
+	hbox.add_theme_constant_override("separation", UITheme.SP_2)
 	vbox.add_child(hbox)
-	
-	var btn_yes = _create_styled_button("ĐỒNG Ý", func():
-		_confirm_dialog.queue_free()
-		on_confirm.call()
-	, BTN_BROWN_TEX)
-	btn_yes.custom_minimum_size = Vector2(100, 34)
-	hbox.add_child(btn_yes)
-	
-	var btn_no = _create_styled_button("HỦY", func():
-		_confirm_dialog.queue_free()
-	, BTN_GREY_TEX)
-	btn_no.custom_minimum_size = Vector2(100, 34)
+
+	var btn_no = _make_button("Hủy", func(): _close_confirmation(), UITheme.Kind.GHOST)
+	btn_no.custom_minimum_size.x = 112
 	hbox.add_child(btn_no)
 
+	var btn_yes = _make_button(confirm_text, func():
+		_close_confirmation(false)
+		on_confirm.call()
+	, UITheme.Kind.DANGER)
+	hbox.add_child(btn_yes)
+
+	# Mặc định focus vào Hủy để tránh lỡ tay xóa/ghi đè
+	_focus_later.call_deferred(btn_no)
+
+func _close_confirmation(restore_focus: bool = true):
+	if _confirm_layer == null:
+		return
+	_confirm_layer.queue_free()
+	_confirm_layer = null
+	_set_background_focusable(true)
+	if restore_focus and is_instance_valid(_confirm_origin):
+		_focus_later.call_deferred(_confirm_origin)
+	_confirm_origin = null
+
+func _set_background_focusable(on: bool):
+	for c in _panel.find_children("*", "Control", true, false):
+		if on:
+			if c.has_meta("focus_backup"):
+				c.focus_mode = c.get_meta("focus_backup")
+				c.remove_meta("focus_backup")
+		elif c.focus_mode != Control.FOCUS_NONE:
+			c.set_meta("focus_backup", c.focus_mode)
+			c.focus_mode = Control.FOCUS_NONE
+
 func _on_back_pressed():
+	if _busy:
+		return
 	if get_parent() != get_tree().root:
+		# Trả focus về nút đã mở hộp thoại này (Tải game / Lưu-Tải game)
+		if is_instance_valid(_prev_focus) and _prev_focus.is_inside_tree():
+			_focus_later.call_deferred(_prev_focus)
 		queue_free()
 		return
 	get_tree().change_scene_to_file("res://UI/Menus/Start/StartMenu.tscn")
 
-# ── Helper Nút Bấm Phong Cách Angular Brown ─────────────────────────────────
-
-func _create_styled_button(txt: String, callback: Callable, tex_path: String) -> Button:
-	var btn = Button.new()
-	btn.text = txt
-	btn.add_theme_font_override("font", load(FONT_BODY))
-	btn.add_theme_font_size_override("font_size", 14)
-	
-	var hover_tex = BTN_BROWN_HOVER_TEX
-	var text_color = Color(0.95, 0.9, 0.82)
-	var hover_color = Color(1.0, 0.95, 0.75)
-	
-	if tex_path == BTN_GREY_TEX:
-		hover_tex = BTN_GREY_HOVER_TEX
-		text_color = Color(0.18, 0.12, 0.05)
-		hover_color = Color(0.1, 0.06, 0.02)
-	elif tex_path == BTN_RED_TEX:
-		hover_tex = BTN_RED_HOVER_TEX
-		text_color = Color(1.0, 0.9, 0.9)
-		hover_color = Color(1.0, 1.0, 1.0)
-	
-	var ns = StyleBoxTexture.new()
-	ns.texture = load(tex_path)
-	ns.texture_margin_left = 8; ns.texture_margin_right = 8
-	ns.texture_margin_top = 8; ns.texture_margin_bottom = 8
-	btn.add_theme_stylebox_override("normal", ns)
-	
-	var hs = StyleBoxTexture.new()
-	hs.texture = load(hover_tex)
-	hs.texture_margin_left = 8; hs.texture_margin_right = 8
-	hs.texture_margin_top = 8; hs.texture_margin_bottom = 8
-	btn.add_theme_stylebox_override("hover", hs)
-	btn.add_theme_stylebox_override("focus", hs)
-	btn.add_theme_stylebox_override("pressed", hs)
-	
-	btn.add_theme_color_override("font_color", text_color)
-	btn.add_theme_color_override("font_hover_color", hover_color)
-	btn.add_theme_color_override("font_pressed_color", hover_color)
-	btn.pressed.connect(callback)
-	return btn
+# Focus trễ một nhịp (sau khi các node queue_free() đã dọn); bỏ qua nếu nút đã bị xóa/gỡ khỏi cây trước đó
+func _focus_later(ctrl):
+	if is_instance_valid(ctrl) and ctrl.is_inside_tree():
+		ctrl.grab_focus()

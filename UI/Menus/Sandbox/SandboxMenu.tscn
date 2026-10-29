@@ -11,15 +11,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sand")
 
-[node name="BG" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.0823529, 0.0823529, 0.101961, 1)
-
 [node name="HBox" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -27,24 +18,18 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 30
-alignment = 1
 
 [node name="PlayerPanel" type="PanelContainer" parent="HBox"]
 layout_mode = 2
 
 [node name="PlayerSide" type="VBoxContainer" parent="HBox/PlayerPanel"]
 layout_mode = 2
-theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="HBox/PlayerPanel/PlayerSide"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "PHE TA (Tối đa 4)"
-horizontal_alignment = 1
+text = "Phe ta"
 
 [node name="Scroll" type="ScrollContainer" parent="HBox/PlayerPanel/PlayerSide"]
-custom_minimum_size = Vector2(250, 400)
 layout_mode = 2
 
 [node name="CharList" type="VBoxContainer" parent="HBox/PlayerPanel/PlayerSide/Scroll"]
@@ -57,23 +42,19 @@ text = "Đã chọn: 0/4"
 
 [node name="UpgradeBtn" type="Button" parent="HBox/PlayerPanel/PlayerSide"]
 layout_mode = 2
-text = "NÂNG CẤP CHỈ SỐ"
+text = "Nâng cấp chỉ số"
 
 [node name="EnemyPanel" type="PanelContainer" parent="HBox"]
 layout_mode = 2
 
 [node name="EnemySide" type="VBoxContainer" parent="HBox/EnemyPanel"]
 layout_mode = 2
-theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="HBox/EnemyPanel/EnemySide"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "PHE ĐỊCH (Tối đa 5)"
-horizontal_alignment = 1
+text = "Phe địch"
 
 [node name="Scroll" type="ScrollContainer" parent="HBox/EnemyPanel/EnemySide"]
-custom_minimum_size = Vector2(250, 400)
 layout_mode = 2
 
 [node name="EnemyList" type="VBoxContainer" parent="HBox/EnemyPanel/EnemySide/Scroll"]
@@ -86,16 +67,11 @@ text = "Đã chọn: 0/5"
 
 [node name="Controls" type="VBoxContainer" parent="HBox"]
 layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 20
 
 [node name="StartBtn" type="Button" parent="HBox/Controls"]
-custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "BẮT ĐẦU"
+text = "Bắt đầu"
 
 [node name="BackBtn" type="Button" parent="HBox/Controls"]
-custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
-text = "QUAY LẠI"
+text = "Quay lại"

@@ -1,109 +1,82 @@
 extends Control
 
 """
-StartMenu: Màn hình tiêu đề chính của game.
+StartMenu: màn hình tiêu đề chính.
 
-Hiển thị các tùy chọn: Tiếp tục (nếu có save), Game Mới, LOAD, Sandbox, Thoát.
-Tự động kiểm tra và thêm nút 'Tiếp tục' nếu tìm thấy file save mặc định.
+Nút chính (vàng) là "Tiếp tục" nếu có save, ngược lại là "Chơi mới".
 """
+
+const MENU_WIDTH = 320
+
+var _error_label: Label
 
 func _ready():
 	AudioManager.play_music("main_menu")
-	_apply_kenney_styles()
-	
-	# Check for existing save
-	if GameManager.has_save():
-		var continue_btn = Button.new()
-		continue_btn.text = "Tiếp tục"
-		continue_btn.name = "ContinueBtn"
-		$CenterContainer/VBoxContainer.add_child(continue_btn)
-		$CenterContainer/VBoxContainer.move_child(continue_btn, 1) # Put it after title/banner
-		_style_button(continue_btn)
-		continue_btn.pressed.connect(_on_continue)
-		
-		var load_btn = Button.new()
-		load_btn.text = "TẢI GAME (LOAD)"
-		load_btn.name = "LoadGameBtn"
-		$CenterContainer/VBoxContainer.add_child(load_btn)
-		$CenterContainer/VBoxContainer.move_child(load_btn, 2)
-		_style_button(load_btn)
-		load_btn.pressed.connect(_on_load_menu)
-	
-	$CenterContainer/VBoxContainer/NewGameBtn.pressed.connect(_on_new_game)
-	$CenterContainer/VBoxContainer/SandboxBtn.pressed.connect(_on_sandbox)
-	
-	var option_menu_btn = Button.new()
-	option_menu_btn.text = "CÀI ĐẶT"
-	$CenterContainer/VBoxContainer.add_child(option_menu_btn)
-	_style_button(option_menu_btn)
-	$CenterContainer/VBoxContainer.move_child(option_menu_btn, $CenterContainer/VBoxContainer/ExitBtn.get_index())
-	option_menu_btn.pressed.connect(_on_open_options)
-	
-	$CenterContainer/VBoxContainer/ExitBtn.pressed.connect(_on_exit)
-	
+	_build()
 	ScreenFade.fade_in(1.0)
 
-func _style_button(btn: Button, normal_svg: String = "res://Assets/UI/btn_angular_brown.svg", hover_svg: String = "res://Assets/UI/btn_angular_brown_hover.svg", text_color: Color = Color(0.96, 0.92, 0.85)):
-	var ns = StyleBoxTexture.new()
-	ns.texture = load(normal_svg)
-	ns.texture_margin_left = 10
-	ns.texture_margin_right = 10
-	ns.texture_margin_top = 10
-	ns.texture_margin_bottom = 14
-	btn.add_theme_stylebox_override("normal", ns)
+func _build():
+	add_child(UITheme.backdrop())
 	
-	if hover_svg != "":
-		var hs = StyleBoxTexture.new()
-		hs.texture = load(hover_svg)
-		hs.texture_margin_left = 10
-		hs.texture_margin_right = 10
-		hs.texture_margin_top = 10
-		hs.texture_margin_bottom = 14
-		btn.add_theme_stylebox_override("hover", hs)
-		btn.add_theme_stylebox_override("focus", hs)
-	else:
-		btn.add_theme_stylebox_override("hover", ns)
-		btn.add_theme_stylebox_override("focus", ns)
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(center)
 	
-	btn.add_theme_color_override("font_color", text_color)
-	btn.add_theme_color_override("font_hover_color", Color(1, 1, 1))
-	btn.add_theme_font_override("font", load("res://Assets/Fonts/#9Slide03 AMPLESOFT MEDIUM.ttf"))
-
-func _apply_kenney_styles():
-	# Title Background using angular brown banner
-	var banner = NinePatchRect.new()
-	banner.texture = load("res://Assets/UI/banner_angular_title.svg")
-	banner.patch_margin_left = 20
-	banner.patch_margin_right = 20
-	banner.patch_margin_top = 20
-	banner.patch_margin_bottom = 20
-	banner.custom_minimum_size = Vector2(400, 80)
-	banner.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	$CenterContainer/VBoxContainer.add_child(banner)
-	$CenterContainer/VBoxContainer.move_child(banner, 0)
+	var column := VBoxContainer.new()
+	column.custom_minimum_size.x = MENU_WIDTH
+	column.add_theme_constant_override("separation", UITheme.SP_3)
+	center.add_child(column)
 	
-	# CenterContainer inside banner to hold the title
-	var cc = CenterContainer.new()
-	cc.set_anchors_preset(Control.PRESET_FULL_RECT)
-	banner.add_child(cc)
+	var title := Label.new()
+	title.text = "SEKAI RPG"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	UITheme.style_title(title, 56, UITheme.ACCENT)
+	column.add_child(title)
 	
-	# Move Title to the CenterContainer
-	var title = $CenterContainer/VBoxContainer/Title
-	$CenterContainer/VBoxContainer.remove_child(title)
-	cc.add_child(title)
-	title.add_theme_font_size_override("font_size", 32)
-	title.add_theme_color_override("font_color", Color(0.96, 0.85, 0.62))
-	title.add_theme_font_override("font", load("res://Assets/Fonts/zhcn.ttf"))
+	var tagline := UITheme.make_label("Nhập vai chiến thuật theo lượt", UITheme.FS_BODY, UITheme.TEXT_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	column.add_child(tagline)
+	
+	var rule := ColorRect.new()
+	rule.color = UITheme.INK_600
+	rule.custom_minimum_size.y = 1
+	column.add_child(rule)
+	
+	var spacer := Control.new()
+	spacer.custom_minimum_size.y = UITheme.SP_2
+	column.add_child(spacer)
+	
+	var has_save := GameManager.has_save()
+	if has_save:
+		_add_button(column, "Tiếp tục", _on_continue, UITheme.Kind.PRIMARY)
+	_add_button(column, "Chơi mới", _on_new_game, UITheme.Kind.SECONDARY if has_save else UITheme.Kind.PRIMARY)
+	if has_save:
+		_add_button(column, "Tải game", _on_load_menu)
+	_add_button(column, "Sandbox", _on_sandbox)
+	_add_button(column, "Cài đặt", _on_open_options)
+	_add_button(column, "Thoát", _on_exit, UITheme.Kind.GHOST)
+	
+	_error_label = UITheme.make_label("", UITheme.FS_BODY, UITheme.DANGER_TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_error_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_error_label.visible = false
+	column.add_child(_error_label)
 
-	_style_button($CenterContainer/VBoxContainer/NewGameBtn, "res://Assets/UI/btn_angular_brown.svg", "res://Assets/UI/btn_angular_brown_hover.svg", Color(0.96, 0.92, 0.85))
-	_style_button($CenterContainer/VBoxContainer/SandboxBtn, "res://Assets/UI/btn_angular_amber.svg", "res://Assets/UI/btn_angular_amber_hover.svg", Color(0.98, 0.90, 0.80))
-	_style_button($CenterContainer/VBoxContainer/ExitBtn, "res://Assets/UI/btn_angular_red.svg", "", Color(1.0, 0.88, 0.88))
-
-
+func _add_button(parent: Control, text: String, handler: Callable, kind: UITheme.Kind = UITheme.Kind.SECONDARY) -> Button:
+	var btn := Button.new()
+	btn.text = text
+	UITheme.style_button(btn, kind, UITheme.FS_HEADING if kind == UITheme.Kind.PRIMARY else UITheme.FS_LABEL)
+	btn.pressed.connect(handler)
+	parent.add_child(btn)
+	if kind == UITheme.Kind.PRIMARY:
+		btn.call_deferred("grab_focus")
+	return btn
 
 func _on_continue():
 	await ScreenFade.fade_out(0.5)
-	GameManager.load_game("")
+	if not GameManager.load_game(""):
+		ScreenFade.fade_in(0.3)
+		var reason = GameManager.get("last_load_error")
+		_error_label.text = reason if reason is String and reason != "" else "Không thể tải file save."
+		_error_label.visible = true
 
 func _on_load_menu():
 	var save_load_scene = preload("res://UI/Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()

@@ -23,6 +23,10 @@ var original_offset: Vector2 = Vector2.ZERO
 func _ready():
 	set_process(false)
 
+# Node bị gỡ giữa lúc hitstop thì phần sau `await` không chạy nữa: trả time_scale về bình thường tại đây
+func _exit_tree():
+	Engine.time_scale = 1.0
+
 # ── API Kích Hoạt ──────────────────────────────────────────────────────────
 
 func shake(intensity: float = 5.0, duration: float = 0.2):
