@@ -116,11 +116,13 @@ func _setup_phase_0():
 #  PHASE 1: Mafuyu arrives after the battle
 # ─────────────────────────────────────────────
 func _setup_phase_1():
+	GameManager.last_player_position = Vector2.ZERO
 	var player = OverworldPlayer.new()
 	player.name = "OverworldPlayer"
-	# Mafuyu starts outside
+	# Mafuyu starts outside facing up towards warehouse
 	player.position = Vector2(12 * TILE_SIZE, 19 * TILE_SIZE)
 	player.character_color = Color(0.4, 0.3, 0.5)
+	player._facing = "up"
 	add_child(player)
 
 	# Ichika inside, exhausted
@@ -149,6 +151,7 @@ func _create_visual_npc(_npc_name: String, pos: Vector2, color: Color):
 func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, lines: Array):
 	var root = Node2D.new()
 	root.position = pos
+	root.add_to_group("objectives")
 
 	var char_sprite = MapUtils.create_character_sprite(_npc_name)
 	if char_sprite:
