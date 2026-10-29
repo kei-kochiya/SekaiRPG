@@ -49,7 +49,4 @@ static func get_multiplier(attacker_element: String, defender_element: String) -
 	elif data["weak_to"] == defender_element:
 		return 0.8
 		
-	if attacker_element == "Mysterious" and defender_element == "Pure": return 1.25
-	if attacker_element == "Pure" and defender_element == "Mysterious": return 1.25
-		
 	return 1.0

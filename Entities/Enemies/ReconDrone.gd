@@ -39,8 +39,7 @@ func emp_shock(target: Variant = null):
 func scan_weakness(target: Variant = null):
 	print(entity_name, " kích hoạt [Quét Điểm Yếu] lên ", target.entity_name if target else "mục tiêu")
 	if target and target.current_hp > 0:
-		target.defense = max(0, target.defense - 25)
-		target.add_status({"type": "Slow", "duration": 2})
+		target.add_temp_mod("defense", -25)
 
 func get_portrait_path() -> String:
 	return "res://Assets/Icons/stun.png"

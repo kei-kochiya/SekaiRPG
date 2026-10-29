@@ -14,11 +14,6 @@ Chức năng chính:
 # ── Cấu Hình & Biến ────────────────────────────────────────────────────────
 
 
-const ReconDroneClass = preload("res://Entities/Enemies/ReconDrone.gd")
-const SniperClass = preload("res://Entities/Enemies/Sniper.gd")
-const CyborgEnforcerClass = preload("res://Entities/Enemies/CyborgEnforcer.gd")
-const CyberJammerClass = preload("res://Entities/Enemies/CyberJammer.gd")
-const GameLogger = preload("res://Scripts/Core/Logger.gd")
 
 # Ánh xạ ID kẻ địch sang các Class tương ứng
 static var enemy_classes = {
@@ -30,10 +25,10 @@ static var enemy_classes = {
 	"warehouse_worker": WarehouseWorker,
 	"terrorist": Terrorist,
 	"prime_minister": PrimeMinister,
-	"recon_drone": ReconDroneClass,
-	"sniper": SniperClass,
-	"cyborg_enforcer": CyborgEnforcerClass,
-	"cyber_jammer": CyberJammerClass
+	"recon_drone": ReconDrone,
+	"sniper": Sniper,
+	"cyborg_enforcer": CyborgEnforcer,
+	"cyber_jammer": CyberJammer
 }
 
 static var mission_battles: Dictionary = {}
@@ -222,7 +217,7 @@ static func _setup_training_battle() -> Dictionary:
 	
 	if enemies.is_empty():
 		enemies = _create_enemies("target", 5, target_lv)
-		for e in enemies: e.entity_name = "Training Bot " + e.entity_name.split(" ")[1]
+		for i in range(enemies.size()): enemies[i].entity_name = "Robot Huấn Luyện %d" % (i + 1)
 
 	GameManager.last_battle_max_lv = target_lv
 	
@@ -342,10 +337,10 @@ static func _setup_holosim_battle() -> Dictionary:
 			"Lính Cảng": inst = Guard.new()
 			"Thug": inst = Thug.new()
 			"Terrorist": inst = Terrorist.new()
-			"Drone Trinh Sát": inst = ReconDroneClass.new()
-			"Xạ Thủ Bắn Tỉa": inst = SniperClass.new()
-			"Vệ Binh Cơ Giới": inst = CyborgEnforcerClass.new()
-			"Chuyên Viên Nhiễu Sóng": inst = CyberJammerClass.new()
+			"Drone Trinh Sát": inst = ReconDrone.new()
+			"Xạ Thủ Bắn Tỉa": inst = Sniper.new()
+			"Vệ Binh Cơ Giới": inst = CyborgEnforcer.new()
+			"Chuyên Viên Nhiễu Sóng": inst = CyberJammer.new()
 			"Đội Trưởng (BOSS)": inst = Captain.new()
 			"Thủ Tướng (FINAL BOSS)": inst = PrimeMinister.new()
 			_: inst = Guard.new()

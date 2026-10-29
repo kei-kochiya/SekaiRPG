@@ -79,8 +79,6 @@ func _handle_loss_p1(main: Node):
 	var mafuyu = GameManager.get_party_member("Mafuyu")
 	if mafuyu:
 		mafuyu.current_hp = mafuyu.max_hp 
-		for s in mafuyu.skills:
-			if s.name == "Lost World": s.cooldown_turns = 5
 	
 	var boss = main._get_entity("Đội Trưởng")
 	if boss:
@@ -144,7 +142,7 @@ func _sync_battle_state(main: Node):
 	main.all_entities = main.player_team + main.enemy_team
 	main._refresh_team_context()
 	for e in main.all_entities:
-		e.action_gauge = 0.0 # Reset thanh hành động để bắt đầu Phase mới công bằng
+		main.prepare_entity(e) # Reset trạng thái để bắt đầu Phase mới công bằng
 		if not e.died.is_connected(main._on_entity_died.bind(e)):
 			e.died.connect(main._on_entity_died.bind(e))
 	main.hud.setup(main.player_team, main.enemy_team)

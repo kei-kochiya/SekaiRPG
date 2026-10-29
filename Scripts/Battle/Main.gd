@@ -42,11 +42,10 @@ func _ready():
 	_refresh_team_context()
 		
 	for e in all_entities:
-		for s in e.skills:
-			if s.has("initial_cooldown"):
-				e.cooldowns[s["method"]] = s["initial_cooldown"]
+		prepare_entity(e)
 				
 	hud = BattleHUDClass.new()
+	hud.allow_skip = scenario is DefaultScenario or scenario is HoloSimScenario
 	add_child(hud)
 	hud.setup(player_team, enemy_team)
 	hud.skip_requested.connect(_on_skip_requested)
@@ -63,10 +62,22 @@ func _ready():
 	if GameManager.is_sandbox:
 		_setup_sandbox_exit_button()
 	
-	if scenario:
-		scenario.on_start(self)
-	else:
-		run_battle()
+	scenario.on_start(self)
+
+func prepare_entity(e: Entity):
+	"""Xóa trạng thái cũ và áp hồi chiêu khởi đầu cho một thực thể (cả người vào giữa trận, vd. kịch bản Harbor)."""
+	e.reset_battle_state()
+	for s in e.skills:
+		if s.has("initial_cooldown"):
+			e.cooldowns[s["method"]] = s["initial_cooldown"]
+
+func _exit_tree():
+	# Gỡ buff/debuff tạm thời khỏi đội hình bền vững và khôi phục tốc độ game nếu thoát giữa hitstop.
+	# Gồm cả thành viên đã rời trận giữa chừng (vd. bị tráo khỏi đội hình bởi kịch bản).
+	for e in all_entities + GameManager.party.values():
+		if is_instance_valid(e):
+			e.clear_temp_mods()
+	Engine.time_scale = 1.0
 
 func _refresh_team_context():
 	# Cập nhật tham chiếu đồng minh và kẻ thù cho từng thực thể.
@@ -100,14 +111,15 @@ func run_battle():
 			await get_tree().create_timer(0.1, false).timeout
 			continue
 			
+		# Tick của timeline là khoảng cách tuyệt đối tính từ lần dựng gần nhất, nên dựng lại mỗi vòng
+		# (nếu không, lượt bị bỏ qua như Choáng/hủy lệnh sẽ khiến thời gian bị cộng dồn hai lần).
+		_regenerate_timeline()
 		if timeline.is_empty():
-			_regenerate_timeline()
-			if timeline.is_empty():
-				break
+			break
 		
 		var turn = timeline.pop_front()
 		var actor = turn["entity"]
-		var av_passed = turn["tick"]
+		var av_passed = maxf(0.0, turn["tick"])
 		
 		if actor == null or actor.current_hp <= 0:
 			continue
@@ -120,6 +132,8 @@ func run_battle():
 			if is_scripting:
 				await get_tree().create_timer(0.5, false).timeout
 				continue
+			if not all_entities.has(actor):
+				continue # Kịch bản vừa tráo đội hình (vd. pha cứu viện): lượt này không còn hợp lệ
 		
 		var is_player_turn = actor in player_team
 		if not GameManager.is_tutorial and is_player_turn:
@@ -176,7 +190,7 @@ func _player_turn(actor: Entity):
 	if battle_over or result[0] == "cancel": return
 	var action: String = result[0]
 	var target: Entity = result[1]
-	_execute_action(actor, action, target)
+	await _execute_action(actor, action, target)
 
 func _on_skip_requested():
 	if battle_over: return
@@ -186,7 +200,7 @@ func _on_skip_requested():
 	if hud.command_menu.visible:
 		hud.command_menu.cancel()
 		
-	for e in enemy_team:
+	for e in enemy_team.duplicate():
 		if e.current_hp > 0:
 			e.take_damage(99999, "pure")
 	hud.show_victory()
@@ -202,7 +216,7 @@ func _ai_turn(actor: Entity):
 	if target == null:
 		return
 	
-	_execute_action(actor, action, target)
+	await _execute_action(actor, action, target)
 
 func _execute_action(actor: Entity, action: String, target: Entity):
 	"""
@@ -216,9 +230,8 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 	
 	if action.begins_with("item:"):
 		var item_id = action.substr(5)
-		var used = GameManager.use_item(item_id, target)
-		if used:
-			actor.action_gauge = 0.0
+		GameManager.use_item(item_id, target)
+		_regenerate_timeline()
 		return
 	elif action == "attack":
 		var dmg = DamageCalculator.calculate_damage(actor, target)
@@ -232,22 +245,24 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 				once_per_battle = s.get("once_per_battle", false)
 				break
 		
-		var is_shadow_blade = (action == "shadow_blade")
+		var is_shadow_strike = (action == "shadow_strike")
 		
 		actor.call(action, target)
 		
 		if once_per_battle:
-			CooldownManager.set_cooldown(actor, action, 99)
+			CooldownManager.set_cooldown(actor, action, CooldownManager.LOCKED_FOR_BATTLE)
 		elif cd_turns > 0:
 			CooldownManager.set_cooldown(actor, action, cd_turns)
 		
-		if is_shadow_blade and actor.current_hp > 0:
+		if is_shadow_strike and actor.current_hp > 0:
 			await shaker.hitstop(0.1)
 			shaker.shake(8.0, 0.3)
 	else:
 		print("[Warning] ", actor.entity_name, " không có skill: ", action)
 	
 	_apply_synergy(actor, action, target, had_bleed)
+	if scenario:
+		scenario.on_action_executed(self, actor, action, target)
 	
 	_regenerate_timeline()
 
@@ -333,37 +348,15 @@ func _setup_sandbox_exit_button():
 	cl.add_child(ctrl)
 	
 	var btn = Button.new()
-	btn.text = "THOÁT TRẬN"
+	btn.text = "Thoát trận"
+	UITheme.style_button(btn, UITheme.Kind.DANGER, UITheme.FS_BODY)
 	btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	btn.position = Vector2(-120, 16)
-	btn.custom_minimum_size = Vector2(100, 32)
-	
-	var rb = StyleBoxTexture.new()
-	rb.texture = load("res://Assets/UI/btn_angular_red.svg")
-	rb.texture_margin_left = 6; rb.texture_margin_right = 6
-	rb.texture_margin_top = 6; rb.texture_margin_bottom = 6
-	btn.add_theme_stylebox_override("normal", rb)
-	
-	var rbh = StyleBoxTexture.new()
-	rbh.texture = load("res://Assets/UI/btn_angular_red_hover.svg")
-	rbh.texture_margin_left = 6; rbh.texture_margin_right = 6
-	rbh.texture_margin_top = 6; rbh.texture_margin_bottom = 6
-	btn.add_theme_stylebox_override("hover", rbh)
-	btn.add_theme_stylebox_override("pressed", rbh)
-	
-	btn.add_theme_color_override("font_color", Color(1.0, 0.9, 0.9))
-	btn.add_theme_font_size_override("font_size", 12)
+	btn.position = Vector2(-140, 16)
+	btn.custom_minimum_size.x = 120
 	ctrl.add_child(btn)
 	
 	btn.pressed.connect(func():
 		print("[Sandbox] Thoát trận đấu sớm.")
 		GameManager.finish_battle(false)
 	)
-
-func _names(team: Array) -> String:
-	# Chuyển đổi danh sách thực thể thành chuỗi tên (dùng cho debug).
-	var n = []
-	for e in team:
-		n.append(e.entity_name)
-	return ", ".join(n)

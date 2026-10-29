@@ -47,7 +47,7 @@ func overclock_ally(target: Variant = null):
 		ally_target = self
 		
 	print(entity_name, " phát [Xung Trợ Lực Đồng Minh] lên ", ally_target.entity_name)
-	ally_target.atk += 25
+	ally_target.add_temp_mod("atk", 25)
 	ally_target.action_gauge = min(10000.0, ally_target.action_gauge + 3000.0)
 
 func get_portrait_path() -> String:

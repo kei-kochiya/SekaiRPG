@@ -78,6 +78,13 @@ const ASYNC_METHODS: Array[String] = [
 
 
 func _ready() -> void:
+	# SekaiRPG patch: chỉ chạy dưới editor binary (F5 / MCP). Trong bản export, kênh IPC qua user://
+	# cho phép bất kỳ tiến trình cục bộ nào điều khiển game, nên tự gỡ autoload này.
+	if not OS.has_feature("editor"):
+		set_process(false)
+		queue_free()
+		return
+
 	# DIAGNOSTIC: print immediately to confirm this autoload was instantiated.
 	# If this message does NOT appear in the game output log, the autoload
 	# was never loaded — check "Failed to instantiate an autoload" errors

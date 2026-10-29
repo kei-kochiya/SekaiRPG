@@ -39,6 +39,8 @@ static func handle_turn_start(entity: Entity) -> bool:
 		print("[ProcessStatus] ", entity.entity_name, " chịu ", bleed_dmg, " sát thương Chảy máu (", bleed_count, " stacks)")
 
 	for status in entity.active_statuses:
+		if entity.current_hp <= 0:
+			break
 		match status["type"]:
 			"Bleed":
 				pass # Đã xử lý sát thương gộp ở trên

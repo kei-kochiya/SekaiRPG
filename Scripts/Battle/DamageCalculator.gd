@@ -41,12 +41,16 @@ static func calculate_damage_detailed(attacker: Entity, defender: Entity, skill_
 		var crit_dmg = attacker.get("crit_dmg") if "crit_dmg" in attacker else 1.50
 		final_damage *= crit_dmg
 		
+	defender.set_meta("was_crit", is_crit) # Entity.take_damage đọc cờ này để phát tín hiệu chí mạng
+	if is_crit:
+		attacker.set_meta("last_hit_crit", true) # Phước Lành "Kích Nổ" đọc cờ này sau mỗi hành động
+	
 	# Tính toán Phá Điểm Yếu (Weakness Break)
 	var is_break = false
 	if "break_gauge" in defender and not defender.is_character:
 		var break_damage = 0
 		if is_weakness:
-			var boost = 2.0 if (HoloSimManager and HoloSimManager.has_blessing("blessing_break")) else 1.0
+			var boost = 2.0 if (HoloSimManager and HoloSimManager.is_sim_active and HoloSimManager.has_blessing("blessing_break")) else 1.0
 			break_damage = int((int(final_damage * 0.4) + 25) * boost)
 		elif defender.type == "None" or multiplier >= 1.0:
 			break_damage = int(final_damage * 0.15) + 10
@@ -71,8 +75,4 @@ static func calculate_damage_detailed(attacker: Entity, defender: Entity, skill_
 	}
 
 static func calculate_damage(attacker: Entity, defender: Entity, skill_multiplier: float = 1.0) -> int:
-	var result = calculate_damage_detailed(attacker, defender, skill_multiplier)
-	if attacker:
-		attacker.set_meta("last_hit_crit", result["is_crit"])
-		attacker.set_meta("last_hit_break", result["is_break"])
-	return result["damage"]
+	return calculate_damage_detailed(attacker, defender, skill_multiplier)["damage"]

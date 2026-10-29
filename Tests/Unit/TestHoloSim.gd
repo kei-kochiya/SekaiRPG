@@ -47,3 +47,29 @@ func test_holosim_scenario():
 	assert_gt(HoloSimManager.high_score_floor, 0, "High score floor updated")
 	
 	HoloSimManager.is_sim_active = false
+
+func test_holosim_battle_setup():
+	HoloSimManager.start_new_run()
+	var battle_data = BattleInitializer.setup_battle(null)
+	assert_gt(battle_data["enemy_team"].size(), 0, "HoloSim floor 1 spawns enemies")
+	assert_true(battle_data["scenario"] is HoloSimScenario, "HoloSim uses HoloSimScenario")
+	HoloSimManager.is_sim_active = false
+
+func test_blessings_do_not_stack_across_floors():
+	HoloSimManager.start_new_run()
+	HoloSimManager.add_blessing("blessing_speed")
+	HoloSimManager.add_blessing("blessing_crit")
+	var ichika = Ichika.new()
+	var base_spd = ichika.spd
+	var base_crit = ichika.crit_rate
+	for floor_run in range(3):
+		HoloSimManager.apply_blessings_to_team([ichika])
+		ichika.clear_temp_mods() # Main._exit_tree gỡ buff khi mỗi tầng kết thúc
+	assert_eq(ichika.spd, base_spd, "Speed blessing leaves no permanent SPD on the party")
+	assert_eq(ichika.crit_rate, base_crit, "Crit blessing leaves no permanent crit rate on the party")
+	HoloSimManager.is_sim_active = false
+
+func test_rest_floors_have_no_enemies():
+	for f in [4, 9]:
+		assert_true(HoloSimManager.is_rest_floor(f), "Floor %d is a rest floor" % f)
+		assert_eq(HoloSimManager.get_floor_info(f)["enemies"].size(), 0, "Rest floor %d has no battle" % f)

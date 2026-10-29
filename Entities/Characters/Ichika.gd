@@ -43,7 +43,7 @@ func piercing_chord(target: Entity):
 func resonant_edge(_target: Entity):
 	# [Âm Vang Đồng Điệu]: Tăng 40 SPD cho bản thân.
 	print(entity_name, " kích hoạt [Âm Vang Đồng Điệu]! Tăng tốc độ.")
-	self.spd += 40
+	add_temp_mod("spd", 40)
 
 func shadow_strike(target: Entity):
 	# [Ảnh Sát]: Tuyệt kỹ - kích nổ toàn bộ Bleed stacks, gây True Damage theo số stack.

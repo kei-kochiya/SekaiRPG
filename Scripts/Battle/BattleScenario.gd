@@ -24,6 +24,10 @@ func on_turn_end(_main: Node, _actor: Entity):
 	"""Gọi khi một thực thể kết thúc lượt."""
 	pass
 
+func on_action_executed(_main: Node, _actor: Entity, _action: String, _target: Entity):
+	"""Gọi sau khi một hành động (đòn đánh/kỹ năng/vật phẩm) được thực thi xong."""
+	pass
+
 func on_entity_died(_main: Node, _entity: Entity):
 	"""Gọi khi có bất kỳ thực thể nào tử trận."""
 	pass

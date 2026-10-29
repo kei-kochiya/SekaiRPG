@@ -6,7 +6,7 @@ Tóm tắt: Định nghĩa lớp kẻ địch WarehouseWorker (Nhân viên kho h
 
 Chức năng chính:
 - Khởi tạo chỉ số với phòng thủ cao.
-- Thực thi kỹ năng [Ném Thùng Hàng]: Tấn công vật lý kèm xác suất gây Làm Chậm (Slow).
+- Thực thi kỹ năng [Ném Thùng Hàng]: Tấn công vật lý đơn mục tiêu.
 """
 
 # ── Khởi Tạo ───────────────────────────────────────────────────────────────
@@ -30,13 +30,10 @@ func _init():
 # ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 
 func throw_box(target: Entity):
-	# [Ném Thùng Hàng]: Tấn công vật lý + 30% tỷ lệ gây Slow 2 lượt (giảm 20% SPD).
+	# [Ném Thùng Hàng]: Tấn công vật lý đơn mục tiêu.
 	print(entity_name, " ném một thùng hàng nặng vào ", target.entity_name, "!")
 	var dmg = DamageCalculator.calculate_damage(self , target)
 	target.take_damage(dmg)
-	
-	if randf() < 0.3:
-		target.add_status({"type": "Slow", "duration": 2, "percent": 0.2})
 
 func get_portrait_path() -> String:
 	return "res://Assets/Person/warehouse_worker.svg"

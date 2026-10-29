@@ -1,9 +1,5 @@
 extends "res://Tests/Unit/BaseTest.gd"
 
-const ReconDroneClass = preload("res://Entities/Enemies/ReconDrone.gd")
-const SniperClass = preload("res://Entities/Enemies/Sniper.gd")
-const CyborgEnforcerClass = preload("res://Entities/Enemies/CyborgEnforcer.gd")
-const CyberJammerClass = preload("res://Entities/Enemies/CyberJammer.gd")
 
 func test_character_skills():
 	var chars = [Ichika.new(), Kanade.new(), Mafuyu.new(), Ena.new(), Mizuki.new(), Honami.new()]
@@ -36,10 +32,10 @@ func test_enemy_classes():
 		Captain.new(),
 		PrimeMinister.new(),
 		TrainingBot.new(),
-		ReconDroneClass.new(),
-		SniperClass.new(),
-		CyborgEnforcerClass.new(),
-		CyberJammerClass.new()
+		ReconDrone.new(),
+		Sniper.new(),
+		CyborgEnforcer.new(),
+		CyberJammer.new()
 	]
 	
 	var valid_elements = ["Cool", "Happy", "Cute", "Mysterious", "Pure"]
@@ -57,18 +53,38 @@ func test_enemy_classes():
 	assert_true(pm.has_method("snipe_order"), "PrimeMinister has snipe_order skill")
 	assert_true(pm.has_method("lock_power"), "PrimeMinister has lock_power skill")
 	
-	var drone = ReconDroneClass.new()
+	var drone = ReconDrone.new()
 	assert_true(drone.has_method("emp_shock"), "ReconDrone has emp_shock skill")
 	assert_true(drone.has_method("scan_weakness"), "ReconDrone has scan_weakness skill")
 	
-	var sniper = SniperClass.new()
+	var sniper = Sniper.new()
 	assert_true(sniper.has_method("headshot"), "Sniper has headshot skill")
 	assert_true(sniper.has_method("smoke_screen"), "Sniper has smoke_screen skill")
 	
-	var cyborg = CyborgEnforcerClass.new()
+	var cyborg = CyborgEnforcer.new()
 	assert_true(cyborg.has_method("shield_slam"), "CyborgEnforcer has shield_slam skill")
 	assert_true(cyborg.has_method("barrier_boost"), "CyborgEnforcer has barrier_boost skill")
 	
-	var jammer = CyberJammerClass.new()
+	var jammer = CyberJammer.new()
 	assert_true(jammer.has_method("system_hack"), "CyberJammer has system_hack skill")
 	assert_true(jammer.has_method("overclock_ally"), "CyberJammer has overclock_ally skill")
+
+func test_enemy_skills_apply_no_ghost_statuses():
+	# Slow/Buff từng được gắn nhưng không có hiệu lực; chỉ còn Bleed, Poison, Stun là hiệu ứng thật.
+	var ichika = Ichika.new()
+	var worker = WarehouseWorker.new()
+	worker.enemies = [ichika]
+	for i in range(30):
+		worker.throw_box(ichika)
+	assert_eq(ichika.active_statuses.size(), 0, "Ném Thùng Hàng chỉ gây sát thương")
+	
+	var drone = ReconDrone.new()
+	var base_def = ichika.defense
+	drone.scan_weakness(ichika)
+	assert_eq(ichika.active_statuses.size(), 0, "Quét Điểm Yếu không gắn trạng thái ảo")
+	assert_eq(ichika.defense, base_def - 25, "Quét Điểm Yếu vẫn giảm 25 DEF")
+	ichika.clear_temp_mods()
+	assert_eq(ichika.defense, base_def, "DEF được hoàn trả sau trận")
+	
+	for status_name in UITheme.STATUS_INFO:
+		assert_true(status_name in ["Bleed", "Poison", "Stun"], "Chỉ còn hiệu ứng có thật: " + status_name)

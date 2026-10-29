@@ -14,8 +14,6 @@ var turns_elapsed: int = 0
 var kill_count: int = 0
 var is_rescue_phase: bool = false
 
-var original_mafuyu_atk: int = 0
-var original_mafuyu_def: int = 0
 
 func on_start(main: Node):
 	print("[StreetSurvivalScenario] Khởi chạy trận chiến sinh tồn!")
@@ -125,10 +123,8 @@ func _trigger_rescue_phase(main: Node):
 	mafuyu.current_hp = mafuyu.max_hp
 	
 	# Buff sức mạnh riêng cho Mafuyu ở pha này (+50% ATK & DEF)
-	original_mafuyu_atk = mafuyu.atk
-	original_mafuyu_def = mafuyu.defense
-	mafuyu.atk = int(mafuyu.atk * 1.5)
-	mafuyu.defense = int(mafuyu.defense * 1.5)
+	mafuyu.add_temp_mod("atk", int(mafuyu.atk * 0.5))
+	mafuyu.add_temp_mod("defense", int(mafuyu.defense * 0.5))
 	
 	# Tráo đổi đội hình phe ta thành duy nhất Mafuyu
 	main.player_team = [mafuyu]
@@ -146,23 +142,13 @@ func _trigger_rescue_phase(main: Node):
 	# Cập nhật toàn bộ hệ thống Battle Engine
 	main._refresh_team_context()
 	for e in main.all_entities:
-		e.action_gauge = 0.0 # Reset thanh hành động để bắt đầu pha cứu viện công bằng
+		main.prepare_entity(e) # Reset trạng thái để bắt đầu pha cứu viện công bằng
 	main.hud.setup(main.player_team, main.enemy_team)
 	main._setup_gauge_teams()
 	main._regenerate_timeline()
 	
 	# Hiển thị Banner cứu viện
-	if main.hud.has_method("show_rescue_banner"):
-		main.hud.show_rescue_banner()
-	elif main.hud.has_method("_create_banner"):
-		var banner = main.hud._create_banner("MAFUYU CỨU VIỆN!", Color(0.6, 0.4, 1.0))
-		main.hud.add_child(banner)
-		banner.position.y -= 150
-		var tw = main.create_tween()
-		tw.tween_property(banner, "modulate:a", 1.0, 0.3)
-		tw.tween_interval(1.5)
-		tw.tween_property(banner, "modulate:a", 0.0, 0.3)
-		tw.tween_callback(banner.queue_free)
+	main.hud.show_announcement("MAFUYU CỨU VIỆN!", UITheme.PLAYER)
 
 func check_battle_end(main: Node) -> bool:
 	if not is_rescue_phase:
@@ -187,13 +173,7 @@ func get_victory_status(main: Node) -> bool:
 	return kill_count >= 5
 
 func on_battle_completed(main: Node, is_victory: bool):
-	# Khôi phục chỉ số gốc của Mafuyu
-	var mafuyu = GameManager.get_party_member("Mafuyu")
-	if mafuyu and original_mafuyu_atk > 0:
-		mafuyu.atk = original_mafuyu_atk
-		mafuyu.defense = original_mafuyu_def
-		
-	# Đảm bảo tắt cờ skills_disabled
+	# Buff của Mafuyu là chỉ số tạm thời: Main._exit_tree sẽ gỡ. Đảm bảo tắt cờ skills_disabled
 	var ichika = GameManager.get_party_member("Ichika")
 	var mizuki = GameManager.get_party_member("Mizuki")
 	if ichika: ichika.skills_disabled = false

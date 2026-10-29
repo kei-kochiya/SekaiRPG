@@ -49,7 +49,7 @@ func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = 
 func merciful_cleave(_target: Entity):
 	# [Vệt Cắt Xót Thương]: AoE 80% ATK cho toàn bộ kẻ địch còn sống.
 	print(entity_name, " vung vũ khí: [Vệt Cắt Xót Thương]!")
-	for enemy in enemies:
+	for enemy in enemies.duplicate():
 		if enemy.current_hp > 0:
 			var dmg = DamageCalculator.calculate_damage(self, enemy, 0.8)
 			enemy.take_damage(dmg)

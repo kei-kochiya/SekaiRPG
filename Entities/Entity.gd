@@ -81,11 +81,17 @@ func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = 
 	Returns: 
 		bool: True nếu thực thể chết (HP = 0), ngược lại False.
 	"""
+	# Thực thể đã chết không nhận thêm sát thương (tránh phát `died` lần hai -> nhân đôi EXP/Credits).
+	if current_hp <= 0:
+		return true
+	
 	current_hp -= amount
 	current_hp = clamp(current_hp, 0, max_hp)
 	
 	var is_break = get_meta("was_broken", false)
 	set_meta("was_broken", false)
+	is_crit = is_crit or get_meta("was_crit", false)
+	set_meta("was_crit", false)
 	
 	hp_changed.emit(current_hp, max_hp)
 	damage_received.emit(amount, damage_type)
@@ -127,6 +133,7 @@ func add_status(status: Dictionary):
 		for s in active_statuses:
 			if s["type"] == "Poison":
 				s["duration"] = status["duration"]
+				s["percent"] = status.get("percent", s.get("percent", 0.1))
 				status_changed.emit(active_statuses.duplicate())
 				return
 	
@@ -162,8 +169,8 @@ func remove_all_status_type(type_name: String):
 	remove_statuses(to_remove)
 
 func clear_all_debuffs():
-	# Thanh tẩy toàn bộ các hiệu ứng xấu (Bleed, Poison, Stun, Slow).
-	var debuffs = ["Bleed", "Poison", "Stun", "Slow"]
+	# Thanh tẩy toàn bộ các hiệu ứng xấu (Bleed, Poison, Stun).
+	var debuffs = ["Bleed", "Poison", "Stun"]
 	var to_remove = []
 	for s in active_statuses:
 		if s["type"] in debuffs:
@@ -186,6 +193,39 @@ func refresh_status_duration(type_name: String, new_duration: int):
 			changed = true
 	if changed:
 		status_changed.emit(active_statuses.duplicate())
+
+# ── Chỉ số tạm thời & reset đầu trận ────────────────────────────────────────
+# Đội hình người chơi sống xuyên suốt nhiều trận (và được lưu vào save), nên mọi buff/debuff
+# chỉ số trong trận phải đi qua add_temp_mod() để được gỡ sạch khi trận kết thúc.
+
+var _temp_mods: Dictionary = {}
+
+func add_temp_mod(stat: String, delta: float):
+	"""Cộng `delta` vào chỉ số `stat` và ghi nhớ mức thay đổi thực tế để hoàn trả cuối trận."""
+	var before = get(stat)
+	var after = before + delta
+	if stat in ["defense", "res", "atk", "spd"]:
+		after = max(0, after)
+	set(stat, after)
+	_temp_mods[stat] = _temp_mods.get(stat, 0.0) + (get(stat) - before)
+
+func clear_temp_mods():
+	for stat in _temp_mods:
+		set(stat, get(stat) - _temp_mods[stat])
+	_temp_mods.clear()
+
+func reset_battle_state():
+	"""Xóa trạng thái chỉ có ý nghĩa trong một trận (hồi chiêu, hiệu ứng, thanh hành động...)."""
+	cooldowns.clear()
+	active_statuses.clear()
+	action_gauge = 0.0
+	skills_disabled = false
+	is_staggered = false
+	break_gauge = max_break_gauge
+	remove_meta("was_broken")
+	remove_meta("was_crit")
+	remove_meta("last_hit_crit")
+	status_changed.emit(active_statuses.duplicate())
 
 # ── Kiểm tra khả năng sử dụng kỹ năng ───────────────────────────────────────
 

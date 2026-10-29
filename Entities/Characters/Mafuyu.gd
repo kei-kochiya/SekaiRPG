@@ -50,6 +50,8 @@ func freezing_void(_target: Entity):
 	if alive_enemies.is_empty(): return
 	
 	for i in range(2):
+		alive_enemies = alive_enemies.filter(func(e): return e.current_hp > 0)
+		if alive_enemies.is_empty(): break
 		var target = alive_enemies.pick_random()
 		var dmg = DamageCalculator.calculate_damage(self, target, 1.0)
 		target.take_damage(dmg)
@@ -59,7 +61,7 @@ func lost_world(_target: Entity):
 	# [Lost World]: Tuyệt kỹ AoE Pure DMG - scale đến x9 sát thương dựa trên lượng máu đã mất. Sống sót → 2 Bleed cho tất cả.
 	print(entity_name, " kích hoạt [Lost World]...")
 	
-	for e in enemies:
+	for e in enemies.duplicate():
 		if e.current_hp > 0:
 			var e_lost_hp_ratio = 1.0 - (float(e.current_hp) / e.max_hp)
 			var dmg_mult = 1.0 + (e_lost_hp_ratio * 8.0) # Tối đa x9 sát thương đối với mục tiêu gần chết
@@ -69,7 +71,7 @@ func lost_world(_target: Entity):
 			e.take_damage(final_dmg, "pure")
 	
 	# Nếu còn kẻ sống sót, lan tỏa 2 Bleed cho cả hai phe
-	for e in enemies + allies:
+	for e in (enemies + allies):
 		if e.current_hp > 0:
 			e.add_status({"type": "Bleed", "duration": 3})
 			e.add_status({"type": "Bleed", "duration": 3})

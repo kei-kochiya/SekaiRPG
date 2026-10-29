@@ -42,10 +42,10 @@ func apply_blessings_to_team(team: Array):
 	for member in team:
 		if member == null: continue
 		if has_blessing("blessing_speed"):
-			member.spd += 35
+			member.add_temp_mod("spd", 35)
 		if has_blessing("blessing_crit"):
-			member.crit_rate = member.get("crit_rate") + 0.25
-			member.crit_dmg = member.get("crit_dmg") + 0.50
+			member.add_temp_mod("crit_rate", 0.25)
+			member.add_temp_mod("crit_dmg", 0.50)
 
 func is_rest_floor(floor_num: int) -> bool:
 	return floor_num == 4 or floor_num == 9

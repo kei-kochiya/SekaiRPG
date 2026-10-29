@@ -1,17 +1,6 @@
 extends DefaultScenario
 class_name PrimeMinisterBossScenario
 
-func on_start(battle_scene: Node):
-	var pm = null
-	for e in battle_scene.enemy_team:
-		if e.entity_name == "Thủ Tướng":
-			pm = e
-			break
-			
-	if pm:
-		pm.add_status({"type": "Buff", "duration": 5})
-		
-	super.on_start(battle_scene)
 
 func on_turn_start(battle_scene: Node, current_actor: Entity):
 	if current_actor.entity_name == "Thủ Tướng":

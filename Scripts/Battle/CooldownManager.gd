@@ -6,9 +6,11 @@ Tóm tắt: CooldownManager quản lý thời gian hồi chiêu (cooldown) của
 
 Chức năng chính:
 - Cung cấp các phương thức tĩnh để đếm ngược cooldown mỗi lượt (`process_cooldowns`).
-- Kiểm tra trạng thái sẵn sàng của kỹ năng (`is_skill_ready`).
 - Thiết lập thời gian chờ sau khi thực thể sử dụng kỹ năng (`set_cooldown`).
 """
+
+# Giá trị cooldown đặc biệt: kỹ năng "một lần mỗi trận" đã dùng xong, không đếm ngược nữa.
+const LOCKED_FOR_BATTLE = 99
 
 # ── Xử Lý Cooldown ─────────────────────────────────────────────────────────
 
@@ -28,23 +30,9 @@ static func process_cooldowns(entity: Entity):
 		
 	var keys = entity.cooldowns.keys()
 	for skill in keys:
-		if entity.cooldowns[skill] > 0:
+		if entity.cooldowns[skill] > 0 and entity.cooldowns[skill] < LOCKED_FOR_BATTLE:
 			entity.cooldowns[skill] -= 1
 			entity.cooldown_updated.emit(skill, entity.cooldowns[skill])
-
-static func is_skill_ready(entity: Entity, skill_name: String) -> bool:
-	"""
-	Kiểm tra xem một kỹ năng đã sẵn sàng để sử dụng hay chưa.
-	
-	Args:
-		entity (Entity): Thực thể sở hữu kỹ năng.
-		skill_name (String): Tên method của kỹ năng cần kiểm tra.
-	Returns: 
-		bool: True nếu cooldown bằng 0, ngược lại False.
-	"""
-	if entity == null:
-		return false
-	return entity.cooldowns.get(skill_name, 0) == 0
 
 static func set_cooldown(entity: Entity, skill_name: String, turns: int):
 	"""
