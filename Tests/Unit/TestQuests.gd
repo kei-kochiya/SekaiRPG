@@ -6,7 +6,7 @@ Tóm tắt: Unit test cho Hệ thống Nhiệm vụ (QuestRegistry, QuestDefinit
 
 func test_quest_registry_loading():
 	var quests = QuestRegistry.get_all_quests()
-	assert_eq(quests.size(), 10, "QuestRegistry loaded exactly 10 quests")
+	assert_eq(quests.size(), 16, "QuestRegistry loaded exactly 16 quests")
 	
 	for q in quests:
 		assert_ne(q.quest_id, "", "Quest has non-empty ID")
@@ -61,4 +61,20 @@ func test_quest_ignores_training_wave():
 	GameManager.begin_training(["Ichika"])
 	GameManager.training_wave = 9
 	assert_eq(QuestRegistry.get_current_quest().quest_id, "quest_03_warehouse", "training_wave không ảnh hưởng quest Nhà kho")
+	GameManager.reset_game()
+
+func test_arc2_quest_chain():
+	# Hồi kết 2: mỗi mốc cờ phải trỏ tới đúng quest, mốc muộn nhất thắng
+	GameManager.reset_game()
+	var steps = [
+		["pm_boss_defeated", "quest_11_next_pm"],
+		["ena_left_nightcord", "quest_12_bounty"],
+		["ena_captured", "quest_13_interrogation"],
+		["kanade_unmasked", "quest_14_mole"],
+		["honami_rescue_done", "quest_15_last_nocturne"],
+		["game_completed", "quest_16_new_nightcord"],
+	]
+	for step in steps:
+		GameManager.story.set_flag(step[0], true)
+		assert_eq(QuestRegistry.get_current_quest().quest_id, step[1], "%s -> %s" % [step[0], step[1]])
 	GameManager.reset_game()

@@ -8,8 +8,8 @@ Dialogue and in-game text are in Vietnamese.
 
 - **Action Value combat** — speed decides turn order; the turn strip at the top of the battle screen shows who acts next.
 - **5-element chart and Weakness Break** — hitting an enemy's weakness drains its Break gauge; empty gauge means a stunned turn and a knock-back on the timeline.
-- **Story mode** — 10 quests from the prologue ambush to the highway finale, driven by `Quests/` definitions and `Data/storyline/*.json` dialogue.
-- **6 playable characters, 12 enemy types**, crits, status effects (Bleed, Poison, Stun), cooldowns and once-per-battle ultimates.
+- **Story mode** — 16 quests, from the prologue ambush through the Prime Minister's fall to the collapse of Nightcord and an epilogue, driven by `Quests/` definitions and `Data/storyline/*.json` dialogue. The last arc (Ena's bounty hunt, the interrogation warehouse, the mole, Mafuyu's betrayal) ends in a fight against a Mafuyu who mirrors every upgrade you gave her, and unlocks a post-game base.
+- **6 playable characters, 13 enemy types**, crits, status effects (Bleed, Poison, Stun), cooldowns and once-per-battle ultimates.
 - **Holo-Simulation** — a 10-floor roguelite tower with 8 blessings and two rest stops.
 - **Economy** — credits, treasure chests, a vending machine and consumables usable in battle.
 - **Sandbox** — pick any team and enemies and fight; also upgrade stats with skill points.

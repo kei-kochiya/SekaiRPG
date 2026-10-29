@@ -13,7 +13,7 @@ const GUIDE_SECTIONS = [
 	["Hệ nguyên tố", "Cool > Happy > Cute > Cool. Mysterious và Pure khắc chế lẫn nhau.\nĐánh trúng hệ khắc gây 125% sát thương, đánh vào hệ bị khắc chỉ còn 80%."],
 	["Phá điểm yếu (Break)", "Mỗi đòn đánh làm giảm thanh Break của kẻ địch, mạnh nhất khi đánh trúng hệ yếu.\nKhi thanh Break cạn: kẻ địch bị Choáng 1 lượt và bị đẩy lùi trên thanh thứ tự lượt."],
 	["Thứ tự lượt", "Tốc độ (SPD) càng cao thì càng tới lượt thường xuyên. Dải thứ tự lượt nằm ở giữa mép trên màn hình.\nDùng Choáng hoặc làm cạn thanh Break để chiếm lượt."],
-	["Nâng cấp chỉ số", "Nói chuyện với Kanade tại căn cứ để dùng Điểm Kỹ Năng (SP) nâng cấp vĩnh viễn chỉ số cho cả đội."],
+	["Nâng cấp chỉ số", "Nói chuyện với Kanade tại căn cứ (về sau là Honami) để dùng Điểm Kỹ Năng (SP) nâng cấp vĩnh viễn chỉ số. Nâng cấp cho ai thì người đó mạnh lên, kể cả khi họ trở thành kẻ địch."],
 ]
 
 static func build_base_ui(menu: Node) -> Dictionary:
