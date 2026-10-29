@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_13_interrogation"
+quest_name = "Kho Thẩm Vấn"
+arc_name = "Hồi Kết 2: Dạ Khúc Tàn"
+description = "Ena bị tra khảo trong một nhà kho để khai về Nightcord. Mafuyu biết hết nhưng đợi tới phút chót mới ra lệnh giết Ena. Mizuki không nghe lệnh, quét sạch lũ cảnh sát, rồi bị Kanade dùng từ trường ép phải đấu với chính Ena."
+linked_map_scene = "res://Maps/Interrogation/InterrogationMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/OrdersStage.gd"
+battle_scenario_class = "ForcedDuelScenario"
+dialogue_files = ["res://Data/storyline/arc2_interrogation.json"]
+pre_conditions = {
+"ena_captured": true,
+"ena_killed": false
+}
+post_conditions = {
+"ena_killed": true,
+"kanade_unmasked": true
+}

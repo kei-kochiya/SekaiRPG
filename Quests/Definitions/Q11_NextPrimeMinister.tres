@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_11_next_pm"
+quest_name = "Ghế Thủ Tướng Mới"
+arc_name = "Hồi Kết 2: Dạ Khúc Tàn"
+description = "Thủ Tướng đã chết. Cả Nightcord ăn mừng và bàn xem ai sẽ là Thủ Tướng kế tiếp: Bộ trưởng Quốc phòng, cấp trên của Mafuyu. Trong lúc trò chuyện, Mizuki lỡ lời khiến Ena nổi giận bỏ đi."
+linked_map_scene = "res://Maps/Base/BaseMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/FinaleStage.gd"
+battle_scenario_class = ""
+dialogue_files = ["res://Data/storyline/base_celebration.json", "res://Data/storyline/arc2_ministry.json"]
+pre_conditions = {
+"pm_boss_defeated": true,
+"ena_left_nightcord": false
+}
+post_conditions = {
+"finale_done": true,
+"ena_left_nightcord": true
+}

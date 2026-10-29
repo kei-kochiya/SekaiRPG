@@ -1,58 +1,188 @@
 {
   "base_celebration": [
     {
+      "type": "narrator",
+      "text": "(Đại sảnh căn cứ Nightcord. Trên màn hình liên lạc, Bộ trưởng Quốc phòng hiện lên, chỉnh tề như thể chưa từng có ai đổ máu.)"
+    },
+    {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "Làm tốt lắm. Tôi sẽ lo việc dọn dẹp hiện trường. Sắp tới, tôi sẽ là tân Thủ tướng.",
-      "type": "dialogue",
-      "name": "Defense Minister"
+      "name": "Bộ trưởng Quốc phòng",
+      "color": "#aaaacc",
+      "text": "Làm tốt lắm. Tôi sẽ lo việc dọn dẹp hiện trường. Sắp tới, tôi sẽ là tân Thủ tướng."
     },
     {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "Tuyệt vời. Mọi chuyện coi như đã êm xuôi.",
-      "type": "dialogue",
-      "name": "Kanade"
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Tuyệt vời. Mọi chuyện coi như đã êm xuôi."
     },
     {
-      "speaker": "left",
-      "text": "Đúng là một đêm dài. Chúc mừng chiến thắng của chúng ta!",
       "type": "dialogue",
-      "name": "Ena"
-    },
-    {
       "speaker": "right",
-      "text": "Tuyệt quá! Chúng ta nên mở tiệc ăn mừng thôi!",
-      "type": "dialogue",
-      "name": "Mizuki"
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đúng là một đêm dài. Chúc mừng chiến thắng của chúng ta!"
     },
     {
-      "speaker": "left",
-      "text": "(Sắc mặt nhợt nhạt, ôm miệng) Ụe... Cảnh tượng đó... ánh mắt lạnh lẽo của chị Mafuyu...",
       "type": "dialogue",
-      "name": "Ichika"
-    },
-    {
-      "speaker": "left",
-      "text": "(Bước tới) Ichika, cô không sao chứ? Sắc mặt cô tệ quá.",
-      "type": "dialogue",
-      "name": "Honami"
-    },
-    {
-      "speaker": "left",
-      "text": "Chị Honami... em... em thấy sợ quá...",
-      "type": "dialogue",
-      "name": "Ichika"
-    },
-    {
-      "speaker": "left",
-      "text": "Không sao đâu. Để tôi đưa cô về nhà nghỉ ngơi nhé. Mọi chuyện qua rồi.",
-      "type": "dialogue",
-      "name": "Honami"
-    },
-    {
       "speaker": "right",
-      "text": "Nhờ cô chăm sóc con bé, Honami.",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Tuyệt quá! Chúng ta nên mở tiệc ăn mừng thôi!"
+    },
+    {
       "type": "dialogue",
-      "name": "Mafuyu"
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Sắc mặt nhợt nhạt, ôm miệng) Ụe... Cảnh tượng đó... ánh mắt lạnh lẽo của chị Mafuyu..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Bước tới) Ichika, cô không sao chứ? Sắc mặt cô tệ quá."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Honami... em... em thấy sợ quá..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Nuốt khan, cố nghĩ về chuyện khác) Chị Mafuyu... ông Bộ trưởng là cấp trên của chị, đúng không ạ? Nếu ông ấy lên làm Thủ tướng thì chị sẽ báo cáo cho ai?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Vẫn là ông ta. Ông ta đứng đầu Bộ Quốc phòng và ký mọi lệnh của Nightcord. Đổi cái ghế, không đổi người cầm bút."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Bộ trưởng Quốc phòng",
+      "color": "#aaaacc",
+      "text": "Một công cụ vận hành tốt thì không có lý do gì để thay. Ngân sách, quyền hạn, hành lang pháp lý, các cô sẽ rộng tay hơn trước nhiều. Chỉ cần nhớ sợi dây nằm trong tay ai."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nghe như bản hợp đồng tăng lương, kèm ba trang điều khoản in chữ nhỏ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Hahaha~ Nghe sang quá! Này tân Thủ tướng, ngài có cần thư ký không ạ... Ơ, ngắt máy rồi à? Thô lỗ ghê~"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Kệ ông ta. Có người chống lưng thì đỡ phải xin phép lằng nhằng mỗi lần xử ai. Tôi thấy vậy là được rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Gác hai chân lên bàn, tung viên xúc xắc đỏ lên rồi đón lấy) Chuẩn~ Để tôi phân vai cho rõ nhé. Mafuyu là bàn tay, Kanade là cái đầu, tôi là gương mặt, còn Ena..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena là con dao Mafuyu nhặt về~ Dao thì làm gì có tiếng nói trong chính trị, ai chỉ đâu chém đó. Ngoan như con chó tha đồ ấy, dễ thương ghê~"
+    },
+    {
+      "type": "narrator",
+      "text": "(Căn phòng im bặt. Viên xúc xắc đỏ rơi xuống bàn, lăn vài vòng rồi nằm yên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "...Cô vừa nói cái gì?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Hahaha~ Đùa thôi, đùa thôi mà, Ena—"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đùa? Tôi xiên người vì tôi muốn xiên, không phải vì ai chỉ tay! Cô cứ cười đi, Mizuki, cười cho đã. Cô có cái mặt nào của riêng mình đâu mà sợ mất."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ena quay sang Mafuyu, chờ một câu phản bác. Mafuyu chỉ nhìn lại, không nói gì.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "...Hay lắm."
+    },
+    {
+      "type": "narrator",
+      "text": "RẦM! (Cánh cửa thép đóng sập mạnh đến mức dãy đèn trần rung lên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Để cô ta nguội."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Có vẻ đây là lúc người ngoài nên lui bước. Ichika, nếu cô muốn, tôi có thể đón cô về chỗ tôi nghỉ vài hôm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Không. Ichika ở lại."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "...Tôi chỉ hỏi vậy thôi. Xin phép. (Gật đầu lịch sự rồi rời khỏi đại sảnh)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Căn cứ bỗng im đến mức nghe được tiếng quạt thông gió... Chị Ena... Có gì đó không ổn, mà mình không nói ra được là gì...)"
     }
   ]
 }

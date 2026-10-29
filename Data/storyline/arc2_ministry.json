@@ -1,0 +1,61 @@
+{
+  "ena_leaves_aftermath": [
+    {
+      "type": "narrator",
+      "text": "(Tiếng giày của Ena xa dần ngoài hành lang rồi tắt hẳn. Viên xúc xắc đỏ nằm yên trên bàn, mặt một hướng lên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "...Nè. Câu lúc nãy của tôi hơi quá, phải không?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Hơi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em đi tìm chị Ena."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ở yên."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Nhưng chị ấy đang—"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô ta đi đâu, đi bao lâu, tự cô ta chọn. Ai đuổi theo bây giờ chỉ khiến cô ta điên thêm. Tôi nói ở yên."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu liếc xuống màn hình nhỏ trên cổ tay, nơi một chấm sáng đang di chuyển chậm rãi, rồi khóa nó lại trước khi ai kịp nhìn thấy.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "...Vâng ạ."
+    }
+  ]
+}

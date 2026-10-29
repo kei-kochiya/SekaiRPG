@@ -1,0 +1,921 @@
+{
+  "interrogation_torture_1": [
+    {
+      "type": "narrator",
+      "text": "(Một nhà kho bỏ hoang. Bóng đèn trần đung đưa rọi xuống chiếc ghế sắt, nơi Ena bị trói chặt, mặt sưng, tóc dính máu khô.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Tỉnh rồi à. Tốt. Tôi không thích nói chuyện với người đang ngủ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ông thuê cái chuồng này à? Nếu vậy thì xin chia buồn, ông bị chặt chém rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Nightcord. Ai chỉ huy, bao nhiêu người, căn cứ ở đâu. Cô trả lời đủ ba câu, chúng ta kết thúc sớm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Shinonome Ena. Nghề: họa sĩ. Sở thích: nhìn mặt những kẻ sắp bị tôi xiên. Hết."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Một lần nữa."
+    },
+    {
+      "type": "narrator",
+      "text": "(Tiếng nắm đấm vào xương sườn, tiếng ghế sắt rít trên nền xi măng. Ena cắn răng, không kêu.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Khụ... nhẹ quá. Cho tôi xin địa chỉ phòng tập của ông đi, tôi muốn mua thẻ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Chúng tôi biết nhiều hơn cô nghĩ, cô Shinonome. Tôi chỉ cần cô xác nhận."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Vậy khỏi hỏi. Ông biết hết rồi còn gì."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Ba ngày rồi. Cô thử nghĩ xem vì sao chưa có ai đến tìm cô."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ena ngẩng lên, chỉ nửa giây, rồi nhếch môi. Nhưng nửa giây ấy đủ để viên đại úy ghi nhớ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đánh vào lòng tự trọng à? Tay nghề ông còn non lắm. Quay lại khi nào học xong."
+    },
+    {
+      "type": "narrator",
+      "text": "(Cô nhìn thẳng vào bóng đèn đung đưa, và từ đó không nói thêm lời nào.)"
+    }
+  ],
+  "interrogation_torture_2": [
+    {
+      "type": "narrator",
+      "text": "(Ena đã thôi đếm ngày. Bóng đèn trần vẫn đung đưa, cốc nước trên bàn cạn từ hôm qua, hoặc hôm kia.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Bảy ngày. Cô là người chịu được lâu nhất tôi từng gặp. Tôi nói thật."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Giọng khàn đặc) Khen à... vậy cho tôi... xin ly gì ngọt đi..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Chỉ cần một cái tên, một địa chỉ. Cô sẽ có bác sĩ, có giường, có cả ánh nắng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "...Ánh nắng. Lâu rồi... tôi không vẽ ánh nắng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Họ coi cô là công cụ, Ena. Công cụ cùn thì bị vứt. Cô hiểu điều đó rõ hơn tôi."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ena không đáp. Cô cúi xuống nhìn đôi tay bầm tím, nhìn rất lâu. Những ngón tay từng cầm cọ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "...Mafuyu... cô ta... không thèm..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Phải. Cô ta không đến. Nói đi."
+    },
+    {
+      "type": "narrator",
+      "text": "(Môi cô run lên. Tiếng cười của Mizuki và hơi lạnh trong mắt Mafuyu cùng hiện về một lúc. Cô hít vào, rất sâu.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Nightcord là... Nightcord..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Tiếp đi. Ai đứng đầu?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Nightcord là..."
+    }
+  ],
+  "orders_mafuyu": [
+    {
+      "type": "narrator",
+      "text": "(Đại sảnh Nightcord. Mizuki vẫn bày đủ năm bộ đũa trên bàn ăn, kể cả bộ của Ena. Đã hơn hai tuần kể từ đêm Ena đập cửa bỏ đi.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Tôi gọi cho cô ấy cả trăm cuộc rồi. Máy tắt. Chắc là giận dai thật~ ...Ừ, không buồn cười, tôi biết."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Mafuyu, em xin chị cho em đi tìm chị Ena. Hai tuần rồi, chị ấy không về, cũng không nhắn gì cả..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Không cần tìm."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu đặt chiếc máy tính bảng xuống bàn. Trên màn hình, một chấm đỏ nhấp nháy cạnh bến Đông.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô ta ở nhà kho cũ phía đông cảng, do Cảnh sát Quốc tế giữ. Hôm nay là ngày thứ bảy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Cảnh sát...? Vậy chúng ta phải đến cứu chị ấy ngay! Chị tìm ra chị ấy từ lúc nào ạ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Từ ngày đầu tiên. Báng khẩu súng bạc của cô ta có thiết bị định vị, từ hôm cô ta mang nó về. Nó cũng nghe được âm thanh xung quanh."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Từ ngày đầu...? Vậy suốt hai tuần qua chị đều biết chị ấy ở đâu, biết chị ấy bị... bị... và chị chỉ ngồi nghe sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô ta tự rời vỏ mà đi. Tự rời vỏ thì tự chịu. Tôi chỉ cần biết con dao nằm ở đâu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Vậy sao bây giờ cô lại nói với bọn tôi?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Vì sáng nay cô ta bắt đầu mở miệng. 'Nightcord là...' rồi nuốt xuống. Lần sau cô ta sẽ nói tiếp, và chữ tiếp theo có thể là căn cứ này, hoặc tên Bộ trưởng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Mizuki. Kanade. Giết cô ta. Trước khi cô ta khai."
+    },
+    {
+      "type": "narrator",
+      "text": "(Không ai nhúc nhích. Kim đồng hồ treo tường nhích thêm một giây, rồi một giây nữa.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị nói... chị nói gì cơ? Chị Ena là đồng đội của chúng ta! Chị ấy chịu cả tuần nay mà chưa khai! Chưa khai mà!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chưa. Hôm nay là chưa."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mizuki ngẩng lên, nở một nụ cười quá sáng. Dưới mặt bàn, bàn tay cô siết viên xúc xắc đỏ đến trắng cả khớp ngón.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Hahaha~ Rõ, sếp. Giết Ena. Việc này tôi làm gọn lắm, không dây dưa~"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Rõ. Cô ra lệnh, tôi làm."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu nhìn Kanade thêm một nhịp, lâu hơn mức cần thiết, rồi mới quay đi.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Mafuyu, xin chị... để em nói chuyện với phía cảnh sát, hoặc..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ichika. Cô đi cùng tôi. Đây là bài học."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ...?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Hôm nay cô sẽ thấy Nightcord xử lý một sơ hở như thế nào."
+    }
+  ],
+  "warehouse_mizuki_arrive": [
+    {
+      "type": "narrator",
+      "text": "(Mizuki dừng xe cách nhà kho hai trăm mét rồi tắt máy. Trên ghế phụ, chiếc mặt nạ silicon cuối cùng cô mang theo nằm nghiêng.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Lệnh của Mafuyu rất rõ: vào, giết Ena, ra. Suốt quãng đường, cô đã nhắc lại nó mười lần trong đầu.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mười lần, và cả mười lần cô đều đi đến cùng một câu trả lời.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Không. Tôi sẽ không làm việc đó.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mizuki đẩy cửa xe, đặt viên xúc xắc đỏ vào lòng bàn tay. Lần này cô không cười.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Cố chịu thêm chút nữa nhé, Ena. Tôi tới rồi.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Trong nhà kho, đèn pha vẫn quét qua quét lại, quân ủng giẫm lên sàn sắt. Cô chưa bao giờ thấy mình bình tĩnh đến thế.)"
+    }
+  ],
+  "mizuki_police_1_pre": [
+    {
+      "type": "narrator",
+      "text": "(Cổng phụ hé mở. Hai viên cảnh sát gác hành lang thấy một đồng nghiệp bước vào, mũ sụp xuống mắt.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Cảnh sát",
+      "color": "#aa4444",
+      "text": "Này, số hiệu của anh?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Giọng trầm, khàn) Tổ ba. Đến thay ca."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Cảnh sát",
+      "color": "#aa4444",
+      "text": "Tổ ba thay ca từ sáng rồi. Mà giọng anh..."
+    },
+    {
+      "type": "narrator",
+      "text": "(Lớp mặt nạ silicon rơi xuống nền xi măng. Mizuki mỉm cười bằng gương mặt thật.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ái chà, lộ rồi. Tiếc ghê, tôi hóa trang đẹp thế mà~"
+    }
+  ],
+  "mizuki_police_2_pre": [
+    {
+      "type": "narrator",
+      "text": "(Hành lang trong cùng. Viên đại úy đứng chắn trước cửa phòng giam, lưng thẳng như thước kẻ, tay đặt trên báng súng.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Akiyama Mizuki, kẻ hóa trang của Nightcord. Đầu hàng đi. Lũ chó săn của Bộ Quốc phòng như các người đã hết thời rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Chó săn à... hôm nay ai cũng thích gọi tôi bằng từ đó nhỉ."
+    },
+    {
+      "type": "narrator",
+      "text": "(Nụ cười trên mặt Mizuki mỏng đi, rồi biến mất hẳn.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Nhưng chó nổi điên thì cắn đau lắm đó, đại úy~"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Khai hỏa."
+    }
+  ],
+  "mizuki_police_done": [
+    {
+      "type": "narrator",
+      "text": "(Tiếng súng cuối cùng tắt hẳn. Chỉ còn tiếng nhỏ giọt của thứ gì đó trên nền xi măng.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mizuki đứng giữa hành lang đầy những bộ đồng phục không còn cử động. Cô nhìn viên xúc xắc đỏ trong tay, mặt sáu hướng lên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Mafuyu bảo tôi giết một người. Tôi giết nguyên cả đội, nhưng không phải người đó. Chắc cô ấy trừ lương tôi mất~ ...Không ai cười hết."
+    },
+    {
+      "type": "narrator",
+      "text": "(Cô lau máu trên má bằng mu bàn tay rồi đẩy cánh cửa cuối hành lang.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena? Ena, nghe tôi nói nè. Tôi tới rồi."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ena nằm co ro trong góc, hai cổ tay còn nguyên vết dây thít. Cô mở một bên mắt, bên kia sưng đến không mở nổi.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "...Mizuki? Cô tới trễ... bảy ngày. Tính cả tiền lãi nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Hahaha~ Tôi trả. Trả đủ. Đứng lên đi, tôi dìu cô."
+    }
+  ],
+  "warehouse_mafuyu_arrive": [
+    {
+      "type": "narrator",
+      "text": "(Cánh cửa nhà kho bật mở. Ba bóng người bước vào, ngược sáng. Mizuki đã kịp dìu Ena đứng dậy, một tay ôm quanh eo cô.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tôi nhớ lệnh của mình là giết, không phải dìu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Tôi tìm thấy cô ấy. Tôi cắt trói cho cô ấy. Giờ chúng ta đưa cô ấy về, hết chuyện."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Nhìn những thi thể dọc hành lang, giọng run) Chị Ena còn sống. Chị Mafuyu, em xin chị..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô ta biết căn cứ, biết tên tôi, biết tên Bộ trưởng. Cô ta sống thêm một ngày thì tất cả chúng ta chết thêm một ngày."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Vậy thì giấu cô ấy đi. Đổi căn cứ, đổi tên, đổi mặt. Tôi giỏi mấy thứ đó mà."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Mizuki. Lần cuối. Làm đi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Không."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Nếu cô muốn tôi giết đồng đội, thì cô sẽ mất tôi luôn. Tôi chưa từng nói 'không' với cô, Mafuyu. Hôm nay là lần đầu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Kanade."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "...Rõ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Dùng năng lực của cô. Bắt Mizuki làm theo lệnh."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Kanade? Cô sẽ không làm thế. Cô là người pha mì ly cho cả hai chúng ta cơ mà."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Xin lỗi, Mizuki. Đừng chống cự thì đỡ đau hơn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Cười yếu ớt) Thôi đi, Mizuki. Cô định cứu ai? Nhìn tôi này, tôi còn không đứng nổi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena, đừng nói thế..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Làm đi. Dù sao cô cũng nợ tôi một ly trà sữa từ hồi ở quán cà phê. Coi như trừ nợ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena... xin cô. Đừng. Cô bảo tôi làm sao đây..."
+    },
+    {
+      "type": "narrator",
+      "text": "(Kanade giơ tay lên. Những mảnh kim loại trên người Mizuki, khuyên tai, nhẫn, lưỡi dao găm, rung lên khe khẽ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Bắt đầu."
+    }
+  ],
+  "forced_duel_pre": [
+    {
+      "type": "narrator",
+      "text": "(Kanade khép hờ hai mắt. Không khí trong nhà kho đặc lại, có tiếng ong ong rất thấp chạy dọc theo các dầm sắt.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Con dao găm trong tay Mizuki tự xoay chiều. Nhẫn, khuyên tai, cả khóa thắt lưng của cô đều rung lên cùng một nhịp.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Kanade... dừng lại. Cô định làm gì tôi vậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Kim loại trên người cô. Và những dòng điện nhỏ chạy trong cơ bắp cô. Tôi chỉ việc uốn chúng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Khoan... không... Tay tôi! Tay tôi không nghe lời tôi nữa!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Cánh tay Mizuki giơ lên theo một hướng cô không chọn. Từng bước, từng bước, cô bị kéo về phía Ena, mũi giày cào xuống nền như muốn bám vào bất cứ thứ gì.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đừng khóc, Mizuki. Hóa trang xấu đi đó."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena, tránh ra... tôi xin cô... TRÁNH RA!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Lưỡi dao nhấc lên. Nhà kho chìm vào im lặng, chỉ còn tiếng thở dốc của Mizuki.)"
+    }
+  ],
+  "forced_duel_line_1": [
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Dừng lại... làm ơn dừng lại! Tay tôi không nghe lời nữa!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena, né đi! Làm ơn né đi mà!"
+    }
+  ],
+  "forced_duel_line_2": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Tôi không đỡ, không né. Cô cứ nhắm cho trúng, đừng bắt tôi chịu đau hai lần."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Và đừng nhìn tôi bằng cái mặt lem nhem đó. Tôi ghét tranh vẽ dở."
+    }
+  ],
+  "forced_duel_line_3": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nhanh sẽ đỡ đau hơn cho cô ấy. Tiếp tục."
+    }
+  ],
+  "forced_duel_post": [
+    {
+      "type": "narrator",
+      "text": "(Nhát cuối cùng dừng lại giữa không trung rồi buông. Lực kéo biến mất khỏi cánh tay Mizuki, và cô quỵ xuống, đỡ lấy Ena kịp lúc.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ena? Ena! Nhìn tôi này... tay tôi... tôi không muốn... tôi không muốn mà..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Thì thào) Đừng gào... đau tai... cô lúc nào cũng ồn..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Bức tranh trên giá... chưa có tên. Cô đặt giúp tôi. Đừng đặt tên xấu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Được, được mà, tôi đặt tên đẹp. Ena, đừng nhắm mắt. Cái câu về con dao đó, tôi nói bậy, tôi nói bậy mà..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Biết rồi... con hề."
+    },
+    {
+      "type": "narrator",
+      "text": "(Bàn tay Ena trượt khỏi vạt áo Mizuki. Cô không nói thêm gì nữa.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Ena... chị Ena...!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mizuki không khóc. Cô chỉ ôm chặt hơn, như sợ ai đó sẽ giật mất.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Nhanh. Gọn. Không một nhịp ngập ngừng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Kanade. Lệnh của tôi không tuyệt đối. Cô có thể từ chối, hoặc ép chậm hơn. Cô không làm vậy. Ena là bạn cô."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Cô bảo làm. Tôi làm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tôi biết. Chỉ là chưa từng thấy cô làm việc lạnh đến thế."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Mì ở nhà chắc nở hết rồi. Tôi về trước."
+    },
+    {
+      "type": "narrator",
+      "text": "(Kanade quay lưng đi ngay, nhanh hơn cách một người bình thường đi lấy mì. Đến cửa, bước chân cô lỡ nhịp đúng một lần, rồi mất hút ngoài ánh sáng.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu nhìn theo bóng lưng ấy. Lần thứ hai trong ngày.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Giọng rất khẽ) Cô ấy nhẹ quá. Nhẹ hơn tôi nghĩ nhiều."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Đứng lên, Mizuki. Còn việc phải làm. Cảnh sát chắc chắn đã ghi lại thứ gì đó về chúng ta, tôi cần nó trước khi ai khác tìm ra."
+    }
+  ],
+  "kanade_dossier": [
+    {
+      "type": "narrator",
+      "text": "(Trong phòng thẩm vấn, chiếc máy tính bảng của viên đại úy vẫn còn sáng, chênh vênh trên mép bàn. Một giọt máu loang ở góc màn hình.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Lau màn hình, lướt ngón tay) Danh sách nhân sự. Lịch tuần tra. Hồ sơ vụ án, nhãn Nightcord... Mật cấp A."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ngón tay Mafuyu dừng lại. Cô đọc, rất lâu.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Yoisaki Kanade. Nghề cũ: giáo viên mầm non. Hiện tại: đặc vụ nằm vùng của Cảnh sát Quốc tế, cài vào Nightcord."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Kanade...? Không thể nào. Chắc có nhầm lẫn... chị ấy dọn phòng cho em, chị ấy..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Báo cáo hằng tuần. Chữ ký tắt của cô ta, từ ngày tôi đưa cô ta về căn cứ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Thì ra vậy. Cái bình tĩnh khó chịu mỗi lần ra tay. Cái bình tĩnh khi xuống tay với Ena. Giờ nó có lý do rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Từ góc phòng, giọng trống rỗng) Vậy là cô ấy ở đây suốt thời gian đó. Ngồi cạnh chúng ta ăn mì."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Kanade đang ở sân sau, xe của cô ta còn đậu ở đó. Cô ta chưa kịp chạy. Mizuki. Ichika. Giết cô ta."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Mafuyu... em... em không..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô ta đã cài cảnh sát vào nhà chúng ta. Cô ta không phải bạn cô, Ichika. Cô ta là hồ sơ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Yếu ớt) Nhưng chị ấy từng... em..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Rõ rồi, sếp. Giết Kanade. Thêm một người nữa, cũng có sao đâu."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu gật đầu rồi quay đi, ở lại dọn hiện trường. Cô không nhìn lại hai người.)"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="QuestDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Quests/QuestDefinition.gd" id="1_quest"]
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "quest_16_new_nightcord"
+quest_name = "Dạ Khúc Mới"
+arc_name = "Hậu Kết"
+description = "Ichika và Honami dựng lại Nightcord. Họ vẫn có thể luyện tập và nâng cấp; các thành viên cũ không còn ở đây, nhưng Holo-Sim vẫn lưu giữ họ."
+linked_map_scene = "res://Maps/Base/BaseMap.tscn"
+entry_stage_script = "res://Maps/Base/Stages/EpilogueStage.gd"
+battle_scenario_class = ""
+dialogue_files = ["res://Data/storyline/arc2_epilogue.json"]
+pre_conditions = {
+"game_completed": true
+}
+post_conditions = {
+}

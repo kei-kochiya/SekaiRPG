@@ -1,0 +1,132 @@
+{
+  "epilogue_base_intro": [
+    {
+      "type": "narrator",
+      "text": "(Một buổi sáng ở căn cứ Nightcord. Lần đầu tiên không có ai ra lệnh, không có tiếng dao mài, không có tiếng ai cãi nhau ngoài hành lang.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Ichika đi qua từng căn phòng, mở từng cánh cửa như để chắc rằng chúng thật sự trống.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Phòng chị Kanade vẫn còn ba thùng mì ly. Em đếm rồi. Hạn dùng còn bảy tháng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Vậy thì đó là kế hoạch dài hạn đầu tiên mà Nightcord từng có."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Bật cười, rồi tắt dần) Trên giá trong phòng chị Ena còn bức tranh dở. Chị Ena nhờ chị Mizuki đặt tên cho nó, mà chị Mizuki chưa kịp."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cô có thể đặt thay."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em... em sẽ nghĩ. Chưa phải hôm nay."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Không ai đang giục cô. Căn cứ này quen với việc phải chờ rồi."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ánh nắng lọt qua khe cửa thép, rơi lên chiếc bàn ăn cũ. Có một chiếc ghế mà Ichika vẫn chưa dám ngồi.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cần luyện tập hay chỉnh lại kỹ năng thì cứ nói với tôi. Căn cứ có thể vắng, nhưng tay nghề thì chưa mất."
+    }
+  ],
+  "epilogue_honami_talk": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ở đây tôi làm được hai việc: luyện tập cùng cô, và chỉnh lại kỹ năng cho cô."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Không giới hạn, không ai đếm. Cô muốn đến lúc nào cũng được."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Còn nếu chỉ muốn đứng nhìn trần nhà, tôi cũng không phàn nàn. Bệnh nhân hồi phục theo nhịp của riêng họ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Vậy, hôm nay cô muốn gì?"
+    }
+  ],
+  "epilogue_honami_idle": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Căn cứ yên tĩnh thật. Tôi vẫn chưa quen với việc nghe được tiếng kim đồng hồ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cứ thong thả. Tôi hết giục ai rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Nếu một ngày nào đó căn cứ này có tiếng đàn, tôi sẽ không phàn nàn đâu. Tôi chỉ nói vậy thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Gió từ khe cửa thép khá lạnh. Mặc thêm áo đi. Bác sĩ không muốn bệnh nhân đầu tiên của mình lại là chủ nhà."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Tôi đang kiểm kê băng gạc. Thói quen nghề nghiệp thôi, cô không cần bận tâm."
+    }
+  ]
+}

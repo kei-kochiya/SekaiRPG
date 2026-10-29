@@ -7,7 +7,7 @@ const QuestDef = preload("res://Quests/QuestDefinition.gd")
 Tóm tắt: QuestRegistry là hệ thống tra cứu và quản lý danh sách siêu dữ liệu Quest toàn cục.
 
 Chức năng:
-- Tự động nạp hoặc truy xuất danh sách 10 Quest được định nghĩa trong Quests/Definitions/.
+- Tự động nạp hoặc truy xuất danh sách 16 Quest được định nghĩa trong Quests/Definitions/.
 - Cung cấp API tìm kiếm Quest theo ID: `get_quest(quest_id)`.
 - Cung cấp API lấy danh sách toàn bộ nhiệm vụ: `get_all_quests()`.
 - Cung cấp API xác định nhiệm vụ hiện tại dựa theo cờ StoryState: `get_current_quest()`.
@@ -25,7 +25,13 @@ const QUEST_FILES = [
 	"Q07_MorningAndCafe.tres",
 	"Q08_StreetAmbush.tres",
 	"Q09_HonamiClinic.tres",
-	"Q10_FinaleOperations.tres"
+	"Q10_FinaleOperations.tres",
+	"Q11_NextPrimeMinister.tres",
+	"Q12_Bounty.tres",
+	"Q13_Interrogation.tres",
+	"Q14_Mole.tres",
+	"Q15_LastNocturne.tres",
+	"Q16_NewNightcord.tres"
 ]
 
 static var _cached_quests: Dictionary = {}
@@ -58,7 +64,20 @@ static func get_current_quest() -> QuestDef:
 	"""
 	Xác định Quest đang hoạt động dựa trên các mốc cờ StoryState hiện tại.
 	"""
-	if GameManager.story.get_flag("finale_done") or GameManager.story.get_flag("pm_arc_started"):
+	# Hồi kết 2 (sau khi Thủ Tướng chết): xét từ mốc muộn nhất về trước
+	if GameManager.story.get_flag("game_completed"):
+		return get_quest("quest_16_new_nightcord")
+	elif GameManager.story.get_flag("honami_rescue_done"):
+		return get_quest("quest_15_last_nocturne")
+	elif GameManager.story.get_flag("kanade_unmasked"):
+		return get_quest("quest_14_mole")
+	elif GameManager.story.get_flag("ena_captured"):
+		return get_quest("quest_13_interrogation")
+	elif GameManager.story.get_flag("ena_left_nightcord"):
+		return get_quest("quest_12_bounty")
+	elif GameManager.story.get_flag("pm_boss_defeated"):
+		return get_quest("quest_11_next_pm")
+	elif GameManager.story.get_flag("finale_done") or GameManager.story.get_flag("pm_arc_started"):
 		return get_quest("quest_10_finale")
 	elif GameManager.story.get_flag("honami_house_unlocked") or GameManager.story.get_flag("street_mission_fully_done"):
 		return get_quest("quest_09_honami_clinic")
