@@ -1,117 +1,94 @@
-<div align="center">
-  <h1>🌟 SekaiRPG 🌟</h1>
-  <p><i>Trải nghiệm nhập vai chiến thuật theo lượt (Turn-based RPG), lấy cảm hứng từ vũ trụ Project Sekai!</i></p>
+# SekaiRPG
 
-  [![CI/CD Pipeline](https://github.com/kei-kochiya/SekaiRPG/actions/workflows/ci.yml/badge.svg)](https://github.com/kei-kochiya/SekaiRPG/actions/workflows/ci.yml)
-  [![Unit Tests](https://img.shields.io/badge/Unit%20Tests-216%20Passed-brightgreen)](Tests/)
-  [![Godot Engine](https://img.shields.io/badge/Godot-4.2+%20|%204.6-blue?logo=godotengine&logoColor=white)](https://godotengine.org)
-  [![Platform](https://img.shields.io/badge/Platform-Windows%20|%20Linux%20|%20Android-green)](#-xuat-ban-va-cai-dat)
-  [![License](https://img.shields.io/badge/License-MIT%20%2F%20CC0-orange)](asset_manifest.json)
-</div>
+A 2D turn-based tactical RPG built with **Godot 4.6**, inspired by the Project Sekai universe. Explore story maps, fight on an Action-Value timeline with elemental weaknesses and Break, and climb the Holo-Simulation roguelite tower.
 
----
+Dialogue and in-game text are in Vietnamese.
 
-**SekaiRPG** là một tựa game nhập vai chiến thuật (2D Turn-based RPG) phát triển trên **Godot Engine 4.x**, được xây dựng theo kiến trúc **Domain-Driven Design** và **Scenario Pattern**. Trò chơi kết hợp phong cách di chuyển khám phá thế giới Overworld với hệ thống chiến đấu chuyên sâu tính theo **Action Value (AV)**, tương khắc 5 hệ nguyên tố, phá vỡ điểm yếu (**Weakness Break**) và chế độ leo tháp mô phỏng **Holo-Simulation Roguelite**.
+## Features
 
----
+- **Action Value combat** — speed decides turn order; the turn strip at the top of the battle screen shows who acts next.
+- **5-element chart and Weakness Break** — hitting an enemy's weakness drains its Break gauge; empty gauge means a stunned turn and a knock-back on the timeline.
+- **Story mode** — 10 quests from the prologue ambush to the highway finale, driven by `Quests/` definitions and `Data/storyline/*.json` dialogue.
+- **6 playable characters, 12 enemy types**, crits, status effects (Bleed, Poison, Stun), cooldowns and once-per-battle ultimates.
+- **Holo-Simulation** — a 10-floor roguelite tower with 8 blessings and two rest stops.
+- **Economy** — credits, treasure chests, a vending machine and consumables usable in battle.
+- **Sandbox** — pick any team and enemies and fight; also upgrade stats with skill points.
+- **Save system** — multiple slots in `user://saves/`, quick save, autosave.
+- **Mobile controls** — virtual joystick and buttons on Android (`gl_compatibility` renderer, landscape).
 
-## ✨ Tính Năng Nổi Bật
+## Running
 
-### ⚔️ 1. Hệ Thống Chiến Đấu 2.0 (Deep Combat Engine)
-* **Action Value (AV) Timeline**: Tốc độ (SPD) quyết định chính xác khoảng cách đến lượt đánh tiếp theo.
-* **Ngũ Hành Tương Khắc (5-Element Chart)**: `Cool` $\rightarrow$ `Happy` $\rightarrow$ `Cute` $\rightarrow$ `Cool`, cùng cặp đối trọng `Pure` $\leftrightarrow$ `Mysterious`.
-* **Cơ Chế Phá Vỡ Điểm Yếu (Weakness Break)**: Đòn đánh đúng hệ bào mòn thanh Break Gauge. Khi vỡ điểm yếu, kẻ địch bị **Choáng 1 lượt** và bị **đẩy lùi 3000 AV**.
-* **Hiệu Ứng Chiến Đấu & Chí Mạng**: Hiệu ứng rung màn hình (**Screen Shake**), dừng hình (**Hitstop**), số nhảy sát thương nổi (**Floating Combat Text**) với tỷ lệ/sát thương Chí Mạng riêng biệt.
-* **12 Chủng Loại Kẻ Địch & Boss**: Bao gồm Drone Trinh Sát, Xạ Thủ Bắn Tỉa, Vệ Binh Cơ Giới, Chuyên Viên Nhiễu Sóng, Boss Đội Trưởng và Trùm Cuối Thủ Tướng.
+1. Install [Godot 4.6](https://godotengine.org/download/).
+2. Open `project.godot` in the editor and press **F5**.
 
-### 🗺️ 2. Khám Phá Cốt Truyện & Kinh Tế (Story & Economy)
-* **10 Nhiệm Vụ Cốt Truyện**: Quản lý bằng siêu dữ liệu `QuestDefinition` từ Mở màn (Prologue) đến Xa lộ đêm (Finale).
-* **Kinh Tế & Vật Phẩm**: Tiền tệ Credits, rương kho báu SVG tương tác Overworld, máy bán hàng tự động Safehouse Vending Machine, sử dụng vật phẩm hỗ trợ trong trận.
-* **Hội Thoại Phân Nhánh (MVC Dialogue)**: Hộp thoại phân tách Model-View-Controller với phông chữ phân lớp và ảnh chân dung nhân vật.
+Controls: arrow keys / WASD to move, Enter or Space to interact and advance dialogue, Esc to pause.
 
-### 🗼 3. Chế Độ Leo Tháp Roguelite (Holo-Simulation)
-* **10 Tầng Thử Thách Vô Tận**: Chọn 1 trong 3 Phước Lành (Blessing) ngẫu nhiên sau mỗi tầng thắng (Huyết Nguyệt, Tốc Hành, Giáp Gai, Chấn Lực...).
-* **Trạm Nghỉ Ngơi & Boss Cuối**: Hồi phục tại Tầng 4 & 9, quyết đấu Super Captain tại Tầng 10.
+## Tests
 
----
+Headless unit tests (auto-discovers every `Tests/Unit/Test*.gd`):
 
-## 📁 Cấu Trúc Dự Án Tinh Gọn (9 Root Folders)
+```bash
+godot --headless --path . res://Tests/TestRunnerScene.tscn
+```
+
+Run only some suites by naming them after `--`:
+
+```bash
+godot --headless --path . res://Tests/TestRunnerScene.tscn -- TestResources TestCombat
+```
+
+`TestResources` loads every script, scene and resource in the project, so it catches parse errors and broken paths even in code the other suites never touch. New tests: add a `func test_*()` to a suite in `Tests/Unit/` (see `BaseTest.gd` for `assert_*` helpers).
+
+Screenshots of UI screens for visual checks (needs a window, not headless):
+
+```bash
+godot --path . res://Tests/CaptureScreenshotsScene.tscn -- start_menu battle dialogue
+```
+
+Output goes to `screenshots/` (git-ignored). The shot names are listed at the top of `Tests/CaptureScreenshots.gd`.
+
+## Project layout
 
 ```text
-SekaiRPG/
-├── .devcontainer/  # Dockerfile & devcontainer.json cho VS Code / Codespaces
-├── .github/        # GitHub Actions CI/CD Pipeline (ci.yml)
-├── Assets/         # Toàn bộ Audio, Fonts, Icons, Portraits, Sprites, Kenney Packs
-├── Data/           # Cấu hình JSON kịch bản hội thoại và đội hình
-├── Entities/       # Characters/ (6 nhân vật), Enemies/ (12 loại quái), Entity.gd
-├── Export/         # Tệp xuất bản Android APK và Desktop builds
-├── Maps/           # Bản đồ Overworld (Base, Prologue, Warehouse, Harbor, Street, Highway...)
-├── Quests/         # 10 Quest Definitions (.tres) & QuestRegistry.gd
-├── Scripts/        # Battle/ (Main.gd, Scenarios/, HoloSim/), Core/, Overworld/, Systems/
-├── Tests/          # Unit Test Suites (TestCore, TestCombat, TestEntities...), TestRunner
-└── UI/             # Giao diện Battle, Effects, Menus, Systems (DialogueUI, MobileControls)
+Assets/     Audio, fonts, icons, portraits, SVG sprites, Kenney micro-roguelike tiles
+Data/       Dialogue (storyline/*.json) and mission battle teams (battles/*.json)
+Entities/   Entity.gd base class, Characters/ (6), Enemies/ (12)
+Maps/       Overworld maps; most build themselves in code with Scripts/Overworld/MapUtils
+Quests/     QuestDefinition resources and QuestRegistry
+Scripts/    Battle/ (engine, scenarios, HoloSim), Core/ (GameManager, SaveManager, StoryState), Overworld/, Systems/
+Tests/      TestRunner, Unit/ suites, screenshot tool
+UI/         UITheme (design tokens), Battle/, Menus/, Popups/, Systems/
+addons/     godot_mcp (editor tooling, see below)
 ```
 
-*(Chi tiết đầy đủ về sơ đồ quan hệ và luồng dữ liệu xem tại [ARCHITECTURE.md](ARCHITECTURE.md))*
+How it fits together:
 
----
+- **`GameManager`** (autoload) holds the party, credits, inventory and `StoryState` flags, and routes battles and scene changes. `SaveManager` serialises it to JSON.
+- **`Scripts/Battle/Main.gd`** runs the turn loop. `BattleInitializer` builds the teams and picks a `BattleScenario` (default, prologue, harbor boss, street survival, prime minister, holo-sim); scenarios hook into the loop (`on_start`, `on_turn_start`, `on_action_executed`, `on_entity_died`, `check_battle_end`...).
+- Persistent party members live across battles and into saves, so in-battle stat changes must go through `Entity.add_temp_mod()`; they are reverted when the battle scene exits.
+- **Combat rules** — damage = `(ATK × skill − DEF) × (1 − RES/100) × element`, minimum 5% of ATK. Element chart: Cool > Happy > Cute > Cool, and Pure ↔ Mysterious, ×1.25 (×0.8 when resisted). Break damage is `0.4 × dmg + 25` on a weakness hit and `0.15 × dmg + 10` on a neutral hit; breaking an enemy stuns it one turn and pushes it back 3000 AV.
 
-## 🧪 Kiểm Thử Tự Động (Automated Testing)
+## UI
 
-Dự án trang bị hệ thống Unit Test toàn diện với **216 Assertions (100% Pass)** kiểm tra từ chỉ số nhân vật, công thức sát thương, AI quái, cơ chế Break đến lưu/tải game:
+All styling comes from `UI/UITheme.gd`: colour tokens (tinted neutrals, one amber accent, teal for allies, coral for enemies), a 6-step type scale (14–44 px), a 4 px spacing scale and StyleBox builders. `default_theme.tres` is generated from it — after changing tokens, regenerate with:
 
-### Chạy Test Cục Bộ (Local):
-- **Linux / macOS / DevContainer**:
-  ```bash
-  make test
-  # hoặc
-  ./scripts/run_tests.sh
-  ```
-- **Windows (PowerShell)**:
-  ```powershell
-  .\scripts\run_tests.ps1
-  # hoặc
-  godot --headless Tests/TestRunnerScene.tscn
-  ```
-
----
-
-## 🚀 Khởi Động & Cài Đặt
-
-### Cách 1: Chạy Trong VS Code DevContainer / GitHub Codespaces
-Mở repository trên GitHub và chọn **Code $\rightarrow$ Codespaces $\rightarrow$ Create codespace**. Toàn bộ môi trường Godot 4 Headless, Java, Python và Linter sẽ được cài đặt tự động.
-
-### Cách 2: Chạy Trên Máy Cá Nhân
-1. Cài đặt **[Godot Engine 4.2+](https://godotengine.org/download/)** (khuyên dùng Godot 4.3 hoặc 4.6).
-2. Clone repository:
-   ```bash
-   git clone https://github.com/kei-kochiya/SekaiRPG.git
-   cd SekaiRPG
-   ```
-3. Mở Godot Engine, chọn **Import**, duyệt đến thư mục dự án và chọn file `project.godot`.
-4. Nhấn **F5** để trải nghiệm game!
-
----
-
-## 📱 Đóng Gói Xuất Bản Android (Build APK)
-
-Dự án đã được cấu hình sẵn sàng cho Android (đồ họa `gl_compatibility`, cố định Landscape, phím ảo cảm ứng):
 ```bash
-make export-android
-# hoặc
-godot --headless --export-debug "Android" Export/Android/SekaiRPG_debug.apk
+godot --headless --path . --script res://Scripts/Editor/BuildTheme.gd
 ```
 
----
+Rules the screens follow: one primary action per screen, no text under 14 px, 48 px minimum touch targets, text contrast of at least 4.5:1 (checked by `TestUITheme`), visible hover/focus/disabled states.
 
-## 🤝 Hướng Dẫn Đóng Góp
+## Editor tooling (MCP)
 
-Vui lòng đọc kỹ tài liệu **[CONTRIBUTING.md](CONTRIBUTING.md)** và **[ARCHITECTURE.md](ARCHITECTURE.md)** trước khi tạo Pull Request.
+`addons/godot_mcp` lets an MCP client drive the editor (scene/node/script edits, running the game, input and screenshots). The runtime half of the addon removes itself outside the editor, so exported builds don't expose it. `tools/` (the Node server and its `node_modules`) is local-only and git-ignored.
 
----
+## Exporting
 
-## 📄 Bản Quyền & Tài Nguyên
+Presets for Windows and Android are in `export_presets.cfg` (output goes to the git-ignored `Export/`). Tests and screenshots are excluded from exports.
 
-- **Game Logic & Source Code**: Phát hành theo chuẩn mã nguồn mở phục vụ học tập và cộng đồng.
-- **Tài Nguyên Đồ Họa & UI**: Sử dụng gói miễn phí của tác giả **Kenney** ([kenney.nl](https://kenney.nl), giấy phép CC0 Public Domain).
-- Chi tiết nguồn gốc và giấy phép từng tài nguyên xem tại **[asset_manifest.json](asset_manifest.json)**.
+## Credits
+
+- Tiles: [Kenney Micro Roguelike](https://kenney.nl/assets/micro-roguelike) (CC0).
+- UI icons, portraits and character/enemy sprites are project-made (SVG/PNG).
+- Fonts: [Chakra Petch](https://fonts.google.com/specimen/Chakra+Petch) (headings, buttons, numbers) and [Be Vietnam Pro](https://fonts.google.com/specimen/Be+Vietnam+Pro) (dialogue and body), both SIL OFL 1.1 with full Vietnamese coverage; the licence texts are next to the fonts in `Assets/Fonts/`.
+- Music in `Assets/Audio/`: confirm licences before publishing a build.
