@@ -230,6 +230,7 @@ func _build_cards() -> Node:
 	entities[0][0].add_status({"type": "Bleed", "duration": 3})
 	entities[0][0].add_status({"type": "Bleed", "duration": 3})
 	entities[0][0].add_status({"type": "Stun", "duration": 1})
+	entities[0][0].add_status({"type": "Poison", "duration": 2})
 	entities[1][0].add_status({"type": "Poison", "duration": 2})
 	return row
 

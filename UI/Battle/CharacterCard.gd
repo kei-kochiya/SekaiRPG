@@ -18,7 +18,7 @@ var hp_bar: ProgressBar
 var break_bar: ProgressBar
 var hp_label: Label
 var level_label: Label
-var status_row: HBoxContainer
+var status_row: HFlowContainer
 
 func setup(e: Entity, player: bool):
 	entity = e
@@ -58,8 +58,9 @@ func _build_ui():
 		UITheme.style_bar(break_bar, UITheme.BREAK, 6)
 		vbox.add_child(break_bar)
 
-	status_row = HBoxContainer.new()
-	status_row.add_theme_constant_override("separation", UITheme.SP_1)
+	status_row = HFlowContainer.new() # nhiều hiệu ứng cùng lúc thì xuống dòng thay vì làm thẻ rộng ra
+	status_row.add_theme_constant_override("h_separation", UITheme.SP_1)
+	status_row.add_theme_constant_override("v_separation", UITheme.SP_1)
 	vbox.add_child(status_row)
 
 func _create_header() -> HBoxContainer:

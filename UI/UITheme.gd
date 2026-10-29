@@ -45,8 +45,8 @@ const ELEMENT_COLORS := {
 	"Pure": Color("e8edf3"),
 }
 const STATUS_INFO := {
-	"Bleed": {"label": "Máu", "color": Color("e5484d"), "icon": "res://Assets/Icons/bleed.png"},
-	"Poison": {"label": "Độc", "color": Color("5ac46e"), "icon": "res://Assets/Icons/poison.png"},
+	"Bleed": {"label": "Chảy máu", "color": Color("e5484d"), "icon": "res://Assets/Icons/bleed.png"},
+	"Poison": {"label": "Trúng độc", "color": Color("5ac46e"), "icon": "res://Assets/Icons/poison.png"},
 	"Stun": {"label": "Choáng", "color": Color("f2c94c"), "icon": "res://Assets/Icons/stun.png"},
 }
 
