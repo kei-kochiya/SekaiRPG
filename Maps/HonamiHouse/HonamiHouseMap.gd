@@ -1,6 +1,18 @@
 extends Node2D
 
 const TILE_SIZE = 32
+const HOUSE_SCENE := "res://Maps/HonamiHouse/HonamiHouseMap.tscn"
+const TRAINING_SCENE := "res://Maps/Warehouse/TrainingWarehouseMap.tscn"
+const BASE_SCENE := "res://Maps/Base/BaseMap.tscn"
+
+# Hồi kết 2 (sau khi Honami cứu Ichika): nhà Honami là trung tâm cuối cùng, người chơi tự chọn lúc nào đối đầu Mafuyu
+const CONFRONT_WARNING := "Đây là trận cuối cùng. Nếu thất bại, cô sẽ tỉnh lại ngay tại căn nhà này và còn có thể luyện tập thêm."
+const DOOR_BLOCKED := "Ngoài kia chỉ còn màn đêm và Mafuyu. Không còn nơi nào để đi, cô chỉ có thể ở lại đây và chuẩn bị."
+
+# Đang chạy chuỗi kịch bản/chuyển cảnh: chặn tương tác lặp
+var _busy: bool = false
+var _player: OverworldPlayer
+var _quest_label: Label
 
 func _ready():
 	AudioManager.play_music("map")
@@ -22,6 +34,9 @@ func _ready():
 	var lighting = CanvasModulate.new()
 	lighting.color = Color(0.9, 0.95, 1.0)
 	add_child(lighting)
+	
+	if _is_arc2() and not GameManager.get_flag("final_mafuyu_defeated"):
+		_build_arc2_hud()
 	
 	await ScreenFade.fade_in(1.0)
 	_run_logic()
@@ -60,6 +75,11 @@ func _build_house():
 	col.shape = rect
 	zone.add_child(col)
 	zone.interacted.connect(func():
+		if _is_arc2():
+			# Hồi kết 2: không còn đường về Nightcord cũ
+			if not _busy:
+				DialogueManager.play_dialogue([{"text": DOOR_BLOCKED, "type": "narrator"}])
+			return
 		DialogueManager.show_choice(["[Trở về Nightcord]", "[Ở lại]"])
 		var idx = await DialogueManager.choice_made
 		if idx == 0:
@@ -102,6 +122,7 @@ func _build_house():
 		player.position = Vector2(12 * TILE_SIZE, 8 * TILE_SIZE)
 	player.character_color = Color(0.29, 0.62, 0.62)
 	add_child(player)
+	_player = player
 
 func _place_indoor_asset(file: String, grid_pos: Vector2, _has_collision: bool, flip_h: bool = false, rot: float = 0.0):
 	var tile_pos = grid_pos * TILE_SIZE
@@ -123,27 +144,136 @@ func _place_indoor_asset(file: String, grid_pos: Vector2, _has_collision: bool, 
 		add_child(body)
 
 func _run_logic():
-	if not GameManager.get_flag("honami_house_intro_done"):
+	if _is_arc2():
+		_run_arc2_logic()
+	elif not GameManager.get_flag("honami_house_intro_done"):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_house_intro"), func():
 			GameManager.set_flag("honami_house_intro_done", true)
 		)
 
 func _on_npc_interacted(npc_name: String):
-	if npc_name == "Honami":
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_training_offer"), func():
-			_show_training_menu()
-		)
+	if npc_name != "Honami" or _busy:
+		return
+	if _is_arc2():
+		_talk_arc2()
+		return
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_training_offer"), func():
+		_show_training_menu()
+	)
 
 func _show_training_menu():
-	var opts: Array = ["Ichika (5 Waves)", "Kanade (5 Waves)", "Ena (5 Waves)", "Mizuki (5 Waves)", "Mafuyu (5 Waves)", "Honami (5 Waves)", "Để sau."]
-	var mapping = ["Ichika", "Kanade", "Ena", "Mizuki", "Mafuyu", "Honami"]
+	# Chỉ những người còn sống trong cốt truyện mới luyện tập được
+	var mapping: Array = []
+	for member in ["Ichika", "Kanade", "Ena", "Mizuki", "Mafuyu", "Honami"]:
+		if GameManager.is_member_alive_in_story(member):
+			mapping.append(member)
+	var opts: Array = []
+	for member in mapping:
+		opts.append("%s (5 Waves)" % member)
+	opts.append("Để sau.")
 	
 	DialogueManager.show_choice(opts)
 	var idx: int = await DialogueManager.choice_made
-	if opts[idx] == "Để sau.": return
+	if idx >= mapping.size(): return
 	
 	GameManager.begin_training([mapping[idx]])
 	
 	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state("res://Maps/HonamiHouse/HonamiHouseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
+	GameManager.store_map_state(HOUSE_SCENE, Vector2.ZERO)
+	get_tree().change_scene_to_file(TRAINING_SCENE)
+
+# ── Hồi kết 2: Dạ Khúc Cuối ───────────────────────────────────────────────────
+# Chạy khi honami_rescue_done && !game_completed: menu của Honami (luyện tập / nâng cấp / đối đầu).
+# Chọn đối đầu thì sang căn cứ (BaseMap, FinalStage); thua trận cuối FinalStage đưa người chơi về lại đây.
+
+func _is_arc2() -> bool:
+	return GameManager.get_flag("honami_rescue_done") and not GameManager.get_flag("game_completed")
+
+func _build_arc2_hud():
+	var hud = QuestHUDBuilder.build(self)
+	_quest_label = hud["label"]
+	_quest_label.text = "MỤC TIÊU: Luyện tập cùng Honami, rồi đối đầu Mafuyu khi đã sẵn sàng."
+
+func _run_arc2_logic():
+	# Trận cuối và đoạn kết diễn ra ở căn cứ (FinalStage); ở đây chỉ còn phần mở đầu
+	if not GameManager.get_flag("honami_options_intro_done"):
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_options_intro"), func():
+			GameManager.set_flag("honami_options_intro_done", true)
+		)
+
+func _freeze_player():
+	if _player:
+		_player.set_physics_process(false)
+
+func _talk_arc2():
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_menu_prompt"), func():
+		_show_arc2_menu()
+	)
+
+func _show_arc2_menu():
+	DialogueManager.show_choice(["[Luyện tập]", "[Nâng cấp]", "[Đối đầu Mafuyu]", "[Rời đi]"])
+	var idx: int = await DialogueManager.choice_made
+	if idx == 0:
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_training_offer_arc2"), func():
+			_show_arc2_training_menu()
+		)
+	elif idx == 1:
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_upgrade_offer"), func():
+			_open_arc2_upgrade()
+		)
+	elif idx == 2:
+		DialogueManager.play_dialogue([{"text": CONFRONT_WARNING, "type": "narrator"}], func():
+			_ask_confront()
+		)
+
+# Luyện tập không giới hạn, chọn Ichika / Honami / cả hai. Không đặt cờ training_*_done.
+func _show_arc2_training_menu():
+	var members: Array = []
+	for member in ["Ichika", "Honami"]:
+		if GameManager.is_member_alive_in_story(member):
+			members.append(member)
+	
+	var opts: Array = []
+	var groups: Array = []
+	for member in members:
+		opts.append("%s (5 Waves)" % member)
+		groups.append([member])
+	if members.size() > 1:
+		opts.append("Cả hai (10 Waves)")
+		groups.append(members.duplicate())
+	opts.append("Để sau.")
+	
+	DialogueManager.show_choice(opts)
+	var idx: int = await DialogueManager.choice_made
+	if idx >= groups.size(): return
+	
+	_busy = true
+	_freeze_player()
+	GameManager.begin_training(groups[idx])
+	
+	await ScreenFade.fade_out(1.0)
+	# Luyện tập xong BaseMap sẽ tự đưa người chơi về lại ngôi nhà này (xem BaseMap._arc2_redirect_target)
+	GameManager.store_map_state(HOUSE_SCENE, Vector2.ZERO)
+	get_tree().change_scene_to_file(TRAINING_SCENE)
+
+func _open_arc2_upgrade():
+	var p_list: Array[Entity] = []
+	for member in ["Ichika", "Honami"]:
+		if GameManager.is_member_alive_in_story(member):
+			p_list.append(GameManager.get_party_member(member))
+	UpgradeUI.show_ui(p_list)
+
+func _ask_confront():
+	DialogueManager.show_choice(["[Đối đầu Mafuyu ngay]", "[Chưa, chuẩn bị thêm]"])
+	var idx: int = await DialogueManager.choice_made
+	if idx != 0: return
+	_go_to_final()
+
+# Sang căn cứ Nightcord: FinalStage phát final_mafuyu_pre rồi vào trận cuối
+func _go_to_final():
+	_busy = true
+	_freeze_player()
+	await ScreenFade.fade_out(1.0)
+	GameManager.set_flag("final_confront_started", true)
+	GameManager.store_map_state(BASE_SCENE, Vector2.ZERO)
+	get_tree().change_scene_to_file(BASE_SCENE)
