@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16">
-  <!-- Dark espresso trough background -->
-  <rect x="0" y="0" width="32" height="16" fill="#140d0a"/>
-  <!-- Inner shadow / depth -->
-  <rect x="1" y="1" width="30" height="14" fill="#1f1510"/>
-  <!-- Gold-brown chamfer border -->
-  <rect x="0.5" y="0.5" width="31" height="15" fill="none" stroke="#4a3525" stroke-width="1"/>
-</svg>
