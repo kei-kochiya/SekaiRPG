@@ -460,6 +460,8 @@ func finish_battle(victory: bool, count: int = 1):
 		reset_mission_stats()
 		current_map_file = "res://Maps/Base/BaseMap.tscn"
 		last_player_position = Vector2.ZERO
+		# Thua trận nhiệm vụ: về căn cứ, mở lại luyện tập cho người chơi cày thêm rồi quay lại
+		reset_training_progress()
 			
 	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Maps/Harbor/HarborMap.tscn":
 		await get_tree().create_timer(1.5, false).timeout 
@@ -484,6 +486,27 @@ const WIN_FLAG_BATTLES = {
 	"bounty_3": "bounty_3_done",
 	"final_mafuyu": "final_mafuyu_defeated",
 }
+
+# Các trận cốt truyện khó của màn Tác chiến/Thủ Tướng: thua thì về căn cứ trước nhiệm vụ để luyện tập thêm (không đánh lại ngay tại chỗ).
+# Tiến độ nhiệm vụ nằm trong cờ (ops_*_done) nên Mafuyu cho tiếp tục đúng chỗ.
+const RETREAT_ON_LOSS = ["ops_kanade", "ops_ichika", "ops_honami", "pm_boss"]
+
+const TRAINING_DONE_FLAGS = [
+	"training_ichika_done", "training_kanade_done", "training_ena_done",
+	"training_mizuki_done", "training_mafuyu_done", "training_honami_done",
+]
+
+# Mở lại các lượt luyện tập đã hoàn thành. Menu của Mafuyu ở giai đoạn đầu ẩn người đã tập xong, nên sau một trận thua
+# phải xóa cờ thì người chơi mới tập thêm được.
+func reset_training_progress() -> void:
+	for flag in TRAINING_DONE_FLAGS:
+		story.set_flag(flag, false)
+
+func _retreat_to_base() -> void:
+	reset_training_progress()
+	story.set_flag("finale_retreated", true)
+	current_map_file = "res://Maps/Base/BaseMap.tscn"
+	last_player_position = Vector2.ZERO
 
 func _handle_scripted_battle_finish(victory: bool):
 	# Thua trận kịch bản: hồi đầy máu để lần đánh lại không bắt đầu với đồng đội đã gục
@@ -537,6 +560,9 @@ func _handle_scripted_battle_finish(victory: bool):
 		if victory: story.set_flag("ops_honami_done", true)
 	elif scripted_battle_id == "pm_boss":
 		if victory: story.set_flag("pm_boss_defeated", true)
+	
+	if not victory and scripted_battle_id in RETREAT_ON_LOSS:
+		_retreat_to_base()
 	
 	is_scripted_battle = false
 	scripted_battle_id = ""

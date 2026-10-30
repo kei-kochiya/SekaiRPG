@@ -35,6 +35,12 @@ func on_stage_start():
 			_cutscene_active = false
 			map._refresh_quest_label()
 		)
+	elif GameManager.get_flag("finale_retreated"):
+		# Vừa thua một trận của màn Tác chiến/Thủ Tướng: giải thích vì sao đang ở căn cứ
+		GameManager.set_flag("finale_retreated", false)
+		DialogueManager.play_dialogue([
+			{"text": "Cả đội gục ngã và phải rút về căn cứ. Luyện tập thêm với Mafuyu, khi sẵn sàng thì nói chuyện với cô ấy để quay lại nhiệm vụ.", "type": "narrator"}
+		])
 
 func handle_npc_interaction(npc_name: String):
 	if _cutscene_active: return
@@ -46,7 +52,7 @@ func handle_npc_interaction(npc_name: String):
 			)
 		else:
 			DialogueManager.play_dialogue([{"text": "Đừng để ả lôi kéo cô quá đà.", "type": "dialogue", "name": "Mafuyu", "color": Color("#665588")}], func():
-				_show_training_menu()
+				_show_resume_menu()
 			)
 	elif npc_name == "Kanade":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade_post"), func():
@@ -72,6 +78,21 @@ func _show_mafuyu_menu():
 	elif idx == 1:
 		_show_training_menu()
 
+# Sau khi đã bắt đầu màn Tác chiến/Thủ Tướng (kể cả khi thua và bị đưa về căn cứ): tiếp tục nhiệm vụ hoặc luyện tập thêm
+func _show_resume_menu():
+	DialogueManager.show_choice(["[Tiếp tục nhiệm vụ]", "[Tập luyện]", "[Hủy]"])
+	var idx: int = await DialogueManager.choice_made
+	if idx == 0:
+		_resume_finale_arc()
+	elif idx == 1:
+		_show_training_menu()
+
+# Bản đồ Tác chiến tự chọn trận chưa xong tiếp theo (theo cờ ops_*_done), xong hết thì sang Xa lộ đánh Thủ Tướng
+func _resume_finale_arc():
+	await ScreenFade.fade_out(1.0)
+	GameManager.store_map_state("res://Maps/CityOperations/CityOperationsMap.tscn", Vector2.ZERO)
+	get_tree().change_scene_to_file("res://Maps/CityOperations/CityOperationsMap.tscn")
+
 func _start_finale_arc():
 	GameManager.set_flag("pm_arc_started", true)
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("pm_plot_reveal"), func():
@@ -95,4 +116,6 @@ func _show_training_menu():
 	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
 
 func get_quest_text() -> String:
+	if GameManager.get_flag("pm_arc_started"):
+		return "MỤC TIÊU: Nói chuyện với Mafuyu để tiếp tục nhiệm vụ (hoặc luyện tập thêm trước khi quay lại)."
 	return "MỤC TIÊU: Bạn đã được phép đi lại tự do. Luyện tập qua lại giữa Nightcord và nhà Honami."

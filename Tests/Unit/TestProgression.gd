@@ -231,3 +231,67 @@ func test_mizuki_snack_scene_plays_only_once():
 	assert_true(GameManager.get_flag("mizuki_control_phase"), "Chuyển sang điều khiển Mizuki")
 	base.free()
 	GameManager.reset_game()
+
+# ── Thua màn Tác chiến / Thủ Tướng: về căn cứ để luyện tập thêm ──────────────
+
+func test_losing_a_finale_fight_retreats_to_base_and_reopens_training():
+	GameManager.reset_game()
+	for id in ["ops_kanade", "ops_ichika", "ops_honami", "pm_boss"]:
+		assert_true(id in GameManager.RETREAT_ON_LOSS, "%s: thua thì rút về căn cứ" % id)
+	for id in ["bounty_ambush", "mizuki_vs_mafuyu", "final_mafuyu", "street_skirmish"]:
+		assert_false(id in GameManager.RETREAT_ON_LOSS, "%s giữ cách xử lý thua riêng" % id)
+
+	for flag in GameManager.TRAINING_DONE_FLAGS:
+		GameManager.set_flag(flag, true)
+	GameManager.current_map_file = "res://Maps/Highway/HighwayMap.tscn"
+	GameManager.last_player_position = Vector2(50, 50)
+	GameManager._retreat_to_base()
+	assert_eq(GameManager.current_map_file, "res://Maps/Base/BaseMap.tscn", "Thua thì quay lại căn cứ, không đánh lại ngay tại bản đồ trận")
+	assert_eq(GameManager.last_player_position, Vector2.ZERO, "Đứng ở vị trí mặc định trong căn cứ")
+	assert_true(GameManager.get_flag("finale_retreated"), "Đánh dấu để căn cứ giải thích vì sao quay về")
+	for flag in GameManager.TRAINING_DONE_FLAGS:
+		assert_false(GameManager.get_flag(flag), "%s được mở lại để luyện tập thêm" % flag)
+	GameManager.reset_game()
+
+func test_wave_mission_loss_also_reopens_training():
+	GameManager.reset_game()
+	GameManager.set_flag("training_ichika_done", true)
+	GameManager.set_flag("training_kanade_done", true)
+	GameManager.reset_training_progress()
+	assert_false(GameManager.get_flag("training_ichika_done"), "Ichika tập lại được")
+	assert_false(GameManager.get_flag("training_kanade_done"), "Kanade tập lại được")
+	GameManager.reset_game()
+
+func _finale_stage_base() -> Node:
+	GameManager.reset_game()
+	for k in ["honami_house_unlocked", "honami_unlocked_intro_done", "pm_arc_started", "ops_intro_done"]:
+		GameManager.set_flag(k, true)
+	var base = load(BASE_SCENE).instantiate()
+	base._init_stage()
+	return base
+
+func test_base_explains_the_retreat_once():
+	var base = _finale_stage_base()
+	var stage = base.current_stage
+	assert_eq(stage.get_script().resource_path.get_file(), "HonamiHouseUnlockedStage.gd", "Giữa màn Tác chiến vẫn dùng Stage nhà Honami")
+	GameManager.set_flag("finale_retreated", true)
+	stage.on_stage_start()
+	assert_true(DialogueManager.active, "Có lời giải thích khi về căn cứ sau trận thua")
+	assert_false(GameManager.get_flag("finale_retreated"), "Chỉ giải thích một lần")
+	_drain_dialogue()
+	base.free()
+	GameManager.reset_game()
+
+func test_mafuyu_lets_the_player_resume_the_mission_or_train():
+	var base = _finale_stage_base()
+	var stage = base.current_stage
+	assert_true(stage.get_quest_text().contains("tiếp tục nhiệm vụ"), "HUD nhắc quay lại nhiệm vụ")
+	stage.handle_npc_interaction("Mafuyu")
+	_drain_dialogue()
+	assert_true(DialogueManager._in_choice, "Mafuyu mở menu lựa chọn")
+	var labels: Array = DialogueManager._ui.choice_box.get_children().filter(func(n): return n is Button).map(func(b): return b.text)
+	assert_true("[Tiếp tục nhiệm vụ]" in labels, "Có lựa chọn tiếp tục nhiệm vụ (trước đây không còn đường nào quay lại)")
+	assert_true("[Tập luyện]" in labels, "Vẫn có tập luyện")
+	DialogueManager._ui.choice_selected.emit(labels.size() - 1)
+	base.free()
+	GameManager.reset_game()

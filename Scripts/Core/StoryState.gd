@@ -68,6 +68,7 @@ const DEFAULT_FLAGS := {
 	"ops_honami_done": false,
 	"pm_car_scene_done": false,
 	"pm_boss_defeated": false,
+	"finale_retreated": false,
 	"finale_done": false,
 	# ── Hồi kết 2: Sự sụp đổ của Nightcord (sau khi Thủ Tướng chết) ──
 	"ena_left_nightcord": false,
