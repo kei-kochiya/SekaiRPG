@@ -114,7 +114,7 @@ func on_battle_completed(battle: Node, is_victory: bool):
 		# Nếu đã vượt qua Tầng 10 (Boss cuối)
 		if HoloSimManager.current_floor >= HoloSimManager.MAX_FLOORS:
 			GameManager.add_credits(1000)
-			HoloSimManager.is_sim_active = false
+			HoloSimManager.end_run()
 			DialogueManager.play_dialogue([
 				{"text": "CHÚC MỪNG!\nBạn đã hoàn thành trọn vẹn 10 Tầng Mô Phỏng Holo-Sim!\nPhần thưởng: +1000 Credits!", "type": "narrator"}
 			], func():
@@ -144,7 +144,7 @@ func on_battle_completed(battle: Node, is_victory: bool):
 		# Thất bại
 		var reward = HoloSimManager.current_floor * 50
 		GameManager.add_credits(reward)
-		HoloSimManager.is_sim_active = false
+		HoloSimManager.end_run()
 		DialogueManager.play_dialogue([
 			{"text": "Đội hình đã bị áp đảo tại Tầng %d.\nKết thúc lượt mô phỏng. Nhận an ủi: %d Credits." % [HoloSimManager.current_floor, reward], "type": "narrator"}
 		], func():

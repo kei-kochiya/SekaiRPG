@@ -52,7 +52,7 @@ Output goes to `screenshots/` (git-ignored). The shot names are listed at the to
 ```text
 Assets/     Audio, fonts, icons, portraits, SVG sprites, Kenney micro-roguelike tiles
 Data/       Dialogue (storyline/*.json) and mission battle teams (battles/*.json)
-Entities/   Entity.gd base class, Characters/ (6), Enemies/ (12)
+Entities/   Entity.gd base class, Characters/ (6), Enemies/ (13)
 Maps/       Overworld maps; most build themselves in code with Scripts/Overworld/MapUtils
 Quests/     QuestDefinition resources and QuestRegistry
 Scripts/    Battle/ (engine, scenarios, HoloSim), Core/ (GameManager, SaveManager, StoryState), Overworld/, Systems/

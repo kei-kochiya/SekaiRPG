@@ -23,6 +23,11 @@ func start_new_run():
 	active_blessings.clear()
 	print("[HoloSim] Bắt đầu lượt leo tháp Mô Phỏng mới từ Tầng 1!")
 
+# Rời tháp (thắng tầng cuối hoặc thua): kết thúc phiên và hồi đầy đội hình, như một trận thua bình thường
+func end_run():
+	is_sim_active = false
+	GameManager.full_heal_party()
+
 func advance_floor():
 	current_floor += 1
 	if current_floor > high_score_floor:

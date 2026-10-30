@@ -66,6 +66,17 @@ func on_stage_start():
 		_update_ena_visuals()
 		_check_ena_phase_trigger()
 
+# Kiểm tra lại ngay khi hội thoại của lần nói chuyện này kết thúc (không chồng lên hội thoại đang chạy)
+func _queue_ena_check():
+	if not DialogueManager.dialogue_finished.is_connected(_on_talk_finished):
+		DialogueManager.dialogue_finished.connect(_on_talk_finished, CONNECT_ONE_SHOT)
+
+func _on_talk_finished():
+	# Hội thoại vừa xong có thể mở tiếp một lựa chọn/bảng nâng cấp; lúc đó chờ lần đóng của chúng
+	if DialogueManager.active or DialogueManager._in_choice or UpgradeUI._open:
+		return
+	_check_ena_phase_trigger()
+
 func _check_ena_phase_trigger():
 	if GameManager.get_flag("ena_control_phase"): return
 	if not GameManager.get_flag("ena_released"): return
@@ -146,7 +157,9 @@ func handle_npc_interaction(npc_name: String):
 	if not is_ena:
 		var count = GameManager.get_flag("interaction_count", 0)
 		GameManager.set_flag("interaction_count", count + 1)
-		
+		# Gợi ý "Nói chuyện 4 lần" phải có hiệu lực ngay trong cảnh, không đợi vào lại căn cứ
+		_queue_ena_check()
+
 	if npc_name == "Ichika":
 		if is_ena:
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("ena_talk_ichika"))
@@ -165,6 +178,8 @@ func handle_npc_interaction(npc_name: String):
 					GameManager.get_party_member("Mizuki")
 				]
 				UpgradeUI.show_ui(p_list)
+				if not UpgradeUI.closed.is_connected(_check_ena_phase_trigger):
+					UpgradeUI.closed.connect(_check_ena_phase_trigger, CONNECT_ONE_SHOT)
 			)
 	elif npc_name == "Mizuki":
 		if is_ena:
@@ -225,8 +240,10 @@ func _show_training_menu():
 	
 	DialogueManager.show_choice(opts)
 	var idx: int = await DialogueManager.choice_made
-	if opts[idx] == "Để sau.": return
-	
+	if opts[idx] == "Để sau.":
+		_check_ena_phase_trigger()
+		return
+
 	GameManager.begin_training([mapping[idx]])
 	
 	await ScreenFade.fade_out(1.0)

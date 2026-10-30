@@ -45,6 +45,8 @@ func on_stage_start():
 
 func _play_mizuki_snack_sequence():
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_snack_p1"), func():
+		# Đánh dấu đã xem để vào lại căn cứ (tải save, đi Holo-Sim...) không phát lại cảnh này
+		GameManager.set_flag("harbor_mizuki_snack_done", true)
 		GameManager.set_flag("mizuki_control_phase", true)
 		var player = map.get_node_or_null("OverworldPlayer")
 		if player:

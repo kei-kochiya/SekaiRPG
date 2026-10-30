@@ -21,6 +21,8 @@ var _in_choice: bool = false
 var _callback: Callable
 
 signal choice_made(index: int)
+# Phát sau mỗi chuỗi hội thoại kết thúc (sau callback). Dùng cho logic muốn chạy "khi người chơi vừa nói chuyện xong".
+signal dialogue_finished
 
 var _ui: DialogueUI
 
@@ -118,3 +120,4 @@ func _finish():
 	_ui.clear()
 	GameManager.end_dialogue()
 	if _callback.is_valid(): _callback.call()
+	dialogue_finished.emit()

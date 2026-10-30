@@ -77,6 +77,7 @@ func _exit_tree():
 	for e in all_entities + GameManager.party.values():
 		if is_instance_valid(e):
 			e.clear_temp_mods()
+			e.untargetable = false # kịch bản có thể đặt cờ này lên nhân vật bền vững (vd. Ichika bị đóng băng)
 	Engine.time_scale = 1.0
 
 func _refresh_team_context():
@@ -317,10 +318,16 @@ func _on_entity_died(entity: Entity):
 	print(">>> ", entity.entity_name, " đã bị hạ gục! <<<")
 	_purge_dead_from_timeline(entity)
 	
-	if not entity.is_character and entity.gives_exp:
+	# Luyện tập: đối thủ có thể là nhân vật trong nhóm nên vẫn cho EXP; EXP được gom lại rồi chuyển cho nhân vật thật
+	# (đội hình luyện tập là bản sao, EXP cộng vào bản sao sẽ mất)
+	if entity.gives_exp and not player_team.has(entity) and (not entity.is_character or GameManager.is_training_mode):
 		var exp_reward = LevelManager.get_exp_reward(entity.level)
-		for p in player_team:
-			LevelManager.gain_exp(p, exp_reward)
+		if GameManager.is_training_mode:
+			GameManager.training_exp_earned += exp_reward
+		else:
+			for p in player_team:
+				LevelManager.gain_exp(p, exp_reward)
+	if not entity.is_character and entity.gives_exp:
 		var credits_reward = entity.level * 25 + randi_range(15, 35)
 		if GameManager.has_method("add_credits"):
 			GameManager.add_credits(credits_reward)

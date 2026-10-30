@@ -21,9 +21,12 @@ func test_quest_progression_chain():
 	
 	# Transition to Safehouse intro
 	GameManager.story.set_flag("prologue_phase", 1)
+	assert_eq(QuestRegistry.get_current_quest().quest_id, "quest_01_prologue", "Thắng trận mở màn nhưng còn ở ngõ vắng vẫn là quest_01_prologue")
+	GameManager.current_map_file = "res://Maps/Base/BaseMap.tscn"
 	var post_prologue = QuestRegistry.get_current_quest()
 	assert_true(post_prologue != null, "Post prologue quest is not null")
-	assert_eq(post_prologue.quest_id, "quest_02_safehouse_intro", "Prologue phase 1 maps to quest_02_safehouse_intro")
+	assert_eq(post_prologue.quest_id, "quest_02_safehouse_intro", "Prologue phase 1 at the base maps to quest_02_safehouse_intro")
+	GameManager.reset_game()
 
 func test_quest_map_scenes_exist():
 	for q in QuestRegistry.get_all_quests():
@@ -52,6 +55,7 @@ func test_quest_current_with_missing_flags_after_load():
 	assert_true(q != null, "Có quest hiện tại khi save thiếu cờ")
 	assert_eq(q.quest_id, "quest_01_prologue", "Save không có cờ nào -> quest_01_prologue")
 	GameManager.story.deserialize({"flags": {"prologue_phase": 1.0}})
+	GameManager.current_map_file = "res://Maps/Base/BaseMap.tscn"
 	assert_eq(QuestRegistry.get_current_quest().quest_id, "quest_02_safehouse_intro", "prologue_phase dạng float vẫn >= 1")
 	GameManager.reset_game()
 

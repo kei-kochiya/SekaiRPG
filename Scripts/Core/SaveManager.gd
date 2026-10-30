@@ -37,7 +37,9 @@ const MAP_NAMES = {
 	"res://Maps/Street/StreetMap.tscn": "Ngã tư đường phố",
 	"res://Maps/HonamiHouse/HonamiHouseMap.tscn": "Phòng khám Honami",
 	"res://Maps/CityOperations/CityOperationsMap.tscn": "Khu tác chiến phòng vệ",
-	"res://Maps/Highway/HighwayMap.tscn": "Xa lộ đêm"
+	"res://Maps/Highway/HighwayMap.tscn": "Xa lộ đêm",
+	"res://Maps/Bounty/BountyMap.tscn": "Khu phố đêm (Tiền thưởng)",
+	"res://Maps/Interrogation/InterrogationMap.tscn": "Kho Cảnh sát Quốc tế"
 }
 
 # Mô tả lỗi của lần save_game/load_game gần nhất ("" nếu thành công); GameManager sao chép ra last_save_error/last_load_error
@@ -161,7 +163,8 @@ static func save_game(path_or_name: String = QUICK_SAVE_PATH) -> bool:
 			"atk": e.atk,
 			"defense": e.defense,
 			"spd": e.spd,
-			"max_hp": e.max_hp
+			"max_hp": e.max_hp,
+			"hp": e.current_hp
 		}
 
 	var game_state = {
@@ -174,7 +177,8 @@ static func save_game(path_or_name: String = QUICK_SAVE_PATH) -> bool:
 		"party": party_data,
 		"credits": GameManager.credits,
 		"inventory": GameManager.inventory.duplicate(),
-		"opened_chests": GameManager.opened_chests.duplicate()
+		"opened_chests": GameManager.opened_chests.duplicate(),
+		"holosim_high_floor": HoloSimManager.high_score_floor
 	}
 
 	var save_package = {
@@ -315,6 +319,7 @@ static func _parse_save_data(data: Dictionary) -> Dictionary:
 			var next_exp = _int_or(d.get("next_level_exp"), 0)
 			if next_exp <= 0:
 				next_exp = LevelManager.exp_needed_for_level(lv)
+			var max_hp: int = max(1, _int_or(d.get("max_hp"), e.max_hp))
 			party[p_name] = {
 				"level": lv,
 				"exp": max(0, _int_or(d.get("exp"), 0)),
@@ -323,7 +328,9 @@ static func _parse_save_data(data: Dictionary) -> Dictionary:
 				"atk": _int_or(d.get("atk"), e.atk),
 				"defense": _int_or(d.get("defense"), e.defense),
 				"spd": _int_or(d.get("spd"), e.spd),
-				"max_hp": max(1, _int_or(d.get("max_hp"), e.max_hp))
+				"max_hp": max_hp,
+				# Save cũ chưa lưu HP -> đầy máu như trước đây
+				"hp": clampi(_int_or(d.get("hp"), max_hp), 0, max_hp)
 			}
 
 	return {
@@ -333,7 +340,8 @@ static func _parse_save_data(data: Dictionary) -> Dictionary:
 		"credits": credits,
 		"inventory": inventory,
 		"opened_chests": opened_chests,
-		"party": party
+		"party": party,
+		"holosim_high_floor": maxi(0, _int_or(game_state.get("holosim_high_floor"), 0))
 	}
 
 static func _commit_save_data(parsed: Dictionary) -> void:
@@ -356,7 +364,9 @@ static func _commit_save_data(parsed: Dictionary) -> void:
 		e.defense = d["defense"]
 		e.spd = d["spd"]
 		e.max_hp = d["max_hp"]
-		e.current_hp = e.max_hp
+		e.current_hp = d["hp"]
+
+	HoloSimManager.high_score_floor = parsed["holosim_high_floor"]
 
 	# Sau khi nạp story (có training_wave) mới xóa trạng thái tạm của phiên trước (training, sandbox, trận kịch bản...)
 	GameManager.clear_transient_state()

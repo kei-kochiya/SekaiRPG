@@ -70,11 +70,11 @@ static func setup_battle(_main: Node) -> Dictionary:
 	
 	Args:
 		_main (Node): Tham chiếu tới Scene trận đấu.
-	Returns: 
+	Returns:
 		Dictionary: Chứa 'player_team', 'enemy_team', 'scenario'.
 	"""
 	_ensure_data_loaded()
-	
+
 	if HoloSimManager and HoloSimManager.is_sim_active:
 		return _setup_holosim_battle()
 
@@ -82,6 +82,20 @@ static func setup_battle(_main: Node) -> Dictionary:
 		return {
 			"player_team": GameManager.sandbox_player_team,
 			"enemy_team": GameManager.sandbox_enemy_team,
+	var data := _build_battle()
+	# Sandbox và luyện tập dùng bản sao mới nên không cần; còn lại là đội hình bền vững, có thể còn nằm ở 0 HP từ trận trước
+	if not GameManager.is_sandbox and not GameManager.is_training_mode:
+		_revive_downed(data["player_team"])
+	return data
+
+# Thành viên gục sau một trận thắng vẫn nằm ở 0 HP ngoài bản đồ (chỉ thua/luyện tập xong mới hồi máu). Trận cốt truyện
+# nào cũng đưa họ về 50% HP lúc vào trận, để không có trận nào bắt đầu bằng một đội đã gục (thua ngay lượt 0).
+static func _revive_downed(team: Array) -> void:
+	for p in team:
+		if p != null and p.current_hp <= 0:
+			p.current_hp = maxi(1, int(p.max_hp * 0.5))
+
+static func _build_battle() -> Dictionary:
 			"scenario": DefaultScenario.new()
 		}
 	
@@ -190,6 +204,17 @@ static func _setup_training_battle() -> Dictionary:
 	var total_lv = 0
 	var p_count = 0
 	
+# Bản sao luyện tập chỉ dựng lại chỉ số theo cấp; chép thêm điểm kỹ năng đã nâng để bản sao mạnh bằng nhân vật thật.
+static func _mirror_upgrades(clone: Entity, source: Entity) -> void:
+	clone.max_hp = source.max_hp
+	clone.atk = source.atk
+	clone.defense = source.defense
+	clone.res = source.res
+	clone.spd = source.spd
+	clone.crit_rate = source.crit_rate
+	clone.crit_dmg = source.crit_dmg
+	clone.current_hp = clone.max_hp
+
 	for p_name in GameManager.training_participants:
 		var real_p = GameManager.get_party_member(p_name)
 		if real_p:
@@ -207,6 +232,7 @@ static func _setup_training_battle() -> Dictionary:
 	
 	var enemies = []
 	
+				_mirror_upgrades(clone, real_p)
 	# Random chance to fight party members
 	if randf() < 0.7:
 		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika", "Honami"]

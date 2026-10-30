@@ -29,6 +29,8 @@ var last_player_position: Vector2 = Vector2.ZERO
 var is_training_mode: bool = false
 var training_participants: Array = []
 var training_used_opponents: Array = []
+# EXP kiếm được trong trận luyện tập hiện tại. Trận luyện tập đánh bằng bản sao nhân vật nên EXP phải chuyển về nhân vật thật.
+var training_exp_earned: int = 0
 var last_battle_max_lv: int = 1
 
 # Thông báo lỗi của lần Lưu/Tải gần nhất ("" nếu thành công) để UI hiển thị cho người chơi
@@ -346,6 +348,7 @@ func reset_game():
 	last_load_error = ""
 	last_save_error = ""
 	last_battle_max_lv = 1
+	HoloSimManager.high_score_floor = 0
 	credits = DEFAULT_CREDITS
 	inventory = DEFAULT_INVENTORY.duplicate()
 	opened_chests = []
@@ -358,6 +361,7 @@ func clear_transient_state():
 	is_training_mode = false
 	training_participants = []
 	training_used_opponents = []
+	training_exp_earned = 0
 	story.training_wave = 0
 	is_scripted_battle = false
 	scripted_battle_id = ""
@@ -375,6 +379,7 @@ func begin_training(participants: Array):
 	story.training_wave = 1
 	training_participants = participants.duplicate()
 	training_used_opponents = []
+	training_exp_earned = 0
 
 # Kết thúc phiên luyện tập (hoàn thành, thua hoặc bỏ dở)
 func end_training():
@@ -382,6 +387,18 @@ func end_training():
 	story.training_wave = 0
 	training_participants = []
 	training_used_opponents = []
+	training_exp_earned = 0
+
+# Chuyển EXP của trận luyện tập vừa thắng cho các nhân vật thật tham gia (rồi xóa bộ đếm)
+func grant_training_exp() -> void:
+	var amount := training_exp_earned
+	training_exp_earned = 0
+	if amount <= 0:
+		return
+	for p_name in training_participants:
+		var entity = get_party_member(p_name)
+		if entity:
+			LevelManager.gain_exp(entity, amount)
 
 # Ghi nhớ bản đồ và vị trí hiện tại
 func store_map_state(map_path: String, player_pos: Vector2):
@@ -425,6 +442,7 @@ func finish_battle(victory: bool, count: int = 1):
 	if not victory and is_training_mode:
 		# Thua training: thưởng EXP an ủi, hồi máu, rồi về base
 		var bonus_exp = int(last_battle_max_lv * 50)
+		training_exp_earned = 0
 		for p_name in training_participants:
 			var entity = get_party_member(p_name)
 			if entity: LevelManager.gain_exp(entity, bonus_exp)
@@ -529,6 +547,7 @@ func _apply_victory_rewards(count: int):
 	if is_training_mode:
 		# Luyện tập dùng bộ đếm riêng, không làm tiến trình Nhà kho của cốt truyện
 		story.training_wave += 1
+		grant_training_exp()
 	elif current_map_file.contains("Warehouse"):
 		story.warehouse_wave += 1
 	if current_map_file == "res://Maps/Harbor/HarborMap.tscn":
