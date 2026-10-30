@@ -67,21 +67,12 @@ static func _load_json(path: String) -> Dictionary:
 static func setup_battle(_main: Node) -> Dictionary:
 	"""
 	Thiết lập toàn bộ thông tin cho một trận đấu mới (Đội hình & Kịch bản).
-	
+
 	Args:
 		_main (Node): Tham chiếu tới Scene trận đấu.
 	Returns:
 		Dictionary: Chứa 'player_team', 'enemy_team', 'scenario'.
 	"""
-	_ensure_data_loaded()
-
-	if HoloSimManager and HoloSimManager.is_sim_active:
-		return _setup_holosim_battle()
-
-	if GameManager.is_sandbox:
-		return {
-			"player_team": GameManager.sandbox_player_team,
-			"enemy_team": GameManager.sandbox_enemy_team,
 	var data := _build_battle()
 	# Sandbox và luyện tập dùng bản sao mới nên không cần; còn lại là đội hình bền vững, có thể còn nằm ở 0 HP từ trận trước
 	if not GameManager.is_sandbox and not GameManager.is_training_mode:
@@ -96,6 +87,15 @@ static func _revive_downed(team: Array) -> void:
 			p.current_hp = maxi(1, int(p.max_hp * 0.5))
 
 static func _build_battle() -> Dictionary:
+	_ensure_data_loaded()
+	
+	if HoloSimManager and HoloSimManager.is_sim_active:
+		return _setup_holosim_battle()
+
+	if GameManager.is_sandbox:
+		return {
+			"player_team": GameManager.sandbox_player_team,
+			"enemy_team": GameManager.sandbox_enemy_team,
 			"scenario": DefaultScenario.new()
 		}
 	
@@ -195,15 +195,6 @@ static var character_classes = {
 	"Honami": Honami
 }
 
-static func _setup_training_battle() -> Dictionary:
-	"""
-	Thiết lập trận đấu luyện tập.
-	Dùng bản sao (clone) của party member để HP không bị ảnh hưởng sau training.
-	"""
-	var player_team = []
-	var total_lv = 0
-	var p_count = 0
-	
 # Bản sao luyện tập chỉ dựng lại chỉ số theo cấp; chép thêm điểm kỹ năng đã nâng để bản sao mạnh bằng nhân vật thật.
 static func _mirror_upgrades(clone: Entity, source: Entity) -> void:
 	clone.max_hp = source.max_hp
@@ -215,6 +206,15 @@ static func _mirror_upgrades(clone: Entity, source: Entity) -> void:
 	clone.crit_dmg = source.crit_dmg
 	clone.current_hp = clone.max_hp
 
+static func _setup_training_battle() -> Dictionary:
+	"""
+	Thiết lập trận đấu luyện tập.
+	Dùng bản sao (clone) của party member để HP không bị ảnh hưởng sau training.
+	"""
+	var player_team = []
+	var total_lv = 0
+	var p_count = 0
+	
 	for p_name in GameManager.training_participants:
 		var real_p = GameManager.get_party_member(p_name)
 		if real_p:
@@ -223,6 +223,7 @@ static func _mirror_upgrades(clone: Entity, source: Entity) -> void:
 			if clone_class:
 				var clone = clone_class.new()
 				LevelManager.set_initial_level(clone, real_p.level)
+				_mirror_upgrades(clone, real_p)
 				player_team.append(clone)
 				total_lv += real_p.level
 				p_count += 1
@@ -232,7 +233,6 @@ static func _mirror_upgrades(clone: Entity, source: Entity) -> void:
 	
 	var enemies = []
 	
-				_mirror_upgrades(clone, real_p)
 	# Random chance to fight party members
 	if randf() < 0.7:
 		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika", "Honami"]
