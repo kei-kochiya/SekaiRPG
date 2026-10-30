@@ -32,15 +32,6 @@ static var enemy_classes = {
 	"police": PoliceOfficer
 }
 
-# Cấp kẻ địch của các trận cốt truyện đơn, chỉnh theo cấp đội hình lúc đó (khoảng L21-26, chưa cày thêm).
-# Đo bằng người chơi tự động: Thủ Tướng thắng ~50-65%, các trận Khu tác chiến ~90-100%, toán cảnh sát 2 ~80%.
-# Cấp cũ (Thủ Tướng 50, Khu tác chiến 35) làm cả đội gục trước khi kịp ra đòn.
-const PM_BOSS_LEVEL = 22
-const OPS_KANADE_ENEMY_LEVEL = 14 # Kanade mỏng máu và bị hệ Cute khắc nên cần địch yếu hơn hẳn
-const OPS_ICHIKA_ENEMY_LEVEL = 19
-const OPS_HONAMI_ENEMY_LEVEL = 23
-const MIZUKI_POLICE_2_LEVEL = 18
-
 # Mafuyu ở trận cuối phản chiếu chỉ số người chơi đã dồn vào Mafuyu đồng đội; không bao giờ yếu hơn bản cấp này.
 # Đây là các "núm vặn" độ khó: tăng HP boss, giảm tốc độ để Ichika/Honami còn lượt hành động giữa hai đòn của cô ta.
 const FINAL_BOSS_FLOOR_LEVEL = 25
@@ -76,12 +67,21 @@ static func _load_json(path: String) -> Dictionary:
 static func setup_battle(_main: Node) -> Dictionary:
 	"""
 	Thiết lập toàn bộ thông tin cho một trận đấu mới (Đội hình & Kịch bản).
-
+	
 	Args:
 		_main (Node): Tham chiếu tới Scene trận đấu.
 	Returns:
 		Dictionary: Chứa 'player_team', 'enemy_team', 'scenario'.
 	"""
+	_ensure_data_loaded()
+
+	if HoloSimManager and HoloSimManager.is_sim_active:
+		return _setup_holosim_battle()
+
+	if GameManager.is_sandbox:
+		return {
+			"player_team": GameManager.sandbox_player_team,
+			"enemy_team": GameManager.sandbox_enemy_team,
 	var data := _build_battle()
 	# Sandbox và luyện tập dùng bản sao mới nên không cần; còn lại là đội hình bền vững, có thể còn nằm ở 0 HP từ trận trước
 	if not GameManager.is_sandbox and not GameManager.is_training_mode:
@@ -96,15 +96,6 @@ static func _revive_downed(team: Array) -> void:
 			p.current_hp = maxi(1, int(p.max_hp * 0.5))
 
 static func _build_battle() -> Dictionary:
-	_ensure_data_loaded()
-	
-	if HoloSimManager and HoloSimManager.is_sim_active:
-		return _setup_holosim_battle()
-
-	if GameManager.is_sandbox:
-		return {
-			"player_team": GameManager.sandbox_player_team,
-			"enemy_team": GameManager.sandbox_enemy_team,
 			"scenario": DefaultScenario.new()
 		}
 	
@@ -204,6 +195,15 @@ static var character_classes = {
 	"Honami": Honami
 }
 
+static func _setup_training_battle() -> Dictionary:
+	"""
+	Thiết lập trận đấu luyện tập.
+	Dùng bản sao (clone) của party member để HP không bị ảnh hưởng sau training.
+	"""
+	var player_team = []
+	var total_lv = 0
+	var p_count = 0
+	
 # Bản sao luyện tập chỉ dựng lại chỉ số theo cấp; chép thêm điểm kỹ năng đã nâng để bản sao mạnh bằng nhân vật thật.
 static func _mirror_upgrades(clone: Entity, source: Entity) -> void:
 	clone.max_hp = source.max_hp
@@ -215,15 +215,6 @@ static func _mirror_upgrades(clone: Entity, source: Entity) -> void:
 	clone.crit_dmg = source.crit_dmg
 	clone.current_hp = clone.max_hp
 
-static func _setup_training_battle() -> Dictionary:
-	"""
-	Thiết lập trận đấu luyện tập.
-	Dùng bản sao (clone) của party member để HP không bị ảnh hưởng sau training.
-	"""
-	var player_team = []
-	var total_lv = 0
-	var p_count = 0
-	
 	for p_name in GameManager.training_participants:
 		var real_p = GameManager.get_party_member(p_name)
 		if real_p:
@@ -232,7 +223,6 @@ static func _setup_training_battle() -> Dictionary:
 			if clone_class:
 				var clone = clone_class.new()
 				LevelManager.set_initial_level(clone, real_p.level)
-				_mirror_upgrades(clone, real_p)
 				player_team.append(clone)
 				total_lv += real_p.level
 				p_count += 1
@@ -242,6 +232,7 @@ static func _setup_training_battle() -> Dictionary:
 	
 	var enemies = []
 	
+				_mirror_upgrades(clone, real_p)
 	# Random chance to fight party members
 	if randf() < 0.7:
 		var pool = ["Mafuyu", "Ena", "Mizuki", "Kanade", "Ichika", "Honami"]
@@ -345,24 +336,24 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 		"ops_kanade": func():
 			return {
 				"player_team": [GameManager.get_party_member("Kanade")],
-				"enemy_team": _create_enemies("terrorist", 2, OPS_KANADE_ENEMY_LEVEL),
+				"enemy_team": _create_enemies("terrorist", 2, 35),
 				"scenario": ScriptedBattleScenario.new()
 			},
 		"ops_ichika": func():
 			return {
 				"player_team": [GameManager.get_party_member("Ichika")],
-				"enemy_team": _create_enemies("terrorist", 2, OPS_ICHIKA_ENEMY_LEVEL),
+				"enemy_team": _create_enemies("terrorist", 2, 35),
 				"scenario": ScriptedBattleScenario.new()
 			},
 		"ops_honami": func():
 			return {
 				"player_team": [GameManager.get_party_member("Honami")],
-				"enemy_team": _create_enemies("terrorist", 3, OPS_HONAMI_ENEMY_LEVEL),
+				"enemy_team": _create_enemies("terrorist", 3, 35),
 				"scenario": ScriptedBattleScenario.new()
 			},
 		"pm_boss": func():
 			var pm = PrimeMinister.new()
-			LevelManager.set_initial_level(pm, PM_BOSS_LEVEL)
+			LevelManager.set_initial_level(pm, 50)
 			return {
 				"player_team": [GameManager.get_party_member("Mafuyu"), GameManager.get_party_member("Ena"), GameManager.get_party_member("Mizuki")],
 				"enemy_team": [pm],
@@ -404,7 +395,7 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 		"mizuki_police_2": func():
 			return {
 				"player_team": [GameManager.get_party_member("Mizuki")],
-				"enemy_team": _create_enemies("police", 3, MIZUKI_POLICE_2_LEVEL),
+				"enemy_team": _create_enemies("police", 3, 22),
 				"scenario": ScriptedBattleScenario.new()
 			},
 		"mizuki_vs_ena_forced": func():
