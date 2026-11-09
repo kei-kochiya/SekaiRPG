@@ -27,25 +27,6 @@ const NEW_FLAGS := [
 	"epilogue_bar_invite_done", "epilogue_bar_done",
 ]
 
-# Giả lập tối thiểu những gì scenario đọc từ Main
-class FakeHud extends RefCounted:
-	func show_announcement(_text: String, _color: Color = Color.WHITE): pass
-	func show_victory(): pass
-	func show_defeat(): pass
-
-class FakeMain extends Node:
-	var player_team: Array
-	var enemy_team: Array
-	var hud = FakeHud.new()
-	var battle_over: bool = false
-	var is_scripting: bool = false
-	var ran: bool = false
-	func _init(players: Array, enemies: Array):
-		player_team = players
-		enemy_team = enemies
-	func run_battle(): ran = true
-	func _regenerate_timeline(): pass
-
 func _all_dialogue() -> Dictionary:
 	var out := {}
 	var dir := DirAccess.open(STORY_DIR)
@@ -131,7 +112,7 @@ func test_trial_opponents_mirror_the_real_party_members():
 func test_training_trial_is_won_by_surviving_until_the_bell():
 	GameManager.reset_game()
 	var data = BattleInitializer._setup_scripted_battle("training_trial")
-	var main := FakeMain.new(data["player_team"], data["enemy_team"])
+	var main := FakeBattleMain.new(data["player_team"], data["enemy_team"])
 	var sc: TrainingTrialScenario = data["scenario"]
 	assert_false(sc.check_battle_end(main), "not over at the start")
 	for i in TrainingTrialScenario.ENEMY_ACTIONS_TO_SURVIVE:
@@ -145,7 +126,7 @@ func test_training_trial_is_won_by_surviving_until_the_bell():
 func test_training_trial_is_lost_when_ichika_falls():
 	GameManager.reset_game()
 	var data = BattleInitializer._setup_scripted_battle("training_trial")
-	var main := FakeMain.new(data["player_team"], data["enemy_team"])
+	var main := FakeBattleMain.new(data["player_team"], data["enemy_team"])
 	var sc: TrainingTrialScenario = data["scenario"]
 	main.player_team[0].current_hp = 0
 	assert_true(sc.check_battle_end(main), "the trial ends when Ichika is down")
@@ -155,7 +136,7 @@ func test_training_trial_is_lost_when_ichika_falls():
 func test_sparring_honami_cannot_be_hurt_and_ends_on_a_forced_shadow_strike():
 	GameManager.reset_game()
 	var data = BattleInitializer._setup_scripted_battle("honami_spar")
-	var main := FakeMain.new(data["player_team"], data["enemy_team"])
+	var main := FakeBattleMain.new(data["player_team"], data["enemy_team"])
 	var sc: SparringScenario = data["scenario"]
 	var honami: Honami = main.enemy_team[0]
 	sc.on_start(main)

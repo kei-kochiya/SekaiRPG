@@ -13,11 +13,6 @@ Chức năng chính:
 - Cung cấp các hàm hỗ trợ chung (filter, entity factory).
 """
 
-const ReconDroneClass = preload("res://Entities/Enemies/ReconDrone.gd")
-const SniperClass = preload("res://Entities/Enemies/Sniper.gd")
-const CyborgEnforcerClass = preload("res://Entities/Enemies/CyborgEnforcer.gd")
-const CyberJammerClass = preload("res://Entities/Enemies/CyberJammer.gd")
-
 # ── Tham chiếu đến các Manager thành phần ──────────────────────────────────
 var story: StoryState = StoryState.new()
 
@@ -52,7 +47,10 @@ var available_sandbox_monsters = [
 	"Chuyên Viên Nhiễu Sóng", "Đội Trưởng (BOSS)", "Thủ Tướng (FINAL BOSS)"
 ]
 
-var battle_speed: float = 1.2
+# battle_speed là số giây chờ giữa các nhịp trong trận (nhỏ hơn = nhanh hơn)
+const BATTLE_SPEED_FAST := 0.6
+const BATTLE_SPEED_NORMAL := 1.2
+var battle_speed: float = BATTLE_SPEED_NORMAL
 var master_volume: float = 1.0:
 	set(v):
 		master_volume = clamp(v, 0.0, 1.0)
@@ -85,7 +83,7 @@ const ITEM_CATALOG := {
 	},
 	"energy_drink": {
 		"name": "Nước Tăng Lực",
-		"desc": "Tăng 5000 thanh hành động (Hành động ngay lập tức).",
+		"desc": "Làm đầy thanh hành động (Hành động ngay lập tức).",
 		"price": 120,
 		"type": "energy"
 	},
@@ -147,8 +145,19 @@ var party: Dictionary = {}
 func _ready():
 	_init_party()
 	_setup_autosave_timer()
+	# Hoãn một nhịp: setter master_volume gọi AudioManager, autoload này có thể khởi tạo sau GameManager
+	load_settings.call_deferred()
+
+# Tùy chọn của người chơi nằm ngoài file save (xem GameSettings)
+func load_settings():
+	GameSettings.load_into(self)
+
+func save_settings():
+	GameSettings.save_from(self)
 
 var _autosave_timer: Timer
+# Tắt hẳn tự động lưu (công cụ chạy thử tự động đặt false để không ghi đè autosave thật của người chơi)
+var autosave_enabled: bool = true
 
 func _setup_autosave_timer():
 	_autosave_timer = Timer.new()
@@ -159,21 +168,29 @@ func _setup_autosave_timer():
 	add_child(_autosave_timer)
 
 func _on_autosave_timer_timeout():
-	if _can_autosave():
+	if autosave_enabled and _can_autosave():
 		auto_save()
 
+# Các scene không phải Overworld: không lưu và không tạm dừng bằng ESC ở đây
+const MENU_SCENES := ["StartMenu", "SandboxMenu", "SaveLoadMenu"]
+
 func _can_autosave() -> bool:
-	if is_in_dialogue or is_sandbox or is_scripted_battle or is_training_mode:
+	return not is_in_dialogue and can_save_now()
+
+# Lưu được khi đang ở Overworld bình thường: không Sandbox/trận/luyện tập/Holo-Sim, có người chơi đang di chuyển
+# (cảnh tự chạy khóa người chơi, lúc đó cờ cốt truyện mới đặt dở nên không lưu).
+func can_save_now() -> bool:
+	if is_sandbox or is_scripted_battle or is_training_mode or HoloSimManager.is_sim_active:
 		return false
 	var cur_scene = get_tree().current_scene
-	if cur_scene == null:
-		return false
-	if cur_scene.name in ["StartMenu", "SandboxMenu", "BattleRoot", "SaveLoadMenu"]:
+	if cur_scene == null or cur_scene.name == "BattleRoot" or cur_scene.name in MENU_SCENES:
 		return false
 	var player = cur_scene.find_child("OverworldPlayer", true, false)
-	if player == null:
-		return false
-	return true
+	return player != null and player.is_physics_processing()
+
+func restart_autosave_timer():
+	if _autosave_timer and autosave_enabled:
+		_autosave_timer.start()
 
 func _init_party():
 	"""
@@ -182,6 +199,10 @@ func _init_party():
 	Args: Không có
 	Returns: Không có
 	"""
+	# Đội hình cũ (New Game / tải lại) không còn ai giữ: giải phóng để không rò rỉ node mồ côi
+	for old in party.values():
+		if is_instance_valid(old):
+			old.queue_free()
 	party["Ichika"] = Ichika.new()
 	party["Kanade"] = Kanade.new()
 	party["Mafuyu"] = Mafuyu.new()
@@ -218,10 +239,10 @@ func create_sandbox_entity(e_name: String) -> Entity:
 		"Target": return TrainingBot.new()
 		"Nhân Viên Kho": return WarehouseWorker.new()
 		"Khủng Bố": return Terrorist.new()
-		"Drone Trinh Sát": return ReconDroneClass.new()
-		"Xạ Thủ Bắn Tỉa": return SniperClass.new()
-		"Vệ Binh Cơ Giới": return CyborgEnforcerClass.new()
-		"Chuyên Viên Nhiễu Sóng": return CyberJammerClass.new()
+		"Drone Trinh Sát": return ReconDrone.new()
+		"Xạ Thủ Bắn Tỉa": return Sniper.new()
+		"Vệ Binh Cơ Giới": return CyborgEnforcer.new()
+		"Chuyên Viên Nhiễu Sóng": return CyberJammer.new()
 		"Đội Trưởng (BOSS)": return Captain.new()
 		"Thủ Tướng (FINAL BOSS)": return PrimeMinister.new()
 	return Entity.new()
@@ -337,6 +358,8 @@ func load_game(path_or_name: String = "") -> bool:
 	var ok := SaveManager.load_game(path_or_name)
 	if not ok:
 		last_load_error = SaveManager.last_error
+	else:
+		restart_autosave_timer()
 	return ok
 
 func has_save() -> bool:
@@ -357,6 +380,7 @@ func reset_game():
 	opened_chests = []
 	clear_transient_state()
 	_init_party()
+	restart_autosave_timer()
 
 # Xóa các trạng thái tạm của phiên chơi (luyện tập, trận kịch bản, sandbox, hội thoại, Holo-Sim)
 # để chúng không rò sang game mới / game vừa tải. Gọi từ reset_game() và khi tải save thành công.
@@ -451,8 +475,7 @@ func finish_battle(victory: bool, count: int = 1):
 			if entity: LevelManager.gain_exp(entity, bonus_exp)
 		end_training()
 		full_heal_party()
-		current_map_file = "res://Maps/Base/BaseMap.tscn"
-		last_player_position = Vector2.ZERO
+		_set_base_as_current_map()
 		get_tree().change_scene_to_file(current_map_file)
 		return
 
@@ -461,8 +484,7 @@ func finish_battle(victory: bool, count: int = 1):
 	else:
 		full_heal_party()
 		reset_mission_stats()
-		current_map_file = "res://Maps/Base/BaseMap.tscn"
-		last_player_position = Vector2.ZERO
+		_set_base_as_current_map()
 		# Thua trận nhiệm vụ: về căn cứ, mở lại luyện tập cho người chơi cày thêm rồi quay lại
 		reset_training_progress()
 			
@@ -490,6 +512,12 @@ const WIN_FLAG_BATTLES = {
 	"bounty_3": "bounty_3_done",
 	"final_mafuyu": "final_mafuyu_defeated",
 	"training_trial": "training_trial_won",
+	"mizuki_police_2": "mizuki_police_done",
+	"ops_kanade": "ops_kanade_done",
+	"ops_ena": "ops_ena_done",
+	"ops_ichika": "ops_ichika_done",
+	"ops_honami": "ops_honami_done",
+	"pm_boss": "pm_boss_defeated",
 }
 
 # Các trận cốt truyện khó của màn Tác chiến/Thủ Tướng: thua thì về căn cứ trước nhiệm vụ để luyện tập thêm (không đánh lại ngay tại chỗ).
@@ -510,6 +538,10 @@ func reset_training_progress() -> void:
 func _retreat_to_base() -> void:
 	reset_training_progress()
 	story.set_flag("finale_retreated", true)
+	_set_base_as_current_map()
+
+# Đặt căn cứ làm map hiện tại (người chơi xuất hiện ở vị trí mặc định)
+func _set_base_as_current_map() -> void:
 	current_map_file = "res://Maps/Base/BaseMap.tscn"
 	last_player_position = Vector2.ZERO
 
@@ -526,8 +558,6 @@ func _handle_scripted_battle_finish(victory: bool):
 		story.set_flag(FATED_BATTLES[scripted_battle_id], true)
 	elif victory and WIN_FLAG_BATTLES.has(scripted_battle_id):
 		story.set_flag(WIN_FLAG_BATTLES[scripted_battle_id], true)
-	elif victory and scripted_battle_id == "mizuki_police_2":
-		story.set_flag("mizuki_police_done", true)
 	
 	if scripted_battle_id == "harbor_boss":
 		is_scripted_battle = false
@@ -557,19 +587,9 @@ func _handle_scripted_battle_finish(victory: bool):
 	elif scripted_battle_id == "street_survival":
 		story.set_flag("street_survival_done", true)
 		story.set_flag("street_survival_won", victory)
-	elif scripted_battle_id == "ops_kanade":
-		if victory: story.set_flag("ops_kanade_done", true)
-	elif scripted_battle_id == "ops_ena":
-		if victory: story.set_flag("ops_ena_done", true)
 	elif scripted_battle_id == "training_trial":
 		# Thua bài kiểm tra: FinaleStage cho chuẩn bị thêm (luyện tập/nâng cấp) thay vì ép đánh lại ngay
 		story.set_flag("training_trial_failed", not victory)
-	elif scripted_battle_id == "ops_ichika":
-		if victory: story.set_flag("ops_ichika_done", true)
-	elif scripted_battle_id == "ops_honami":
-		if victory: story.set_flag("ops_honami_done", true)
-	elif scripted_battle_id == "pm_boss":
-		if victory: story.set_flag("pm_boss_defeated", true)
 	
 	if not victory and scripted_battle_id in RETREAT_ON_LOSS:
 		_retreat_to_base()

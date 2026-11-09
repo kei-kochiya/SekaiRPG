@@ -36,6 +36,9 @@ func _ready():
 
 # ── Điều Khiển Phát Nhạc ───────────────────────────────────────────────────
 
+# Mỗi lần đổi bài tăng số này; coroutine làm mờ cũ thấy số đã đổi thì bỏ cuộc (xem play_music)
+var _play_id: int = 0
+
 func play_music(track_name: String, fade_duration: float = 1.0):
 	"""
 	Phát một bài nhạc nền có sẵn trong thư mục Music.
@@ -57,8 +60,10 @@ func play_music(track_name: String, fade_duration: float = 1.0):
 		return
 		
 	_current_track = track_name
+	_play_id += 1
+	var my_id := _play_id
 	
-	if new_stream is AudioStreamMP3 or new_stream is AudioStreamWAV:
+	if new_stream is AudioStreamMP3:
 		new_stream.loop = true
 	
 	if _player.playing and fade_duration > 0:
@@ -66,6 +71,10 @@ func play_music(track_name: String, fade_duration: float = 1.0):
 		tween.tween_property(_player, "volume_db", -40, fade_duration)
 		await tween.finished
 		_player.stop()
+	
+	# Có yêu cầu đổi bài mới hơn trong lúc đang làm mờ: bỏ bài này, để chỉ bài mới nhất được phát
+	if my_id != _play_id:
+		return
 	
 	_player.stream = new_stream
 	_player.volume_db = 0
@@ -75,21 +84,6 @@ func play_music(track_name: String, fade_duration: float = 1.0):
 		_player.volume_db = -40
 		var tween = create_tween()
 		tween.tween_property(_player, "volume_db", 0, fade_duration)
-
-func stop_music(fade_duration: float = 1.0):
-	"""
-	Dừng phát nhạc nền hiện tại kèm hiệu ứng giảm âm dần.
-	
-	Args:
-		fade_duration (float): Thời gian làm mờ (giây) trước khi tắt hẳn.
-	Returns: Không có
-	"""
-	_current_track = ""
-	if fade_duration > 0 and _player.playing:
-		var tween = create_tween()
-		tween.tween_property(_player, "volume_db", -40, fade_duration)
-		await tween.finished
-	_player.stop()
 
 # ── Cài Đặt Âm Lượng ───────────────────────────────────────────────────────
 

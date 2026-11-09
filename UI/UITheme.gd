@@ -167,9 +167,6 @@ static func style_title(label: Label, size: int = FS_TITLE, color: Color = ACCEN
 	style_label(label, size, color)
 	label.add_theme_font_override("font", font_display_bold())
 
-static func style_panel(ctrl: Control, accent: Color = Color.TRANSPARENT, bg: Color = INK_800) -> void:
-	ctrl.add_theme_stylebox_override("panel", panel(bg, INK_600, accent))
-
 # Nhãn nhỏ dạng "chip" (hệ nguyên tố, hiệu ứng trạng thái...). Nền là màu chủ đạo pha tối, chữ là chính màu đó.
 static func chip(text: String, color: Color, size: int = FS_CAPTION, icon: Texture2D = null) -> PanelContainer:
 	var p := PanelContainer.new()

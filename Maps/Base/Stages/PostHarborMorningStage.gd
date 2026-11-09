@@ -30,6 +30,10 @@ func get_npc_positions() -> Dictionary:
 		
 	return pos
 
+# Ánh sáng buổi sáng sủa; BaseMap áp trước fade_in nên không bị "nháy sáng"
+func get_scene_lighting() -> Color:
+	return Color(0.9, 0.9, 1.0)
+
 func on_stage_start():
 	# Hủy góc nhìn Mizuki
 	GameManager.set_flag("mizuki_control_phase", false)
@@ -55,11 +59,6 @@ func on_stage_start():
 		_cutscene_active = true
 		if player: player.position = Vector2(6 * map.TILE_SIZE, 6 * map.TILE_SIZE)
 		
-	# Hiệu ứng ánh sáng buổi sáng
-	var lighting = CanvasModulate.new()
-	map.add_child(lighting)
-	lighting.color = Color(0.9, 0.9, 1.0) # Sáng sủa
-	
 	if not GameManager.get_flag("post_harbor_morning_done"):
 		_play_morning_cutscene()
 	else:
@@ -102,8 +101,7 @@ func _play_morning_cutscene():
 	)
 
 func _show_morning_choices():
-	DialogueManager.show_choice(["Đẩy ra nhẹ nhàng", "Đá khỏi giường"])
-	var choice_idx = await DialogueManager.choice_made
+	var choice_idx: int = await DialogueManager.ask(["Đẩy ra nhẹ nhàng", "Đá khỏi giường"])
 	
 	if choice_idx == 0:
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("morning_push"), func():
@@ -138,16 +136,17 @@ func _simulate_food_run():
 
 func _update_ena_visuals():
 	if GameManager.get_flag("ena_released"): return
-	
-	# Tìm Ena và quay ngược 180 độ
-	for child in map.get_children():
-		if child.has_meta("is_npc"):
-			var lbl = child.get_node_or_null("Label")
-			if lbl and lbl.text == "Ena":
-				child.rotation_degrees = 180
-				# Điều chỉnh offset do quay ngược
-				child.position.y += 24
-				break
+	_set_ena_hanging(true)
+
+# Ena bị treo ngược trên ròng rọc (sprite quay 180 độ quanh tâm) hoặc được thả xuống. Chỉ quay sprite, không quay cả node,
+# để nhãn tên và gợi ý "Nói chuyện với Ena" vẫn đọc được; gọi lặp với cùng trạng thái thì không làm gì.
+func _set_ena_hanging(hanging: bool):
+	var ena = map.get_npc_node("Ena")
+	if ena == null:
+		return
+	var body = ena.get_child(0)
+	if body is Sprite2D:
+		body.rotation_degrees = 180.0 if hanging else 0.0
 
 func handle_npc_interaction(npc_name: String):
 	if _cutscene_active: return
@@ -170,14 +169,7 @@ func handle_npc_interaction(npc_name: String):
 		else:
 			var lines = "talk_kanade_post_ena" if is_ena else "talk_kanade_post"
 			DialogueManager.play_dialogue(DialogueLoader.get_lines(lines), func():
-				var p_list: Array[Entity] = [
-					GameManager.get_party_member("Ichika"),
-					GameManager.get_party_member("Kanade"),
-					GameManager.get_party_member("Mafuyu"),
-					GameManager.get_party_member("Ena"),
-					GameManager.get_party_member("Mizuki")
-				]
-				UpgradeUI.show_ui(p_list)
+				open_upgrade_ui()
 				if not UpgradeUI.closed.is_connected(_check_ena_phase_trigger):
 					UpgradeUI.closed.connect(_check_ena_phase_trigger, CONNECT_ONE_SHOT)
 			)
@@ -202,14 +194,7 @@ func handle_npc_interaction(npc_name: String):
 		if not GameManager.get_flag("ena_released"):
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_mafuyu_release"), func():
 				GameManager.set_flag("ena_released", true)
-				# Hủy quay ngược
-				for child in map.get_children():
-					if child.has_meta("is_npc"):
-						var lbl = child.get_node_or_null("Label")
-						if lbl and lbl.text == "Ena":
-							child.rotation_degrees = 0
-							child.position.y -= 24
-							break
+				_set_ena_hanging(false)
 				map._refresh_quest_label()
 			)
 		else:
@@ -238,8 +223,7 @@ func _show_training_menu():
 	
 	opts.append("Để sau.")
 	
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if opts[idx] == "Để sau.":
 		_check_ena_phase_trigger()
 		return

@@ -104,6 +104,10 @@ static func _resolve_full_path(path_or_name: String, for_save: bool = false) -> 
 		return ""
 	return SAVES_DIR + clean + ".json"
 
+# Đường dẫn slot ứng với một tên do người chơi nhập ("" nếu tên không hợp lệ), để UI biết slot đã tồn tại chưa
+static func slot_path_for_name(raw_name: String) -> String:
+	return _resolve_full_path(raw_name, true)
+
 static func _fail(message: String, as_warning: bool = false) -> bool:
 	last_error = message
 	if as_warning:

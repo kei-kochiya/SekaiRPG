@@ -220,16 +220,3 @@ func _physics_process(delta):
 		_anim_timer = 0.0
 		
 	_update_sprite_frame()
-
-# ── Legacy Stubs ───────────────────────────────────────────────────────────
-
-func _draw_dot():
-	_anim_frame = 1
-	_update_sprite_frame()
-
-func _draw_arrow(dir: Vector2):
-	if abs(dir.x) > abs(dir.y):
-		_facing = "left" if dir.x < 0 else "right"
-	else:
-		_facing = "up" if dir.y < 0 else "down"
-	_update_sprite_frame()

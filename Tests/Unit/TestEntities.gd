@@ -22,21 +22,22 @@ func test_character_passives():
 	honami.take_damage(50, "physical")
 	assert_lt(honami.current_hp, 200, "Honami takes damage when is_harbor is false")
 
+# Mọi lớp kẻ địch trong Entities/Enemies phải được đăng ký ở BattleInitializer.enemy_classes (và ngược lại),
+# để test dưới đây không bỏ sót loại nào khi thêm kẻ địch mới.
+func test_every_enemy_script_is_registered():
+	var registered := []
+	for enemy_class in BattleInitializer.enemy_classes.values():
+		registered.append(enemy_class.resource_path.get_file())
+	var on_disk := []
+	for file in DirAccess.get_files_at("res://Entities/Enemies/"):
+		if file.ends_with(".gd"):
+			on_disk.append(file)
+	on_disk.sort()
+	registered.sort()
+	assert_eq(registered, on_disk, "enemy_classes registers exactly the scripts in Entities/Enemies")
+
 func test_enemy_classes():
-	var enemies = [
-		Guard.new(),
-		Kidnapper.new(),
-		Thug.new(),
-		WarehouseWorker.new(),
-		Terrorist.new(),
-		Captain.new(),
-		PrimeMinister.new(),
-		TrainingBot.new(),
-		ReconDrone.new(),
-		Sniper.new(),
-		CyborgEnforcer.new(),
-		CyberJammer.new()
-	]
+	var enemies: Array = BattleInitializer.enemy_classes.values().map(func(c): return c.new())
 	
 	var valid_elements = ["Cool", "Happy", "Cute", "Mysterious", "Pure"]
 	

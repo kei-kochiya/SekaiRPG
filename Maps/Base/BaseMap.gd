@@ -37,7 +37,7 @@ func _ready() -> void:
 	_init_stage()
 	
 	var base_music = "base"
-	if current_stage and current_stage.has_method("get_bgm_track"):
+	if current_stage:
 		base_music = current_stage.get_bgm_track()
 			
 	AudioManager.play_music(base_music)
@@ -122,14 +122,14 @@ func _arc2_redirect_target() -> String:
 # Node của NPC đã spawn theo tên (null nếu không có)
 func get_npc_node(npc_name: String) -> Node2D:
 	for child in get_children():
-		if child.has_meta("is_npc") and child.get_meta("npc_name", "") == npc_name:
+		# Bỏ qua node đã xếp hàng chờ xóa (NPC vừa được dựng lại trong cùng frame: bản cũ vẫn còn trong cây tới cuối frame)
+		if child.has_meta("is_npc") and child.get_meta("npc_name", "") == npc_name and not child.is_queued_for_deletion():
 			return child as Node2D
 	return null
 
 # Nhân vật trang trí không tương tác (toạ độ theo ô lưới), trả về node để Stage điều khiển
 func spawn_dummy(char_name: String, grid_pos: Vector2, color: Color) -> Node2D:
-	MapUtils.create_dummy_char(self, char_name, grid_pos, color)
-	return get_child(get_child_count() - 1) as Node2D
+	return MapUtils.create_dummy_char(self, char_name, grid_pos, color)
 
 # Cho một nhân vật đi lần lượt qua các điểm (toạ độ pixel), quay mặt theo hướng đi, và chờ đến khi tới nơi
 func walk_node(node: Node2D, points: Array, speed: float = 150.0) -> void:
@@ -299,15 +299,14 @@ func _on_exit_interacted():
 		return
 	
 	# Một số Stage (Hồi kết 2) chặn cửa ra; handle_exit() trả về true nếu Stage đã tự xử lý
-	if current_stage and current_stage.has_method("handle_exit") and current_stage.handle_exit():
+	if current_stage and current_stage.handle_exit():
 		return
 	
 	_leaving = true
 	
 	# Ưu tiên đi Harbor nếu đã nhận nhiệm vụ và chưa hoàn thành
 	if GameManager.get_flag("honami_house_unlocked"):
-		DialogueManager.show_choice(["[Đến nhà Honami]", "[Đi dạo (Khu phố)]", "[Hủy]"])
-		var idx = await DialogueManager.choice_made
+		var idx: int = await DialogueManager.ask(["[Đến nhà Honami]", "[Đi dạo (Khu phố)]", "[Hủy]"])
 		if idx == 0:
 			_leave_to("res://Maps/HonamiHouse/HonamiHouseMap.tscn")
 		elif idx == 1:
@@ -385,8 +384,7 @@ func _spawn_shop_and_sim():
 	mz_col.shape = mz_shape
 	sim_zone.add_child(mz_col)
 	sim_zone.interacted.connect(func():
-		DialogueManager.show_choice(["[Bắt đầu Leo Tháp (Tầng 1-10)]", "[Xem Kỷ Lục]", "[Rời khỏi]"])
-		var idx = await DialogueManager.choice_made
+		var idx: int = await DialogueManager.ask(["[Bắt đầu Leo Tháp (Tầng 1-10)]", "[Xem Kỷ Lục]", "[Rời khỏi]"])
 		if idx == 0:
 			await ScreenFade.fade_out(0.8)
 			var p = get_node_or_null("OverworldPlayer")
@@ -418,21 +416,10 @@ func _refresh_quest_label():
 # ── Tile Helpers ─────────────────────────────────────────────────────────────
 
 func _fill_floor(x1, y1, x2, y2):
-	for x in range(x1, x2 + 1):
-		for y in range(y1, y2 + 1):
-			_place_tile("floor.png", Vector2(x, y), false)
+	MapUtils.fill_floor(self, x1, y1, x2, y2)
 
 func _draw_room_walls(x1, y1, x2, y2):
-	for x in range(x1, x2 + 1):
-		_place_tile("horizontal_wall.png", Vector2(x, y1), true)
-		_place_tile("horizontal_wall.png", Vector2(x, y2), true)
-	for y in range(y1, y2 + 1):
-		_place_tile("left_vertical_wall.png", Vector2(x1, y), true)
-		_place_tile("right_vertical_wall.png", Vector2(x2, y), true)
-	_place_tile("top_left_wall.png", Vector2(x1, y1), true)
-	_place_tile("top_right_wall.png", Vector2(x2, y1), true)
-	_place_tile("bottom_left_wall.png", Vector2(x1, y2), true)
-	_place_tile("bottom_right_wall.png", Vector2(x2, y2), true)
+	MapUtils.draw_room_walls(self, x1, y1, x2, y2)
 
 func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
 	MapUtils.place_tile(self, file, grid_pos, has_collision)
@@ -455,12 +442,7 @@ func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool):
 		add_child(body)
 
 func _remove_wall_at(grid_pos: Vector2):
-	var target_pos = grid_pos * TILE_SIZE
-	for child in get_children():
-		if child is Node2D:
-			if child.position.distance_to(target_pos) < 1.0:
-				child.queue_free()
-	_place_tile("floor.png", grid_pos, false)
+	MapUtils.remove_wall_at(self, grid_pos)
 
 func _add_room_label(text: String, grid_pos: Vector2):
 	# Bảng tên khu: căn giữa theo ô, chữ xám xanh đặc (không mờ 40% như trước) để vẫn đọc được trên sàn tối

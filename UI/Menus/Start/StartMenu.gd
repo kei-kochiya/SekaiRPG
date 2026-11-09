@@ -70,12 +70,19 @@ func _add_button(parent: Control, text: String, handler: Callable, kind: UITheme
 		btn.call_deferred("grab_focus")
 	return btn
 
+# Đang chạy một lần chuyển cảnh (fade): bấm thêm nút khác hay bấm đúp không được chạy lần thứ hai
+var _busy: bool = false
+
 func _on_continue():
+	if _busy:
+		return
+	_busy = true
 	await ScreenFade.fade_out(0.5)
 	if not GameManager.load_game(""):
+		_busy = false
 		ScreenFade.fade_in(0.3)
-		var reason = GameManager.get("last_load_error")
-		_error_label.text = reason if reason is String and reason != "" else "Không thể tải file save."
+		var reason := GameManager.last_load_error
+		_error_label.text = reason if reason != "" else "Không thể tải file save."
 		_error_label.visible = true
 
 func _on_load_menu():
@@ -83,11 +90,17 @@ func _on_load_menu():
 	add_child(save_load_scene)
 
 func _on_new_game():
+	if _busy:
+		return
+	_busy = true
 	await ScreenFade.fade_out(1.0)
 	GameManager.reset_game()
 	get_tree().change_scene_to_file("res://Maps/Prologue/PrologueMap.tscn")
 
 func _on_sandbox():
+	if _busy:
+		return
+	_busy = true
 	await ScreenFade.fade_out(0.5)
 	get_tree().change_scene_to_file("res://UI/Menus/Sandbox/SandboxMenu.tscn")
 

@@ -8,14 +8,12 @@ func on_start(main: Node):
 func check_battle_end(main: Node) -> bool:
 	# Thắng nếu toàn bộ kẻ địch bị hạ gục
 	if AIManager.get_alive_targets(main.enemy_team).is_empty():
-		main.hud.show_victory()
-		main.battle_over = true
+		main.end_battle(true)
 		return true
 		
 	# Thua nếu toàn bộ phe ta bị hạ gục
 	if AIManager.get_alive_targets(main.player_team).is_empty():
-		main.hud.show_defeat()
-		main.battle_over = true
+		main.end_battle(false)
 		return true
 		
 	return false

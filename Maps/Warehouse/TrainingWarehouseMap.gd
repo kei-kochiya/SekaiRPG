@@ -133,32 +133,16 @@ func _build_map():
 	_place_tile("chest.png", Vector2(15, 7), false)
 
 func _fill_floor(x1, y1, x2, y2):
-	for x in range(x1, x2 + 1):
-		for y in range(y1, y2 + 1):
-			_place_tile("floor.png", Vector2(x, y), false)
+	MapUtils.fill_floor(self, x1, y1, x2, y2)
 
 func _draw_room_walls(x1, y1, x2, y2):
-	for x in range(x1, x2 + 1):
-		_place_tile("horizontal_wall.png", Vector2(x, y1), true)
-		_place_tile("horizontal_wall.png", Vector2(x, y2), true)
-	for y in range(y1, y2 + 1):
-		_place_tile("left_vertical_wall.png", Vector2(x1, y), true)
-		_place_tile("right_vertical_wall.png", Vector2(x2, y), true)
-	_place_tile("top_left_wall.png", Vector2(x1, y1), true)
-	_place_tile("top_right_wall.png", Vector2(x2, y1), true)
-	_place_tile("bottom_left_wall.png", Vector2(x1, y2), true)
-	_place_tile("bottom_right_wall.png", Vector2(x2, y2), true)
+	MapUtils.draw_room_walls(self, x1, y1, x2, y2)
 
 func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
 	MapUtils.place_tile(self, file, grid_pos, has_collision)
 
 func _remove_wall_at(grid_pos: Vector2):
-	var target_pos = grid_pos * TILE_SIZE
-	for child in get_children():
-		if child is Node2D:
-			if child.position.distance_to(target_pos) < 1.0:
-				child.queue_free()
-	_place_tile("floor.png", grid_pos, false)
+	MapUtils.remove_wall_at(self, grid_pos)
 
 func _build_mission_hud():
 	var canvas = CanvasLayer.new()

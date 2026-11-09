@@ -53,7 +53,8 @@ func _build_ui():
 	hp_bar.add_child(hp_label)
 	vbox.add_child(hp_bar)
 
-	if not is_player:
+	# Thanh Break chỉ có ý nghĩa với quái: nhân vật đứng phe địch (Mafuyu cuối, Ena/Kanade bài kiểm tra...) không bị phá Break
+	if not is_player and not entity.is_character:
 		break_bar = ProgressBar.new()
 		UITheme.style_bar(break_bar, UITheme.BREAK, 6)
 		vbox.add_child(break_bar)

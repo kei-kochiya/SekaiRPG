@@ -15,6 +15,9 @@ const ENEMY_LIMIT = 5
 const PLAYER_PANEL_WIDTH = 340
 const CONTROLS_WIDTH = 288
 
+# Đang chuyển cảnh (fade): bỏ qua lần bấm thứ hai
+var _busy: bool = false
+
 var selected_players: Array = []
 var selected_enemies: Array = []
 var sandbox_player_instances: Dictionary = {}
@@ -314,6 +317,8 @@ func _on_upgrade():
 	UpgradeUI.show_ui(entities)
 
 func _on_start():
+	if _busy:
+		return
 	if selected_players.is_empty():
 		_show_status("Vui lòng chọn ít nhất 1 nhân vật phe ta!", UITheme.DANGER_TEXT)
 		return
@@ -338,10 +343,14 @@ func _on_start():
 		LevelManager.set_initial_level(enemy, e_lv)
 		GameManager.sandbox_enemy_team.append(enemy)
 
+	_busy = true
 	await ScreenFade.fade_out(0.5)
 	GameManager.trigger_battle()
 
 func _on_back():
+	if _busy:
+		return
+	_busy = true
 	GameManager.is_sandbox = false
 	GameManager.sandbox_player_team.clear()
 	GameManager.sandbox_enemy_team.clear()

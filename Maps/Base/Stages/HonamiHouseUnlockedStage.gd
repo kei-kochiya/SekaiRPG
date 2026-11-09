@@ -11,15 +11,15 @@ func get_npc_positions() -> Dictionary:
 		"Mafuyu": Vector2(24 * map.TILE_SIZE, 11 * map.TILE_SIZE),
 	}
 
+# BaseMap áp ánh sáng này trước fade_in nên không bị "nháy sáng"
+func get_scene_lighting() -> Color:
+	return Color(0.9, 0.9, 1.0)
+
 func on_stage_start():
 	var player = map.get_node_or_null("OverworldPlayer")
 	if player:
 		player.character_color = map.NPC_COLORS["Ichika"]
 		
-	var lighting = CanvasModulate.new()
-	map.add_child(lighting)
-	lighting.color = Color(0.9, 0.9, 1.0)
-	
 	if not GameManager.get_flag("honami_unlocked_intro_done"):
 		_cutscene_active = true
 		if player:
@@ -56,14 +56,7 @@ func handle_npc_interaction(npc_name: String):
 			)
 	elif npc_name == "Kanade":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade_post"), func():
-			var p_list: Array[Entity] = [
-				GameManager.get_party_member("Ichika"),
-				GameManager.get_party_member("Kanade"),
-				GameManager.get_party_member("Mafuyu"),
-				GameManager.get_party_member("Ena"),
-				GameManager.get_party_member("Mizuki")
-			]
-			UpgradeUI.show_ui(p_list)
+			open_upgrade_ui()
 		)
 	elif npc_name == "Ena":
 		DialogueManager.play_dialogue([{"text": "Bác sĩ gì mà tay vịn cứng như thép... Đau điếng cả người.", "type": "dialogue", "name": "Ena", "color": Color("#b86028")}])
@@ -71,8 +64,7 @@ func handle_npc_interaction(npc_name: String):
 		DialogueManager.play_dialogue([{"text": "Bà bác sĩ đó cũng bảnh đấy chứ, ha ha!", "type": "dialogue", "name": "Mizuki", "color": Color("#d8a4cc")}])
 
 func _show_mafuyu_menu():
-	DialogueManager.show_choice(["[Báo cáo Intel]", "[Tập luyện]", "[Hủy]"])
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(["[Báo cáo Intel]", "[Tập luyện]", "[Hủy]"])
 	if idx == 0:
 		_start_finale_arc()
 	elif idx == 1:
@@ -80,8 +72,7 @@ func _show_mafuyu_menu():
 
 # Sau khi đã bắt đầu màn Tác chiến/Thủ Tướng (kể cả khi thua và bị đưa về căn cứ): tiếp tục nhiệm vụ hoặc luyện tập thêm
 func _show_resume_menu():
-	DialogueManager.show_choice(["[Tiếp tục nhiệm vụ]", "[Tập luyện]", "[Hủy]"])
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(["[Tiếp tục nhiệm vụ]", "[Tập luyện]", "[Hủy]"])
 	if idx == 0:
 		_resume_finale_arc()
 	elif idx == 1:
@@ -105,8 +96,7 @@ func _show_training_menu():
 	var opts: Array = ["Ichika (5 Waves)", "Kanade (5 Waves)", "Ena (5 Waves)", "Mizuki (5 Waves)", "Mafuyu (5 Waves)", "Để sau."]
 	var mapping = ["Ichika", "Kanade", "Ena", "Mizuki", "Mafuyu"]
 	
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if opts[idx] == "Để sau.": return
 	
 	GameManager.begin_training([mapping[idx]])

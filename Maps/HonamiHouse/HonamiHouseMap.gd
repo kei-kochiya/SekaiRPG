@@ -80,8 +80,7 @@ func _build_house():
 			if not _busy:
 				DialogueManager.play_dialogue([{"text": DOOR_BLOCKED, "type": "narrator"}])
 			return
-		DialogueManager.show_choice(["[Trở về Nightcord]", "[Ở lại]"])
-		var idx = await DialogueManager.choice_made
+		var idx: int = await DialogueManager.ask(["[Trở về Nightcord]", "[Ở lại]"])
 		if idx == 0:
 			await ScreenFade.fade_out(1.0)
 			GameManager.last_player_position = Vector2.ZERO
@@ -189,8 +188,7 @@ func _show_training_menu():
 		opts.append("%s (5 Waves)" % member)
 	opts.append("Để sau.")
 	
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if idx >= mapping.size(): return
 	
 	GameManager.begin_training([mapping[idx]])
@@ -228,8 +226,7 @@ func _talk_arc2():
 	)
 
 func _show_arc2_menu():
-	DialogueManager.show_choice(["[Luyện tập]", "[Nâng cấp]", "[Đối đầu Mafuyu]", "[Rời đi]"])
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(["[Luyện tập]", "[Nâng cấp]", "[Đối đầu Mafuyu]", "[Rời đi]"])
 	if idx == 0:
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_training_offer_arc2"), func():
 			_show_arc2_training_menu()
@@ -260,8 +257,7 @@ func _show_arc2_training_menu():
 		groups.append(members.duplicate())
 	opts.append("Để sau.")
 	
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if idx >= groups.size(): return
 	
 	_busy = true
@@ -281,8 +277,7 @@ func _open_arc2_upgrade():
 	UpgradeUI.show_ui(p_list)
 
 func _ask_confront():
-	DialogueManager.show_choice(["[Đối đầu Mafuyu ngay]", "[Chưa, chuẩn bị thêm]"])
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(["[Đối đầu Mafuyu ngay]", "[Chưa, chuẩn bị thêm]"])
 	if idx != 0: return
 	_go_to_final()
 

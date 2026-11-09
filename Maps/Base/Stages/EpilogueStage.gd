@@ -72,8 +72,7 @@ func _show_honami_menu():
 		bar_idx = opts.size()
 		opts.append("[Đi quán bar]")
 	opts.append("[Hủy]")
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if idx == 0:
 		_show_training_menu()
 	elif idx == 1:
@@ -106,11 +105,7 @@ func _go_to_bar():
 	)
 
 func _open_upgrade():
-	var p_list: Array[Entity] = []
-	for member in TRAINEES:
-		if GameManager.is_member_alive_in_story(member):
-			p_list.append(GameManager.get_party_member(member))
-	UpgradeUI.show_ui(p_list)
+	open_upgrade_ui(TRAINEES)
 
 # Luyện tập không giới hạn: chọn Ichika, Honami hoặc cả hai (cả hai = 10 wave). Không đặt cờ training_*_done.
 func _show_training_menu():
@@ -129,8 +124,7 @@ func _show_training_menu():
 		groups.append(members.duplicate())
 	opts.append("Để sau.")
 
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if idx >= groups.size(): return
 
 	_cutscene_active = true # chặn tương tác lặp trong lúc chuyển cảnh

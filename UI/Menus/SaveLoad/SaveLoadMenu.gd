@@ -280,6 +280,12 @@ func _on_create_new_save():
 		var dt = Time.get_datetime_dict_from_system()
 		fname = "save_%02d%02d_%02d%02d" % [dt["day"], dt["month"], dt["hour"], dt["minute"]]
 
+	# Trùng tên một slot đã có: phải xác nhận ghi đè như nút "Ghi đè", không lặng lẽ thay mất file cũ
+	var existing := SaveManager.slot_path_for_name(fname)
+	if existing != "" and FileAccess.file_exists(existing):
+		_confirm_overwrite(existing)
+		return
+
 	if GameManager.save_game(fname):
 		new_save_edit.text = ""
 		_set_status("Đã lưu file \"%s\"." % fname, UITheme.SUCCESS)
@@ -288,8 +294,8 @@ func _on_create_new_save():
 		_set_status(_save_error_text(), UITheme.DANGER_TEXT)
 
 func _save_error_text() -> String:
-	var err = GameManager.get("last_save_error")
-	if err is String and err != "":
+	var err := GameManager.last_save_error
+	if err != "":
 		return err
 	return "Không thể lưu game. Tên file không hợp lệ hoặc không ghi được."
 
@@ -304,8 +310,8 @@ func _on_load_save(path: String):
 		return
 	if not GameManager.load_game(path):
 		ScreenFade.fade_in(0.3)
-		var err = GameManager.get("last_load_error")
-		_set_status(err if (err is String and err != "") else "Không thể tải file save.", UITheme.DANGER_TEXT)
+		var err := GameManager.last_load_error
+		_set_status(err if err != "" else "Không thể tải file save.", UITheme.DANGER_TEXT)
 		_busy = false
 		return
 	# Tải thành công: nếu mở từ PauseMenu thì ẩn nó và bỏ pause để cảnh mới chạy được

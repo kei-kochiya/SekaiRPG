@@ -54,7 +54,9 @@ static func upgrade_stat(entity: Entity, stat_name: String) -> bool:
 	entity.set(stat_name, current_val + actual_increment)
 	entity.skill_points -= UPGRADE_COST
 
-	if stat_name == "max_hp":
+	# Thành viên đang gục (0 HP) không được nâng cấp để "sống lại" với vài chục HP: BattleInitializer._revive_downed
+	# chỉ hồi 50% cho người còn 0 HP, nên hồi nhầm ở đây sẽ làm họ vào trận với máu gần như trống.
+	if stat_name == "max_hp" and entity.current_hp > 0:
 		entity.current_hp = min(entity.current_hp + actual_increment, entity.max_hp)
 		
 	return true

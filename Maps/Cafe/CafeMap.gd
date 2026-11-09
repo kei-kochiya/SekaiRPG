@@ -123,8 +123,7 @@ func _run_logic():
 	else:
 		# Initial sequence
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("cafe_p1"), func():
-			DialogueManager.show_choice(["[Hất tay ra] Xê ra! Tụi này tao cân hết!", "[Nổi cáu] Mày cản tao? Muốn ăn đòn à?!"])
-			var choice_idx = await DialogueManager.choice_made
+			var choice_idx: int = await DialogueManager.ask(["[Hất tay ra] Xê ra! Tụi này tao cân hết!", "[Nổi cáu] Mày cản tao? Muốn ăn đòn à?!"])
 			if choice_idx == 0:
 				DialogueManager.play_dialogue(DialogueLoader.get_lines("cafe_choice_fight_thugs"), func():
 					_trigger_thugs_battle()

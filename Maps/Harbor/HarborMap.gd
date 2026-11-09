@@ -92,10 +92,7 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 	sprite.position = Vector2(0, -16)
 	root.add_child(sprite)
 	
-	var lbl = Label.new()
-	lbl.text = label
-	lbl.position = Vector2(-40, -70)
-	root.add_child(lbl)
+	root.add_child(MapUtils.make_world_label(label, UITheme.TEXT, -70.0))
 	
 	var zone = InteractableZone.new()
 	zone.prompt_text = "Nhấn ENTER để chiến đấu"

@@ -10,22 +10,6 @@ const SCRIPTED_IDS = [
 	"mizuki_vs_ena_forced", "mizuki_vs_kanade", "ichika_vs_kanade_slow", "final_mafuyu",
 ]
 
-# Giả lập tối thiểu những gì scenario đọc từ Main (đội hình + HUD để hiện thông báo).
-class FakeHud extends RefCounted:
-	func show_announcement(_text: String, _color: Color = Color.WHITE): pass
-	func show_victory(): pass
-	func show_defeat(): pass
-
-class FakeMain extends Node:
-	var player_team: Array
-	var enemy_team: Array
-	var hud = FakeHud.new()
-	var battle_over: bool = false
-	var shaker = null
-	func _init(players: Array, enemies: Array):
-		player_team = players
-		enemy_team = enemies
-
 func test_every_arc_battle_builds_valid_teams():
 	GameManager.reset_game()
 	for id in SCRIPTED_IDS:
@@ -110,7 +94,7 @@ func test_forced_duel_overrides_mizuki_and_skips_ena():
 	var scenario = ForcedDuelScenario.new()
 	var mizuki = Mizuki.new()
 	var ena = Ena.new()
-	var fake = FakeMain.new([mizuki], [ena])
+	var fake = FakeBattleMain.new([mizuki], [ena])
 	assert_eq(scenario.get_forced_action(fake, mizuki)["action"], "attack", "Mizuki's command is forced to attack")
 	assert_eq(scenario.get_forced_action(fake, mizuki)["target"], ena, "Mizuki is forced onto Ena")
 	assert_true(scenario.skips_turn(fake, ena), "Ena never fights back")
@@ -128,7 +112,7 @@ func test_slow_strike_restricts_actions_and_finishes():
 	var scenario = SlowStrikeScenario.new()
 	var ichika = Ichika.new()
 	var kanade = Kanade.new()
-	var fake = FakeMain.new([ichika], [kanade])
+	var fake = FakeBattleMain.new([ichika], [kanade])
 	assert_eq(scenario.get_allowed_actions(fake, ichika), ["shadow_strike"], "Only Ảnh Sát is available")
 	kanade.max_hp = 5000
 	kanade.current_hp = 5000
@@ -140,7 +124,7 @@ func test_slow_strike_restricts_actions_and_finishes():
 func test_forced_loss_ends_after_a_few_turns():
 	var scenario = ForcedLossScenario.new()
 	var ena = Ena.new()
-	var fake = FakeMain.new([ena], [PoliceOfficer.new()])
+	var fake = FakeBattleMain.new([ena], [PoliceOfficer.new()])
 	for i in range(ForcedLossScenario.MAX_PLAYER_TURNS):
 		scenario.on_turn_start(fake, ena)
 	assert_false(scenario._overwhelmed, "Ena still fights during her allotted turns")

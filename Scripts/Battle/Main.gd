@@ -22,6 +22,8 @@ var shaker: Node
 
 var scenario: BattleScenario
 var is_scripting: bool = false
+# Banner kết quả chỉ hiện một lần dù nhiều đường cùng kết thúc trận (bỏ qua, kịch bản, vòng lặp)
+var _result_shown: bool = false
 
 func _ready():
 	"""
@@ -55,14 +57,44 @@ func _ready():
 	add_child(shaker)
 	
 	for entity in all_entities:
-		entity.died.connect(_on_entity_died.bind(entity))
-		if entity.has_signal("damage_received_detailed"):
-			entity.damage_received_detailed.connect(_on_entity_damage_received.bind(entity))
+		_connect_combatant(entity)
 	
 	if GameManager.is_sandbox:
 		_setup_sandbox_exit_button()
 	
 	scenario.on_start(self)
+
+func _connect_combatant(e: Entity):
+	"""Nối tín hiệu tử trận và rung màn hình cho một thực thể (mỗi thực thể chỉ nối một lần)."""
+	if not e.died.is_connected(_on_entity_died.bind(e)):
+		e.died.connect(_on_entity_died.bind(e))
+	if not e.damage_received_detailed.is_connected(_on_entity_damage_received.bind(e)):
+		e.damage_received_detailed.connect(_on_entity_damage_received.bind(e))
+
+func add_combatant(e: Entity, on_player_side: bool = false):
+	"""Cho một thực thể vào trận giữa chừng (quái tiếp viện, đồng minh gia nhập): vào đội, nối tín hiệu, xóa trạng thái cũ.
+	Gọi refresh_battle_state() sau khi đã thêm/bớt xong để HUD và timeline cập nhật."""
+	(player_team if on_player_side else enemy_team).append(e)
+	all_entities.append(e)
+	_connect_combatant(e)
+	prepare_entity(e)
+
+func refresh_battle_state():
+	"""Dựng lại ngữ cảnh đội, HUD, thanh hành động và timeline sau khi kịch bản đổi đội hình giữa trận."""
+	_refresh_team_context()
+	hud.setup(player_team, enemy_team)
+	_setup_gauge_teams()
+	_regenerate_timeline()
+
+func end_battle(victory: bool):
+	"""Kết thúc trận: hiện banner thắng/thua đúng một lần rồi đánh dấu battle_over."""
+	if not _result_shown:
+		_result_shown = true
+		if victory:
+			hud.show_victory()
+		else:
+			hud.show_defeat()
+	battle_over = true
 
 func prepare_entity(e: Entity):
 	"""Xóa trạng thái cũ và áp hồi chiêu khởi đầu cho một thực thể (cả người vào giữa trận, vd. kịch bản Harbor)."""
@@ -74,10 +106,17 @@ func prepare_entity(e: Entity):
 func _exit_tree():
 	# Gỡ buff/debuff tạm thời khỏi đội hình bền vững và khôi phục tốc độ game nếu thoát giữa hitstop.
 	# Gồm cả thành viên đã rời trận giữa chừng (vd. bị tráo khỏi đội hình bởi kịch bản).
-	for e in all_entities + GameManager.party.values():
+	var persistent: Array = GameManager.party.values()
+	for e in all_entities + persistent:
 		if is_instance_valid(e):
 			e.clear_temp_mods()
 			e.untargetable = false # kịch bản có thể đặt cờ này lên nhân vật bền vững (vd. Ichika bị đóng băng)
+	# Kẻ địch và bản sao dựng riêng cho trận này không còn ai giữ: giải phóng để không rò rỉ node mồ côi.
+	# Sandbox giữ các nhân vật phe ta (menu dùng lại để đánh tiếp) nhưng kẻ địch được dựng mới mỗi lần bắt đầu.
+	var disposable: Array = enemy_team if GameManager.is_sandbox else all_entities
+	for e in disposable:
+		if is_instance_valid(e) and not persistent.has(e):
+			e.queue_free()
 	Engine.time_scale = 1.0
 
 func _refresh_team_context():
@@ -217,12 +256,15 @@ func _on_skip_requested():
 	for e in enemy_team.duplicate():
 		if e.current_hp > 0:
 			e.take_damage(99999, "pure")
-	hud.show_victory()
+	end_battle(true)
 
 func _ai_turn(actor: Entity):
 	# Xử lý lượt đi của AI đối thủ (Đã làm chậm để người chơi kịp quan sát).
 	await scenario.on_before_action(self, actor)
 	await get_tree().create_timer(GameManager.battle_speed, false).timeout
+	# Nút bỏ qua/kịch bản có thể đã kết thúc trận hoặc hạ kẻ địch này trong lúc chờ
+	if battle_over or actor.current_hp <= 0:
+		return
 	
 	var decision = AIManager.pick_action(actor, actor.enemies, actor.allies, timeline)
 	var action: String = decision["action"]
@@ -327,11 +369,11 @@ func _on_entity_died(entity: Entity):
 		else:
 			for p in player_team:
 				LevelManager.gain_exp(p, exp_reward)
-	if not entity.is_character and entity.gives_exp:
+	# Sandbox không trả credits thật (credits là kho chung và được lưu vào save)
+	if not entity.is_character and entity.gives_exp and not GameManager.is_sandbox:
 		var credits_reward = entity.level * 25 + randi_range(15, 35)
-		if GameManager.has_method("add_credits"):
-			GameManager.add_credits(credits_reward)
-			print("[Battle Reward] Nhận được %d Credits từ %s!" % [credits_reward, entity.entity_name])
+		GameManager.add_credits(credits_reward)
+		print("[Battle Reward] Nhận được %d Credits từ %s!" % [credits_reward, entity.entity_name])
 	
 	if scenario:
 		scenario.on_entity_died(self, entity)

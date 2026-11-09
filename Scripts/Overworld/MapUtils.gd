@@ -23,6 +23,33 @@ static func place_tile(parent: Node2D, file: String, grid_pos: Vector2, has_coll
 		body.add_child(col)
 		parent.add_child(body)
 
+# Sàn phẳng phủ kín hình chữ nhật ô lưới [x1..x2] x [y1..y2] (không va chạm)
+static func fill_floor(parent: Node2D, x1: int, y1: int, x2: int, y2: int):
+	for x in range(x1, x2 + 1):
+		for y in range(y1, y2 + 1):
+			place_tile(parent, "floor.png", Vector2(x, y))
+
+# Khung tường bao quanh hình chữ nhật ô lưới (có va chạm); thứ tự đặt giữ nguyên để thứ tự vẽ không đổi
+static func draw_room_walls(parent: Node2D, x1: int, y1: int, x2: int, y2: int):
+	for x in range(x1, x2 + 1):
+		place_tile(parent, "horizontal_wall.png", Vector2(x, y1), true)
+		place_tile(parent, "horizontal_wall.png", Vector2(x, y2), true)
+	for y in range(y1, y2 + 1):
+		place_tile(parent, "left_vertical_wall.png", Vector2(x1, y), true)
+		place_tile(parent, "right_vertical_wall.png", Vector2(x2, y), true)
+	place_tile(parent, "top_left_wall.png", Vector2(x1, y1), true)
+	place_tile(parent, "top_right_wall.png", Vector2(x2, y1), true)
+	place_tile(parent, "bottom_left_wall.png", Vector2(x1, y2), true)
+	place_tile(parent, "bottom_right_wall.png", Vector2(x2, y2), true)
+
+# Phá các node tại một ô (vd. tường) rồi trải sàn lên chỗ đó: mở lối đi qua tường
+static func remove_wall_at(parent: Node2D, grid_pos: Vector2):
+	var target_pos = grid_pos * TILE_SIZE
+	for child in parent.get_children():
+		if child is Node2D and child.position.distance_to(target_pos) < 1.0:
+			child.queue_free()
+	place_tile(parent, "floor.png", grid_pos)
+
 static func place_road_asset(parent: Node2D, file: String, grid_pos: Vector2):
 	var tile_pos = grid_pos * TILE_SIZE
 	var sprite = Sprite2D.new()
@@ -69,7 +96,9 @@ static func make_world_label(text: String, color: Color = UITheme.TEXT, y: float
 	lbl.position = Vector2(-lbl.get_minimum_size().x / 2.0, y)
 	return lbl
 
-static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2, color: Color):
+# Dựng một nhân vật đứng yên (sprite hoặc khối màu 16x24, kèm nhãn tên) tại ô lưới và trả về node gốc của nó.
+# `sprite_file` (trong PERSON_ROOT): nhân vật chưa có sprite riêng (cảnh sát...) thì thay khối màu bằng SVG này nếu có.
+static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2, color: Color, sprite_file: String = "") -> Node2D:
 	var root = Node2D.new()
 	root.position = grid_pos * TILE_SIZE
 	
@@ -91,8 +120,17 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 			root.add_child(vis)
 	
 	root.add_child(make_world_label(p_name, color))
-
+	
+	if sprite_file != "" and ResourceLoader.exists(PERSON_ROOT + sprite_file) and root.get_child(0) is ColorRect:
+		root.get_child(0).queue_free()
+		var sp := Sprite2D.new()
+		sp.texture = load(PERSON_ROOT + sprite_file)
+		sp.position = Vector2(0, -16)
+		root.add_child(sp)
+		root.move_child(sp, 0)
+	
 	parent.add_child(root)
+	return root
 
 static func create_visual_npc(parent: Node2D, npc_name: String, pos: Vector2, color: Color):
 	var root = Node2D.new()

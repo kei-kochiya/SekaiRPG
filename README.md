@@ -8,12 +8,12 @@ Dialogue and in-game text are in Vietnamese.
 
 - **Action Value combat** — speed decides turn order; the turn strip at the top of the battle screen shows who acts next.
 - **5-element chart and Weakness Break** — hitting an enemy's weakness drains its Break gauge; empty gauge means a stunned turn and a knock-back on the timeline.
-- **Story mode** — 16 quests, from the prologue ambush through the Prime Minister's fall to the collapse of Nightcord and an epilogue, driven by `Quests/` definitions and `Data/storyline/*.json` dialogue. The last arc (Ena's bounty hunt, the interrogation warehouse, the mole, Mafuyu's betrayal) ends in a fight against a Mafuyu who mirrors every upgrade you gave her, and unlocks a post-game base.
+- **Story mode** — 16 quests, from the prologue ambush through the Prime Minister's fall to the collapse of Nightcord and an epilogue, driven by `Quests/` definitions and `Data/storyline/*.json` dialogue. The story follows the novel "Giao ước lúc 25h" (events, details and each character's voice) with a few gameplay twists: the day-7 training trial, Ena's convoy fight, Honami's sparring and the Shiho bar scene come straight from its chapters. The last arc (Ena's bounty hunt, the interrogation warehouse, the mole, Mafuyu's betrayal) ends in a fight against a Mafuyu who mirrors every upgrade you gave her, and unlocks a post-game base.
 - **6 playable characters, 13 enemy types**, crits, status effects (Bleed, Poison, Stun), cooldowns and once-per-battle ultimates.
 - **Holo-Simulation** — a 10-floor roguelite tower with 8 blessings and two rest stops.
 - **Economy** — credits, treasure chests, a vending machine and consumables usable in battle.
 - **Sandbox** — pick any team and enemies and fight; also upgrade stats with skill points.
-- **Save system** — multiple slots in `user://saves/`, quick save, autosave.
+- **Save system** — multiple slots in `user://saves/`, quick save, autosave. Options (battle speed, volume, reduce screen shake, skip-battle unlock) are kept separately in `user://settings.cfg`.
 - **Mobile controls** — virtual joystick and buttons on Android (`gl_compatibility` renderer, landscape).
 
 ## Running
@@ -37,7 +37,7 @@ Run only some suites by naming them after `--`:
 godot --headless --path . res://Tests/TestRunnerScene.tscn -- TestResources TestCombat
 ```
 
-`TestResources` loads every script, scene and resource in the project, so it catches parse errors and broken paths even in code the other suites never touch. New tests: add a `func test_*()` to a suite in `Tests/Unit/` (see `BaseTest.gd` for `assert_*` helpers).
+`TestResources` loads every `.gd`, `.tscn` and `.tres` file of the game (not the editor addons), so it catches parse errors and broken paths even in code the other suites never touch. The runner exits 1 on any failure, an unknown suite name, a suite that does not compile, or a test that runs no assertion. `TestStaticChecks` scans the code for story flags and dialogue keys that do not exist, and `TestBattleRegistry` pins the setup of every existing scripted battle so a cleanup cannot silently change the hand-tuned difficulty. New tests: add a `func test_*()` to a suite in `Tests/Unit/` (see `BaseTest.gd` for `assert_*` helpers).
 
 Screenshots of UI screens for visual checks (needs a window, not headless):
 
@@ -55,16 +55,16 @@ Data/       Dialogue (storyline/*.json) and mission battle teams (battles/*.json
 Entities/   Entity.gd base class, Characters/ (6), Enemies/ (13)
 Maps/       Overworld maps; most build themselves in code with Scripts/Overworld/MapUtils
 Quests/     QuestDefinition resources and QuestRegistry
-Scripts/    Battle/ (engine, scenarios, HoloSim), Core/ (GameManager, SaveManager, StoryState), Overworld/, Systems/
+Scripts/    Battle/ (engine, scenarios, HoloSim), Core/ (GameManager, SaveManager, StoryState, GameSettings), Overworld/, Systems/, Editor/ (theme builder)
 Tests/      TestRunner, Unit/ suites, screenshot tool
-UI/         UITheme (design tokens), Battle/, Menus/, Popups/, Systems/
+UI/         UITheme (design tokens), Battle/, Effects/, HoloSim/, Menus/, Popups/, Systems/
 addons/     godot_mcp (editor tooling, see below)
 ```
 
 How it fits together:
 
 - **`GameManager`** (autoload) holds the party, credits, inventory and `StoryState` flags, and routes battles and scene changes. `SaveManager` serialises it to JSON.
-- **`Scripts/Battle/Main.gd`** runs the turn loop. `BattleInitializer` builds the teams and picks a `BattleScenario` (default, prologue, harbor boss, street survival, prime minister, holo-sim); scenarios hook into the loop (`on_start`, `on_turn_start`, `on_action_executed`, `on_entity_died`, `check_battle_end`...).
+- **`Scripts/Battle/Main.gd`** runs the turn loop. `BattleInitializer` builds the teams and picks a `BattleScenario` from `Scripts/Battle/Scenarios/` (default, scripted, prologue, harbor boss, street survival, prime minister, holo-sim, forced loss/duel, frozen ally, slow strike, training trial, convoy waves, sparring); scenarios hook into the loop (`on_start`, `on_turn_start`, `on_action_executed`, `on_entity_died`, `check_battle_end`...) and use `Main.add_combatant()`, `refresh_battle_state()` and `end_battle()` instead of touching the teams or the HUD directly.
 - Persistent party members live across battles and into saves, so in-battle stat changes must go through `Entity.add_temp_mod()`; they are reverted when the battle scene exits.
 - **Combat rules** — damage = `(ATK × skill − DEF) × (1 − RES/100) × element`, minimum 5% of ATK. Element chart: Cool > Happy > Cute > Cool, and Pure ↔ Mysterious, ×1.25 (×0.8 when resisted). Break damage is `0.4 × dmg + 25` on a weakness hit and `0.15 × dmg + 10` on a neutral hit; breaking an enemy stuns it one turn and pushes it back 3000 AV.
 

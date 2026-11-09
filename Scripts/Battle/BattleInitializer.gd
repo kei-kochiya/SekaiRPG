@@ -174,22 +174,29 @@ static func _named(enemies: Array, names: Array) -> Array:
 		enemies[i].entity_name = names[i]
 	return enemies
 
+# Dựng một kẻ địch theo id loại (xem enemy_classes) ở cấp `lv`; `p_name` (nếu có) thay tên mặc định của loại đó.
+static func create_enemy(type_id: String, lv: int, p_name: String = "") -> Entity:
+	var enemy_class = enemy_classes.get(type_id)
+	if enemy_class == null:
+		GameLogger.error("BattleInitializer", "Không tìm thấy Class cho loại kẻ địch: %s" % type_id)
+		return null
+	var e: Entity = enemy_class.new()
+	if p_name != "":
+		e.entity_name = p_name
+	LevelManager.set_initial_level(e, lv)
+	return e
+
 static func _create_enemies(type_id: String, count: int, lv: int) -> Array:
 	"""
-	Tạo danh sách kẻ địch bằng cách khởi tạo các Class tương ứng.
+	Tạo danh sách kẻ địch cùng loại; nhiều hơn một thì đánh số sau tên ("Khủng Bố 1", "Khủng Bố 2"...).
 	"""
 	var team = []
-	var enemy_class = enemy_classes.get(type_id)
-	
-	if enemy_class == null:
-		print("[BattleInitializer] Lỗi: Không tìm thấy Class cho loại kẻ địch: ", type_id)
-		return []
-	
 	for i in range(count):
-		var e = enemy_class.new()
-		if count > 1: e.entity_name += " " + str(i + 1)
-		
-		LevelManager.set_initial_level(e, lv)
+		var e := create_enemy(type_id, lv)
+		if e == null:
+			return []
+		if count > 1:
+			e.entity_name += " " + str(i + 1)
 		team.append(e)
 	return team
 
@@ -307,187 +314,93 @@ static func build_final_mafuyu() -> Entity:
 	floor_ref.free()
 	return boss
 
+static func _party(names: Array) -> Array:
+	"""Các thành viên thật (bền vững) theo tên; thiếu ai thì chỗ đó là null và Main.gd sẽ lọc bỏ."""
+	return names.map(func(n): return GameManager.get_party_member(n))
+
+static func _battle(party_names: Array, enemies: Array, scenario: BattleScenario) -> Dictionary:
+	return {"player_team": _party(party_names), "enemy_team": enemies, "scenario": scenario}
+
+# Kẻ địch là nhân vật chính (cùng class với thành viên), dựng mới ở cấp cho trước
+static func _character_enemy(char_name: String, lv: int) -> Entity:
+	var e: Entity = character_classes[char_name].new()
+	LevelManager.set_initial_level(e, lv)
+	return e
+
+# Cấp của thành viên thật, hoặc `fallback` nếu thiếu (dùng cho các bản sao đối đầu đồng đội)
+static func _party_level(char_name: String, fallback: int) -> int:
+	var member: Entity = GameManager.get_party_member(char_name)
+	return member.level if member else fallback
+
 static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 	"""
 	Khởi tạo các trận đấu theo kịch bản cốt truyện.
 	"""
 	var registry = {
 		"mizuki_vs_mafuyu": func():
-			var mizuki = GameManager.get_party_member("Mizuki")
-			var mafuyu = Mafuyu.new()
+			var mafuyu := _character_enemy("Mafuyu", 100)
 			mafuyu.entity_name = "Mafuyu (BOSS)"
-			LevelManager.set_initial_level(mafuyu, 100)
-			return {
-				"player_team": [mizuki],
-				"enemy_team": [mafuyu],
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Mizuki"], [mafuyu], ScriptedBattleScenario.new()),
 		"ena_vs_mizuki": func():
-			var mizuki_enemy = Mizuki.new()
-			var party_mizuki = GameManager.get_party_member("Mizuki")
-			var lv = party_mizuki.level if party_mizuki else 25
-			LevelManager.set_initial_level(mizuki_enemy, lv)
-			return {
-				"player_team": [GameManager.get_party_member("Ena")],
-				"enemy_team": [mizuki_enemy],
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Ena"], [_character_enemy("Mizuki", _party_level("Mizuki", 25))], ScriptedBattleScenario.new()),
 		"ena_vs_thugs": func():
-			return {
-				"player_team": [GameManager.get_party_member("Ena")],
-				"enemy_team": _create_enemies("thug", 3, 25),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Ena"], _create_enemies("thug", 3, 25), ScriptedBattleScenario.new()),
 		"harbor_boss": func():
-			var boss = Captain.new()
-			LevelManager.set_initial_level(boss, 25)
-			return {
-				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Ena")],
-				"enemy_team": [boss],
-				"scenario": HarborBossScenario.new()
-			},
+			return _battle(["Ichika", "Ena"], [create_enemy("harbor_boss", 25)], HarborBossScenario.new()),
 		"prologue": func():
-			var kidnappers = _create_enemies("kidnapper", 3, 1)
-			return {
-				"player_team": [GameManager.get_party_member("Ichika")],
-				"enemy_team": kidnappers,
-				"scenario": PrologueScenario.new()
-			},
+			return _battle(["Ichika"], _create_enemies("kidnapper", 3, 1), PrologueScenario.new()),
 		"ops_kanade": func():
-			return {
-				"player_team": [GameManager.get_party_member("Kanade")],
-				"enemy_team": _create_enemies("terrorist", 2, 35),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Kanade"], _create_enemies("terrorist", 2, 35), ScriptedBattleScenario.new()),
 		"ops_ichika": func():
-			return {
-				"player_team": [GameManager.get_party_member("Ichika")],
-				"enemy_team": _create_enemies("terrorist", 2, 35),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Ichika"], _create_enemies("terrorist", 2, 35), ScriptedBattleScenario.new()),
 		"ops_honami": func():
-			return {
-				"player_team": [GameManager.get_party_member("Honami")],
-				"enemy_team": _create_enemies("terrorist", 3, 35),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Honami"], _create_enemies("terrorist", 3, 35), ScriptedBattleScenario.new()),
 		"pm_boss": func():
-			var pm = PrimeMinister.new()
-			LevelManager.set_initial_level(pm, 50)
-			return {
-				"player_team": [GameManager.get_party_member("Mafuyu"), GameManager.get_party_member("Ena"), GameManager.get_party_member("Mizuki")],
-				"enemy_team": [pm],
-				"scenario": PrimeMinisterBossScenario.new()
-			},
+			return _battle(["Mafuyu", "Ena", "Mizuki"], [create_enemy("prime_minister", 50)], PrimeMinisterBossScenario.new()),
 		"bounty_1": func():
 			# Chủ nợ chợ cá và tay chân của hắn
-			return {
-				"player_team": [GameManager.get_party_member("Ena")],
-				"enemy_team": _named(_create_enemies("warehouse_worker", 2, 22), ["Chủ Nợ", "Tay Chân"]),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Ena"], _named(_create_enemies("warehouse_worker", 2, 22), ["Chủ Nợ", "Tay Chân"]), ScriptedBattleScenario.new()),
 		"bounty_2": func():
 			# Họa sĩ làm tranh giả và bảo vệ xưởng
-			return {
-				"player_team": [GameManager.get_party_member("Ena")],
-				"enemy_team": _named(_create_enemies("terrorist", 2, 22), ["Họa Sĩ Giả", "Bảo Vệ Xưởng"]),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Ena"], _named(_create_enemies("terrorist", 2, 22), ["Họa Sĩ Giả", "Bảo Vệ Xưởng"]), ScriptedBattleScenario.new()),
 		"bounty_3": func():
 			# Chủ kho bến Đông: ngồi một mình, không vệ sĩ (đúng như lời thoại)
-			return {
-				"player_team": [GameManager.get_party_member("Ena")],
-				"enemy_team": _named(_create_enemies("guard", 1, 27), ["Chủ Kho"]),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Ena"], _named(_create_enemies("guard", 1, 27), ["Chủ Kho"]), ScriptedBattleScenario.new()),
 		"bounty_ambush": func():
-			return {
-				"player_team": [GameManager.get_party_member("Ena")],
-				"enemy_team": _create_enemies("police", 4, 27),
-				"scenario": ForcedLossScenario.new()
-			},
+			return _battle(["Ena"], _create_enemies("police", 4, 27), ForcedLossScenario.new()),
 		"mizuki_police_1": func():
-			return {
-				"player_team": [GameManager.get_party_member("Mizuki")],
-				"enemy_team": _create_enemies("police", 2, 20),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Mizuki"], _create_enemies("police", 2, 20), ScriptedBattleScenario.new()),
 		"mizuki_police_2": func():
-			return {
-				"player_team": [GameManager.get_party_member("Mizuki")],
-				"enemy_team": _create_enemies("police", 3, 22),
-				"scenario": ScriptedBattleScenario.new()
-			},
+			return _battle(["Mizuki"], _create_enemies("police", 3, 22), ScriptedBattleScenario.new()),
 		"mizuki_vs_ena_forced": func():
-			var ena_enemy = Ena.new()
-			var party_ena = GameManager.get_party_member("Ena")
-			LevelManager.set_initial_level(ena_enemy, party_ena.level if party_ena else 20)
+			var ena_enemy := _character_enemy("Ena", _party_level("Ena", 20))
 			ena_enemy.current_hp = int(ena_enemy.max_hp * 0.4) # đã bị tra tấn nhiều ngày
-			return {
-				"player_team": [GameManager.get_party_member("Mizuki")],
-				"enemy_team": [ena_enemy],
-				"scenario": ForcedDuelScenario.new()
-			},
+			return _battle(["Mizuki"], [ena_enemy], ForcedDuelScenario.new()),
 		"mizuki_vs_kanade": func():
-			var kanade_enemy = Kanade.new()
-			LevelManager.set_initial_level(kanade_enemy, 100)
-			return {
-				"player_team": [GameManager.get_party_member("Mizuki"), GameManager.get_party_member("Ichika")],
-				"enemy_team": [kanade_enemy],
-				"scenario": FrozenAllyScenario.new()
-			},
+			return _battle(["Mizuki", "Ichika"], [_character_enemy("Kanade", 100)], FrozenAllyScenario.new()),
 		"ichika_vs_kanade_slow": func():
-			var kanade_enemy = Kanade.new()
-			LevelManager.set_initial_level(kanade_enemy, 60)
-			return {
-				"player_team": [GameManager.get_party_member("Ichika")],
-				"enemy_team": [kanade_enemy],
-				"scenario": SlowStrikeScenario.new()
-			},
+			return _battle(["Ichika"], [_character_enemy("Kanade", 60)], SlowStrikeScenario.new()),
 		"final_mafuyu": func():
-			return {
-				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Honami")],
-				"enemy_team": [build_final_mafuyu()],
-				"scenario": DefaultScenario.new()
-			},
+			return _battle(["Ichika", "Honami"], [build_final_mafuyu()], DefaultScenario.new()),
 		"training_trial": func():
 			# Khóa huấn luyện sinh tử, ngày thứ bảy: Ichika một mình trước Ena và Kanade
-			return {
-				"player_team": [GameManager.get_party_member("Ichika")],
-				"enemy_team": [_mirror_party_member("Ena", TRAINING_TRIAL_MIRROR), _mirror_party_member("Kanade", TRAINING_TRIAL_MIRROR)],
-				"scenario": TrainingTrialScenario.new()
-			},
+			return _battle(["Ichika"], [_mirror_party_member("Ena", TRAINING_TRIAL_MIRROR), _mirror_party_member("Kanade", TRAINING_TRIAL_MIRROR)], TrainingTrialScenario.new()),
 		"ops_ena": func():
 			# Tác chiến cầu vịnh Tokyo: Ena hộ tống đoàn xe chở bom, hai đợt khủng bố
-			return {
-				"player_team": [GameManager.get_party_member("Ena")],
-				"enemy_team": _create_enemies("terrorist", OPS_ENA_COUNT, OPS_ENA_LEVEL),
-				"scenario": ConvoyWavesScenario.new()
-			},
+			return _battle(["Ena"], _create_enemies("terrorist", OPS_ENA_COUNT, OPS_ENA_LEVEL), ConvoyWavesScenario.new()),
 		"honami_spar": func():
 			# Buổi thử phản xạ ở phòng khám: Honami chỉ đỡ đòn
-			return {
-				"player_team": [GameManager.get_party_member("Ichika")],
-				"enemy_team": [_mirror_party_member("Honami")],
-				"scenario": SparringScenario.new()
-			},
+			return _battle(["Ichika"], [_mirror_party_member("Honami")], SparringScenario.new()),
 		"street_skirmish": func():
-			return {
-				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")],
-				"enemy_team": _create_enemies("terrorist", 3, 20),
-				"scenario": DefaultScenario.new()
-			},
+			return _battle(["Ichika", "Mizuki"], _create_enemies("terrorist", 3, 20), DefaultScenario.new()),
 		"street_survival": func():
-			return {
-				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Mizuki")],
-				"enemy_team": _create_enemies("terrorist", 3, 20),
-				"scenario": StreetSurvivalScenario.new()
-			}
+			return _battle(["Ichika", "Mizuki"], _create_enemies("terrorist", 3, 20), StreetSurvivalScenario.new()),
 	}
 	
 	if registry.has(battle_id):
 		return registry[battle_id].call()
 	
+	GameLogger.error("BattleInitializer", "Trận kịch bản không có trong bảng: %s" % battle_id)
 	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}
 
 static func _setup_holosim_battle() -> Dictionary:

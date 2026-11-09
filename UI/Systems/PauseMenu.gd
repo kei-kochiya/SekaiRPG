@@ -13,11 +13,7 @@ Chức năng chính:
 # Mật mã mở khóa tùy chọn "Bỏ qua trận đánh"
 const SKIP_BATTLE_CODE := "27101108"
 
-# Scene không cho mở menu bằng ESC ("Lưu nhanh" sẽ ghi đè quicksave bằng trạng thái mặc định).
-# `show_options(true)` từ StartMenu vẫn dùng được vì không đi qua `toggle()`.
-const NO_PAUSE_SCENES := ["StartMenu", "SandboxMenu", "SaveLoadMenu"]
-# Scene không được lưu game (cùng danh sách với GameManager._can_autosave)
-const NO_SAVE_SCENES := ["BattleRoot"]
+const QUICK_SAVE_LABEL := "Lưu nhanh"
 
 # ── Biến Tham Chiếu ────────────────────────────────────────────────────────
 
@@ -71,7 +67,7 @@ func _build_ui():
 	var vbox = ui_nodes["vbox"]
 
 	_btn_resume = PauseMenuBuilder.create_button("Tiếp tục", _on_resume, UITheme.Kind.PRIMARY)
-	_btn_quick_save = PauseMenuBuilder.create_button("Lưu nhanh", _on_quick_save)
+	_btn_quick_save = PauseMenuBuilder.create_button(QUICK_SAVE_LABEL, _on_quick_save)
 	_btn_save_load = PauseMenuBuilder.create_button("Lưu / Tải game", _on_open_save_load_menu)
 	_btn_guide = PauseMenuBuilder.create_button("Hướng dẫn", _on_guide)
 	_btn_options = PauseMenuBuilder.create_button("Tùy chọn", _on_options)
@@ -94,24 +90,16 @@ func _show_main_panel(focus: Control):
 	_panel.visible = true
 	focus.call_deferred("grab_focus")
 
-# Chỉ cho lưu khi đang ở Overworld bình thường (mirror GameManager._can_autosave, trừ cờ hội thoại)
-func _can_save() -> bool:
-	if GameManager.is_sandbox or GameManager.is_scripted_battle or GameManager.is_training_mode:
-		return false
-	if HoloSimManager.is_sim_active:
-		return false
-	var scene := get_tree().current_scene
-	if scene == null or scene.name in NO_SAVE_SCENES:
-		return false
-	return scene.find_child("OverworldPlayer", true, false) != null
-
+# Không mở menu bằng ESC ở các scene menu ("Lưu nhanh" sẽ ghi đè quicksave bằng trạng thái mặc định).
+# `show_options(true)` từ StartMenu vẫn dùng được vì không đi qua `toggle()`.
 func _can_pause() -> bool:
 	var scene := get_tree().current_scene
-	return scene != null and not (scene.name in NO_PAUSE_SCENES)
+	return scene != null and not (scene.name in GameManager.MENU_SCENES)
 
 # Ẩn nút lưu khi không hợp lệ (trận chiến, Holo-Sim, luyện tập...)
 func _refresh_save_buttons():
-	var can_save := _can_save()
+	var can_save := GameManager.can_save_now()
+	_btn_quick_save.text = QUICK_SAVE_LABEL
 	_btn_quick_save.visible = can_save
 	_btn_save_load.visible = can_save
 
@@ -146,6 +134,7 @@ func _on_options():
 	_build_options_vbox(false)
 
 func _close_options():
+	GameManager.save_settings() # âm lượng chỉnh bằng thanh trượt và mã mở khóa bỏ qua trận được lưu khi đóng bảng
 	_options_panel.visible = false
 	_free_pw_dialog()
 	if _options_from_main_menu:
@@ -170,15 +159,19 @@ func _build_options_vbox(from_main_menu: bool):
 	vbox.add_child(title)
 
 	var check = CheckButton.new()
-	check.button_pressed = (GameManager.battle_speed < 1.0)
+	check.button_pressed = (GameManager.battle_speed < GameManager.BATTLE_SPEED_NORMAL)
 	check.toggled.connect(func(pressed):
-		GameManager.battle_speed = 0.6 if pressed else 1.2
+		GameManager.battle_speed = GameManager.BATTLE_SPEED_FAST if pressed else GameManager.BATTLE_SPEED_NORMAL
+		GameManager.save_settings()
 	)
 	vbox.add_child(_option_row("Chiến đấu nhanh", check))
 
 	var check_motion = CheckButton.new()
 	check_motion.button_pressed = GameManager.reduce_motion
-	check_motion.toggled.connect(func(pressed): GameManager.reduce_motion = pressed)
+	check_motion.toggled.connect(func(pressed):
+		GameManager.reduce_motion = pressed
+		GameManager.save_settings()
+	)
 	vbox.add_child(_option_row("Giảm rung màn hình", check_motion))
 
 	var v_vol = VBoxContainer.new()
@@ -191,6 +184,7 @@ func _build_options_vbox(from_main_menu: bool):
 	slider.step = 0.05
 	slider.value = GameManager.master_volume
 	slider.custom_minimum_size.y = UITheme.MIN_TOUCH
+	slider.drag_ended.connect(func(_changed): GameManager.save_settings())
 	slider.value_changed.connect(func(val):
 		GameManager.master_volume = val
 		lbl_vol.text = "Âm lượng tổng: %d%%" % int(val * 100)
@@ -205,6 +199,7 @@ func _build_options_vbox(from_main_menu: bool):
 			_show_password_dialog(btn_skip)
 		else:
 			GameManager.skip_battle_enabled = pressed
+			GameManager.save_settings()
 	)
 	vbox.add_child(_option_row("Bỏ qua trận đánh", btn_skip))
 
@@ -267,6 +262,7 @@ func _show_password_dialog(target_check: CheckButton):
 		if edit.text == SKIP_BATTLE_CODE:
 			GameManager.skip_battle_unlocked = true
 			GameManager.skip_battle_enabled = true
+			GameManager.save_settings()
 			target_check.button_pressed = true
 			_free_pw_dialog()
 			print("[Options] Skip Battle unlocked!")
@@ -345,20 +341,19 @@ func _on_quick_save():
 	"""
 	Lưu nhanh vào quicksave.json.
 	"""
-	if not _can_save():
+	if not GameManager.can_save_now():
 		return
-	var player = get_tree().current_scene.find_child("OverworldPlayer", true, false)
-	if player:
-		GameManager.last_player_position = player.global_position
-
-	GameManager.quick_save()
-	_on_resume()
+	# Lưu thất bại (đĩa đầy, không ghi được): giữ menu mở và báo ngay trên nút thay vì đóng như thể đã lưu
+	if GameManager.quick_save():
+		_on_resume()
+	else:
+		_btn_quick_save.text = "Không lưu được. Thử lại?"
 
 func _on_open_save_load_menu():
 	"""
 	Mở menu quản lý Save & Load dạng Overlay.
 	"""
-	if not _can_save() or is_instance_valid(_save_load_menu):
+	if not GameManager.can_save_now() or is_instance_valid(_save_load_menu):
 		return
 	_save_load_menu = preload("res://UI/Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
 	_root.add_child(_save_load_menu)

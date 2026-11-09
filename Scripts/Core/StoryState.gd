@@ -20,6 +20,7 @@ const DEFAULT_FLAGS := {
 	"safehouse_intro_done": false,
 	"intro_quest_done": false,
 	"npcs_greeted": [],
+	"npcs_info_heard": [], # đã nghe chuyện quá khứ (npc_info_*) của ai
 	"warehouse_mission_accepted": false,
 	"talked_to_mafuyu_training": false,
 	"accepted_harbor_mission": false,

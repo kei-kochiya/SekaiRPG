@@ -73,8 +73,7 @@ func _on_body_entered(body):
 	if body.name == "OverworldPlayer":
 		is_player_inside = true
 		prompt_label.visible = true
-		if has_node("/root/MobileControls"):
-			get_node("/root/MobileControls").set_interact_visible(true)
+		_set_mobile_interact(true)
 
 func _on_body_exited(body):
 	"""
@@ -86,8 +85,7 @@ func _on_body_exited(body):
 	if body.name == "OverworldPlayer":
 		is_player_inside = false
 		prompt_label.visible = false
-		if has_node("/root/MobileControls"):
-			get_node("/root/MobileControls").set_interact_visible(false)
+		_set_mobile_interact(false)
 
 # ── Xử Lý Tương Tác ────────────────────────────────────────────────────────
 
@@ -103,7 +101,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		event (InputEvent): Sự kiện đầu vào từ bàn phím.
 	"""
 	if is_player_inside and event.is_action_pressed("ui_accept"):
-		if not GameManager.is_in_dialogue:
+		# Đang fade (chuyển cảnh/cảnh tự chạy) cũng không cho tương tác: bấm thêm sẽ mở hội thoại chồng lên cảnh sắp đổi
+		if not GameManager.is_in_dialogue and not ScreenFade.busy:
 			get_viewport().set_input_as_handled()
 			interacted.emit()
 
@@ -113,9 +112,17 @@ func _process(_delta):
 	"""
 	if GameManager.is_in_dialogue:
 		prompt_label.visible = false
-		if has_node("/root/MobileControls"):
-			get_node("/root/MobileControls").set_interact_visible(false)
+		_set_mobile_interact(false)
 	elif is_player_inside:
 		prompt_label.visible = true
-		if has_node("/root/MobileControls"):
-			get_node("/root/MobileControls").set_interact_visible(true)
+		_set_mobile_interact(true)
+
+# Nút ENTER ảo (chỉ có trên mobile, là autoload) bật khi người chơi đứng trong vùng này
+func _set_mobile_interact(on: bool) -> void:
+	if has_node("/root/MobileControls"):
+		get_node("/root/MobileControls").set_interact_visible(on)
+
+# Vùng bị gỡ (NPC dựng lại, đổi scene) lúc người chơi còn đứng trong: tắt nút ENTER ảo đang bật
+func _exit_tree() -> void:
+	if is_player_inside:
+		_set_mobile_interact(false)

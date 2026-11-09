@@ -41,10 +41,21 @@ func _mission_briefing_interact(npc_name: String):
 			map._refresh_quest_label()
 		)
 	else:
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
+		_talk_casual(npc_name)
 
 func _free_roam_interact(npc_name: String):
-	DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
+	_talk_casual(npc_name)
+
+# Nói chuyện thường ngày: lần đầu với mỗi người là chuyện quá khứ của họ (npc_info_*, theo truyện), các lần sau là câu chào ngắn
+func _talk_casual(npc_name: String):
+	var heard: Array = GameManager.get_flag("npcs_info_heard", [])
+	var info_lines := DialogueLoader.get_lines("npc_info_" + npc_name.to_lower())
+	if npc_name not in heard and not info_lines.is_empty():
+		heard.append(npc_name)
+		GameManager.set_flag("npcs_info_heard", heard)
+		DialogueManager.play_dialogue(info_lines)
+	else:
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
 
 func _check_quest_complete():
 	var quests = ["Mafuyu", "Ena", "Kanade", "Mizuki"]

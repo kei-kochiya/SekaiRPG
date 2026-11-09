@@ -16,6 +16,7 @@ Chức năng chính:
 var shake_intensity: float = 0.0
 var shake_timer: float = 0.0
 var original_offset: Vector2 = Vector2.ZERO
+var _hitstops: int = 0
 
 # ── Khởi Tạo & Vòng Lặp ────────────────────────────────────────────────────
 
@@ -40,6 +41,9 @@ func shake(intensity: float = 5.0, duration: float = 0.2):
 	"""
 	if GameManager.reduce_motion:
 		return
+	var parent := get_parent()
+	if not is_processing() and parent:
+		original_offset = parent.position # vị trí gốc để trả về sau khi rung (không giả định node cha ở gốc tọa độ)
 	shake_intensity = intensity
 	shake_timer = duration
 	set_process(true)
@@ -54,9 +58,14 @@ func hitstop(duration: float = 0.1):
 	"""
 	if GameManager.reduce_motion:
 		return
+	_hitstops += 1
 	Engine.time_scale = 0.05
 	await get_tree().create_timer(duration, true, false, true).timeout
-	Engine.time_scale = 1.0
+	# Nhiều hit-stop chồng nhau: chỉ trả tốc độ về bình thường khi cái cuối cùng kết thúc
+	_hitstops -= 1
+	if _hitstops <= 0:
+		_hitstops = 0
+		Engine.time_scale = 1.0
 
 # ── Xử Lý Frame ────────────────────────────────────────────────────────────
 

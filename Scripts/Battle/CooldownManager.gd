@@ -32,7 +32,6 @@ static func process_cooldowns(entity: Entity):
 	for skill in keys:
 		if entity.cooldowns[skill] > 0 and entity.cooldowns[skill] < LOCKED_FOR_BATTLE:
 			entity.cooldowns[skill] -= 1
-			entity.cooldown_updated.emit(skill, entity.cooldowns[skill])
 
 static func set_cooldown(entity: Entity, skill_name: String, turns: int):
 	"""
@@ -48,4 +47,3 @@ static func set_cooldown(entity: Entity, skill_name: String, turns: int):
 		return
 		
 	entity.cooldowns[skill_name] = turns
-	entity.cooldown_updated.emit(skill_name, turns)

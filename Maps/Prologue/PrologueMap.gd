@@ -8,7 +8,6 @@ Chứa 2 phase:
 - Phase 1: Mafuyu đã vào sau trận, gặp Ichika đang mệt mỏi. Kết thúc chuyển về BaseMap.
 """
 
-var has_triggered_intro: bool = false
 var has_triggered_outro: bool = false
 
 const TILE_SIZE = 32 # 8x8 tiles scaled 4x
@@ -16,7 +15,6 @@ const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
 	AudioManager.play_music("map")
-	ScreenFade.fade_in(1.0)
 	_build_map()
 	
 	# Phase 0: Ichika bị vây, dẫn đến trận đầu với kiết tặc.
@@ -25,6 +23,13 @@ func _ready():
 		_setup_phase_0()
 	else:
 		_setup_phase_1()
+	
+	# Chờ màn hình sáng hẳn rồi mới phát hội thoại mở đầu (hộp thoại ở layer 100 sẽ bị ScreenFade layer 200 che nếu phát sớm)
+	await ScreenFade.fade_in(1.0)
+	if GameManager.prologue_phase == 0:
+		_play_phase_0_intro()
+	else:
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase1_intro"))
 
 # ─────────────────────────────────────────────
 #  MAP CONSTRUCTION
@@ -98,18 +103,14 @@ func _setup_phase_0():
 	# Mafuyu visible outside the door
 	_create_visual_npc("Mafuyu", Vector2(12 * TILE_SIZE, 18 * TILE_SIZE), Color(0.4, 0.3, 0.5))
 
-	get_tree().create_timer(0.8).timeout.connect(func():
-		if has_triggered_intro:
-			return
-		has_triggered_intro = true
-
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase0"), func():
-			GameManager.is_tutorial = true
-			GameManager.is_scripted_battle = true
-			GameManager.scripted_battle_id = "prologue"
-			GameManager.store_map_state("res://Maps/Prologue/PrologueMap.tscn", Vector2.ZERO)
-			GameManager.trigger_battle()
-		)
+# Đoạn mở đầu bị bắt cóc, xong thì vào trận hướng dẫn đầu tiên
+func _play_phase_0_intro():
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase0"), func():
+		GameManager.is_tutorial = true
+		GameManager.is_scripted_battle = true
+		GameManager.scripted_battle_id = "prologue"
+		GameManager.store_map_state("res://Maps/Prologue/PrologueMap.tscn", Vector2.ZERO)
+		GameManager.trigger_battle()
 	)
 
 # ─────────────────────────────────────────────
@@ -122,7 +123,7 @@ func _setup_phase_1():
 	# Mafuyu starts outside facing up towards warehouse
 	player.position = Vector2(12 * TILE_SIZE, 19 * TILE_SIZE)
 	player.character_color = Color(0.4, 0.3, 0.5)
-	player._facing = "up"
+	player.set_facing("up")
 	add_child(player)
 
 	# Ichika inside, exhausted
@@ -133,10 +134,6 @@ func _setup_phase_1():
 	_create_dead_body(Vector2(9 * TILE_SIZE, 9 * TILE_SIZE))
 	_create_dead_body(Vector2(15 * TILE_SIZE, 9 * TILE_SIZE))
 	_create_dead_body(Vector2(12 * TILE_SIZE, 7 * TILE_SIZE))
-
-	get_tree().create_timer(0.8).timeout.connect(func():
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase1_intro"))
-	)
 
 # ─────────────────────────────────────────────
 #  HELPERS

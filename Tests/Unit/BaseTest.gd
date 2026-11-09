@@ -64,6 +64,16 @@ func assert_lt(actual, expected, message: String = ""):
 		failures.append(err)
 		push_error(err)
 
+# Hook chạy quanh MỖI test: test nào đụng vào trạng thái toàn cục (GameManager, Engine...) tự dọn lại ở after_each.
+func before_each():
+	pass
+
+func after_each():
+	# Mặc định trả lại các trạng thái toàn cục dễ bị test làm bẩn (suite sau không phải tự reset_game mới chạy đúng)
+	GameManager.is_sandbox = false
+	GameManager.reduce_motion = false
+	Engine.time_scale = 1.0
+
 func run_all_tests() -> Dictionary:
 	var methods = get_method_list()
 	var test_methods = []
@@ -73,7 +83,16 @@ func run_all_tests() -> Dictionary:
 			
 	for m_name in test_methods:
 		current_test_name = m_name
+		var before := passed_count + failed_count
+		before_each()
 		call(m_name)
+		after_each()
+		if passed_count + failed_count == before:
+			# Test lỗi giữa chừng (script error) hoặc quên assert sẽ không bao giờ được tính là đạt
+			failed_count += 1
+			var err = "[FAIL] %s: không có assertion nào được chạy" % m_name
+			failures.append(err)
+			push_error(err)
 		
 	return {
 		"name": get_script().resource_path.get_file().get_basename(),

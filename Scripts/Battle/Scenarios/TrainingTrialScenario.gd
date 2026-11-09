@@ -44,8 +44,7 @@ func on_before_action(main: Node, actor: Entity):
 func check_battle_end(main: Node) -> bool:
 	if _bell and not AIManager.get_alive_targets(main.player_team).is_empty():
 		main.hud.show_announcement("CHUÔNG RUNG!", UITheme.PLAYER)
-		main.hud.show_victory()
-		main.battle_over = true
+		main.end_battle(true)
 		return true
 	return super.check_battle_end(main)
 

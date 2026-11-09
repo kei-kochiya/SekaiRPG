@@ -97,12 +97,10 @@ func check_battle_end(battle: Node) -> bool:
 		return false
 
 	if enemy_dead:
-		battle.hud.show_victory()
-		battle.battle_over = true
+		battle.end_battle(true)
 		return true
 	if player_dead:
-		battle.hud.show_defeat()
-		battle.battle_over = true
+		battle.end_battle(false)
 		return true
 	return false
 
@@ -117,10 +115,7 @@ func on_battle_completed(battle: Node, is_victory: bool):
 			HoloSimManager.end_run()
 			DialogueManager.play_dialogue([
 				{"text": "CHÚC MỪNG!\nBạn đã hoàn thành trọn vẹn 10 Tầng Mô Phỏng Holo-Sim!\nPhần thưởng: +1000 Credits!", "type": "narrator"}
-			], func():
-				await ScreenFade.fade_out(1.0)
-				GameManager.get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
-			)
+			], _return_to_base)
 			return
 
 		# Tiến tầng và mở màn chọn Phước Lành
@@ -147,10 +142,11 @@ func on_battle_completed(battle: Node, is_victory: bool):
 		HoloSimManager.end_run()
 		DialogueManager.play_dialogue([
 			{"text": "Đội hình đã bị áp đảo tại Tầng %d.\nKết thúc lượt mô phỏng. Nhận an ủi: %d Credits." % [HoloSimManager.current_floor, reward], "type": "narrator"}
-		], func():
-			await ScreenFade.fade_out(1.0)
-			GameManager.get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
-		)
+		], _return_to_base)
+
+func _return_to_base():
+	await ScreenFade.fade_out(1.0)
+	GameManager.get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
 
 func _show_blessing_selection(battle: Node):
 	var options = HoloBlessing.get_random_blessings(3, HoloSimManager.active_blessings)

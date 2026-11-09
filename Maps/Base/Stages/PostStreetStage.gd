@@ -11,15 +11,15 @@ func get_npc_positions() -> Dictionary:
 		"Mafuyu": Vector2(24 * map.TILE_SIZE, 11 * map.TILE_SIZE),
 	}
 
+# BaseMap áp ánh sáng này trước fade_in nên không bị "nháy sáng"
+func get_scene_lighting() -> Color:
+	return Color(0.9, 0.9, 1.0)
+
 func on_stage_start():
 	var player = map.get_node_or_null("OverworldPlayer")
 	if player:
 		player.character_color = map.NPC_COLORS["Ichika"]
 		
-	var lighting = CanvasModulate.new()
-	map.add_child(lighting)
-	lighting.color = Color(0.9, 0.9, 1.0)
-	
 	if GameManager.get_flag("post_street_trained_once"):
 		_cutscene_active = true
 		_play_honami_invasion()
@@ -33,14 +33,7 @@ func handle_npc_interaction(npc_name: String):
 		)
 	elif npc_name == "Kanade":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade_post"), func():
-			var p_list: Array[Entity] = [
-				GameManager.get_party_member("Ichika"),
-				GameManager.get_party_member("Kanade"),
-				GameManager.get_party_member("Mafuyu"),
-				GameManager.get_party_member("Ena"),
-				GameManager.get_party_member("Mizuki")
-			]
-			UpgradeUI.show_ui(p_list)
+			open_upgrade_ui()
 		)
 	elif npc_name == "Ena":
 		DialogueManager.play_dialogue([{"text": "Chị còn đau lưng lắm, đừng rủ chị tập luyện.", "type": "dialogue", "name": "Ena", "color": Color("#b86028")}])
@@ -51,8 +44,7 @@ func _show_training_menu():
 	var opts: Array = ["Ichika (5 Waves)", "Kanade (5 Waves)", "Ena (5 Waves)", "Mizuki (5 Waves)", "Mafuyu (5 Waves)", "Để sau."]
 	var mapping = ["Ichika", "Kanade", "Ena", "Mizuki", "Mafuyu"]
 	
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if opts[idx] == "Để sau.": return
 	
 	GameManager.set_flag("post_street_trained_once", true)

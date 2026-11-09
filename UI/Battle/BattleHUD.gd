@@ -28,6 +28,7 @@ var enemy_container: VBoxContainer
 var action_gauge: Node
 var command_menu: Node
 var _info_panel: Node
+var _banner_tween: Tween
 var _cards: Dictionary = {}
 var _turn_banner: PanelContainer
 # Main đặt false cho trận có kịch bản cốt truyện (boss, sinh tồn...) để không thể bỏ qua bằng nút Skip.
@@ -171,10 +172,14 @@ func show_turn_indicator(entity: Entity):
 	_turn_banner.get_child(0).text = "Lượt của " + entity.entity_name
 	_turn_banner.get_child(0).add_theme_color_override("font_color", color)
 	
-	var tw = create_tween()
-	tw.tween_property(_turn_banner, "modulate:a", 1.0, 0.2)
-	tw.tween_interval(0.8)
-	tw.tween_property(_turn_banner, "modulate:a", 0.0, 0.3)
+	# Ngắt hiệu ứng của lượt trước: ở chế độ chiến đấu nhanh hai lượt cách nhau chưa tới thời lượng banner,
+	# hai tween chạy chồng nhau sẽ làm banner nhấp nháy.
+	if _banner_tween:
+		_banner_tween.kill()
+	_banner_tween = create_tween()
+	_banner_tween.tween_property(_turn_banner, "modulate:a", 1.0, 0.2)
+	_banner_tween.tween_interval(0.8)
+	_banner_tween.tween_property(_turn_banner, "modulate:a", 0.0, 0.3)
 
 func show_announcement(text: String, color: Color = UITheme.ACCENT):
 	"""Banner thông báo ngắn của kịch bản (vd. pha cứu viện), hiện dưới banner lượt."""

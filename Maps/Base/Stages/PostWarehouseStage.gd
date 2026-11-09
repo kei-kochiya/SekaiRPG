@@ -28,7 +28,10 @@ func on_stage_start():
 
 func _do_morning_transition(lighting: CanvasModulate):
 	await ScreenFade.fade_out(1.0)
+	# Khoảng đen 1 giây: ScreenFade không còn bận nhưng cảnh chưa xong, nên khóa tương tác bằng chính khoảng đợi này
+	GameManager.start_dialogue()
 	await map.get_tree().create_timer(1.0).timeout
+	GameManager.end_dialogue()
 	
 	AudioManager.play_music("base")
 	
@@ -54,14 +57,7 @@ func handle_npc_interaction(npc_name: String):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
 
 func _show_upgrade_ui():
-	var p_list: Array[Entity] = [
-		GameManager.get_party_member("Ichika"),
-		GameManager.get_party_member("Kanade"),
-		GameManager.get_party_member("Mafuyu"),
-		GameManager.get_party_member("Ena"),
-		GameManager.get_party_member("Mizuki")
-	]
-	UpgradeUI.show_ui(p_list)
+	open_upgrade_ui()
 
 func _handle_training_dialogue():
 	if not GameManager.talked_to_mafuyu_training:
@@ -84,8 +80,7 @@ func _show_training_options():
 		mapping.append("Kanade")
 	opts.append("Để sau.")
 	
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if opts[idx] == "Để sau.": return
 	
 	GameManager.begin_training([mapping[idx]])

@@ -17,12 +17,11 @@ func get_npc_positions() -> Dictionary:
 func get_bgm_track() -> String:
 	return "night"
 
+# Ánh sáng buổi chiều ấm áp (cam vàng); BaseMap áp trước fade_in nên không bị "nháy sáng"
+func get_scene_lighting() -> Color:
+	return Color(0.8, 0.6, 0.4)
+
 func on_stage_start():
-	# Hiệu ứng ánh sáng buổi chiều ấm áp
-	var lighting = CanvasModulate.new()
-	map.add_child(lighting)
-	lighting.color = Color(0.8, 0.6, 0.4) # Màu cam vàng ấm
-	
 	if GameManager.get_flag("mizuki_vs_mafuyu_done") and not GameManager.get_flag("mizuki_report_done"):
 		var p = map.get_node_or_null("OverworldPlayer")
 		if p: p.character_color = map.NPC_COLORS["Mizuki"]

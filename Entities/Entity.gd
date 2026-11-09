@@ -14,10 +14,7 @@ Chức năng chính:
 # ── Tín hiệu (Signals) ─────────────────────────────────────────────────────
 signal hp_changed(new_hp: int, max_hp: int)
 signal died()
-@warning_ignore("unused_signal")
-signal cooldown_updated(skill_name: String, turns_left: int)
 signal status_changed(statuses: Array)
-signal damage_received(amount: int, damage_type: String)
 signal damage_received_detailed(amount: int, damage_type: String, is_crit: bool, is_break: bool)
 signal break_gauge_changed(current: int, max_val: int)
 @warning_ignore("unused_signal")
@@ -46,7 +43,6 @@ signal level_changed(new_level: int)
 	set(v):
 		break_gauge = clamp(v, 0, max_break_gauge)
 		break_gauge_changed.emit(break_gauge, max_break_gauge)
-@export var is_staggered: bool = false
 # Kẻ địch AI bỏ qua thực thể này khi chọn mục tiêu (vd. Ichika đang đóng băng trong trận kịch bản).
 var untargetable: bool = false
 
@@ -96,7 +92,6 @@ func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = 
 	set_meta("was_crit", false)
 	
 	hp_changed.emit(current_hp, max_hp)
-	damage_received.emit(amount, damage_type)
 	damage_received_detailed.emit(amount, damage_type, is_crit, is_break)
 	
 	if current_hp == 0:
@@ -117,7 +112,6 @@ func heal(amount: int):
 	if actual > 0:
 		current_hp += actual
 		hp_changed.emit(current_hp, max_hp)
-		damage_received.emit(actual, "heal")
 
 # ── Quản lý Trạng thái (Status) ─────────────────────────────────────────────
 
@@ -215,6 +209,17 @@ func clear_temp_mods():
 	for stat in _temp_mods:
 		set(stat, get(stat) - _temp_mods[stat])
 	_temp_mods.clear()
+	current_hp = mini(current_hp, max_hp) # buff max_hp vừa gỡ thì máu hiện tại không được vượt trần mới
+
+# Gỡ mọi buff tạm và trả về bảng đã gỡ để áp lại bằng restore_temp_mods (vd. quanh một lần lên cấp giữa trận)
+func take_temp_mods() -> Dictionary:
+	var mods := _temp_mods.duplicate()
+	clear_temp_mods()
+	return mods
+
+func restore_temp_mods(mods: Dictionary):
+	for stat in mods:
+		add_temp_mod(stat, mods[stat])
 
 func reset_battle_state():
 	"""Xóa trạng thái chỉ có ý nghĩa trong một trận (hồi chiêu, hiệu ứng, thanh hành động...)."""
@@ -222,7 +227,6 @@ func reset_battle_state():
 	active_statuses.clear()
 	action_gauge = 0.0
 	skills_disabled = false
-	is_staggered = false
 	untargetable = false
 	break_gauge = max_break_gauge
 	remove_meta("was_broken")
@@ -245,4 +249,5 @@ func can_use_skill(skill_name: String) -> bool:
 	return cooldowns.get(skill_name, 0) <= 0
 
 func get_portrait_path() -> String:
-	return "res://Assets/Portraits/%s.png" % entity_name.to_lower()
+	# Bỏ hậu tố trong ngoặc như "Mafuyu (BOSS)" để dùng chung chân dung với nhân vật gốc
+	return "res://Assets/Portraits/%s.png" % entity_name.split(" (")[0].to_lower()

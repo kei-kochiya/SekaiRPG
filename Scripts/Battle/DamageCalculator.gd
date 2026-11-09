@@ -61,8 +61,6 @@ static func calculate_damage_detailed(attacker: Entity, defender: Entity, skill_
 				defender.break_gauge = defender.max_break_gauge
 				is_break = true
 				defender.set_meta("was_broken", true)
-				if "is_staggered" in defender:
-					defender.is_staggered = true
 				defender.action_gauge = max(0.0, defender.action_gauge - 3000.0)
 				defender.add_status({"type": "Stun", "duration": 1})
 				print("[Weakness Break] ", defender.entity_name, " bị phá vỡ điểm yếu! Choáng 1 lượt và trễ thanh hành động.")

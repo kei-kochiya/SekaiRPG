@@ -60,6 +60,10 @@ static func process_level_up(entity: Entity):
 	"""
 	if entity == null: return
 	
+	# Buff tạm (Âm Vang Đồng Điệu, phước lành Holo-Sim...) được gỡ ra trước khi tăng chỉ số rồi áp lại sau. Nếu không,
+	# chỉ số tăng theo giá trị đã buff, còn clear_temp_mods() cuối trận chỉ trừ phần buff nên để lại phần thừa vĩnh viễn.
+	var buffs := entity.take_temp_mods()
+	
 	entity.level += 1
 	
 	if entity.is_character:
@@ -83,6 +87,7 @@ static func process_level_up(entity: Entity):
 	entity.atk = min(entity.atk, entity.stat_caps.get("atk", 9999))
 	entity.defense = min(entity.defense, entity.stat_caps.get("defense", 9999))
 	entity.spd = min(entity.spd, entity.stat_caps.get("spd", 9999))
+	entity.restore_temp_mods(buffs)
 
 	if entity.current_hp > 0:
 		entity.current_hp = entity.max_hp

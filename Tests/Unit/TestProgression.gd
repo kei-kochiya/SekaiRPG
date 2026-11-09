@@ -295,3 +295,30 @@ func test_mafuyu_lets_the_player_resume_the_mission_or_train():
 	DialogueManager._ui.choice_selected.emit(labels.size() - 1)
 	base.free()
 	GameManager.reset_game()
+
+# Lên cấp giữa trận khi đang có buff tạm: chỉ số tăng theo giá trị gốc, buff gỡ xong không để lại phần thừa
+func test_level_up_under_a_temp_buff_leaves_no_permanent_extra():
+	var buffed := Ichika.new()
+	var plain := Ichika.new()
+	LevelManager.set_initial_level(buffed, 5)
+	LevelManager.set_initial_level(plain, 5)
+	buffed.add_temp_mod("spd", 40)
+	buffed.add_temp_mod("atk", 100)
+	LevelManager.process_level_up(buffed)
+	LevelManager.process_level_up(plain)
+	assert_eq(buffed.spd, plain.spd + 40, "the buff is still applied after the level-up")
+	buffed.clear_temp_mods()
+	assert_eq(buffed.spd, plain.spd, "spd is back to the plain level-up value once the buff is removed")
+	assert_eq(buffed.atk, plain.atk, "atk is back to the plain level-up value once the buff is removed")
+	buffed.free()
+	plain.free()
+
+func test_clearing_a_max_hp_buff_never_leaves_hp_above_max():
+	var e := Ichika.new()
+	var base_max := e.max_hp
+	e.add_temp_mod("max_hp", 500)
+	e.current_hp = e.max_hp
+	e.clear_temp_mods()
+	assert_eq(e.max_hp, base_max, "max HP back to normal")
+	assert_eq(e.current_hp, base_max, "current HP is clamped to the restored max")
+	e.free()

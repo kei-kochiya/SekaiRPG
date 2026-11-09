@@ -81,11 +81,6 @@ func test_sandbox_battle_initializer():
 func test_sandbox_enemy_limit():
 	current_test_name = "test_sandbox_enemy_limit"
 	
-	var enemies = []
-	for i in range(5):
-		enemies.append("Kidnapper")
-	assert_eq(enemies.size(), 5, "Should have 5 enemies")
-	
-	# Test removing enemy at index
-	enemies.remove_at(0)
-	assert_eq(enemies.size(), 4, "Should have 4 enemies after removing one")
+	var menu_script = load("res://UI/Menus/Sandbox/SandboxMenu.gd")
+	assert_eq(menu_script.ENEMY_LIMIT, 5, "Sandbox allows at most 5 enemies")
+	assert_eq(menu_script.PLAYER_LIMIT, 4, "Sandbox allows at most 4 player characters")

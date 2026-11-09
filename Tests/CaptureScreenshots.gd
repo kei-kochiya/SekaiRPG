@@ -16,6 +16,8 @@ Kiểm tra logic (in [Check] PASS/FAIL): pause_flow | fx_check
 const OUT_DIR = "res://screenshots/"
 const SETTLE_FRAMES = 20
 
+var _failed_checks: int = 0
+
 func _ready():
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	var shots := OS.get_cmdline_user_args()
@@ -23,7 +25,8 @@ func _ready():
 		shots = PackedStringArray(["start_menu", "sandbox", "upgrade", "battle", "cards"])
 	for shot in shots:
 		await _capture(shot)
-	get_tree().quit(0)
+	# Các dòng "[Check] ... FAIL" phải làm lệnh chạy thất bại (exit 1) để dùng được trong script/CI
+	get_tree().quit(1 if _failed_checks > 0 else 0)
 
 func _reset_overlays():
 	# Autoload giữ trạng thái giữa các shot trong cùng một lần chạy nên phải dọn trước mỗi shot.
@@ -444,6 +447,8 @@ func _build_pause_flow() -> Node:
 	_press_esc()
 	ok = ok and PauseMenu.visible and not GameManager.is_in_dialogue
 	print("[Check] pause_flow ", "PASS" if ok else "FAIL")
+	if not ok:
+		_failed_checks += 1
 	var holder := Control.new()
 	holder.tree_exiting.connect(func():
 		if PauseMenu.visible:
@@ -475,6 +480,8 @@ func _build_fx_check() -> Node:
 	await get_tree().process_frame
 	ok = ok and Engine.time_scale == 1.0
 	print("[Check] fx ", "PASS" if ok else "FAIL", " ", state, " busy=", ScreenFade.busy, " scale=", Engine.time_scale)
+	if not ok:
+		_failed_checks += 1
 	return Control.new()
 
 func _press_esc():

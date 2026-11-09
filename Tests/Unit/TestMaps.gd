@@ -28,7 +28,9 @@ func test_every_map_builds_content():
 		var map: Node = load(path).instantiate()
 		root.add_child(map)
 		assert_gt(map.get_child_count(), 0, "Map builds content: " + path)
-		assert_true(map.find_child("OverworldPlayer", true, false) != null or map.get_script() != null, "Map is playable: " + path)
+		# can_save_now() cần OverworldPlayer: các map chơi được phải có (map cutscene như Highway/Cafe/Alleyway thì không)
+		if path.get_file().get_basename() in ["BaseMap", "PrologueMap", "HarborMap", "HonamiHouseMap", "WarehouseMap", "TrainingWarehouseMap"]:
+			assert_true(map.find_child("OverworldPlayer", true, false) != null, "Playable map has an OverworldPlayer: " + path)
 		root.remove_child(map)
 		map.free()
 	# Một số map mở hội thoại ngay khi vào; trả trạng thái về như cũ cho các suite sau.

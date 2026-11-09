@@ -12,8 +12,8 @@ nên lưu/tải giữa chừng chỉ khiến cảnh phát lại từ đầu, kh�
 """
 
 const NEXT_SCENE := "res://Maps/Bounty/BountyMap.tscn"
-# Ai được luyện tập/nâng cấp trong lúc chuẩn bị lại bài kiểm tra
-const PREP_TRAINEES := ["Ichika", "Kanade", "Ena", "Mizuki", "Mafuyu"]
+# Ai được luyện tập/nâng cấp trong lúc chuẩn bị lại bài kiểm tra: cả đội chính
+const PREP_TRAINEES := MAIN_TEAM
 
 var _cutscene_active: bool = false
 # Sau khi thua bài kiểm tra: người chơi được tự do chuẩn bị (luyện tập, nâng cấp) rồi nói chuyện với Mafuyu để làm lại
@@ -54,6 +54,7 @@ func _next_beat():
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("training_week_intro"), func():
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("training_week_drills"), func():
 				GameManager.set_flag("training_week_intro_done", true)
+				map._refresh_quest_label()
 				_start_trial()
 			)
 		)
@@ -66,6 +67,7 @@ func _next_beat():
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("training_trial_post"), func():
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("training_welcome"), func():
 				GameManager.set_flag("training_welcome_done", true)
+				map._refresh_quest_label()
 				_start_celebration()
 			)
 		)
@@ -82,12 +84,12 @@ func _enter_prep_mode():
 		_prep_mode = true
 		_cutscene_active = false
 		map.unfreeze_player()
+		map._refresh_quest_label() # HUD được dựng trước on_stage_start nên phải làm mới để hiện lời nhắc chuẩn bị
 	)
 
 # Menu của Mafuyu trong lúc chuẩn bị lại: làm lại bài kiểm tra, luyện tập, nâng cấp
 func _show_prep_menu():
-	DialogueManager.show_choice(["[Bắt đầu bài kiểm tra]", "[Luyện tập]", "[Nâng cấp]", "[Hủy]"])
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(["[Bắt đầu bài kiểm tra]", "[Luyện tập]", "[Nâng cấp]", "[Hủy]"])
 	if idx == 0:
 		_cutscene_active = true
 		map.freeze_player()
@@ -95,11 +97,7 @@ func _show_prep_menu():
 	elif idx == 1:
 		_show_prep_training_menu()
 	elif idx == 2:
-		var p_list: Array[Entity] = []
-		for member in PREP_TRAINEES:
-			if GameManager.is_member_alive_in_story(member):
-				p_list.append(GameManager.get_party_member(member))
-		UpgradeUI.show_ui(p_list)
+		open_upgrade_ui(PREP_TRAINEES)
 
 func _show_prep_training_menu():
 	var members: Array = PREP_TRAINEES.filter(func(m): return GameManager.is_member_alive_in_story(m))
@@ -107,8 +105,7 @@ func _show_prep_training_menu():
 	for m in members:
 		opts.append("%s (5 Waves)" % m)
 	opts.append("Để sau.")
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if idx >= members.size():
 		return
 	_cutscene_active = true

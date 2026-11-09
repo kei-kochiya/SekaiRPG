@@ -18,6 +18,10 @@ func get_npc_positions() -> Dictionary:
 		"Mafuyu": Vector2(24 * map.TILE_SIZE, 11 * map.TILE_SIZE),
 	}
 
+# Ánh sáng dịu nhẹ buổi chiều; BaseMap áp trước fade_in nên không bị "nháy sáng"
+func get_scene_lighting() -> Color:
+	return Color(0.95, 0.9, 0.85)
+
 func on_stage_start():
 	# Hủy mọi control phase khác, đảm bảo người chơi điều khiển Ichika
 	GameManager.set_flag("mizuki_control_phase", false)
@@ -27,11 +31,6 @@ func on_stage_start():
 	if player:
 		player.character_color = map.NPC_COLORS["Ichika"]
 		
-	# Bật ánh sáng dịu nhẹ buổi chiều
-	var lighting = CanvasModulate.new()
-	map.add_child(lighting)
-	lighting.color = Color(0.95, 0.9, 0.85)
-	
 	# Nếu chưa bắt đầu nhiệm vụ, tự động chạy cutscene giao nhiệm vụ của Mafuyu
 	if not GameManager.get_flag("street_mission_started"):
 		_cutscene_active = true
@@ -51,14 +50,7 @@ func handle_npc_interaction(npc_name: String):
 	
 	if npc_name == "Kanade":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade_post"), func():
-			var p_list: Array[Entity] = [
-				GameManager.get_party_member("Ichika"),
-				GameManager.get_party_member("Kanade"),
-				GameManager.get_party_member("Mafuyu"),
-				GameManager.get_party_member("Ena"),
-				GameManager.get_party_member("Mizuki")
-			]
-			UpgradeUI.show_ui(p_list)
+			open_upgrade_ui()
 		)
 	elif npc_name == "Mafuyu":
 		DialogueManager.play_dialogue([{"text": "Hãy chuẩn bị thật kỹ trước khi xuất phát thám thính.", "type": "dialogue", "name": "Mafuyu", "color": Color("#665588")}], func():
@@ -76,8 +68,7 @@ func _show_training_menu():
 	var opts: Array = ["Ichika (5 Waves)", "Kanade (5 Waves)", "Ena (5 Waves)", "Mizuki (5 Waves)", "Để sau."]
 	var mapping = ["Ichika", "Kanade", "Ena", "Mizuki"]
 	
-	DialogueManager.show_choice(opts)
-	var idx: int = await DialogueManager.choice_made
+	var idx: int = await DialogueManager.ask(opts)
 	if opts[idx] == "Để sau.": return
 	
 	GameManager.begin_training([mapping[idx]])

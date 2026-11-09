@@ -20,7 +20,10 @@ func _ready():
 	var total_tests = 0
 	var total_passed_assertions = 0
 	var total_failed_assertions = 0
-	var all_failures = []
+	# Suite không nạp/dựng được (lỗi biên dịch, sai tên gọi tên) cũng là thất bại: không được im lặng bỏ qua
+	var setup_errors := _setup_errors.size()
+	for err in _setup_errors:
+		printerr("[FAIL] " + err)
 	
 	for suite in suites:
 		var res = suite.run_all_tests()
@@ -38,7 +41,6 @@ func _ready():
 		
 		if not res["failures"].is_empty():
 			for f in res["failures"]:
-				all_failures.append(f)
 				print("    -> " + f)
 				
 	print("-".repeat(65))
@@ -49,26 +51,40 @@ func _ready():
 	])
 	print("ASSERTIONS: %d Passed, %d Failed" % [total_passed_assertions, total_failed_assertions])
 	
-	if total_failed_assertions == 0:
+	if suites.is_empty():
+		setup_errors += 1
+		printerr("[FAIL] Không có suite nào chạy (tên suite sai hoặc thư mục trống)")
+	
+	if total_failed_assertions == 0 and setup_errors == 0:
 		print("\n>>> ALL TESTS COMPLETED SUCCESSFULLY WITH ZERO ERRORS! <<<\n")
 		print("=".repeat(65) + "\n")
 		get_tree().quit(0)
 	else:
-		printerr("\n>>> %d TEST FAILURES DETECTED! <<<\n" % total_failed_assertions)
+		printerr("\n>>> %d TEST FAILURES DETECTED! <<<\n" % (total_failed_assertions + setup_errors))
 		print("=".repeat(65) + "\n")
 		get_tree().quit(1)
+
+var _setup_errors: Array = []
 
 func _discover_suites() -> Array:
 	var suites = []
 	var names = []
 	var only := OS.get_cmdline_user_args()
+	var available := []
 	for file in DirAccess.get_files_at(UNIT_DIR):
 		if file.begins_with("Test") and file.ends_with(".gd"):
+			available.append(file.get_basename())
 			if only.is_empty() or file.get_basename() in only:
 				names.append(file)
+	for wanted in only:
+		if wanted not in available:
+			_setup_errors.append("Không có suite tên '%s' trong %s" % [wanted, UNIT_DIR])
 	names.sort()
 	for file in names:
 		var script = load(UNIT_DIR + file)
-		if script:
-			suites.append(script.new())
+		var suite = script.new() if script else null
+		if suite == null:
+			_setup_errors.append("Suite không nạp/dựng được (lỗi biên dịch?): " + file)
+		else:
+			suites.append(suite)
 	return suites

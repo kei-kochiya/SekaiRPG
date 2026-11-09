@@ -250,16 +250,7 @@ func _police(grid_pos: Vector2, captain: bool = false) -> void:
 	_npc("Đại Úy Cảnh Sát" if captain else "Cảnh Sát", grid_pos, POLICE, "captain.svg" if captain else "police.svg")
 
 func _npc(p_name: String, grid_pos: Vector2, color: Color, sprite_file: String = "") -> Node2D:
-	MapUtils.create_dummy_char(self, p_name, grid_pos, color)
-	var node := get_child(get_child_count() - 1) as Node2D
-	# Nhân vật chưa có sprite riêng (cảnh sát...) thì thay khối màu bằng SVG nếu đã nhập vào project
-	if sprite_file != "" and ResourceLoader.exists(MapUtils.PERSON_ROOT + sprite_file) and node.get_child(0) is ColorRect:
-		node.get_child(0).queue_free()
-		var sp := Sprite2D.new()
-		sp.texture = load(MapUtils.PERSON_ROOT + sprite_file)
-		sp.position = Vector2(0, -16)
-		node.add_child(sp)
-		node.move_child(sp, 0)
+	var node := MapUtils.create_dummy_char(self, p_name, grid_pos, color, sprite_file)
 	if not _npcs.has(p_name):
 		_npcs[p_name] = node
 	return node

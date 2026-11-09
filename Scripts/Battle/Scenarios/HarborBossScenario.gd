@@ -2,7 +2,6 @@ extends BattleScenario
 class_name HarborBossScenario
 
 var phase: int = 0
-var turns_in_phase: int = 0
 
 func on_start(main: Node):
 	main.is_scripting = true
@@ -15,7 +14,6 @@ func on_start(main: Node):
 
 func on_turn_start(main: Node, _actor: Entity):
 	_check_transitions(main)
-	turns_in_phase += 1
 
 func on_entity_died(main: Node, _entity: Entity):
 	_check_transitions(main)
@@ -28,8 +26,7 @@ func check_battle_end(main: Node) -> bool:
 	
 	# Win condition: Boss dead in Phase 3
 	if boss_dead and phase >= 3:
-		main.hud.show_victory()
-		main.battle_over = true
+		main.end_battle(true)
 		return true
 		
 	# Special case for Phase 1 loss
@@ -38,8 +35,7 @@ func check_battle_end(main: Node) -> bool:
 			_handle_loss_p1(main)
 			return false # Chuyển sang Phase 2, không kết thúc trận đấu
 		else:
-			main.hud.show_defeat()
-			main.battle_over = true
+			main.end_battle(false)
 			return true
 			
 	return false
@@ -74,7 +70,6 @@ func _check_transitions(main: Node):
 func _handle_loss_p1(main: Node):
 	main.is_scripting = true
 	phase = 2 
-	turns_in_phase = 0
 	
 	var mafuyu = GameManager.get_party_member("Mafuyu")
 	if mafuyu:
@@ -86,7 +81,7 @@ func _handle_loss_p1(main: Node):
 		boss.defense = 80
 		boss.current_hp = boss.max_hp
 	
-	main.player_team = [mafuyu]
+	main.player_team = [mafuyu] if mafuyu else main.player_team.duplicate()
 	main.enemy_team = [boss] if boss else []
 	_sync_battle_state(main)
 	
@@ -102,7 +97,6 @@ func _revive_boss_p1(main: Node):
 	
 	main.is_scripting = true
 	phase = 2
-	turns_in_phase = 0
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_boss_revive_p1"), func():
 		boss.current_hp = int(boss.max_hp * 0.5)
 		_sync_battle_state(main)
@@ -112,7 +106,6 @@ func _revive_boss_p1(main: Node):
 func _trigger_phase_3(main: Node):
 	main.is_scripting = true
 	phase = 3
-	turns_in_phase = 0
 	
 	var honami = Honami.new()
 	honami.is_harbor = true
@@ -140,11 +133,7 @@ func _trigger_phase_3(main: Node):
 
 func _sync_battle_state(main: Node):
 	main.all_entities = main.player_team + main.enemy_team
-	main._refresh_team_context()
 	for e in main.all_entities:
 		main.prepare_entity(e) # Reset trạng thái để bắt đầu Phase mới công bằng
-		if not e.died.is_connected(main._on_entity_died.bind(e)):
-			e.died.connect(main._on_entity_died.bind(e))
-	main.hud.setup(main.player_team, main.enemy_team)
-	main._setup_gauge_teams()
-	main._regenerate_timeline()
+		main._connect_combatant(e)
+	main.refresh_battle_state()

@@ -131,8 +131,7 @@ func _place_characters():
 		col.shape = rect
 		exit.add_child(col)
 		exit.interacted.connect(func():
-			DialogueManager.show_choice(["[Trở về Nightcord]", "[Hủy]"])
-			var idx = await DialogueManager.choice_made
+			var idx: int = await DialogueManager.ask(["[Trở về Nightcord]", "[Hủy]"])
 			if idx == 0:
 				await ScreenFade.fade_out(1.0)
 				GameManager.last_player_position = Vector2.ZERO
@@ -159,8 +158,7 @@ func _place_characters():
 # MapUtils.create_dummy_char không đặt meta nên tự gắn "is_npc"/"npc_name" lên node vừa tạo
 # (cảnh Honami gặp Ichika cần dọn Mizuki đi dựa vào các meta này)
 func _spawn_dummy(p_name: String, grid_pos: Vector2, color: Color):
-	MapUtils.create_dummy_char(self, p_name, grid_pos, color)
-	var node = get_child(get_child_count() - 1)
+	var node := MapUtils.create_dummy_char(self, p_name, grid_pos, color)
 	node.set_meta("is_npc", true)
 	node.set_meta("npc_name", p_name)
 

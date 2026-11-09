@@ -49,7 +49,7 @@ func _process(_delta):
 	if not _is_mobile or _root == null: return
 
 	var cur_scene = get_tree().current_scene
-	var is_menu = (cur_scene != null and cur_scene.name in ["StartMenu", "SandboxMenu", "SaveLoadMenu"])
+	var is_menu = (cur_scene != null and cur_scene.name in GameManager.MENU_SCENES)
 
 	if is_menu:
 		if _root.visible:
@@ -227,7 +227,7 @@ func _on_interact_pressed():
 	ev.pressed = true
 	Input.parse_input_event(ev)
 
-	await get_tree().create_timer(0.1, false).timeout
+	await get_tree().create_timer(0.1).timeout # chạy cả khi cây bị tạm dừng (nút mở Shop/menu pause cây node)
 
 	var ev_rel = InputEventAction.new()
 	ev_rel.action = "ui_accept"

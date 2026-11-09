@@ -62,6 +62,11 @@ func play_dialogue(lines: Array, on_complete: Callable = Callable()) -> void:
 	GameManager.start_dialogue()
 	_show_current_line()
 
+# Hiện danh sách lựa chọn rồi chờ người chơi chọn: trả về chỉ số được chọn (dùng với await)
+func ask(options: Array) -> int:
+	show_choice(options)
+	return await choice_made
+
 func show_choice(options: Array):
 	"""
 	Hiển thị danh sách các tùy chọn cho người chơi chọn lựa.
