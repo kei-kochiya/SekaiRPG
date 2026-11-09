@@ -249,10 +249,14 @@ static func clear_children(node: Node) -> void:
 # Focus trễ một nhịp (sau khi các node queue_free() đã dọn); bỏ qua nếu nút đã bị xóa/gỡ khỏi cây trước đó.
 # Thay cho `_focus_later` + `.call_deferred(...)` chép ở SaveLoadMenu, UpgradeUI, EntityDetailPanel, SkillDetailPopup.
 static func focus_later(ctrl) -> void:
-	var grab := func():
-		if is_instance_valid(ctrl) and ctrl.is_inside_tree():
-			ctrl.grab_focus()
-	grab.call_deferred()
+	# Chỉ truyền id, không bắt chính node vào lambda: node bị xóa trước lượt gọi trễ thì engine báo lỗi "Lambda capture ... was freed"
+	# dù đã kiểm tra is_instance_valid; id thì tra lại được và im lặng bỏ qua.
+	_grab_focus_by_id.call_deferred(ctrl.get_instance_id())
+
+static func _grab_focus_by_id(id: int) -> void:
+	var ctrl := instance_from_id(id) as Control
+	if ctrl != null and ctrl.is_inside_tree():
+		ctrl.grab_focus()
 
 static func style_button(btn: Button, kind: Kind = Kind.SECONDARY, size: int = FS_LABEL) -> void:
 	var boxes := button_boxes(kind)

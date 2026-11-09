@@ -20,11 +20,11 @@ func _ready():
 	
 	# Chờ màn hình sáng hẳn để Dialogue UI (Layer 100) không bị ScreenFade (Layer 200) che
 	await ScreenFade.fade_in(0.8)
-	if not GameManager.harbor_intro_done:
+	if not GameManager.get_flag("harbor_intro_done"):
 		_play_intro()
 
 func _play_intro():
-	GameManager.harbor_intro_done = true
+	GameManager.set_flag("harbor_intro_done", true)
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_arrival"))
 
 func _build_map():
@@ -38,8 +38,7 @@ func _build_map():
 	MapUtils.fill_tiles(self, "upper_horizontal_water.png", 0, 19, 80, 19, true)
 	
 	# 4. Decor
-	# Some crates (chests) and barrels (not sure if barrel exists, use grave as placeholder for barrel?)
-	# Actually I'll use chest.png
+	# Vài thùng hàng (dùng chest.png)
 	_place_tile("chest.png", Vector2(10, 10), false)
 	_place_tile("chest.png", Vector2(11, 10), false)
 	_place_tile("chest.png", Vector2(10, 11), false)
@@ -72,25 +71,8 @@ func _spawn_interactables():
 		_create_trigger(Vector2(1000, 500), "Đường Vòng (BOSS)", "boss")
 
 func _create_trigger(pos: Vector2, label: String, route: String):
-	var root = Node2D.new()
-	root.position = pos
-	root.add_to_group("objectives")
-	
-	var sprite = Sprite2D.new()
-	var texture_path = "res://Assets/Person/guard.svg"
-	if route == "boss" or GameManager.harbor_wave > 3:
-		texture_path = "res://Assets/Person/captain.svg"
-	sprite.texture = load(texture_path)
-	sprite.scale = Vector2(1, 1)
-	sprite.position = Vector2(0, -16)
-	root.add_child(sprite)
-	
-	root.add_child(MapUtils.make_world_label(label, UITheme.TEXT, -70.0))
-	
-	var zone = MapUtils.circle_zone(60, "Nhấn ENTER để chiến đấu")
-	root.add_child(zone)
-	
-	zone.interacted.connect(func():
+	var sprite_file := "captain.svg" if (route == "boss" or GameManager.harbor_wave > 3) else "guard.svg"
+	var root := MapUtils.add_enemy_trigger(self, pos, sprite_file, "Nhấn ENTER để chiến đấu", 60, func():
 		GameManager.harbor_route = route
 		var player_pos: Vector2 = get_node("OverworldPlayer").global_position
 		# Boss được tính là trận đấu kịch bản (Scripted)
@@ -108,8 +90,8 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 		else:
 			GameManager.trigger_battle()
 	)
-	
-	add_child(root)
+	root.add_child(MapUtils.make_world_label(label, UITheme.TEXT, -70.0))
+	root.move_child(root.get_child(root.get_child_count() - 1), 1) # nhãn nằm giữa sprite và vùng tương tác như trước
 
 func _spawn_player():
 	MapUtils.spawn_player(self, Vector2(100, 350))

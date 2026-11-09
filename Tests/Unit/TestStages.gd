@@ -327,3 +327,48 @@ func test_greeting_an_intro_npc_is_recorded_in_the_story_flags():
 	root.remove_child(base)
 	base.free()
 	GameManager.reset_game()
+
+# Ai cũng đã tập xong thì nói một câu thay vì mở menu chỉ có nút "Để sau."
+func test_training_with_everyone_done_says_so_instead_of_opening_an_empty_menu():
+	GameManager.reset_game()
+	_drain_dialogue()
+	for member in ["Ichika", "Kanade"]:
+		GameManager.set_flag("training_%s_done" % member.to_lower(), true)
+	var stage := BaseMapStage.new()
+	var started = await stage.offer_training(["Ichika", "Kanade"], true)
+	assert_eq(started, false, "Không có ai để luyện tập")
+	assert_true(DialogueManager.active, "Có một dòng dẫn truyện thay cho menu")
+	assert_false(DialogueManager._in_choice, "Không mở lựa chọn chỉ có \"Để sau.\"")
+	_drain_dialogue()
+	stage.free()
+	GameManager.reset_game()
+
+# NPC chưa có gì để nói vẫn phải đáp lại: ở bước Kanade nằm giường và lúc chuẩn bị lại bài kiểm tra, bấm ENTER không được im lặng
+func test_npcs_with_nothing_to_say_still_answer():
+	GameManager.reset_game()
+	_drain_dialogue()
+	var harbor = load("res://Maps/Base/Stages/PostHarborStage.gd").new()
+	GameManager.set_flag("mizuki_control_phase", true)
+	harbor.handle_npc_interaction("Kanade")
+	assert_true(DialogueManager.active, "Kanade (Mizuki điều khiển) đáp một dòng")
+	_drain_dialogue()
+	harbor.free()
+	GameManager.set_flag("mizuki_control_phase", false)
+	var finale = load("res://Maps/Base/Stages/FinaleStage.gd").new()
+	finale._prep_mode = true
+	for npc in ["Ena", "Kanade", "Mizuki"]:
+		finale.handle_npc_interaction(npc)
+		assert_true(DialogueManager.active, "%s lúc chuẩn bị lại đáp một dòng" % npc)
+		_drain_dialogue()
+	finale.free()
+	GameManager.reset_game()
+
+# FinaleStage tách base_celebration ở dòng bắt đầu bằng "RẦM!" (tiếng sập cửa): sửa chữ trong JSON mà quên chỗ này thì phần sau
+# cú sập rỗng và Mafuyu nói "để cô ta nguội" khi Ena vẫn còn trong phòng
+func test_base_celebration_still_has_the_door_slam_line_the_finale_splits_on():
+	var lines: Array = DialogueLoader.get_lines("base_celebration")
+	var slam := lines.filter(func(l): return str(l.get("text", "")).begins_with("RẦM!"))
+	assert_eq(slam.size(), 1, "Đúng một dòng bắt đầu bằng RẦM!")
+	assert_gt(lines.find(slam[0]), 0, "Có thoại trước tiếng sập cửa")
+	assert_lt(lines.find(slam[0]), lines.size() - 1, "Có thoại sau tiếng sập cửa")
+

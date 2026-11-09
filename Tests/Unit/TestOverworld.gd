@@ -123,7 +123,7 @@ func test_zone_and_player_factories():
 	assert_eq(round_zone.prompt_text, "Nói chuyện", "Gợi ý được đặt")
 	assert_eq(round_zone.position, Vector2(64, 96), "Vị trí được đặt")
 	assert_eq(((round_zone.get_child(0) as CollisionShape2D).shape as CircleShape2D).radius, 40.0, "Bán kính vùng tròn")
-	assert_eq(box_zone.prompt_text, "Press ENTER", "Không truyền gợi ý thì giữ gợi ý mặc định")
+	assert_eq(box_zone.prompt_text, "Nhấn ENTER", "Không truyền gợi ý thì giữ gợi ý mặc định")
 	assert_eq(((box_zone.get_child(0) as CollisionShape2D).shape as RectangleShape2D).size, Vector2(64, 32), "Kích thước vùng chữ nhật")
 
 	GameManager.reset_game()

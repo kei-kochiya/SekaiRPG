@@ -34,7 +34,7 @@ func skips_turn(main: Node, actor: Entity) -> bool:
 func on_turn_skipped(main: Node, _actor: Entity):
 	main.hud.show_announcement("Ena không chống cự...", UITheme.TEXT_MUTED)
 
-func on_action_executed(main: Node, actor: Entity, _action: String, target: Entity):
+func on_action_executed(_main: Node, actor: Entity, _action: String, target: Entity):
 	if not _is_mizuki(actor):
 		return
 	_mizuki_actions += 1

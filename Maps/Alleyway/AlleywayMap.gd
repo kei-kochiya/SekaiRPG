@@ -1,11 +1,11 @@
 extends Node2D
 
 """
-AlleywayMap: Cánh đồng tối - Scene kết thúc nhiệm vụ Harbor.
+AlleywayMap: Con hẻm tối - Scene kết thúc nhiệm vụ Harbor.
 
 Honami đợi trong ngõ hẻm ban đêm. Diễn ra monologue kết thúc của cô sau trận Boss.
 Cờ mafuyu_honami_talked quyết định dùng hội thoại nào (chưa/đã nói chuyện với Mafuyu về Honami).
-Kết thúc chuyển về BaseMap_PostHarbor.
+Kết thúc: về BaseMap (Stage PostHarbor).
 """
 
 const TILE_SIZE = MapUtils.TILE_SIZE
@@ -21,8 +21,10 @@ func _ready():
 	add_child(_lighting)
 	
 	_map_root = Node2D.new()
-	_map_root.position = Vector2(496, 100) # Centering on 1152x648 screen
+	_map_root.position = Vector2(496, 100)
 	add_child(_map_root)
+	# Hành lang rộng 5 ô, cao 15 ô: đặt camera giữa nó để luôn nằm giữa màn hình ở mọi cỡ cửa sổ (trước đây dàn theo khung 1152x648)
+	MapUtils.add_fixed_camera(self, (_map_root.position + Vector2(2, 7) * TILE_SIZE) / TILE_SIZE, 1.0)
 	
 	_build_map()
 	_spawn_honami()
@@ -55,15 +57,7 @@ func _spawn_honami():
 	var root = Node2D.new()
 	root.position = Vector2(2 * TILE_SIZE, 8 * TILE_SIZE)
 	
-	var char_sprite = MapUtils.create_character_sprite("Honami")
-	if char_sprite:
-		root.add_child(char_sprite)
-	else:
-		var vis = ColorRect.new()
-		vis.size = Vector2(16, 24)
-		vis.position = Vector2(-8, -24)
-		vis.color = Color(0.5, 0.35, 0.25)
-		root.add_child(vis)
+	MapUtils.add_character_body(root, "Honami", Color(0.5, 0.35, 0.25))
 	
 	root.add_child(MapUtils.make_world_label("Honami"))
 	

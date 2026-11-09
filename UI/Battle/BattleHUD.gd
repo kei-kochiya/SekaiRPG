@@ -31,8 +31,6 @@ var _info_panel: Node
 var _banner_tween: Tween
 var _cards: Dictionary = {}
 var _turn_banner: PanelContainer
-# Main đặt false cho trận có kịch bản cốt truyện (boss, sinh tồn...) để không thể bỏ qua bằng nút Skip.
-var allow_skip: bool = true
 
 # ── Xây Dựng UI ────────────────────────────────────────────────────────────
 
@@ -95,7 +93,7 @@ func _build_ui():
 	add_child(info_btn)
 
 	# Nút Skip Battle (Chỉ hiện khi Option bật và không phải kịch bản/boss/hướng dẫn)
-	if allow_skip and GameManager.skip_battle_enabled and not GameManager.is_scripted_battle and not GameManager.is_tutorial:
+	if GameManager.skip_battle_enabled and not GameManager.is_scripted_battle and not GameManager.is_tutorial:
 		var skip_btn = UITheme.make_button("Bỏ qua trận đấu", UITheme.Kind.SECONDARY, UITheme.FS_BODY, func(): skip_requested.emit())
 		skip_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 		skip_btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN

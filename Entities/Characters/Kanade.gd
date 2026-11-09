@@ -55,14 +55,13 @@ func salvation_song(target: Entity):
 
 # ── Ghi Đè Logic Chiến Đấu ─────────────────────────────────────────────────
 
-func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = false) -> bool:
+func take_damage(amount: int, damage_type: String = "physical") -> bool:
 	"""
 	Xử lý nhận sát thương với cơ chế Chuyển hướng (Deflect).
 	
 	Args:
 		amount (int): Lượng sát thương gốc.
 		damage_type (String): Loại sát thương.
-		is_crit (bool): Có phải đòn đánh chí mạng không.
 	Returns: 
 		bool: True nếu Kanade bị hạ gục, ngược lại False.
 	"""
@@ -72,7 +71,10 @@ func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = 
 		var alive_allies = allies.filter(func(a): return a != self and a.current_hp > 0)
 		if not alive_allies.is_empty():
 			var transfer_target = alive_allies[randi() % alive_allies.size()]
-			transfer_target.take_damage(halved_dmg, damage_type, is_crit)
-			return super.take_damage(0, damage_type, false)
+			# Cờ chí mạng đi theo phần sát thương sang đồng đội (Kanade chỉ hiện số 0), không ở lại trên Kanade
+			transfer_target.set_meta("was_crit", get_meta("was_crit", false))
+			set_meta("was_crit", false)
+			transfer_target.take_damage(halved_dmg, damage_type)
+			return super.take_damage(0, damage_type)
 	
-	return super.take_damage(amount, damage_type, is_crit)
+	return super.take_damage(amount, damage_type)

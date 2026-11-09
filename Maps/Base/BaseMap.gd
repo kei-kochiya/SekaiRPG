@@ -237,15 +237,7 @@ func _create_npc(npc_name: String, pos: Vector2, color: Color):
 	root.set_meta("is_npc", true)
 	root.set_meta("npc_name", npc_name)
 	
-	var char_sprite = MapUtils.create_character_sprite(npc_name)
-	if char_sprite:
-		root.add_child(char_sprite)
-	else:
-		var vis = ColorRect.new()
-		vis.size = Vector2(16, 24)
-		vis.position = Vector2(-8, -24)
-		vis.color = color
-		root.add_child(vis)
+	MapUtils.add_character_body(root, npc_name, color)
 	
 	root.add_child(MapUtils.make_world_label(npc_name, color))
 	
@@ -256,15 +248,7 @@ func _create_npc(npc_name: String, pos: Vector2, color: Color):
 		if current_stage: current_stage.talk_to_npc(npc_name)
 	)
 	
-	var sb = StaticBody2D.new()
-	sb.collision_layer = 2
-	var col = CollisionShape2D.new()
-	var shape = RectangleShape2D.new()
-	shape.size = Vector2(16, 16)
-	col.shape = shape
-	col.position = Vector2(0, -8)
-	sb.add_child(col)
-	root.add_child(sb)
+	MapUtils.add_static_box(root, Vector2(16, 16), Vector2.ZERO, 2, Vector2(0, -8)) # thân NPC: người chơi không đi xuyên được
 	add_child(root)
 
 func _spawn_player():
@@ -304,11 +288,11 @@ func _on_exit_interacted():
 			_leave_to(MapPaths.STREET)
 		else:
 			_leaving = false
-	elif GameManager.get_flag("harbor_mission_unlocked") and not GameManager.accepted_harbor_mission:
+	elif GameManager.get_flag("harbor_mission_unlocked") and not GameManager.get_flag("accepted_harbor_mission"):
 		# Chưa nhận nhiệm vụ từ Ena: cảnh Bến Cảng (harbor_arrival) giả định cô ấy đã giao việc
 		DialogueManager.play_dialogue([{"text": "Ena đang đợi để giao nhiệm vụ Bến Cảng. Nên gặp cô ấy trước khi đi.", "type": "narrator"}])
 		_leaving = false
-	elif GameManager.accepted_harbor_mission and not GameManager.harbor_mission_done:
+	elif GameManager.get_flag("accepted_harbor_mission") and not GameManager.get_flag("harbor_mission_done"):
 		_leave_to(MapPaths.HARBOR)
 	# Kiểm tra chuyển cảnh sang StreetMap
 	elif GameManager.get_flag("ena_cafe_done") and not GameManager.get_flag("street_survival_done"):
@@ -318,7 +302,7 @@ func _on_exit_interacted():
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("lobby_street_mission_not_ready"))
 			_leaving = false
 	# Chỉ đi Warehouse nếu chưa xong 5 wave
-	elif GameManager.warehouse_mission_accepted and GameManager.warehouse_wave <= 5:
+	elif GameManager.get_flag("warehouse_mission_accepted") and GameManager.warehouse_wave <= 5:
 		_leave_to(MapPaths.WAREHOUSE)
 	else:
 		DialogueManager.play_dialogue([{"text": "Bạn chưa có lý do gì để ra ngoài lúc này.", "type": "narrator"}])

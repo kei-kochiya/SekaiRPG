@@ -136,7 +136,7 @@ static func _setup_mission_battle(cfg: Dictionary) -> Dictionary:
 		var p = GameManager.get_party_member(p_name)
 		if p: p_team.append(p)
 	
-	var lv = cfg.get("level_val", 1)
+	var lv := 1
 	if cfg.has("level_key"):
 		var key = cfg["level_key"]
 		if key == "warehouse_wave": lv = clamp(GameManager.warehouse_wave * 3, 3, 15)
@@ -249,8 +249,7 @@ static func _setup_training_battle() -> Dictionary:
 				enemies.append(enemy)
 	
 	if enemies.is_empty():
-		enemies = _create_enemies("target", 5, target_lv)
-		for i in range(enemies.size()): enemies[i].entity_name = "Robot Huấn Luyện %d" % (i + 1)
+		enemies = _create_enemies("target", 5, target_lv) # "Robot Huấn Luyện 1..5"
 
 	GameManager.last_battle_max_lv = target_lv
 	

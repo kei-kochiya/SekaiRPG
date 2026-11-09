@@ -12,17 +12,17 @@ func get_npc_positions() -> Dictionary:
 	}
 
 func get_bgm_track() -> String:
-	if not GameManager.harbor_mission_unlocked:
+	if not GameManager.get_flag("harbor_mission_unlocked"):
 		return "night"
 	return "base"
 
 func get_scene_lighting() -> Color:
-	if not GameManager.harbor_mission_unlocked:
+	if not GameManager.get_flag("harbor_mission_unlocked"):
 		return Color(0.2, 0.2, 0.4) # Ban đêm
 	return Color.WHITE
 
 func on_stage_start():
-	if not GameManager.harbor_mission_unlocked:
+	if not GameManager.get_flag("harbor_mission_unlocked"):
 		# Lấy CanvasModulate đã được tạo sẵn bởi BaseMap trước fade_in
 		var lighting = map.get_node_or_null("SceneLighting")
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_rest"), func():
@@ -38,7 +38,7 @@ func _do_morning_transition(lighting: CanvasModulate):
 	AudioManager.play_music("base")
 	
 	lighting.color = Color(1.0, 1.0, 1.0) # Trời sáng
-	GameManager.harbor_mission_unlocked = true
+	GameManager.set_flag("harbor_mission_unlocked", true)
 	
 	await ScreenFade.fade_in(1.0)
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("post_warehouse_morning"), func():
@@ -60,9 +60,9 @@ func handle_npc_interaction(npc_name: String):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
 
 func _handle_training_dialogue():
-	if not GameManager.talked_to_mafuyu_training:
+	if not GameManager.get_flag("talked_to_mafuyu_training"):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("mafuyu_training_intro"), func():
-			GameManager.talked_to_mafuyu_training = true
+			GameManager.set_flag("talked_to_mafuyu_training", true)
 			map._refresh_quest_label()
 			offer_training(TRAINEES, true)
 		)
@@ -70,9 +70,9 @@ func _handle_training_dialogue():
 		offer_training(TRAINEES, true)
 
 func _handle_harbor_mission():
-	if not GameManager.accepted_harbor_mission:
+	if not GameManager.get_flag("accepted_harbor_mission"):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_mission_assignment"), func():
-			GameManager.accepted_harbor_mission = true
+			GameManager.set_flag("accepted_harbor_mission", true)
 			map._refresh_quest_label()
 		)
 	else:
@@ -80,9 +80,9 @@ func _handle_harbor_mission():
 
 func get_quest_text() -> String:
 	var tasks: Array = []
-	if not GameManager.talked_to_mafuyu_training:
+	if not GameManager.get_flag("talked_to_mafuyu_training"):
 		tasks.append("- Nói chuyện với Mafuyu về chuyện luyện tập.")
-	if not GameManager.accepted_harbor_mission:
+	if not GameManager.get_flag("accepted_harbor_mission"):
 		tasks.append("- Gặp Ena để nhận nhiệm vụ tiếp theo.")
 	
 	if tasks.is_empty():

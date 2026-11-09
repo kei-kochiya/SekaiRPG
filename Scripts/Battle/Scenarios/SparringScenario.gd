@@ -60,4 +60,4 @@ func get_victory_status(_main: Node) -> bool:
 
 func on_battle_completed(_main: Node, _is_victory: bool):
 	await say_lines("honami_spar_bark")
-	GameManager.finish_battle(false, 0)
+	GameManager.finish_battle(false)

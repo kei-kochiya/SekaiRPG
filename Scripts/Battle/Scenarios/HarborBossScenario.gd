@@ -44,15 +44,14 @@ func get_victory_status(main: Node) -> bool:
 	var boss = main._get_entity("Đội Trưởng")
 	return boss == null or boss.current_hp <= 0
 
-func on_battle_completed(main: Node, is_victory: bool):
-	var enemy_count = main.enemy_team.size()
+func on_battle_completed(_main: Node, is_victory: bool):
 	if is_victory:
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_victory"), func():
-			GameManager.harbor_mission_done = true
-			GameManager.finish_battle(is_victory, enemy_count)
+			GameManager.set_flag("harbor_mission_done", true)
+			GameManager.finish_battle(is_victory)
 		)
 	else:
-		GameManager.finish_battle(is_victory, enemy_count)
+		GameManager.finish_battle(is_victory)
 
 # --- Internal Harbor Logic ---
 

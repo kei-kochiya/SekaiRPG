@@ -68,14 +68,13 @@ var stat_caps: Dictionary = {
 
 # ── Phương thức chiến đấu cốt lõi ───────────────────────────────────────────
 
-func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = false) -> bool:
+func take_damage(amount: int, damage_type: String = "physical") -> bool:
 	"""
 	Xử lý việc thực thể nhận sát thương và kiểm tra trạng thái sống còn.
 	
 	Args:
 		amount (int): Lượng sát thương nhận vào.
 		damage_type (String): Loại sát thương (physical, pure, dot).
-		is_crit (bool): Có phải đòn đánh chí mạng không.
 	Returns: 
 		bool: True nếu thực thể chết (HP = 0), ngược lại False.
 	"""
@@ -88,7 +87,7 @@ func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = 
 	
 	var is_break = get_meta("was_broken", false)
 	set_meta("was_broken", false)
-	is_crit = is_crit or get_meta("was_crit", false)
+	var is_crit: bool = get_meta("was_crit", false) # DamageCalculator đánh dấu đòn chí mạng lên người nhận
 	set_meta("was_crit", false)
 	
 	hp_changed.emit(current_hp, max_hp)

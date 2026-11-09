@@ -12,5 +12,5 @@ func on_start(main: Node):
 
 func on_battle_completed(main: Node, is_victory: bool):
 	if is_victory:
-		GameManager.prologue_phase = 1
+		GameManager.set_flag("prologue_phase", 1)
 	super.on_battle_completed(main, is_victory)

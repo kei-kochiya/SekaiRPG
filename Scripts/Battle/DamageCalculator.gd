@@ -45,7 +45,7 @@ static func calculate_damage_detailed(attacker: Entity, defender: Entity, skill_
 	
 	# Tính toán Phá Điểm Yếu (Weakness Break)
 	var is_break = false
-	if "break_gauge" in defender and not defender.is_character:
+	if not defender.is_character:
 		var break_damage = 0
 		if is_weakness:
 			var boost = 2.0 if (HoloSimManager and HoloSimManager.is_sim_active and HoloSimManager.has_blessing("blessing_break")) else 1.0

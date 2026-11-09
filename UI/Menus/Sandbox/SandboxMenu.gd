@@ -233,6 +233,11 @@ func _on_player_lv_changed(new_lv: float):
 	var lv = int(new_lv)
 	for c_name in sandbox_player_instances.keys():
 		var p = sandbox_player_instances[c_name]
+		if lv < p.level:
+			# set_initial_level chỉ nâng cấp: hạ cấp phải dựng lại nhân vật từ đầu, nếu không ô chọn hiện Lv thấp mà trận vẫn đánh ở Lv cũ
+			p.free()
+			p = EntityFactory.create(c_name)
+			sandbox_player_instances[c_name] = p
 		LevelManager.set_initial_level(p, lv)
 
 func _on_player_toggled(is_on: bool, c_name: String, chk: CheckBox):

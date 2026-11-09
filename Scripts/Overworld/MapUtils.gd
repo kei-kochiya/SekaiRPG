@@ -6,8 +6,8 @@ const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 const PERSON_ROOT = "res://Assets/Person/"
 const ROAD_ROOT = "res://Assets/Roads/"
 
-# Màu đại diện của từng nhân vật chính: nguồn duy nhất cho nhãn NPC trên map (BaseMap.NPC_COLORS) và cho việc OverworldPlayer
-# đoán sprite từ màu (thay cho hai bảng riêng đã lệch nhau ở màu Honami)
+# Màu đại diện của từng nhân vật chính: nguồn duy nhất cho nhãn NPC trên map (BaseMap.NPC_COLORS), cho các map dựng nhân vật bằng
+# khối màu và cho việc OverworldPlayer đoán sprite từ màu (thay cho hai bảng riêng đã lệch nhau ở màu Honami)
 const CHARACTER_COLORS := {
 	"Mafuyu": Color(0.4,  0.3,  0.5),
 	"Ena":    Color(0.72, 0.38, 0.16),
@@ -61,17 +61,24 @@ static func place_indoor_asset(parent: Node2D, file: String, grid_pos: Vector2, 
 		add_block(parent, grid_pos)
 	return sprite
 
-# Vật cản vô hình một ô lưới (thân tĩnh 32x32); thay cho khối StaticBody2D + CollisionShape2D chép ở nhiều map
-static func add_block(parent: Node2D, grid_pos: Vector2) -> StaticBody2D:
+# Thân tĩnh hình chữ nhật `size`, đặt tại `pos`; ô va chạm lệch `shape_offset` so với gốc thân. `layer` 1 là tường; NPC và rương dùng
+# layer 2 (chặn người chơi nhưng không vướng vùng tương tác). Thay cho cụm StaticBody2D + CollisionShape2D chép ở 5 chỗ.
+static func add_static_box(parent: Node, size: Vector2, pos: Vector2 = Vector2.ZERO, layer: int = 1, shape_offset: Vector2 = Vector2.ZERO) -> StaticBody2D:
 	var body := StaticBody2D.new()
-	body.position = grid_pos * TILE_SIZE
+	body.position = pos
+	body.collision_layer = layer
 	var col := CollisionShape2D.new()
 	var shape := RectangleShape2D.new()
-	shape.size = Vector2(TILE_SIZE, TILE_SIZE)
+	shape.size = size
 	col.shape = shape
+	col.position = shape_offset
 	body.add_child(col)
 	parent.add_child(body)
 	return body
+
+# Vật cản vô hình một ô lưới (thân tĩnh 32x32)
+static func add_block(parent: Node2D, grid_pos: Vector2) -> StaticBody2D:
+	return add_static_box(parent, Vector2(TILE_SIZE, TILE_SIZE), grid_pos * TILE_SIZE)
 
 # Nền màu phủ kín khung nhìn phía sau map nhỏ (thay cho ColorRect 2000x2000 chép ở các map cảnh cố định)
 static func add_backdrop(parent: Node2D, color: Color) -> ColorRect:
@@ -116,14 +123,7 @@ static func fill_tiles(parent: Node2D, file: String, x1: int, y1: int, x2: int, 
 	sprite.position = Vector2(x1, y1) * TILE_SIZE - Vector2(TILE_SIZE, TILE_SIZE) / 2.0 # ô (x, y) có tâm tại (x, y) * TILE_SIZE
 	parent.add_child(sprite)
 	if collide:
-		var body := StaticBody2D.new()
-		body.position = Vector2(x1 + x2, y1 + y2) * TILE_SIZE / 2.0
-		var col := CollisionShape2D.new()
-		var shape := RectangleShape2D.new()
-		shape.size = cells * TILE_SIZE
-		col.shape = shape
-		body.add_child(col)
-		parent.add_child(body)
+		add_static_box(parent, cells * TILE_SIZE, Vector2(x1 + x2, y1 + y2) * TILE_SIZE / 2.0)
 
 # Sàn phẳng (không va chạm): xem fill_tiles
 static func fill_floor(parent: Node2D, x1: int, y1: int, x2: int, y2: int):
@@ -167,7 +167,8 @@ static func get_character_sprite_path(c_name: String) -> String:
 		return path
 	return ""
 
-static func create_character_sprite(c_name: String, direction: String = "down") -> Sprite2D:
+# Sprite đứng yên (khung giữa, hướng xuống) của nhân vật; null nếu chưa có sprite riêng
+static func create_character_sprite(c_name: String) -> Sprite2D:
 	var path = get_character_sprite_path(c_name)
 	if path == "":
 		return null
@@ -175,15 +176,37 @@ static func create_character_sprite(c_name: String, direction: String = "down") 
 	sprite.texture = load(path)
 	sprite.hframes = 3
 	sprite.vframes = 4
-	var row = 0
-	match direction.to_lower():
-		"down": row = 0
-		"left": row = 1
-		"right": row = 2
-		"up": row = 3
-	sprite.frame = row * 3 + 1
+	sprite.frame = 1
 	sprite.position = Vector2(0, -16)
 	return sprite
+
+# Thân nhân vật trên map: sprite riêng nếu có, không thì khối màu 16x24 (thay cho khối if/else chép ở 5 chỗ)
+static func add_character_body(root: Node2D, c_name: String, color: Color) -> void:
+	var sprite := create_character_sprite(c_name)
+	if sprite:
+		root.add_child(sprite)
+		return
+	var vis := ColorRect.new()
+	vis.size = Vector2(16, 24)
+	vis.position = Vector2(-8, -24)
+	vis.color = color
+	root.add_child(vis)
+
+# Điểm kích hoạt trận trên map: sprite kẻ địch đứng yên (SVG trong PERSON_ROOT) + vùng tròn; `on_interact` chạy khi nhấn ENTER.
+# Thay cho cụm dựng chép ở Nhà kho, Phòng tập và Bến Cảng. Trả về node gốc để người gọi thêm nhãn.
+static func add_enemy_trigger(parent: Node2D, pos: Vector2, sprite_file: String, prompt: String, radius: float, on_interact: Callable) -> Node2D:
+	var root := Node2D.new()
+	root.position = pos
+	root.add_to_group("objectives")
+	var sprite := Sprite2D.new()
+	sprite.texture = load(PERSON_ROOT + sprite_file)
+	sprite.position = Vector2(0, -16)
+	root.add_child(sprite)
+	var zone := circle_zone(radius, prompt)
+	zone.interacted.connect(on_interact)
+	root.add_child(zone)
+	parent.add_child(root)
+	return root
 
 # Nhãn trong thế giới (tên NPC, tên khu, bảng hiệu): chữ >= FS_CAPTION, viền tối để đọc được trên mọi nền.
 # Màu tối (Mafuyu, PrimeMinister...) được làm sáng lên vì viền INK_900 sẽ nuốt mất chữ tối.
@@ -209,16 +232,8 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 		sprite.position = Vector2(0, -16)
 		root.add_child(sprite)
 	else:
-		var char_sprite = create_character_sprite(p_name)
-		if char_sprite:
-			root.add_child(char_sprite)
-		else:
-			var vis = ColorRect.new()
-			vis.size = Vector2(16, 24)
-			vis.position = Vector2(-8, -24)
-			vis.color = color
-			root.add_child(vis)
-	
+		add_character_body(root, p_name, color)
+
 	root.add_child(make_world_label(p_name, color))
 	
 	if sprite_file != "" and ResourceLoader.exists(PERSON_ROOT + sprite_file) and root.get_child(0) is ColorRect:
@@ -235,15 +250,7 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 static func create_visual_npc(parent: Node2D, npc_name: String, pos: Vector2, color: Color):
 	var root = Node2D.new()
 	root.position = pos
-	var char_sprite = create_character_sprite(npc_name)
-	if char_sprite:
-		root.add_child(char_sprite)
-	else:
-		var vis = ColorRect.new()
-		vis.size = Vector2(16, 24)
-		vis.position = Vector2(-8, -24)
-		vis.color = color
-		root.add_child(vis)
+	add_character_body(root, npc_name, color)
 	root.z_index = 2
 	parent.add_child(root)
 

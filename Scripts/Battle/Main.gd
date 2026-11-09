@@ -47,7 +47,6 @@ func _ready():
 		prepare_entity(e)
 				
 	hud = BattleHUDClass.new()
-	hud.allow_skip = scenario is DefaultScenario or scenario is HoloSimScenario
 	add_child(hud)
 	hud.setup(player_team, enemy_team)
 	hud.skip_requested.connect(_on_skip_requested)
@@ -167,13 +166,12 @@ func run_battle():
 		_advance_action_gauges(av_passed)
 		actor.action_gauge = max(0.0, actor.action_gauge - TurnCalculator.ACTION_GAUGE_FULL)
 		
-		if scenario:
-			scenario.on_turn_start(self, actor)
-			if is_scripting:
-				await get_tree().create_timer(0.5, false).timeout
-				continue
-			if not all_entities.has(actor):
-				continue # Kịch bản vừa tráo đội hình (vd. pha cứu viện): lượt này không còn hợp lệ
+		scenario.on_turn_start(self, actor)
+		if is_scripting:
+			await get_tree().create_timer(0.5, false).timeout
+			continue
+		if not all_entities.has(actor):
+			continue # Kịch bản vừa tráo đội hình (vd. pha cứu viện): lượt này không còn hợp lệ
 		
 		var is_player_turn = actor in player_team
 		if not GameManager.is_tutorial and is_player_turn:
@@ -199,9 +197,6 @@ func run_battle():
 			await _player_turn(actor)
 		else:
 			await _ai_turn(actor)
-		
-		if scenario:
-			scenario.on_turn_end(self, actor)
 		
 		if _check_battle_end():
 			break
@@ -318,8 +313,7 @@ func _execute_action(actor: Entity, action: String, target: Entity):
 		print("[Warning] ", actor.entity_name, " không có skill: ", action)
 	
 	_apply_synergy(actor, action, target, had_bleed)
-	if scenario:
-		scenario.on_action_executed(self, actor, action, target)
+	scenario.on_action_executed(self, actor, action, target)
 	
 	_regenerate_timeline()
 
@@ -395,10 +389,7 @@ func _check_battle_end() -> bool:
 	Hàm kiểm tra xem trận đấu đã kết thúc hay chưa và kết quả thắng/thua.
 	- Return: True nếu trận đấu kết thúc, False nếu tiếp tục (bool).
 	"""
-	if scenario:
-		return scenario.check_battle_end(self)
-	
-	return false
+	return scenario.check_battle_end(self)
 
 func _setup_sandbox_exit_button():
 	# Tạo nút thoát ở góc phải màn hình cho Sandbox

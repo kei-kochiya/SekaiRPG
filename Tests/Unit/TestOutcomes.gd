@@ -98,3 +98,18 @@ func test_entity_factory_monsters_are_known_to_the_battle_initializer():
 	var known: Array = BattleInitializer.enemy_classes.values()
 	for monster_name in EntityFactory.MONSTERS:
 		assert_true(EntityFactory.MONSTERS[monster_name] in known, "%s có trong BattleInitializer.enemy_classes" % monster_name)
+
+# Bảng kết cục chỉ chạy khi khóa khớp một id trong registry: gõ sai một id thì trận đó lặng lẽ mất cờ/quy tắc rút lui
+func test_every_outcome_table_key_is_a_registered_battle():
+	var ids: Array = BattleInitializer.scripted_battle_ids()
+	var tables := {
+		"FATED": ScriptedBattleOutcomes.FATED.keys(),
+		"WIN_FLAG": ScriptedBattleOutcomes.WIN_FLAG.keys(),
+		"RETREAT_ON_LOSS": ScriptedBattleOutcomes.RETREAT_ON_LOSS,
+		"CONTINUES_ON_LOSS": ScriptedBattleOutcomes.CONTINUES_ON_LOSS,
+	}
+	for table_name in tables:
+		assert_gt(tables[table_name].size(), 0, "%s không rỗng" % table_name)
+		for id in tables[table_name]:
+			assert_true(id in ids, "%s: '%s' là một id có trong registry" % [table_name, id])
+

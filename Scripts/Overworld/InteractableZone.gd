@@ -6,7 +6,7 @@ Tóm tắt: InteractableZone quản lý các vùng tương tác sự kiện trê
 
 Chức năng chính:
 - Tạo một vùng phát hiện va chạm (Area2D) chuyên biệt để nhận diện OverworldPlayer.
-- Tự động hiển thị nhãn gợi ý (Prompt) "Press ENTER" khi người chơi nằm trong vùng an toàn.
+- Tự động hiển thị nhãn gợi ý (Prompt) "Nhấn ENTER" khi người chơi nằm trong vùng an toàn.
 - Lắng nghe sự kiện phím (InputEvent) và phát tín hiệu `interacted` khi người chơi bấm nút tương tác.
 - Tích hợp với hệ thống MobileControls để hiển thị phím bấm tương tác ảo trên điện thoại.
 - Các vùng chồng lên nhau (NPC đứng sát bệ cửa hàng/Holo-Sim): chỉ vùng gần người chơi nhất hiện gợi ý và nhận phím.
@@ -28,7 +28,7 @@ var _player: Node2D
 const PROMPT_GAP = 56
 
 # Đổi text sau khi vùng đã tạo (vd. TreasureChest: "Mở rương" -> "Rương trống") thì nhãn cập nhật theo
-@export var prompt_text: String = "Press ENTER":
+@export var prompt_text: String = "Nhấn ENTER":
 	set(value):
 		prompt_text = value
 		_refresh_prompt()

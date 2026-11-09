@@ -12,24 +12,24 @@ func get_npc_positions() -> Dictionary:
 	}
 
 func on_stage_start():
-	if not GameManager.safehouse_intro_done:
-		GameManager.safehouse_intro_done = true
+	if not GameManager.get_flag("safehouse_intro_done"):
+		GameManager.set_flag("safehouse_intro_done", true)
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("safehouse_intro"), func():
 			map._refresh_quest_label()
 		)
 
 func handle_npc_interaction(npc_name: String):
-	if not GameManager.intro_quest_done:
+	if not GameManager.get_flag("intro_quest_done"):
 		_quest_phase_interact(npc_name)
-	elif not GameManager.warehouse_mission_accepted:
+	elif not GameManager.get_flag("warehouse_mission_accepted"):
 		_mission_briefing_interact(npc_name)
 	else:
 		_free_roam_interact(npc_name)
 
 func _quest_phase_interact(npc_name: String):
 	var key := "safehouse_meet_" + npc_name.to_lower()
-	if npc_name not in GameManager.npcs_greeted:
-		GameManager.npcs_greeted = GameManager.npcs_greeted + [npc_name]
+	if npc_name not in GameManager.get_flag("npcs_greeted", []):
+		GameManager.set_flag("npcs_greeted", GameManager.get_flag("npcs_greeted", []) + [npc_name])
 		DialogueManager.play_dialogue(DialogueLoader.get_lines(key), func():
 			map._refresh_quest_label()
 			_check_quest_complete()
@@ -40,7 +40,7 @@ func _quest_phase_interact(npc_name: String):
 func _mission_briefing_interact(npc_name: String):
 	if npc_name == "Kanade":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("kanade_mission"), func():
-			GameManager.warehouse_mission_accepted = true
+			GameManager.set_flag("warehouse_mission_accepted", true)
 			map._refresh_quest_label()
 		)
 	else:
@@ -62,19 +62,19 @@ func _talk_casual(npc_name: String):
 
 func _check_quest_complete():
 	for n in INTRO_NPCS:
-		if n not in GameManager.npcs_greeted: return
-	GameManager.intro_quest_done = true
+		if n not in GameManager.get_flag("npcs_greeted", []): return
+	GameManager.set_flag("intro_quest_done", true)
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("quest_intro_complete"), func():
 		map._refresh_quest_label()
 	)
 
 func get_quest_text() -> String:
-	if not GameManager.intro_quest_done:
+	if not GameManager.get_flag("intro_quest_done"):
 		var remaining: Array = []
 		for n in INTRO_NPCS:
-			if n not in GameManager.npcs_greeted: remaining.append(n)
+			if n not in GameManager.get_flag("npcs_greeted", []): remaining.append(n)
 		return "MỤC TIÊU: Làm quen với mọi người\nCòn lại: " + ", ".join(remaining)
-	elif not GameManager.warehouse_mission_accepted:
+	elif not GameManager.get_flag("warehouse_mission_accepted"):
 		return "MỤC TIÊU: Nói chuyện với Kanade để nhận nhiệm vụ"
 	else:
 		return "MỤC TIÊU: Rời khỏi nhà để bắt đầu nhiệm vụ\n(Có thể nói chuyện thêm với mọi người)"

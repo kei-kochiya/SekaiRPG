@@ -36,8 +36,7 @@ func slash_attack(target: Entity):
 	target.take_damage(dmg)
 	
 	# Luôn gây Bleed nhẹ (2 lượt)
-	if target.has_method("add_status"):
-		target.add_status({"type": "Bleed", "duration": 2})
+	target.add_status({"type": "Bleed", "duration": 2})
 
 func get_portrait_path() -> String:
 	return "res://Assets/Person/thug.svg"

@@ -96,6 +96,13 @@ func run_all_tests() -> Dictionary:
 		if m["name"].begins_with("test_"):
 			test_methods.append(m["name"])
 			
+	if test_methods.is_empty():
+		# Suite đặt sai tiền tố hàm (tst_..., tests_...) sẽ chạy không test nào mà vẫn "đạt"
+		failed_count += 1
+		var empty = "[FAIL] %s: không có hàm test_* nào" % get_script().resource_path.get_file().get_basename()
+		failures.append(empty)
+		push_error(empty)
+
 	for m_name in test_methods:
 		current_test_name = m_name
 		var before := passed_count + failed_count

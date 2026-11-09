@@ -36,12 +36,12 @@ func _init():
 
 # ── Ghi Đè Logic Chiến Đấu ─────────────────────────────────────────────────
 
-func take_damage(amount: int, damage_type: String = "physical", is_crit: bool = false) -> bool:
+func take_damage(amount: int, damage_type: String = "physical") -> bool:
 	# Khi is_harbor = true (trong trận Harbor): miễn tổn thương hoàn toàn.
 	if is_harbor:
 		damage_received_detailed.emit(0, damage_type, false, false)
 		return false
-	return super.take_damage(amount, damage_type, is_crit)
+	return super.take_damage(amount, damage_type)
 
 # ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────
 

@@ -49,10 +49,7 @@ func on_stage_start():
 	
 	# Reset training flags
 	if not GameManager.get_flag("post_harbor_training_reset"):
-		GameManager.set_flag("training_ichika_done", false)
-		GameManager.set_flag("training_kanade_done", false)
-		GameManager.set_flag("training_ena_done", false)
-		GameManager.set_flag("training_mizuki_done", false)
+		GameManager.reset_training_progress()
 		GameManager.set_flag("post_harbor_training_reset", true)
 	
 	# Đặt người chơi (Ichika) cạnh giường ban đầu nếu chưa xem cutscene
@@ -85,14 +82,12 @@ func _check_ena_phase_trigger():
 	var count = GameManager.get_flag("interaction_count", 0)
 	
 	if trained or count >= 4:
-		if not GameManager.get_flag("ena_cafe_unlocked"):
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("ena_bored_intro"), func():
-				GameManager.set_flag("ena_cafe_unlocked", true)
-				GameManager.set_flag("ena_control_phase", true)
-				map.set_player("Ena")
-				map._spawn_npcs()
-				map._refresh_quest_label()
-			)
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("ena_bored_intro"), func():
+			GameManager.set_flag("ena_control_phase", true)
+			map.set_player("Ena")
+			map._spawn_npcs()
+			map._refresh_quest_label()
+		)
 
 func _play_morning_cutscene():
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("morning_p1"), func():

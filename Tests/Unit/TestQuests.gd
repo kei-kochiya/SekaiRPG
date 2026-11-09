@@ -62,7 +62,7 @@ func test_quest_current_with_missing_flags_after_load():
 
 func test_quest_ignores_training_wave():
 	GameManager.reset_game()
-	GameManager.warehouse_mission_accepted = true
+	GameManager.set_flag("warehouse_mission_accepted", true)
 	GameManager.begin_training(["Ichika"])
 	GameManager.training_wave = 9
 	assert_eq(QuestRegistry.get_current_quest().quest_id, "quest_03_warehouse", "training_wave không ảnh hưởng quest Nhà kho")

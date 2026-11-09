@@ -21,10 +21,6 @@ var _honami: Node2D = null
 # Phần của base_celebration từ tiếng sập cửa trở đi: chỉ phát sau khi Ena đã bước ra tới cửa
 var _after_slam: Array = []
 
-# Cửa ra bị khoá suốt cảnh này, kể cả lúc chuẩn bị lại
-func _init():
-	exit_locked = true
-
 func get_npc_positions() -> Dictionary:
 	return {
 		"Mafuyu": Vector2(24 * map.TILE_SIZE, 12 * map.TILE_SIZE),
@@ -163,9 +159,12 @@ func handle_exit() -> bool:
 	return true
 
 func handle_npc_interaction(npc_name: String):
-	if not _prep_mode or npc_name != "Mafuyu":
+	if not _prep_mode:
 		return
-	_show_prep_menu()
+	if npc_name == "Mafuyu":
+		_show_prep_menu()
+	else:
+		say_nothing(npc_name)
 
 func get_quest_text() -> String:
 	if _prep_mode:

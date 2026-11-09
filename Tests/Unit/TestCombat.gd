@@ -161,3 +161,34 @@ func test_crit_flag_reaches_take_damage():
 	bot.take_damage(dmg)
 	assert_eq(seen.size(), 1, "One damage event")
 	assert_true(seen[0], "Critical hits are reported to listeners")
+
+# Kanade bẻ hướng 20% đòn: cờ chí mạng phải đi theo phần sát thương sang đồng đội, Kanade chỉ hiện số 0 thường
+func test_kanade_deflect_moves_the_crit_flag_to_whoever_takes_the_damage():
+	var kanade := Kanade.new()
+	var ichika := Ichika.new()
+	kanade.allies = [kanade, ichika]
+	var k_events: Array = []
+	var i_events: Array = []
+	kanade.damage_received_detailed.connect(func(amount, _t, crit, _b): k_events.append([amount, crit]))
+	ichika.damage_received_detailed.connect(func(amount, _t, crit, _b): i_events.append([amount, crit]))
+	var deflected := 0
+	var direct := 0
+	for i in 300:
+		kanade.current_hp = kanade.max_hp
+		ichika.current_hp = ichika.max_hp
+		k_events.clear()
+		i_events.clear()
+		kanade.set_meta("was_crit", true)
+		kanade.take_damage(100)
+		if i_events.is_empty():
+			direct += 1
+			assert_eq(k_events, [[100, true]], "Không bẻ hướng: Kanade nhận đòn chí mạng")
+		else:
+			deflected += 1
+			assert_eq(k_events, [[0, false]], "Bẻ hướng: Kanade chỉ hiện số 0 thường")
+			assert_eq(i_events, [[50, true]], "Bẻ hướng: đồng đội nhận nửa sát thương kèm cờ chí mạng")
+	assert_gt(deflected, 0, "Trong 300 lần phải có lần bẻ hướng (xác suất 20%)")
+	assert_gt(direct, 0, "Và có lần không bẻ hướng")
+	kanade.free()
+	ichika.free()
+

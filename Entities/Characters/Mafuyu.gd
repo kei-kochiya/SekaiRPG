@@ -27,7 +27,7 @@ func _init():
 	
 	skills = [
 		{"name": "Lưỡi Dao Vô Hồn", "method": "numb_blade", "cooldown_turns": 2, "target": "enemy", "details": "Phóng dao găm từ xa. Gây sát thương và 1 stack Bleed."},
-		{"name": "Vực Thẳm Vô Định", "method": "freezing_void", "cooldown_turns": 3, "target": "all_enemies", "details": "Gây DMG và 2 stack Bleed cho 2 kẻ địch bất kỳ."},
+		{"name": "Vực Thẳm Vô Định", "method": "freezing_void", "cooldown_turns": 3, "target": "all_enemies", "details": "Đánh 2 lần vào kẻ địch ngẫu nhiên (có thể trùng mục tiêu), mỗi lần gây DMG và 1 stack Bleed."},
 		{"name": "Lost World", "method": "lost_world", "initial_cooldown": 5, "once_per_battle": true, "target": "all_enemies", "details": "Sát thương scale theo máu đã mất. Nếu có người sống sót, gây 2 stack Bleed cho cả 2 phe."},
 	]
 

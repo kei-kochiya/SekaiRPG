@@ -104,3 +104,38 @@ func test_clear_children_detaches_immediately():
 	a.free()
 	b.free()
 	parent.free()
+
+# default_theme.tres là sản phẩm sinh ra từ UITheme.make_theme() (project.godot trỏ tới nó): đổi token mà quên chạy BuildTheme.gd thì
+# game vẫn chạy với màu cũ. So từng màu, hằng số, cỡ chữ và các thuộc tính chính của StyleBoxFlat.
+func test_default_theme_tres_matches_make_theme():
+	var saved := load("res://default_theme.tres") as Theme
+	assert_true(saved != null, "default_theme.tres nạp được")
+	var fresh := UITheme.make_theme()
+	var checked := 0
+	for t in fresh.get_type_list():
+		for n in fresh.get_color_list(t):
+			assert_eq(saved.get_color(n, t), fresh.get_color(n, t), "%s/%s: màu" % [t, n])
+			checked += 1
+		for n in fresh.get_constant_list(t):
+			assert_eq(saved.get_constant(n, t), fresh.get_constant(n, t), "%s/%s: hằng số" % [t, n])
+			checked += 1
+		for n in fresh.get_font_size_list(t):
+			assert_eq(saved.get_font_size(n, t), fresh.get_font_size(n, t), "%s/%s: cỡ chữ" % [t, n])
+			checked += 1
+		for n in fresh.get_stylebox_list(t):
+			var a := saved.get_stylebox(n, t) as StyleBoxFlat
+			var b := fresh.get_stylebox(n, t) as StyleBoxFlat
+			if b == null:
+				continue
+			assert_true(a != null, "%s/%s: có StyleBoxFlat trong file" % [t, n])
+			if a == null:
+				continue
+			var label := "%s/%s" % [t, n]
+			assert_eq(a.bg_color, b.bg_color, label + ": nền")
+			assert_eq(a.border_color, b.border_color, label + ": viền")
+			assert_eq([a.border_width_left, a.border_width_top, a.border_width_right, a.border_width_bottom], [b.border_width_left, b.border_width_top, b.border_width_right, b.border_width_bottom], label + ": độ dày viền")
+			assert_eq(a.corner_radius_top_left, b.corner_radius_top_left, label + ": bo góc")
+			assert_eq([a.content_margin_left, a.content_margin_top, a.content_margin_right, a.content_margin_bottom], [b.content_margin_left, b.content_margin_top, b.content_margin_right, b.content_margin_bottom], label + ": lề")
+			checked += 1
+	assert_gt(checked, 40, "Đã so đủ nhiều mục (chống kiểm tra rỗng)")
+

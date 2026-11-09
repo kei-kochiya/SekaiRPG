@@ -32,12 +32,7 @@ var _hud_label: Label
 func _ready() -> void:
 	AudioManager.play_music("map")
 
-	var bg := ColorRect.new()
-	bg.position = Vector2(-300, -300)
-	bg.size = Vector2(1900, 1300)
-	bg.color = Color(0.04, 0.05, 0.09)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
+	_rect(Vector2(-300, -300), Vector2(1900, 1300), Color(0.04, 0.05, 0.09))
 
 	_mod = CanvasModulate.new()
 	_mod.color = NIGHT
@@ -212,10 +207,11 @@ func _spawn_player() -> void:
 			c.limit_right = 40 * TILE_SIZE
 			c.limit_bottom = 22 * TILE_SIZE
 
-# Vị trí lưu lúc vào trận, chỉ nhận khi nằm trên đường/vỉa hè (tránh vị trí cũ của map khác làm Ena kẹt vào tường)
+# Vị trí lưu lúc vào trận, chỉ nhận khi nằm trên đường/vỉa hè (tránh vị trí cũ của map khác làm Ena kẹt vào tường).
+# Cận trên y = 7.5 là mép dưới hàng tường các tòa nhà phía bắc: người chơi đứng sát cửa ở y ≈ 7.72 vẫn được nhận lại.
 func _saved_pos(default: Vector2) -> Vector2:
 	var g := GameManager.last_player_position / TILE_SIZE
-	if g.x >= 2.0 and g.x <= 37.0 and g.y >= 8.0 and g.y <= 14.6:
+	if g.x >= 2.0 and g.x <= 37.0 and g.y >= 7.5 and g.y <= 14.6:
 		return GameManager.last_player_position
 	return default * TILE_SIZE
 

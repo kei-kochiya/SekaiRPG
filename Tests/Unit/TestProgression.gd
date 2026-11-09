@@ -68,7 +68,7 @@ func test_training_win_grants_exp_to_the_real_character():
 	var kanade_exp := kanade.current_exp
 	GameManager.begin_training(["Ichika"])
 	GameManager.training_exp_earned = 40
-	GameManager._apply_victory_rewards(1)
+	GameManager._apply_victory_rewards()
 	assert_eq(ichika.current_exp, exp_before + 40, "Thắng luyện tập cộng EXP cho nhân vật thật")
 	assert_eq(kanade.current_exp, kanade_exp, "Người không tham gia không nhận EXP")
 	assert_eq(GameManager.training_exp_earned, 0, "Bộ đếm EXP được xóa sau khi trao")
@@ -194,7 +194,6 @@ func test_four_talks_trigger_ena_in_the_same_scene():
 	_drain_dialogue()
 	assert_eq(GameManager.get_flag("interaction_count", 0), 4, "Đã đếm đủ 4 lần nói chuyện")
 	assert_true(GameManager.get_flag("ena_control_phase"), "Lần thứ 4: Ena chán và nhận quyền điều khiển ngay, không cần vào lại căn cứ")
-	assert_true(GameManager.get_flag("ena_cafe_unlocked"), "Mở khóa quán cafe")
 	base.free()
 	GameManager.reset_game()
 

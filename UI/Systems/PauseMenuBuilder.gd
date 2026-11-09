@@ -9,9 +9,9 @@ const PAUSE_WIDTH = 400
 const OPTIONS_WIDTH = 460
 
 const GUIDE_SECTIONS = [
-	["Công thức sát thương", "Sát thương = (ATK × hệ số kỹ năng − DEF) × (1 − RES/100) × hệ số hệ.\nSát thương tối thiểu luôn bằng 5% ATK của người đánh. Chí mạng nhân thêm Crit DMG."],
+	["Công thức sát thương", "Sát thương = (ATK × hệ số kỹ năng − DEF) × (1 − RES/100) × hệ số hệ.\nSát thương tối thiểu luôn bằng 5% của (ATK × hệ số kỹ năng). Chí mạng nhân thêm Crit DMG."],
 	["Hệ nguyên tố", "Cool > Happy > Cute > Cool. Mysterious và Pure khắc chế lẫn nhau.\nĐánh trúng hệ khắc gây 125% sát thương, đánh vào hệ bị khắc chỉ còn 80%."],
-	["Phá điểm yếu (Break)", "Mỗi đòn đánh làm giảm thanh Break của kẻ địch, mạnh nhất khi đánh trúng hệ yếu.\nKhi thanh Break cạn: kẻ địch bị Choáng 1 lượt và bị đẩy lùi trên thanh thứ tự lượt."],
+	["Phá điểm yếu (Break)", "Đòn đánh không bị kháng hệ làm giảm thanh Break của kẻ địch, mạnh nhất khi đánh trúng hệ yếu (đòn bị kháng thì không làm giảm).\nKhi thanh Break cạn: kẻ địch bị Choáng 1 lượt và bị đẩy lùi trên thanh thứ tự lượt."],
 	["Thứ tự lượt", "Tốc độ (SPD) càng cao thì càng tới lượt thường xuyên. Dải thứ tự lượt nằm ở giữa mép trên màn hình.\nDùng Choáng hoặc làm cạn thanh Break để chiếm lượt."],
 	["Nâng cấp chỉ số", "Nói chuyện với Kanade tại căn cứ (về sau là Honami) để dùng Điểm Kỹ Năng (SP) nâng cấp vĩnh viễn chỉ số. Nâng cấp cho ai thì người đó mạnh lên, kể cả khi họ trở thành kẻ địch."],
 ]
@@ -55,7 +55,7 @@ static func build_base_ui(menu: Node) -> Dictionary:
 		"options_panel": options_panel,
 	}
 
-static func build_guide_panel(guide_panel: PanelContainer, on_close: Callable = Callable()) -> void:
+static func build_guide_panel(guide_panel: PanelContainer, on_close: Callable) -> void:
 	UITheme.clear_children(guide_panel)
 
 	var outer := VBoxContainer.new()
@@ -68,8 +68,6 @@ static func build_guide_panel(guide_panel: PanelContainer, on_close: Callable = 
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(title)
 	var close_btn := UITheme.make_button("Đóng", UITheme.Kind.GHOST, UITheme.FS_LABEL, on_close)
-	if not on_close.is_valid():
-		close_btn.pressed.connect(func(): guide_panel.visible = false)
 	header.add_child(close_btn)
 	UITheme.focus_later(close_btn)
 

@@ -24,9 +24,6 @@ func get_npc_positions() -> Dictionary:
 func get_scene_lighting() -> Color:
 	return Color(1.0, 0.96, 0.9)
 
-func get_bgm_track() -> String:
-	return "base"
-
 func on_stage_start():
 	_visit_after_intro = GameManager.get_flag("epilogue_intro_done")
 	GameManager.set_flag("mizuki_control_phase", false)

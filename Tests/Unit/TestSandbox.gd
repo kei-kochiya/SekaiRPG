@@ -92,3 +92,26 @@ func test_sandbox_enemy_limit():
 	root.remove_child(menu)
 	menu.free()
 	GameManager.reset_game()
+
+# Hạ ô Level phải hạ cả nhân vật đã chọn (set_initial_level chỉ biết nâng): trước đây ô hiện Lv.20 nhưng trận vẫn đánh ở Lv.50
+func test_lowering_the_level_spinner_lowers_selected_players():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var menu: Node = load(MapPaths.SANDBOX_MENU).instantiate()
+	root.add_child(menu)
+	var box := CheckBox.new()
+	menu._on_player_toggled(true, "Ichika", box)
+	box.free()
+	menu._on_player_lv_changed(50.0)
+	var high_hp: int = menu.sandbox_player_instances["Ichika"].max_hp
+	assert_eq(menu.sandbox_player_instances["Ichika"].level, 50, "Nâng lên Lv.50")
+	menu._on_player_lv_changed(20.0)
+	var low = menu.sandbox_player_instances["Ichika"]
+	assert_eq(low.level, 20, "Hạ xuống Lv.20 thì nhân vật cũng về Lv.20")
+	assert_lt(low.max_hp, high_hp, "Chỉ số giảm theo cấp")
+	assert_eq(low.skill_points, 20 * 3, "SP tính lại theo cấp mới")
+	menu._on_player_lv_changed(35.0)
+	assert_eq(menu.sandbox_player_instances["Ichika"].level, 35, "Nâng lại vẫn đúng")
+	root.remove_child(menu)
+	menu.free()
+	GameManager.reset_game()
+

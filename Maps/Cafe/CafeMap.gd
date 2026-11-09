@@ -8,8 +8,6 @@ say xỉn của Ena, các lựa chọn rẽ nhánh dẫn đến các trận chi�
 kết cục sau trận đấu trước khi quay trở lại căn cứ.
 """
 
-const TILE_SIZE = MapUtils.TILE_SIZE
-
 func _ready():
 	AudioManager.play_music("map")
 	
@@ -32,30 +30,30 @@ func _build_cafe():
 	
 	# Counter (Kitchen assets)
 	for i in range(1, 7):
-		_place_indoor_asset("kitchen_%d.png" % i, Vector2(10 + i, 5), true)
+		_place_indoor_asset("kitchen_%d.png" % i, Vector2(10 + i, 5))
 		
 	# Table 1: Ena & Mizuki (Vertical table)
-	_place_indoor_asset("table_1.png", Vector2(10, 10), true)
-	_place_indoor_asset("table_2.png", Vector2(10, 11), true)
-	_place_indoor_asset("table_3.png", Vector2(10, 12), true)
+	_place_indoor_asset("table_1.png", Vector2(10, 10))
+	_place_indoor_asset("table_2.png", Vector2(10, 11))
+	_place_indoor_asset("table_3.png", Vector2(10, 12))
 	
 	# Chairs for Table 1 (1 tile away)
-	_place_indoor_asset("chair_facing_right.png", Vector2(8, 11), true)
-	_place_indoor_asset("chair_facing_right.png", Vector2(12, 11), true, true) # Mirrored
+	_place_indoor_asset("chair_facing_right.png", Vector2(8, 11))
+	_place_indoor_asset("chair_facing_right.png", Vector2(12, 11), true) # Mirrored (flip_h)
 	
 	# Table 2: 3 Thugs (Vertical table)
-	_place_indoor_asset("table_1.png", Vector2(20, 10), true)
-	_place_indoor_asset("table_2.png", Vector2(20, 11), true)
-	_place_indoor_asset("table_3.png", Vector2(20, 12), true)
+	_place_indoor_asset("table_1.png", Vector2(20, 10))
+	_place_indoor_asset("table_2.png", Vector2(20, 11))
+	_place_indoor_asset("table_3.png", Vector2(20, 12))
 	
 	# Chairs for Table 2 (3 Thugs sitting along the table, 1 tile away)
-	_place_indoor_asset("chair_facing_right.png", Vector2(18, 10), true)
-	_place_indoor_asset("chair_facing_right.png", Vector2(18, 11), true)
-	_place_indoor_asset("chair_facing_right.png", Vector2(18, 12), true)
+	_place_indoor_asset("chair_facing_right.png", Vector2(18, 10))
+	_place_indoor_asset("chair_facing_right.png", Vector2(18, 11))
+	_place_indoor_asset("chair_facing_right.png", Vector2(18, 12))
 	
 	# Characters as dummy sprites
-	_create_dummy_char("Ena", Vector2(8, 11), Color(0.72, 0.38, 0.16))
-	_create_dummy_char("Mizuki", Vector2(12, 11), Color(0.85, 0.65, 0.8))
+	_create_dummy_char("Ena", Vector2(8, 11), MapUtils.CHARACTER_COLORS["Ena"])
+	_create_dummy_char("Mizuki", Vector2(12, 11), MapUtils.CHARACTER_COLORS["Mizuki"])
 	
 	_create_dummy_char("Giang Hồ 1", Vector2(18, 10), Color.DARK_GRAY)
 	_create_dummy_char("Giang Hồ 2", Vector2(18, 11), Color.DARK_GRAY)
@@ -70,10 +68,8 @@ func _fill_floor(x1, y1, x2, y2):
 func _draw_room_walls(x1, y1, x2, y2):
 	MapUtils.draw_room_walls(self, x1, y1, x2, y2, false) # quán không có người chơi đi lại: khỏi dựng vật cản
 
-func _place_tile(file: String, grid_pos: Vector2):
-	MapUtils.place_tile(self, file, grid_pos, false)
-
-func _place_indoor_asset(file: String, grid_pos: Vector2, _has_collision: bool, flip_h: bool = false, rot: float = 0.0):
+# Quán không có người chơi đi lại nên đồ nội thất không dựng vật cản
+func _place_indoor_asset(file: String, grid_pos: Vector2, flip_h: bool = false, rot: float = 0.0):
 	MapUtils.place_indoor_asset(self, file, grid_pos, false, flip_h, rot)
 
 func _run_logic():

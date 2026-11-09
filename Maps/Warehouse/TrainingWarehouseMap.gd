@@ -5,7 +5,7 @@ TrainingWarehouseMap: Bản đồ chế độ luyện tập tại kho hàng.
 
 Cho phép 1-2 thành viên tham gia luyện tập với số wave tăng theo số người (5 hoặc 10).
 Kẻ địch sinh ngẫu nhiên (có thể là nhân vật trong nhóm hoặc mục tiêu).
-Hoàn thành chuyển về BaseMap_PostWarehouse.
+Hoàn thành: về BaseMap (Stage hiện tại của câu chuyện).
 """
 
 const TILE_SIZE = MapUtils.TILE_SIZE
@@ -69,25 +69,11 @@ func _return_to_base():
 	await GameManager.change_map(MapPaths.BASE, 1.0)
 
 func _create_enemy_zone(pos: Vector2):
-	var root = Node2D.new()
-	root.position = pos
-	root.add_to_group("objectives")
-	
-	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/Person/warehouse_worker.svg")
-	sprite.scale = Vector2(1, 1)
-	sprite.position = Vector2(0, -16)
-	root.add_child(sprite)
-	
-	var zone = MapUtils.circle_zone(40, "Nhấn ENTER để bắt đầu lượt tập (Wave " + str(GameManager.training_wave) + ")")
-	root.add_child(zone)
-	
-	zone.interacted.connect(func():
+	MapUtils.add_enemy_trigger(self, pos, "warehouse_worker.svg", "Nhấn ENTER để bắt đầu lượt tập (Wave " + str(GameManager.training_wave) + ")", 40, func():
 		var player = get_node("OverworldPlayer")
 		GameManager.store_map_state(MapPaths.TRAINING, player.global_position)
 		GameManager.trigger_battle()
 	)
-	add_child(root)
 
 func _build_map():
 	# Floor

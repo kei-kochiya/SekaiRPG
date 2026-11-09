@@ -63,10 +63,7 @@ static func pick_target(attacker: Entity, enemy_team: Array, timeline: Array) ->
 		for _i in range(int(entry.score)):
 			weighted_pool.append(entry.target)
 
-	if weighted_pool.is_empty():
-		return alive_targets.pick_random()
-
-	return weighted_pool.pick_random()
+	return weighted_pool.pick_random() # điểm tối thiểu 1 nên mỗi mục tiêu có ít nhất một phiếu
 
 # ── Quyết Định Hành Động ───────────────────────────────────────────────────
 

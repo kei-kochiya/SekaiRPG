@@ -37,15 +37,7 @@ func _setup_visual():
 	add_child(_sprite)
 
 func _setup_collision():
-	var body = StaticBody2D.new()
-	body.collision_layer = 2
-	var col = CollisionShape2D.new()
-	var rect = RectangleShape2D.new()
-	rect.size = Vector2(24, 20)
-	col.shape = rect
-	col.position = Vector2(0, -6)
-	body.add_child(col)
-	add_child(body)
+	MapUtils.add_static_box(self, Vector2(24, 20), Vector2.ZERO, 2, Vector2(0, -6))
 
 func _setup_interactable():
 	_zone = MapUtils.circle_zone(38.0, "Mở rương")

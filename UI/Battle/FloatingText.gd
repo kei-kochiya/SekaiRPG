@@ -8,7 +8,7 @@ Chức năng chính:
 - Tự động thực hiện hiệu ứng bay lên, phóng to nảy (pop) và mờ dần (Tween).
 - Phân biệt màu sắc trực quan:
   - Chí mạng (Crit): Vàng kim viền đỏ, cỡ chữ lớn kèm nhãn "CRIT!".
-  - Phá điểm yếu (Break): Xanh ngọc phát sáng "BREAK!".
+  - Phá điểm yếu (Break): Xanh ngọc phát sáng "WEAKNESS BREAK!".
   - Hồi máu: Xanh lá cây (+HP).
   - DoT: Tím mờ.
   - Sát thương vật lý/thuộc tính thường: Đỏ / Trắng.

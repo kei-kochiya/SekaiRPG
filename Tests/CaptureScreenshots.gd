@@ -362,7 +362,7 @@ func _build_prompt() -> Node:
 	_clear_systems()
 	var holder := Node2D.new()
 	holder.add_child(_backdrop(Color.DARK_OLIVE_GREEN))
-	var texts := ["Mở rương", "Nhấn ENTER để bắt đầu lượt tập (Wave 3)", "Press ENTER"]
+	var texts := ["Mở rương", "Nhấn ENTER để bắt đầu lượt tập (Wave 3)", "Nhấn ENTER"]
 	for i in texts.size():
 		var marker := ColorRect.new()
 		marker.color = UITheme.PLAYER
@@ -426,7 +426,7 @@ func _build_floating() -> Node:
 		var foes: Array = battle.enemy_team
 		foes[0].take_damage(37)
 		foes[1].set_meta("was_crit", true)
-		foes[1].take_damage(88, "physical", true)
+		foes[1].take_damage(88)
 		foes[2].set_meta("was_broken", true)
 		foes[2].take_damage(54)
 		battle.player_team[0].take_damage(21, "dot"))

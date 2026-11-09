@@ -49,7 +49,7 @@ func _build_house():
 	add_child(door)
 	
 	# Tạo InteractableZone cho cửa
-	var zone = MapUtils.rect_zone(Vector2(32, 32), "", Vector2(15 * TILE_SIZE, 15 * TILE_SIZE))
+	var zone = MapUtils.rect_zone(Vector2(32, 32), "Rời khỏi nhà", Vector2(15 * TILE_SIZE, 15 * TILE_SIZE))
 	zone.interacted.connect(func():
 		if _is_arc2():
 			# Hồi kết 2: không còn đường về Nightcord cũ
@@ -72,8 +72,8 @@ func _build_house():
 	# Spawn NPCs
 	var honami_pos = Vector2(15, 8)
 	MapUtils.create_dummy_char(self, "Honami", honami_pos, MapUtils.CHARACTER_COLORS["Honami"])
-	var honami_zone = MapUtils.rect_zone(Vector2(32, 32), "", honami_pos * TILE_SIZE)
-	honami_zone.interacted.connect(func(): _on_npc_interacted("Honami"))
+	var honami_zone = MapUtils.rect_zone(Vector2(32, 32), "Nói chuyện với Honami", honami_pos * TILE_SIZE)
+	honami_zone.interacted.connect(_on_honami_interacted)
 	add_child(honami_zone)
 	
 	# Rương thuốc y tế của Honami
@@ -81,7 +81,7 @@ func _build_house():
 	
 	# Spawn Player
 	var player := MapUtils.spawn_player(self, Vector2(12 * TILE_SIZE, 8 * TILE_SIZE), false) # camera cố định căn giữa căn phòng
-	player.character_color = Color(0.29, 0.62, 0.62)
+	player.character_color = MapUtils.CHARACTER_COLORS["Ichika"]
 	_player = player
 
 func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool, flip_h: bool = false, rot: float = 0.0):
@@ -108,8 +108,8 @@ func _start_spar():
 		GameManager.start_scripted_battle("honami_spar", HOUSE_SCENE, Vector2.ZERO, 1.0)
 	)
 
-func _on_npc_interacted(npc_name: String):
-	if npc_name != "Honami" or _busy:
+func _on_honami_interacted():
+	if _busy:
 		return
 	if _is_arc2():
 		_talk_arc2()

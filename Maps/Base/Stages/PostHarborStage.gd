@@ -68,6 +68,8 @@ func _handle_mizuki_interactions(npc_name: String):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_report_p1"), func():
 			GameManager.start_scripted_battle("mizuki_vs_mafuyu", MapPaths.BASE)
 		)
+	else:
+		say_nothing(npc_name) # Kanade đang nằm nghỉ trên giường
 
 func _handle_normal_interactions(npc_name: String):
 	if npc_name == "Mafuyu" and not GameManager.get_flag("mafuyu_honami_talked"):
@@ -77,7 +79,7 @@ func _handle_normal_interactions(npc_name: String):
 			await GameManager.change_map(MapPaths.ALLEYWAY, 1.5)
 		)
 	else:
-		DialogueManager.play_dialogue([{"text": "...", "type": "dialogue", "name": npc_name, "color": Color.WHITE}])
+		say_nothing(npc_name)
 
 func get_quest_text() -> String:
 	if GameManager.get_flag("mizuki_control_phase"):

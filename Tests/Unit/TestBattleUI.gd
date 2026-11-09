@@ -158,3 +158,30 @@ func test_the_tutorial_modal_can_be_released_before_its_canvas_is_freed():
 	root.remove_child(host)
 	host.free() # tree_exiting gọi exit() lần nữa: phải vô hại (idempotent)
 	assert_false(PauseMenu.is_modal_open(), "Không bị nhả hai lần làm lệch bộ đếm")
+
+# Bước chọn mục tiêu có nút quay lại: bấm nhầm một kỹ năng dùng một lần vẫn rút lại được (kỹ năng chỉ tiêu hao khi lệnh được phát đi)
+func test_command_menu_can_go_back_from_target_selection():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var menu := CommandMenu.new()
+	root.add_child(menu)
+	var ichika := Ichika.new()
+	var guard := Guard.new()
+	ichika.allies = [ichika]
+	menu.show_for(ichika, [guard])
+	var chosen: Array = []
+	menu.command_chosen.connect(func(action, target): chosen.append(action))
+	menu._on_action_picked("attack")
+	assert_true(menu.target_container.visible, "Chọn Tấn công thì hiện danh sách mục tiêu")
+	assert_false(menu.action_container.visible, "Danh sách lệnh được ẩn")
+	var buttons := menu.target_container.get_children().filter(func(n): return n is Button)
+	assert_eq(buttons.size(), 2, "Một mục tiêu cộng một nút quay lại")
+	(buttons[-1] as Button).pressed.emit()
+	assert_true(menu.action_container.visible, "Quay lại danh sách lệnh")
+	assert_false(menu.target_container.visible, "Danh sách mục tiêu được ẩn")
+	assert_eq(menu.chosen_action, "", "Lệnh đã chọn bị bỏ")
+	assert_true(chosen.is_empty(), "Quay lại không phát lệnh nào")
+	root.remove_child(menu)
+	menu.free()
+	ichika.free()
+	guard.free()
+

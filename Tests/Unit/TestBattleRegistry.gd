@@ -63,8 +63,9 @@ func test_final_mafuyu_keeps_her_mirror_and_floor():
 	boss.free()
 
 func test_every_registry_battle_builds_non_empty_teams():
-	# Mọi id kịch bản được map gán phải có trong bảng (nếu không trận sẽ rỗng và thắng ngay).
-	var ids: Array = EXPECTED.keys() + ["ena_vs_mizuki", "mizuki_vs_ena_forced", "bounty_ambush", "final_mafuyu", "training_trial", "ops_ena", "honami_spar"]
+	# Mọi id kịch bản trong registry phải dựng được hai đội (nếu không trận sẽ rỗng và thắng ngay); duyệt cả registry chứ không chép tay danh sách
+	var ids: Array = BattleInitializer.scripted_battle_ids()
+	assert_gt(ids.size(), 20, "Registry có đủ các trận")
 	GameManager.reset_game()
 	for id in ids:
 		var data := BattleInitializer._setup_scripted_battle(id)

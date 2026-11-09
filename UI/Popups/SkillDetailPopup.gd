@@ -10,8 +10,6 @@ Gốc là lớp mờ phủ toàn màn hình (top_level), bên trong là một b�
 """
 
 const PANEL_WIDTH = 560
-const MAX_LIST_HEIGHT = 420
-const MAX_SKILLS_UNSCROLLED = 4
 
 var _content_vbox: VBoxContainer
 var _close_btn: Button
@@ -54,16 +52,7 @@ func display_entity_skills(entity: Entity):
 	var list = VBoxContainer.new()
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", UITheme.SP_3)
-	# Danh sách ngắn thì hiện thẳng; chỉ dùng khung cuộn khi nhiều kỹ năng
-	if entity.skills.size() > MAX_SKILLS_UNSCROLLED:
-		var scroll = ScrollContainer.new()
-		scroll.custom_minimum_size.y = MAX_LIST_HEIGHT
-		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		scroll.follow_focus = true
-		_content_vbox.add_child(scroll)
-		scroll.add_child(list)
-	else:
-		_content_vbox.add_child(list)
+	_content_vbox.add_child(list)
 
 	for i in range(entity.skills.size()):
 		var skill = entity.skills[i]

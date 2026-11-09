@@ -114,3 +114,21 @@ func test_a_simultaneous_wipe_shows_victory_like_the_outcome_says():
 	ichika.free()
 	guard.free()
 
+# Main.end_battle thật (không phải bản giả của FakeBattleMain): banner chỉ hiện đúng một lần dù bị gọi hai lần
+class CountingHud extends Node:
+	var results: Array = []
+	func show_victory(): results.append(true)
+	func show_defeat(): results.append(false)
+
+func test_real_main_shows_the_result_banner_only_once():
+	var main = load("res://Scripts/Battle/Main.gd").new()
+	var hud := CountingHud.new()
+	main.hud = hud
+	main.end_battle(false)
+	main.end_battle(true)
+	assert_eq(hud.results, [false], "Lần gọi đầu quyết định banner, lần hai bị bỏ qua")
+	assert_true(main.battle_over, "battle_over được đặt")
+	main.hud = null
+	hud.free()
+	main.free()
+

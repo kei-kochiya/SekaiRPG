@@ -32,12 +32,10 @@ func _build_highway():
 
 func _run_logic():
 	if GameManager.get_flag("pm_boss_defeated"):
-		# Đã thắng boss: chỉ phát hậu cảnh khi đã thắng thật sự (không phát sau khi thua)
-		if not GameManager.get_flag("finale_done"):
-			DialogueManager.play_dialogue(DialogueLoader.get_lines("pm_boss_aftermath"), func():
-				# Transition to BaseMap for celebration
-				await GameManager.change_map(MapPaths.BASE, 1.0)
-			)
+		# Đã thắng boss (pm_boss_defeated chỉ được đặt khi thắng thật): phát hậu cảnh rồi về Base cho buổi ăn mừng
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("pm_boss_aftermath"), func():
+			await GameManager.change_map(MapPaths.BASE, 1.0)
+		)
 	elif not GameManager.get_flag("pm_car_scene_done"):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("pm_car_ride"), func():
 			GameManager.set_flag("pm_car_scene_done", true)

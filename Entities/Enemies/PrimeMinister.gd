@@ -6,7 +6,7 @@ Tóm tắt: Định nghĩa lớp kẻ địch Prime Minister (Boss cuối).
 
 Chức năng chính:
 - Khởi tạo chỉ số cực cao.
-- Có đòn diện rộng gây choáng; vệ sĩ bắn tỉa do PrimeMinisterBossScenario triệu hồi.
+- Có đòn diện rộng gây choáng; hai Cảnh Vệ do PrimeMinisterBossScenario triệu hồi khi HP dưới 50%.
 """
 
 func _init():

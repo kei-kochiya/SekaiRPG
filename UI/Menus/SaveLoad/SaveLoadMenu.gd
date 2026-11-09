@@ -397,10 +397,7 @@ func _set_background_focusable(on: bool):
 func _on_back_pressed():
 	if _busy:
 		return
-	if get_parent() != get_tree().root:
-		# Trả focus về nút đã mở hộp thoại này (Tải game / Lưu-Tải game)
-		if is_instance_valid(_prev_focus) and _prev_focus.is_inside_tree():
-			UITheme.focus_later(_prev_focus)
-		queue_free()
-		return
-	get_tree().change_scene_to_file(MapPaths.START_MENU)
+	# Trả focus về nút đã mở hộp thoại này (Tải game / Lưu-Tải game)
+	if is_instance_valid(_prev_focus) and _prev_focus.is_inside_tree():
+		UITheme.focus_later(_prev_focus)
+	queue_free()

@@ -12,7 +12,8 @@ var map: Node2D
 # Đang chạy cảnh tự chạy: talk_to_npc bỏ qua mọi tương tác NPC (thay cho biến + dòng `if _cutscene_active: return` chép ở 8 Stage)
 var _cutscene_active: bool = false
 
-# true = cửa ra bị khoá suốt Stage này (các cảnh tự chạy Hồi kết 2, đặt trong _init); thay cho bốn handle_exit() chỉ trả về true
+# true = cửa ra bị khoá suốt Stage này (các cảnh tự chạy Hồi kết 2, đặt trong _init); thay cho các handle_exit() chỉ trả về true.
+# Stage ghi đè handle_exit (vd. Finale, có thêm dòng dẫn truyện) thì không cần cờ này.
 var exit_locked: bool = false
 
 func setup(p_map: Node2D):
@@ -44,6 +45,10 @@ func talk_to_npc(npc_name: String):
 # Xử lý tương tác với NPC
 func handle_npc_interaction(_npc_name: String):
 	pass
+
+# NPC chưa có gì để nói: một dòng "..." để người chơi thấy phản hồi thay vì bấm ENTER mà không có gì xảy ra
+func say_nothing(npc_name: String) -> void:
+	DialogueManager.play_dialogue([{"text": "...", "type": "dialogue", "name": npc_name, "color": Color.WHITE}])
 
 # Trả về text hiển thị trên HUD Quest
 func get_quest_text() -> String:
@@ -82,6 +87,11 @@ func offer_training(trainees: Array, hide_done: bool = false, before_start: Call
 		if alive_only and not GameManager.is_member_alive_in_story(member):
 			continue
 		members.append(member)
+
+	if members.is_empty():
+		# Ai cũng đã tập xong (hide_done): không mở menu chỉ có mỗi nút "Để sau."
+		DialogueManager.play_dialogue([{"text": "Mọi người đều đã luyện tập xong.", "type": "narrator"}])
+		return false
 
 	var opts: Array = []
 	var groups: Array = []

@@ -132,6 +132,47 @@ func test_change_map_and_scripted_battles_are_ignored_while_a_menu_is_current():
 	root.name = _saved_root_name
 	GameManager.reset_game()
 
+# "Tải game" xóa hết save rồi đóng: cột nút phải được dựng lại (trước đây "Tiếp tục" vẫn nằm đó và dẫn tới "Không tìm thấy file save")
+func test_start_menu_rebuilds_its_buttons_when_the_save_list_changes():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var menu: Node = load("res://UI/Menus/Start/StartMenu.tscn").instantiate()
+	root.add_child(menu)
+	var count_buttons := func(): return menu.find_children("*", "Button", true, false).size()
+	var before: int = count_buttons.call()
+	var old_button: Button = menu.find_children("*", "Button", true, false)[0]
+	menu._on_save_menu_closed()
+	assert_true(old_button.is_inside_tree(), "Danh sách save không đổi thì giữ nguyên các nút")
+	menu._built_with_save = not GameManager.has_save() # như thể danh sách save đã đổi lúc hộp "Tải game" đang mở
+	menu._on_save_menu_closed()
+	assert_false(old_button.is_inside_tree(), "Danh sách save đổi thì các nút cũ bị bỏ")
+	assert_eq(count_buttons.call(), before, "Cột nút được dựng lại đủ, không nhân đôi")
+	assert_eq(menu._built_with_save, GameManager.has_save(), "Trạng thái dựng khớp với danh sách save hiện tại")
+	root.remove_child(menu)
+	menu.free()
+
+# Lưu game chỉ khi đang đi lại ngoài Overworld: không Sandbox/trận kịch bản/luyện tập/Holo-Sim, không ở menu/trận, và người chơi chưa bị khóa
+func test_can_save_now_guards():
+	GameManager.reset_game()
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	assert_false(GameManager.can_save_now(), "Không có người chơi Overworld thì không lưu")
+	var player := OverworldPlayer.new()
+	root.add_child(player)
+	assert_true(GameManager.can_save_now(), "Người chơi đang đi lại thì lưu được")
+	player.set_physics_process(false) # cảnh tự chạy khóa người chơi
+	assert_false(GameManager.can_save_now(), "Người chơi bị khóa (đang cảnh tự chạy) thì không lưu")
+	player.set_physics_process(true)
+	for guard in ["is_sandbox", "is_scripted_battle", "is_training_mode"]:
+		GameManager.set(guard, true)
+		assert_false(GameManager.can_save_now(), "%s chặn lưu" % guard)
+		GameManager.set(guard, false)
+	HoloSimManager.is_sim_active = true
+	assert_false(GameManager.can_save_now(), "Holo-Sim chặn lưu")
+	HoloSimManager.is_sim_active = false
+	assert_true(GameManager.can_save_now(), "Hết các chốt chặn thì lưu lại được")
+	root.remove_child(player)
+	player.free()
+	GameManager.reset_game()
+
 # Tên gốc của runner đổi sang "StartMenu" trong một test: trả lại ở after_each để một lỗi giữa chừng không làm các lời gọi change_map
 # ở mọi test sau bị bỏ qua lặng lẽ
 var _saved_root_name := ""

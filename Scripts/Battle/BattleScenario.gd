@@ -5,7 +5,7 @@ class_name BattleScenario
 Tóm tắt: BattleScenario là lớp cơ sở (Base Class) cho các kịch bản trận đấu đặc biệt.
 
 Chức năng chính:
-- Định nghĩa các phương thức ảo (Virtual Methods) như `on_start`, `on_turn_start`, `on_turn_end`, `on_entity_died`.
+- Định nghĩa các phương thức ảo (Virtual Methods) như `on_start`, `on_turn_start`, `on_action_executed`, `on_entity_died`.
 - Cung cấp điểm nối (hooks) để các kịch bản cốt truyện có thể ghi đè và thực thi logic tùy chỉnh mà không cần sửa đổi Engine trận đấu.
 """
 
@@ -18,10 +18,6 @@ func on_start(_main: Node):
 
 func on_turn_start(_main: Node, _actor: Entity):
 	"""Gọi khi một thực thể bắt đầu lượt."""
-	pass
-
-func on_turn_end(_main: Node, _actor: Entity):
-	"""Gọi khi một thực thể kết thúc lượt."""
 	pass
 
 func on_before_action(_main: Node, _actor: Entity):

@@ -141,7 +141,7 @@ func _on_action_picked(action_name: String):
 	
 	var target_type = GameManager.get_skill_target_type(current_entity, action_name)
 	
-	if target_type == "all_allies" or target_type == "all_enemies" or target_type == "self":
+	if target_type == "all_enemies" or target_type == "self":
 		visible = false
 		command_chosen.emit(chosen_action, current_entity)
 	else:
@@ -166,14 +166,27 @@ func _show_items():
 		)
 		target_container.add_child(btn)
 		
-	var back_btn = UITheme.make_button("‹ Quay lại", UITheme.Kind.GHOST)
-	back_btn.pressed.connect(func():
-		action_container.visible = true
-		target_container.visible = false
-		_focus_first_enabled(action_container)
-	)
-	target_container.add_child(back_btn)
+	target_container.add_child(_make_back_button(_back_to_actions))
 	_focus_first_enabled(target_container)
+
+# Nút quay lại của các bước phụ (túi đồ, chọn mục tiêu): kỹ năng chỉ bị tiêu hao khi lệnh được phát đi, nên bấm nhầm vẫn rút lại được
+func _make_back_button(on_back: Callable) -> Button:
+	var back_btn := UITheme.make_button("‹ Quay lại", UITheme.Kind.GHOST)
+	back_btn.pressed.connect(on_back)
+	return back_btn
+
+func _back_to_actions() -> void:
+	chosen_action = ""
+	action_container.visible = true
+	target_container.visible = false
+	_focus_first_enabled(action_container)
+
+# Từ bước chọn mục tiêu: vật phẩm quay về túi đồ, kỹ năng quay về danh sách lệnh
+func _back_from_targets() -> void:
+	if chosen_action.begins_with("item:"):
+		_show_items()
+	else:
+		_back_to_actions()
 
 func _show_targets(target_type: String = "enemy"):
 	"""Hiển thị danh sách các mục tiêu hợp lệ để người chơi lựa chọn."""
@@ -189,6 +202,7 @@ func _show_targets(target_type: String = "enemy"):
 		var btn = _make_btn(label, "", true)
 		btn.pressed.connect(_on_target_picked.bind(member))
 		target_container.add_child(btn)
+	target_container.add_child(_make_back_button(_back_from_targets))
 	_focus_first_enabled(target_container)
 
 func _on_target_picked(target: Entity):

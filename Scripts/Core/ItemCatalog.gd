@@ -35,6 +35,5 @@ static func apply_effect(item_id: String, target: Entity) -> void:
 			target.action_gauge = TurnCalculator.ACTION_GAUGE_FULL
 			print("[Item] Sử dụng Nước Tăng Lực lên ", target.entity_name, ": Đầy thanh hành động!")
 		"bandage":
-			target.active_statuses.clear()
-			target.status_changed.emit(target.active_statuses)
+			target.clear_all_debuffs()
 			print("[Item] Sử dụng Băng Cứu Thương lên ", target.entity_name, ": Xóa sạch debuff!")

@@ -36,7 +36,6 @@ const DEFAULT_FLAGS := {
 	"training_honami_done": false,
 	"post_harbor_training_reset": false,
 	"ena_control_phase": false,
-	"ena_cafe_unlocked": false,
 	"ena_cafe_done": false,
 	"ena_vs_mizuki_done": false,
 	"ena_vs_mizuki_won": false,
@@ -124,7 +123,6 @@ var harbor_wave: int = 1
 # Bộ đếm wave RIÊNG của chế độ luyện tập (0 = không luyện tập). Không dùng chung với warehouse_wave
 # để việc thua/bỏ dở luyện tập không làm sai lệch tiến trình cốt truyện Nhà kho.
 var training_wave: int = 0
-var enemies_defeated: int = 0
 var harbor_route: String = ""
 
 # ── API Quản Lý Trạng Thái ─────────────────────────────────────────────────
@@ -150,7 +148,6 @@ func reset():
 	warehouse_wave = 1
 	harbor_wave = 1
 	training_wave = 0
-	enemies_defeated = 0
 	harbor_route = ""
 
 # ── API Tuần Tự Hóa (Serialize/Deserialize) ────────────────────────────────
@@ -168,7 +165,6 @@ func serialize() -> Dictionary:
 		"warehouse_wave": warehouse_wave,
 		"harbor_wave": harbor_wave,
 		"training_wave": training_wave,
-		"enemies_defeated": enemies_defeated,
 		"harbor_route": harbor_route
 	}
 
@@ -192,7 +188,6 @@ func deserialize(data: Dictionary):
 	warehouse_wave = int(data.get("warehouse_wave", 1))
 	harbor_wave = int(data.get("harbor_wave", 1))
 	training_wave = int(data.get("training_wave", 0))
-	enemies_defeated = int(data.get("enemies_defeated", 0))
 	harbor_route = str(data.get("harbor_route", ""))
 
 # Ép các cờ mặc định kiểu int (JSON trả về float) về lại int để so sánh/hiển thị đúng.

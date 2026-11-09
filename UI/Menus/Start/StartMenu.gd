@@ -9,6 +9,7 @@ Nút chính (vàng) là "Tiếp tục" nếu có save, ngược lại là "Chơi
 const MENU_WIDTH = 320
 
 var _error_label: Label
+var _built_with_save := false # cột nút được dựng lúc có/không có save
 
 func _ready():
 	# Mọi đường về màn hình tiêu đề (thoát từ menu tạm dừng, thắng/thua, kết thúc game) đều dọn trạng thái tạm của lượt chơi trước:
@@ -49,6 +50,7 @@ func _build():
 	column.add_child(spacer)
 	
 	var has_save := GameManager.has_save()
+	_built_with_save = has_save
 	if has_save:
 		_add_button(column, "Tiếp tục", _on_continue, UITheme.Kind.PRIMARY)
 	_add_button(column, "Chơi mới", _on_new_game, UITheme.Kind.SECONDARY if has_save else UITheme.Kind.PRIMARY)
@@ -90,6 +92,14 @@ func _on_load_menu():
 		return
 	var save_load_scene = preload("res://UI/Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
 	add_child(save_load_scene)
+	save_load_scene.tree_exited.connect(_on_save_menu_closed)
+
+# Xóa hết save trong "Tải game" thì "Tiếp tục"/"Tải game" không còn nghĩa (bấm vào chỉ fade rồi báo không có file): dựng lại cột nút
+func _on_save_menu_closed() -> void:
+	if not is_inside_tree() or is_queued_for_deletion() or GameManager.has_save() == _built_with_save:
+		return
+	UITheme.clear_children(self)
+	_build()
 
 func _on_new_game():
 	if _busy:

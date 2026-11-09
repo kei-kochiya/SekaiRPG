@@ -107,7 +107,7 @@ func _place_characters():
 	if GameManager.get_flag("street_mission_fully_done"):
 		# Sandbox/Thăm lại: Chỉ spawn Player và 1 lối ra
 		var player := MapUtils.spawn_player(self, Vector2(15 * TILE_SIZE, 11 * TILE_SIZE))
-		player.character_color = Color(0.29, 0.62, 0.62)
+		player.character_color = MapUtils.CHARACTER_COLORS["Ichika"]
 		
 		# Thêm 1 exit zone để về Base
 		var exit = MapUtils.rect_zone(Vector2(96, 32), "Rời khỏi đường phố", Vector2(15 * TILE_SIZE, 13 * TILE_SIZE))
@@ -119,8 +119,8 @@ func _place_characters():
 		add_child(exit)
 		return
 		
-	_spawn_dummy("Ichika", Vector2(14, 11), Color(0.29, 0.62, 0.62))
-	_spawn_dummy("Mizuki", Vector2(15, 11), Color(0.85, 0.65, 0.8))
+	_spawn_dummy("Ichika", Vector2(14, 11), MapUtils.CHARACTER_COLORS["Ichika"])
+	_spawn_dummy("Mizuki", Vector2(15, 11), MapUtils.CHARACTER_COLORS["Mizuki"])
 
 	if not GameManager.get_flag("street_skirmish_done"):
 		_spawn_dummy("Khủng Bố 1", Vector2(11, 10), Color.DARK_RED)

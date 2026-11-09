@@ -114,7 +114,6 @@ func test_storystate_json_roundtrip_types():
 func test_training_wave_separate_from_warehouse_wave():
 	var old_wave = GameManager.warehouse_wave
 	var old_map = GameManager.current_map_file
-	var old_defeated = GameManager.enemies_defeated
 	GameManager.warehouse_wave = 3
 	GameManager.training_used_opponents = ["Kanade"]
 	GameManager.begin_training(["Ichika"])
@@ -124,7 +123,7 @@ func test_training_wave_separate_from_warehouse_wave():
 	assert_eq(GameManager.training_used_opponents.size(), 0, "begin_training xóa training_used_opponents")
 
 	GameManager.current_map_file = "res://Maps/Warehouse/TrainingWarehouseMap.tscn"
-	GameManager._apply_victory_rewards(1)
+	GameManager._apply_victory_rewards()
 	assert_eq(GameManager.training_wave, 2, "thắng khi luyện tập tăng training_wave")
 	assert_eq(GameManager.warehouse_wave, 3, "thắng khi luyện tập không tăng warehouse_wave")
 
@@ -136,7 +135,6 @@ func test_training_wave_separate_from_warehouse_wave():
 
 	GameManager.warehouse_wave = old_wave
 	GameManager.current_map_file = old_map
-	GameManager.enemies_defeated = old_defeated
 
 func test_clear_transient_state():
 	GameManager.begin_training(["Ichika"])

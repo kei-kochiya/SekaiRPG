@@ -198,9 +198,6 @@ var harbor_wave: int:
 var training_wave: int:
 	get: return story.training_wave
 	set(v): story.training_wave = v
-var enemies_defeated: int:
-	get: return story.enemies_defeated
-	set(v): story.enemies_defeated = v
 var harbor_route: String:
 	get: return story.harbor_route
 	set(v): story.harbor_route = v
@@ -212,37 +209,6 @@ func set_flag(id: String, value: Variant):
 # Lấy giá trị của một cờ trạng thái
 func get_flag(id: String, default: Variant = false) -> Variant:
 	return story.get_flag(id, default)
-
-var prologue_phase: int:
-	get: return story.get_flag("prologue_phase", 0)
-	set(v): story.set_flag("prologue_phase", v)
-var harbor_mission_done: bool:
-	get: return story.get_flag("harbor_mission_done", false)
-	set(v): story.set_flag("harbor_mission_done", v)
-var harbor_mission_unlocked: bool:
-	get: return story.get_flag("harbor_mission_unlocked", false)
-	set(v): story.set_flag("harbor_mission_unlocked", v)
-var intro_quest_done: bool:
-	get: return story.get_flag("intro_quest_done", false)
-	set(v): story.set_flag("intro_quest_done", v)
-var safehouse_intro_done: bool:
-	get: return story.get_flag("safehouse_intro_done", false)
-	set(v): story.set_flag("safehouse_intro_done", v)
-var npcs_greeted: Array:
-	get: return story.get_flag("npcs_greeted", [])
-	set(v): story.set_flag("npcs_greeted", v)
-var warehouse_mission_accepted: bool:
-	get: return story.get_flag("warehouse_mission_accepted", false)
-	set(v): story.set_flag("warehouse_mission_accepted", v)
-var talked_to_mafuyu_training: bool:
-	get: return story.get_flag("talked_to_mafuyu_training", false)
-	set(v): story.set_flag("talked_to_mafuyu_training", v)
-var accepted_harbor_mission: bool:
-	get: return story.get_flag("accepted_harbor_mission", false)
-	set(v): story.set_flag("accepted_harbor_mission", v)
-var harbor_intro_done: bool:
-	get: return story.get_flag("harbor_intro_done", false)
-	set(v): story.set_flag("harbor_intro_done", v)
 
 # ── Tiện Ích Trò Chơi ──────────────────────────────────────────────────────
 func get_party_member(m_name: String) -> Entity:
@@ -409,30 +375,24 @@ func store_map_state(map_path: String, player_pos: Vector2):
 	current_map_file = map_path
 	last_player_position = player_pos
 
-# Đặt lại bộ đếm nhiệm vụ
-func reset_mission_stats():
-	story.enemies_defeated = 0
-
 func full_heal_party():
 	for key in party.keys():
 		var entity = party[key]
 		if entity:
 			entity.current_hp = entity.max_hp
-			if entity.has_method("clear_all_debuffs"):
-				entity.clear_all_debuffs()
+			entity.clear_all_debuffs()
 
 # Chuyển cảnh đến trận chiến
 func trigger_battle():
 	AudioManager.play_music("battle")
 	get_tree().change_scene_to_file(MapPaths.BATTLE_SCENE)
 
-func finish_battle(victory: bool, count: int = 1):
+func finish_battle(victory: bool):
 	"""
 	Xử lý logic kết quả sau trận đấu (Exp, Cốt truyện, Chuyển cảnh).
 	
 	Args:
 		victory (bool): Cờ báo thắng hay thua.
-		count (int): Số lượng địch bị hạ.
 	Returns: Không có
 	"""
 	if is_sandbox:
@@ -457,10 +417,9 @@ func finish_battle(victory: bool, count: int = 1):
 		return
 
 	if victory:
-		_apply_victory_rewards(count)
+		_apply_victory_rewards()
 	else:
 		full_heal_party()
-		reset_mission_stats()
 		_set_base_as_current_map()
 		# Thua trận nhiệm vụ: về căn cứ, mở lại luyện tập cho người chơi cày thêm rồi quay lại
 		reset_training_progress()
@@ -516,8 +475,7 @@ func _handle_scripted_battle_finish(victory: bool):
 	scripted_battle_id = ""
 	get_tree().change_scene_to_file(current_map_file)
 
-func _apply_victory_rewards(count: int):
-	story.enemies_defeated += count
+func _apply_victory_rewards():
 	if is_training_mode:
 		# Luyện tập dùng bộ đếm riêng, không làm tiến trình Nhà kho của cốt truyện
 		story.training_wave += 1

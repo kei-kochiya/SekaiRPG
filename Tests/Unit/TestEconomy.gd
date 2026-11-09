@@ -51,3 +51,31 @@ func test_treasure_chests():
 	GameManager.open_chest(chest_id)
 	assert_true(GameManager.is_chest_opened(chest_id), "GameManager.open_chest marks chest opened")
 	assert_true(GameManager.opened_chests.has(chest_id), "Chest ID recorded in opened_chests array")
+
+# Rương thật trên map: thưởng đúng một lần, lần bấm sau chỉ báo rương rỗng; thân rương chặn người chơi (layer 2) mà không vướng vùng tương tác
+func test_chest_node_pays_out_once_and_blocks_the_player():
+	GameManager.reset_game()
+	_drain_dialogue()
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var parent := Node2D.new()
+	root.add_child(parent)
+	MapUtils.place_chest(parent, "unit_test_chest_node", Vector2(3, 4), 200, "bandage", 2)
+	var chest: TreasureChest = parent.get_child(0)
+	var credits_before: int = GameManager.credits
+	var bandages_before: int = GameManager.inventory.get("bandage", 0)
+	chest._on_interacted()
+	_drain_dialogue()
+	assert_eq(GameManager.credits, credits_before + 200, "Nhận 200 Credits")
+	assert_eq(GameManager.inventory.get("bandage", 0), bandages_before + 2, "Nhận 2 băng gạc")
+	assert_true(GameManager.is_chest_opened("unit_test_chest_node"), "Rương được ghi là đã mở")
+	chest._on_interacted()
+	_drain_dialogue()
+	assert_eq(GameManager.credits, credits_before + 200, "Mở lần hai không thưởng thêm")
+	assert_eq(GameManager.inventory.get("bandage", 0), bandages_before + 2, "Cũng không thêm vật phẩm")
+	var bodies := chest.get_children().filter(func(n): return n is StaticBody2D)
+	assert_eq(bodies.size(), 1, "Một thân va chạm")
+	assert_eq((bodies[0] as StaticBody2D).collision_layer, 2, "Layer 2: chặn người chơi nhưng không chặn vùng tương tác")
+	root.remove_child(parent)
+	parent.free()
+	GameManager.reset_game()
+

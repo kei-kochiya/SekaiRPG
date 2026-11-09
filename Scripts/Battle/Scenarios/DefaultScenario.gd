@@ -21,6 +21,5 @@ func check_battle_end(main: Node) -> bool:
 func get_victory_status(main: Node) -> bool:
 	return AIManager.get_alive_targets(main.enemy_team).is_empty()
 
-func on_battle_completed(main: Node, is_victory: bool):
-	var enemy_count = main.enemy_team.size()
-	GameManager.finish_battle(is_victory, enemy_count)
+func on_battle_completed(_main: Node, is_victory: bool):
+	GameManager.finish_battle(is_victory)

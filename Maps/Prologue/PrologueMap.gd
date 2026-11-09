@@ -18,14 +18,14 @@ func _ready():
 	
 	# Phase 0: Ichika bị vây, dẫn đến trận đầu với kiết tặc.
 	# Phase 1: Sau trận, Mafuyu gặp và tuyển Ichika vào nhóm.
-	if GameManager.prologue_phase == 0:
+	if GameManager.get_flag("prologue_phase", 0) == 0:
 		_setup_phase_0()
 	else:
 		_setup_phase_1()
 	
 	# Chờ màn hình sáng hẳn rồi mới phát hội thoại mở đầu (hộp thoại ở layer 100 sẽ bị ScreenFade layer 200 che nếu phát sớm)
 	await ScreenFade.fade_in(1.0)
-	if GameManager.prologue_phase == 0:
+	if GameManager.get_flag("prologue_phase", 0) == 0:
 		_play_phase_0_intro()
 	else:
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase1_intro"))
@@ -97,7 +97,7 @@ func _setup_phase_0():
 	_create_enemy_npc(Vector2(12 * TILE_SIZE, 7 * TILE_SIZE), "kidnapper.svg")
 
 	# Mafuyu visible outside the door
-	_create_visual_npc("Mafuyu", Vector2(12 * TILE_SIZE, 18 * TILE_SIZE), Color(0.4, 0.3, 0.5))
+	_create_visual_npc("Mafuyu", Vector2(12 * TILE_SIZE, 18 * TILE_SIZE), MapUtils.CHARACTER_COLORS["Mafuyu"])
 
 # Đoạn mở đầu bị bắt cóc, xong thì vào trận hướng dẫn đầu tiên
 func _play_phase_0_intro():
@@ -120,12 +120,12 @@ func _setup_phase_1():
 	var player = OverworldPlayer.new()
 	# Mafuyu starts outside facing up towards warehouse
 	player.position = Vector2(12 * TILE_SIZE, 19 * TILE_SIZE)
-	player.character_color = Color(0.4, 0.3, 0.5)
+	player.character_color = MapUtils.CHARACTER_COLORS["Mafuyu"]
 	player.set_facing("up")
 	add_child(player)
 
 	# Ichika inside, exhausted
-	_create_recruitable_npc("Ichika", Vector2(12 * TILE_SIZE, 10 * TILE_SIZE), Color(0.29, 0.62, 0.62),
+	_create_recruitable_npc("Ichika", Vector2(12 * TILE_SIZE, 10 * TILE_SIZE), MapUtils.CHARACTER_COLORS["Ichika"],
 		DialogueLoader.get_lines("prologue_phase1_recruit"))
 
 	# Dead bodies from the fight
@@ -143,32 +143,16 @@ func _create_enemy_npc(pos: Vector2, sprite_file: String):
 func _create_visual_npc(_npc_name: String, pos: Vector2, color: Color):
 	MapUtils.create_visual_npc(self, _npc_name, pos, color)
 
-func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, lines: Array):
+func _create_recruitable_npc(npc_name: String, pos: Vector2, color: Color, lines: Array):
 	var root = Node2D.new()
 	root.position = pos
 	root.add_to_group("objectives")
 
-	var char_sprite = MapUtils.create_character_sprite(_npc_name)
-	if char_sprite:
-		root.add_child(char_sprite)
-	else:
-		var vis = ColorRect.new()
-		vis.size = Vector2(16, 24)
-		vis.position = Vector2(-8, -24)
-		vis.color = color
-		root.add_child(vis)
+	MapUtils.add_character_body(root, npc_name, color)
 
-	var static_body = StaticBody2D.new()
-	static_body.collision_layer = 2
-	var col = CollisionShape2D.new()
-	var shape = RectangleShape2D.new()
-	shape.size = Vector2(16, 16)
-	col.shape = shape
-	col.position = Vector2(0, -8)
-	static_body.add_child(col)
-	root.add_child(static_body)
+	MapUtils.add_static_box(root, Vector2(16, 16), Vector2.ZERO, 2, Vector2(0, -8)) # thân NPC: người chơi không đi xuyên được
 
-	var zone = MapUtils.circle_zone(40)
+	var zone = MapUtils.circle_zone(40, "Nói chuyện với " + npc_name)
 	root.add_child(zone)
 
 	zone.interacted.connect(func():
