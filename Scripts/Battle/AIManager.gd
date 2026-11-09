@@ -95,7 +95,7 @@ static func pick_action(actor: Entity, enemies: Array, allies: Array, timeline: 
 		var skill = usable_skills.pick_random()
 		
 		var final_target = target
-		var t_type = skill.get("target", skill.get("target_type", "enemy"))
+		var t_type = skill.get("target", "enemy")
 		if t_type == "ally":
 			var wounded = get_alive_targets(allies)
 			if not wounded.is_empty():

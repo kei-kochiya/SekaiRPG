@@ -35,11 +35,9 @@ static func calculate_damage_detailed(attacker: Entity, defender: Entity, skill_
 		
 	# Tính toán Chí Mạng (Critical Hit)
 	var is_crit = false
-	var crit_rate = attacker.get("crit_rate") if "crit_rate" in attacker else 0.10
-	if randf() < crit_rate:
+	if randf() < attacker.crit_rate:
 		is_crit = true
-		var crit_dmg = attacker.get("crit_dmg") if "crit_dmg" in attacker else 1.50
-		final_damage *= crit_dmg
+		final_damage *= attacker.crit_dmg
 		
 	defender.set_meta("was_crit", is_crit) # Entity.take_damage đọc cờ này để phát tín hiệu chí mạng
 	if is_crit:

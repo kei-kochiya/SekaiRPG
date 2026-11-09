@@ -50,7 +50,7 @@ func test_holosim_scenario():
 
 func test_holosim_battle_setup():
 	HoloSimManager.start_new_run()
-	var battle_data = BattleInitializer.setup_battle(null)
+	var battle_data = BattleInitializer.setup_battle()
 	assert_gt(battle_data["enemy_team"].size(), 0, "HoloSim floor 1 spawns enemies")
 	assert_true(battle_data["scenario"] is HoloSimScenario, "HoloSim uses HoloSimScenario")
 	HoloSimManager.is_sim_active = false

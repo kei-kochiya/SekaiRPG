@@ -71,12 +71,10 @@ static func _load_json(path: String) -> Dictionary:
 
 # ── Khởi Tạo Trận Đấu ──────────────────────────────────────────────────────
 
-static func setup_battle(_main: Node) -> Dictionary:
+static func setup_battle() -> Dictionary:
 	"""
 	Thiết lập toàn bộ thông tin cho một trận đấu mới (Đội hình & Kịch bản).
 
-	Args:
-		_main (Node): Tham chiếu tới Scene trận đấu.
 	Returns:
 		Dictionary: Chứa 'player_team', 'enemy_team', 'scenario'.
 	"""

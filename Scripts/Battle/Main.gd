@@ -34,7 +34,7 @@ func _ready():
 	"""
 	ScreenFade.fade_in(0.5)
 	
-	var data = BattleInitializer.setup_battle(self)
+	var data = BattleInitializer.setup_battle()
 	
 	player_team = data["player_team"].filter(func(e): return e != null)
 	enemy_team = data["enemy_team"].filter(func(e): return e != null)

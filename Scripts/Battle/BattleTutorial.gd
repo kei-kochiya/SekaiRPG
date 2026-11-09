@@ -59,7 +59,7 @@ static func run_tutorial(main: Node):
 		return
 
 	for step in STEPS:
-		await _show_tutorial_step(main, vbox, step[0], step[1])
+		await _show_tutorial_step(vbox, step[0], step[1])
 
 	# Xóa toàn bộ CanvasLayer chứa panel hướng dẫn. Nhả khóa modal NGAY (queue_free chỉ chạy cuối frame): lượt đầu của người chơi bắt đầu
 	# trong cùng frame này, và menu lệnh không nhận focus khi PauseMenu còn báo đang có modal.
@@ -87,12 +87,11 @@ static func _themed_bbcode(content: String) -> String:
 		content = content.replace("[color=%s]" % hex, "[color=#%s]" % remap[hex].to_html(false))
 	return content
 
-static func _show_tutorial_step(_main: Node, vbox: VBoxContainer, title: String, content: String):
+static func _show_tutorial_step(vbox: VBoxContainer, title: String, content: String):
 	"""
 	Hiển thị một bước hướng dẫn cụ thể và đợi người chơi nhấn nút 'Tiếp theo'.
 
 	Args:
-		_main (Node): Scene chính.
 		vbox (VBoxContainer): Container chứa nội dung hiển thị.
 		title (String): Tiêu đề của bước hướng dẫn.
 		content (String): Nội dung hướng dẫn (hỗ trợ BBCode).

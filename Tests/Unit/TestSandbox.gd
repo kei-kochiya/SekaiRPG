@@ -58,7 +58,7 @@ func test_sandbox_battle_initializer():
 	LevelManager.set_initial_level(e1, 25)
 	GameManager.sandbox_enemy_team.append(e1)
 	
-	var battle_data = BattleInitializer.setup_battle(null)
+	var battle_data = BattleInitializer.setup_battle()
 	assert_eq(battle_data["player_team"].size(), 1, "Player team count should be 1")
 	assert_eq(battle_data["enemy_team"].size(), 1, "Enemy team count should be 1")
 	assert_true(battle_data["scenario"] is DefaultScenario, "Sandbox should use DefaultScenario")

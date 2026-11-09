@@ -227,7 +227,7 @@ func _build_tutorial() -> Node:
 	holder.add_child(UITheme.backdrop())
 	var panel := BattleTutorial._build_tutorial_panel(holder)
 	var step: Array = BattleTutorial.STEPS[3]
-	BattleTutorial._show_tutorial_step(holder, panel.get_child(0), step[0], step[1])
+	BattleTutorial._show_tutorial_step(panel.get_child(0), step[0], step[1])
 	return holder
 
 func _build_cards() -> Node:

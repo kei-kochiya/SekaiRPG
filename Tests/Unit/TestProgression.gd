@@ -83,13 +83,13 @@ func test_downed_members_start_story_battles_revived():
 	ena.current_hp = 0
 	GameManager.is_scripted_battle = true
 	GameManager.scripted_battle_id = "bounty_1"
-	var data = BattleInitializer.setup_battle(null)
+	var data = BattleInitializer.setup_battle()
 	assert_eq(data["player_team"][0], ena, "Hợp đồng 1 do Ena đánh một mình")
 	assert_eq(ena.current_hp, int(ena.max_hp * 0.5), "Ena gục từ trận trước vào trận với 50% HP, không thua ngay lượt 0")
 
 	# Người chỉ bị thương không bị đụng tới (các trận cốt truyện có thể cố ý bắt đầu với đội yếu)
 	ena.current_hp = 10
-	BattleInitializer.setup_battle(null)
+	BattleInitializer.setup_battle()
 	assert_eq(ena.current_hp, 10, "Chỉ người đã gục mới được hồi")
 	GameManager.reset_game()
 
@@ -100,7 +100,7 @@ func test_sandbox_and_training_teams_are_not_touched_by_revive():
 	GameManager.is_sandbox = true
 	GameManager.sandbox_player_team = [fresh]
 	GameManager.sandbox_enemy_team = [Guard.new()]
-	BattleInitializer.setup_battle(null)
+	BattleInitializer.setup_battle()
 	assert_eq(fresh.current_hp, 0, "Sandbox giữ nguyên đội do người chơi dựng")
 	GameManager.reset_game()
 

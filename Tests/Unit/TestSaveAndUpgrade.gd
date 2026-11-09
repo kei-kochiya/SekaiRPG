@@ -116,21 +116,21 @@ func test_warehouse_waves_come_from_the_json_and_scale_with_the_wave():
 	GameManager.reset_game()
 	GameManager.current_map_file = MapPaths.WAREHOUSE
 	GameManager.warehouse_wave = 2
-	var data := BattleInitializer.setup_battle(null)
+	var data := BattleInitializer.setup_battle()
 	assert_eq(data["player_team"].map(func(e): return e.entity_name), ["Ichika", "Kanade"], "Đội hình Nhà kho")
 	assert_eq(data["enemy_team"].size(), 5, "5 nhân viên kho")
 	assert_eq(data["enemy_team"][0].level, 6, "Cấp = wave x 3")
 	GameManager.warehouse_wave = 5
-	assert_eq(BattleInitializer.setup_battle(null)["enemy_team"][0].level, 15, "Cấp tối đa 15")
+	assert_eq(BattleInitializer.setup_battle()["enemy_team"][0].level, 15, "Cấp tối đa 15")
 	GameManager.warehouse_wave = 1
-	assert_eq(BattleInitializer.setup_battle(null)["enemy_team"][0].level, 3, "Cấp tối thiểu 3")
+	assert_eq(BattleInitializer.setup_battle()["enemy_team"][0].level, 3, "Cấp tối thiểu 3")
 	GameManager.reset_game()
 
 func test_harbor_guard_waves_come_from_the_json_and_scale_with_the_wave():
 	GameManager.reset_game()
 	GameManager.current_map_file = MapPaths.HARBOR
 	GameManager.harbor_wave = 2
-	var data := BattleInitializer.setup_battle(null)
+	var data := BattleInitializer.setup_battle()
 	assert_eq(data["player_team"].map(func(e): return e.entity_name), ["Ichika", "Ena"], "Đội hình Bến Cảng")
 	assert_eq(data["enemy_team"].size(), 4, "4 lính gác")
 	assert_eq(data["enemy_team"][0].level, 7, "Cấp = 5 + wave")
@@ -166,7 +166,7 @@ func test_holosim_floor_raises_low_hp_members_to_thirty_percent_before_the_hud()
 	ichika.current_hp = int(ichika.max_hp * 0.1)
 	kanade.current_hp = ceili(kanade.max_hp * 0.9)
 	mafuyu.current_hp = 0
-	var data := BattleInitializer.setup_battle(null)
+	var data := BattleInitializer.setup_battle()
 	assert_eq(ichika.current_hp, int(ichika.max_hp * 0.3), "Người còn ít máu được nâng lên 30%")
 	assert_eq(kanade.current_hp, ceili(kanade.max_hp * 0.9), "Người nhiều máu hơn 30% giữ nguyên")
 	assert_gt(mafuyu.current_hp, 0, "Người đang gục được hồi (BattleInitializer._revive_downed) rồi mới tính sàn")
