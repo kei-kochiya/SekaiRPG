@@ -10,7 +10,6 @@ const BASE_SCENE = "res://Maps/Base/BaseMap.tscn"
 # ── Luyện tập ───────────────────────────────────────────────────────────────
 
 func test_training_clone_has_the_real_characters_upgrades():
-	GameManager.reset_game()
 	var real: Entity = GameManager.get_party_member("Ichika")
 	real.max_hp += 900
 	real.atk += 120
@@ -25,10 +24,8 @@ func test_training_clone_has_the_real_characters_upgrades():
 	assert_eq(clone.spd, real.spd, "Bản sao có đủ SPD đã nâng")
 	assert_eq(clone.current_hp, clone.max_hp, "Bản sao luôn vào trận đầy máu")
 	GameManager.end_training()
-	GameManager.reset_game()
 
 func test_training_exp_is_collected_for_the_real_party_not_the_clone():
-	GameManager.reset_game()
 	var main = load("res://Scripts/Battle/Main.gd").new()
 	var clone := Ichika.new()
 	main.player_team = [clone]
@@ -58,10 +55,8 @@ func test_training_exp_is_collected_for_the_real_party_not_the_clone():
 	main._on_entity_died(robot)
 	assert_gt(clone.current_exp, 0, "Ngoài luyện tập, quái thường cho EXP trực tiếp")
 	main.free()
-	GameManager.reset_game()
 
 func test_training_win_grants_exp_to_the_real_character():
-	GameManager.reset_game()
 	var ichika: Entity = GameManager.get_party_member("Ichika")
 	var kanade: Entity = GameManager.get_party_member("Kanade")
 	var exp_before := ichika.current_exp
@@ -73,12 +68,10 @@ func test_training_win_grants_exp_to_the_real_character():
 	assert_eq(kanade.current_exp, kanade_exp, "Người không tham gia không nhận EXP")
 	assert_eq(GameManager.training_exp_earned, 0, "Bộ đếm EXP được xóa sau khi trao")
 	GameManager.end_training()
-	GameManager.reset_game()
 
 # ── Đội hình gục sau trận ───────────────────────────────────────────────────
 
 func test_downed_members_start_story_battles_revived():
-	GameManager.reset_game()
 	var ena: Entity = GameManager.get_party_member("Ena")
 	ena.current_hp = 0
 	GameManager.is_scripted_battle = true
@@ -91,10 +84,8 @@ func test_downed_members_start_story_battles_revived():
 	ena.current_hp = 10
 	BattleInitializer.setup_battle()
 	assert_eq(ena.current_hp, 10, "Chỉ người đã gục mới được hồi")
-	GameManager.reset_game()
 
 func test_sandbox_and_training_teams_are_not_touched_by_revive():
-	GameManager.reset_game()
 	var fresh := Ichika.new()
 	fresh.current_hp = 0
 	GameManager.is_sandbox = true
@@ -102,10 +93,8 @@ func test_sandbox_and_training_teams_are_not_touched_by_revive():
 	GameManager.sandbox_enemy_team = [Guard.new()]
 	BattleInitializer.setup_battle()
 	assert_eq(fresh.current_hp, 0, "Sandbox giữ nguyên đội do người chơi dựng")
-	GameManager.reset_game()
 
 func test_leaving_holosim_heals_the_whole_party():
-	GameManager.reset_game()
 	for p in GameManager.party.values():
 		p.current_hp = 0
 	HoloSimManager.start_new_run()
@@ -113,7 +102,6 @@ func test_leaving_holosim_heals_the_whole_party():
 	assert_false(HoloSimManager.is_sim_active, "end_run kết thúc phiên Holo-Sim")
 	for p in GameManager.party.values():
 		assert_eq(p.current_hp, p.max_hp, "%s đầy máu khi rời tháp" % p.entity_name)
-	GameManager.reset_game()
 
 func test_battle_exit_clears_untargetable():
 	var main = load("res://Scripts/Battle/Main.gd").new()
@@ -130,7 +118,6 @@ func _saved_game_state(slot: String) -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(SaveManager.SAVES_DIR + slot + ".json"))
 
 func test_save_keeps_hp_and_the_holosim_record():
-	GameManager.reset_game()
 	var slot := "unit_test_hp_slot"
 	var ichika: Entity = GameManager.get_party_member("Ichika")
 	ichika.current_hp = 7
@@ -158,7 +145,6 @@ func test_save_keeps_hp_and_the_holosim_record():
 	assert_eq(parsed["party"]["Mafuyu"]["hp"], 0, "hp âm bị kẹp về 0")
 	assert_eq(parsed["holosim_high_floor"], 0, "Save cũ thiếu kỷ lục -> 0")
 	SaveManager.delete_save(slot)
-	GameManager.reset_game()
 
 func test_new_game_clears_the_holosim_record():
 	HoloSimManager.high_score_floor = 9
@@ -195,7 +181,6 @@ func test_four_talks_trigger_ena_in_the_same_scene():
 	assert_eq(GameManager.get_flag("interaction_count", 0), 4, "Đã đếm đủ 4 lần nói chuyện")
 	assert_true(GameManager.get_flag("ena_control_phase"), "Lần thứ 4: Ena chán và nhận quyền điều khiển ngay, không cần vào lại căn cứ")
 	base.free()
-	GameManager.reset_game()
 
 func test_ena_trigger_waits_for_open_choice_menus():
 	var base = _post_harbor_morning_base()
@@ -207,11 +192,9 @@ func test_ena_trigger_waits_for_open_choice_menus():
 	assert_false(GameManager.get_flag("ena_control_phase"), "Chờ người chơi chọn xong")
 	DialogueManager._ui.choice_selected.emit(0)
 	base.free()
-	GameManager.reset_game()
 
 # Giai đoạn của PostHarborStage do cờ mafuyu_honami_talked quyết định (trước đây là harbor_wave > 5)
 func test_post_harbor_phase_follows_the_honami_talk_flag():
-	GameManager.reset_game()
 	var base = load(BASE_SCENE).instantiate()
 	var stage = load("res://Maps/Base/Stages/PostHarborStage.gd").new()
 	base.add_child(stage)
@@ -231,20 +214,16 @@ func test_post_harbor_phase_follows_the_honami_talk_flag():
 	stage.on_stage_start()
 	assert_false(DialogueManager.active, "Xem rồi thì không phát lại")
 	base.free()
-	GameManager.reset_game()
 
 func test_alleyway_monologue_follows_the_honami_talk_flag():
-	GameManager.reset_game()
 	var alley = load("res://Maps/Alleyway/AlleywayMap.gd").new()
 	assert_eq(alley._dialogue_key(), "honami_alleyway", "Chưa nói chuyện với Mafuyu: phần 1")
 	GameManager.set_flag("mafuyu_honami_talked", true)
 	assert_eq(alley._dialogue_key(), "honami_alleyway_p2", "Đã nói chuyện: phần 2")
 	assert_true(DialogueLoader.get_lines("honami_alleyway").size() > 0 and DialogueLoader.get_lines("honami_alleyway_p2").size() > 0, "Cả hai đoạn hội thoại đều có")
 	alley.free()
-	GameManager.reset_game()
 
 func test_mizuki_snack_scene_plays_only_once():
-	GameManager.reset_game()
 	GameManager.set_flag("mafuyu_honami_talked", true)
 	var base = load(BASE_SCENE).instantiate()
 	var stage = load("res://Maps/Base/Stages/PostHarborStage.gd").new()
@@ -256,12 +235,10 @@ func test_mizuki_snack_scene_plays_only_once():
 	assert_true(GameManager.get_flag("harbor_mizuki_snack_done"), "Xem xong thì đánh dấu để vào lại căn cứ không phát lại")
 	assert_true(GameManager.get_flag("mizuki_control_phase"), "Chuyển sang điều khiển Mizuki")
 	base.free()
-	GameManager.reset_game()
 
 # ── Thua màn Tác chiến / Thủ Tướng: về căn cứ để luyện tập thêm ──────────────
 
 func test_losing_a_finale_fight_retreats_to_base_and_reopens_training():
-	GameManager.reset_game()
 	for id in ["ops_kanade", "ops_ichika", "ops_honami", "pm_boss"]:
 		assert_true(id in ScriptedBattleOutcomes.RETREAT_ON_LOSS, "%s: thua thì rút về căn cứ" % id)
 	for id in ["bounty_ambush", "mizuki_vs_mafuyu", "final_mafuyu", "street_skirmish"]:
@@ -277,16 +254,13 @@ func test_losing_a_finale_fight_retreats_to_base_and_reopens_training():
 	assert_true(GameManager.get_flag("finale_retreated"), "Đánh dấu để căn cứ giải thích vì sao quay về")
 	for flag in GameManager.TRAINING_DONE_FLAGS:
 		assert_false(GameManager.get_flag(flag), "%s được mở lại để luyện tập thêm" % flag)
-	GameManager.reset_game()
 
 func test_wave_mission_loss_also_reopens_training():
-	GameManager.reset_game()
 	GameManager.set_flag("training_ichika_done", true)
 	GameManager.set_flag("training_kanade_done", true)
 	GameManager.reset_training_progress()
 	assert_false(GameManager.get_flag("training_ichika_done"), "Ichika tập lại được")
 	assert_false(GameManager.get_flag("training_kanade_done"), "Kanade tập lại được")
-	GameManager.reset_game()
 
 func _finale_stage_base() -> Node:
 	GameManager.reset_game()
@@ -306,7 +280,6 @@ func test_base_explains_the_retreat_once():
 	assert_false(GameManager.get_flag("finale_retreated"), "Chỉ giải thích một lần")
 	_drain_dialogue()
 	base.free()
-	GameManager.reset_game()
 
 func test_mafuyu_lets_the_player_resume_the_mission_or_train():
 	var base = _finale_stage_base()
@@ -320,7 +293,6 @@ func test_mafuyu_lets_the_player_resume_the_mission_or_train():
 	assert_true("[Tập luyện]" in labels, "Vẫn có tập luyện")
 	DialogueManager._ui.choice_selected.emit(labels.size() - 1)
 	base.free()
-	GameManager.reset_game()
 
 # Lên cấp giữa trận khi đang có buff tạm: chỉ số tăng theo giá trị gốc, buff gỡ xong không để lại phần thừa
 func test_level_up_under_a_temp_buff_leaves_no_permanent_extra():

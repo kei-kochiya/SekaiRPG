@@ -37,4 +37,3 @@ func test_every_map_builds_content():
 	DialogueManager.active = false
 	DialogueManager.visible = false
 	GameManager.end_dialogue()
-	GameManager.reset_game()

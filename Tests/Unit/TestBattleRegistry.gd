@@ -33,7 +33,6 @@ var EXPECTED := {
 }
 
 func test_scripted_battle_setups_are_unchanged():
-	GameManager.reset_game()
 	for id in EXPECTED:
 		var want: Array = EXPECTED[id]
 		var data := BattleInitializer._setup_scripted_battle(id)
@@ -45,7 +44,6 @@ func test_scripted_battle_setups_are_unchanged():
 		assert_eq(data["enemy_team"][0].get_script().get_global_name(), want[4], "%s enemy class" % id)
 
 func test_party_enemies_that_mirror_members_follow_the_real_level():
-	GameManager.reset_game()
 	LevelManager.set_initial_level(GameManager.get_party_member("Mizuki"), 31)
 	LevelManager.set_initial_level(GameManager.get_party_member("Ena"), 29)
 	var ena_vs_mizuki := BattleInitializer._setup_scripted_battle("ena_vs_mizuki")
@@ -54,13 +52,6 @@ func test_party_enemies_that_mirror_members_follow_the_real_level():
 	var ena: Entity = forced["enemy_team"][0]
 	assert_eq(ena.level, 29, "the Ena opponent has the real Ena's level")
 	assert_eq(ena.current_hp, int(ena.max_hp * 0.4), "she starts at 40% HP after days of torture")
-
-func test_final_mafuyu_keeps_her_mirror_and_floor():
-	GameManager.reset_game()
-	var boss := BattleInitializer.build_final_mafuyu()
-	assert_true(boss.level >= BattleInitializer.FINAL_BOSS_FLOOR_LEVEL, "never below the floor level")
-	assert_eq(boss.current_hp, boss.max_hp, "full HP at the start")
-	boss.free()
 
 func test_every_registry_battle_builds_non_empty_teams():
 	# Mọi id kịch bản trong registry phải dựng được hai đội (nếu không trận sẽ rỗng và thắng ngay); duyệt cả registry chứ không chép tay danh sách

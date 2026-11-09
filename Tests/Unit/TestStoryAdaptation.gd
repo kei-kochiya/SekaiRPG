@@ -2,8 +2,8 @@ extends "res://Tests/Unit/BaseTest.gd"
 
 """
 Tóm tắt: Bảo vệ phần cốt truyện đưa từ truyện "Giao ước lúc 25h" vào game: mọi hội thoại đúng định dạng, các khóa
-hội thoại mới có mặt, ba trận mới (bài kiểm tra huấn luyện, Ena hộ tống, buổi thử phản xạ của Honami) dựng được
-và kịch bản của chúng chạy đúng luật.
+hội thoại mới có mặt và kịch bản của ba trận mới (bài kiểm tra huấn luyện, Ena hộ tống, buổi thử phản xạ của Honami)
+chạy đúng luật. Đội hình của chúng được TestBattleRegistry khóa.
 """
 
 const STORY_DIR := "res://Data/storyline/"
@@ -19,12 +19,18 @@ const NEW_KEYS := [
 	"epilogue_bar_invite", "epilogue_bar_shiho",
 ]
 
-# Cờ cốt truyện mà các cảnh mới đọc/ghi: phải có trong DEFAULT_FLAGS để lưu/tải và reset không làm mất kiểu dữ liệu
-const NEW_FLAGS := [
-	"training_week_intro_done", "training_trial_started", "training_trial_won", "training_trial_failed", "training_trial_prep_seen", "training_welcome_done",
-	"ops_ena_done", "ops_ena_intro_done", "ops_ena_post_done",
-	"honami_spar_done", "street_car_ride_done", "honami_spar_post_done", "harbor_gate_firefight_done",
-	"epilogue_bar_invite_done", "epilogue_bar_done",
+# Khóa hội thoại của hồi kết 2 (Nightcord sụp đổ), gồm cả khóa ghép tên động (forced_duel_line_N...) mà quét literal không thấy
+const ARC_KEYS = [
+	"base_celebration", "ena_leaves_aftermath",
+	"bounty_intro", "bounty_1_pre", "bounty_1_post", "bounty_2_pre", "bounty_2_post", "bounty_3_pre", "bounty_3_post",
+	"bounty_ambush_mid", "bounty_ambush_end",
+	"interrogation_torture_1", "interrogation_torture_2", "orders_mafuyu", "warehouse_mizuki_arrive",
+	"mizuki_police_1_pre", "mizuki_police_2_pre", "mizuki_police_done", "warehouse_mafuyu_arrive",
+	"forced_duel_pre", "forced_duel_line_1", "forced_duel_line_2", "forced_duel_line_3", "forced_duel_post", "kanade_dossier",
+	"kanade_confront_pre", "ichika_freeze_line", "mizuki_dies", "kanade_slow_pre", "kanade_death", "reveal_mafuyu", "honami_rescue",
+	"honami_options_intro", "honami_menu_prompt", "honami_training_offer_arc2", "honami_upgrade_offer",
+	"final_mafuyu_pre", "final_mafuyu_lose", "final_mafuyu_post", "ending_honami_offer", "ending_narration",
+	"epilogue_base_intro", "epilogue_honami_talk", "epilogue_honami_idle",
 ]
 
 func _all_dialogue() -> Dictionary:
@@ -73,33 +79,16 @@ func test_every_dialogue_entry_is_well_formed():
 				assert_true(str(e.get("color", "")).is_valid_html_color(), where + " has a valid colour")
 
 func test_new_dialogue_keys_exist():
-	for key in NEW_KEYS:
+	for key in NEW_KEYS + ARC_KEYS:
 		assert_gt(DialogueLoader.get_lines(key).size(), 0, "dialogue key exists: " + key)
 
-func test_new_story_flags_have_defaults():
-	for flag in NEW_FLAGS:
-		assert_true(StoryState.DEFAULT_FLAGS.has(flag), "default flag exists: " + flag)
+# Cờ của các cảnh mới đã được TestStaticChecks bảo vệ (mọi cờ literal trong code phải khai báo trong DEFAULT_FLAGS); ở đây chỉ ghim luật kết cục
+func test_new_battles_have_their_outcome_rules():
 	assert_eq(ScriptedBattleOutcomes.FATED.get("honami_spar"), "honami_spar_done", "spar sets its flag win or lose")
 	assert_eq(ScriptedBattleOutcomes.WIN_FLAG.get("training_trial"), "training_trial_won", "trial sets its flag on a win")
 	assert_true("ops_ena" in ScriptedBattleOutcomes.RETREAT_ON_LOSS, "losing the convoy fight retreats like the other ops")
 
-func test_new_battles_build_valid_teams():
-	GameManager.reset_game()
-	var expect := {
-		"training_trial": [1, 2, TrainingTrialScenario],
-		"ops_ena": [1, BattleInitializer.OPS_ENA_COUNT, ConvoyWavesScenario],
-		"honami_spar": [1, 1, SparringScenario],
-	}
-	for id in expect:
-		var data = BattleInitializer._setup_scripted_battle(id)
-		assert_eq(data["player_team"].size(), expect[id][0], "%s player count" % id)
-		assert_eq(data["enemy_team"].size(), expect[id][1], "%s enemy count" % id)
-		assert_true(is_instance_of(data["scenario"], expect[id][2]), "%s uses its scenario" % id)
-		for e in data["player_team"]:
-			assert_true(e != null, "%s has no null player" % id)
-
 func test_trial_opponents_mirror_the_real_party_members():
-	GameManager.reset_game()
 	var ena: Entity = GameManager.get_party_member("Ena")
 	LevelManager.set_initial_level(ena, 20)
 	var data = BattleInitializer._setup_scripted_battle("training_trial")
@@ -110,7 +99,6 @@ func test_trial_opponents_mirror_the_real_party_members():
 	assert_eq(clone.current_hp, clone.max_hp, "the clone starts at full HP")
 
 func test_training_trial_is_won_by_surviving_until_the_bell():
-	GameManager.reset_game()
 	var data = BattleInitializer._setup_scripted_battle("training_trial")
 	var main := FakeBattleMain.new(data["player_team"], data["enemy_team"])
 	var sc: TrainingTrialScenario = data["scenario"]
@@ -124,7 +112,6 @@ func test_training_trial_is_won_by_surviving_until_the_bell():
 	main.free()
 
 func test_training_trial_is_lost_when_ichika_falls():
-	GameManager.reset_game()
 	var data = BattleInitializer._setup_scripted_battle("training_trial")
 	var main := FakeBattleMain.new(data["player_team"], data["enemy_team"])
 	var sc: TrainingTrialScenario = data["scenario"]
@@ -134,7 +121,6 @@ func test_training_trial_is_lost_when_ichika_falls():
 	main.free()
 
 func test_sparring_honami_cannot_be_hurt_and_ends_on_a_forced_shadow_strike():
-	GameManager.reset_game()
 	var data = BattleInitializer._setup_scripted_battle("honami_spar")
 	var main := FakeBattleMain.new(data["player_team"], data["enemy_team"])
 	var sc: SparringScenario = data["scenario"]

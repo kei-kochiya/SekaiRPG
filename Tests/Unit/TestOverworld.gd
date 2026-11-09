@@ -137,7 +137,6 @@ func test_zone_and_player_factories():
 	assert_eq(resumed.global_position, Vector2(128, 160), "Có vị trí lưu (vào lại map sau trận): OverworldPlayer tự nạp lại")
 	root.remove_child(parent)
 	parent.free()
-	GameManager.reset_game()
 
 # Camera cố định dùng chung: mặc định căn giữa (15, 10) zoom 1.5; Thẩm vấn truyền tâm/zoom riêng
 func test_fixed_camera_defaults_and_overrides():

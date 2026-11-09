@@ -140,7 +140,6 @@ func test_sandbox_menu_frees_the_previous_battles_player_copies():
 	assert_eq(GameManager.sandbox_player_team.size(), 0, "Danh sách phe ta được làm sạch")
 	root.remove_child(menu)
 	menu.free()
-	GameManager.reset_game()
 
 # Hướng dẫn trận đầu nhả khóa modal NGAY khi đóng (không chờ queue_free cuối frame): lượt đầu bắt đầu trong cùng frame và menu lệnh
 # không nhận focus bàn phím/tay cầm khi PauseMenu còn báo có modal
@@ -184,4 +183,29 @@ func test_command_menu_can_go_back_from_target_selection():
 	menu.free()
 	ichika.free()
 	guard.free()
+
+# Từ bước chọn mục tiêu của một vật phẩm: Quay lại về túi đồ, rồi Quay lại nữa về danh sách lệnh
+func test_command_menu_back_from_an_item_target_returns_to_the_item_list():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var menu := CommandMenu.new()
+	root.add_child(menu)
+	var ichika := Ichika.new()
+	ichika.allies = [ichika]
+	GameManager.add_item("potion", 1)
+	menu.show_for(ichika, [Guard.new()])
+	menu._on_action_picked("menu_items")
+	var item_buttons := menu.target_container.get_children().filter(func(n): return n is Button)
+	assert_gt(item_buttons.size(), 1, "Có ít nhất một vật phẩm cộng nút Quay lại")
+	(item_buttons[0] as Button).pressed.emit() # chọn vật phẩm đầu tiên -> bước chọn mục tiêu
+	assert_true(menu.chosen_action.begins_with("item:"), "Đã chọn một vật phẩm")
+	var target_buttons := menu.target_container.get_children().filter(func(n): return n is Button)
+	(target_buttons[-1] as Button).pressed.emit() # Quay lại
+	assert_true(menu.target_container.visible and not menu.action_container.visible, "Về lại túi đồ, chưa về danh sách lệnh")
+	var again := menu.target_container.get_children().filter(func(n): return n is Button)
+	(again[-1] as Button).pressed.emit() # Quay lại lần nữa
+	assert_true(menu.action_container.visible and not menu.target_container.visible, "Quay lại lần nữa về danh sách lệnh")
+	assert_eq(menu.chosen_action, "", "Không còn lệnh nào được chọn")
+	root.remove_child(menu)
+	menu.free()
+	ichika.free()
 

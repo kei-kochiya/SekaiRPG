@@ -36,7 +36,7 @@ func _ready():
 
 func _build_map():
 	# Fill a large background area to ensure everything is black/dark
-	MapUtils.fill_floor(_map_root, -15, -10, 19, 24)
+	MapUtils.fill_floor(_map_root, -30, -20, 34, 34) # phủ kín khung nhìn của camera giữa hành lang, kể cả cửa sổ rộng
 			
 	# Walls
 	for y in range(1, 15):

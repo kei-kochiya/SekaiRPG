@@ -5,21 +5,6 @@ Tóm tắt: Kiểm tra logic chiến đấu và trạng thái của hồi kết 
 Mafuyu phản chiếu, thành viên đã chết và bộ lọc đối thủ luyện tập.
 """
 
-const SCRIPTED_IDS = [
-	"bounty_1", "bounty_2", "bounty_3", "bounty_ambush", "mizuki_police_1", "mizuki_police_2",
-	"mizuki_vs_ena_forced", "mizuki_vs_kanade", "ichika_vs_kanade_slow", "final_mafuyu",
-]
-
-func test_every_arc_battle_builds_valid_teams():
-	GameManager.reset_game()
-	for id in SCRIPTED_IDS:
-		var data = BattleInitializer._setup_scripted_battle(id)
-		assert_gt(data["player_team"].size(), 0, "%s has a player team" % id)
-		assert_gt(data["enemy_team"].size(), 0, "%s has an enemy team" % id)
-		assert_true(data["scenario"] is BattleScenario, "%s has a scenario" % id)
-		for e in data["player_team"]:
-			assert_true(e != null, "%s player team has no null members" % id)
-
 func test_fated_and_win_flags_exist_in_story_state():
 	for id in ScriptedBattleOutcomes.FATED:
 		assert_true(StoryState.DEFAULT_FLAGS.has(ScriptedBattleOutcomes.FATED[id]), "Flag exists for fated battle " + id)
@@ -29,7 +14,6 @@ func test_fated_and_win_flags_exist_in_story_state():
 		assert_true(StoryState.DEFAULT_FLAGS.has(id), "Default flag " + id)
 
 func test_members_die_in_story_but_stay_in_sandbox_data():
-	GameManager.reset_game()
 	for n in ["Ichika", "Honami", "Ena", "Mizuki", "Kanade", "Mafuyu"]:
 		assert_true(GameManager.is_member_alive_in_story(n), n + " alive by default")
 	GameManager.story.set_flag("ena_killed", true)
@@ -41,10 +25,8 @@ func test_members_die_in_story_but_stay_in_sandbox_data():
 		assert_true(GameManager.get_party_member(n) != null, n + " data stays for Holo-Sim and Sandbox")
 	assert_true(GameManager.is_member_alive_in_story("Ichika"), "Ichika survives")
 	assert_true(GameManager.is_member_alive_in_story("Honami"), "Honami survives")
-	GameManager.reset_game()
 
 func test_training_never_picks_dead_members():
-	GameManager.reset_game()
 	GameManager.story.set_flag("ena_killed", true)
 	GameManager.story.set_flag("mizuki_killed", true)
 	GameManager.story.set_flag("kanade_killed", true)
@@ -55,10 +37,8 @@ func test_training_never_picks_dead_members():
 		for e in data["enemy_team"]:
 			assert_false(e.entity_name in ["Ena", "Mizuki", "Kanade", "Mafuyu"], "Training opponent is not a dead member: " + e.entity_name)
 	GameManager.end_training()
-	GameManager.reset_game()
 
 func test_final_mafuyu_mirrors_upgrades_with_a_floor():
-	GameManager.reset_game()
 	var mafuyu = GameManager.get_party_member("Mafuyu")
 	var base_atk = mafuyu.atk
 	var base_hp = mafuyu.max_hp
@@ -78,7 +58,6 @@ func test_final_mafuyu_mirrors_upgrades_with_a_floor():
 	assert_true(boss_upgraded.atk >= int((base_atk + 5000) * BattleInitializer.FINAL_BOSS_MIRROR["atk"]), "Boss ATK reflects the party Mafuyu")
 	mafuyu.atk = base_atk
 	mafuyu.max_hp = base_hp
-	GameManager.reset_game()
 
 func test_untargetable_entities_are_skipped_by_ai():
 	var kanade = Kanade.new()
@@ -159,7 +138,6 @@ func test_base_picks_the_right_arc_stage():
 	assert_eq(_stage_name({"kanade_killed": true}), "RevealStage", "Kanade dead -> Mafuyu's reveal")
 	assert_eq(_stage_name({"final_confront_started": true}), "FinalStage", "Confronting Mafuyu happens in the base")
 	assert_eq(_stage_name({"game_completed": true, "final_confront_started": true}), "EpilogueStage", "Epilogue wins over the final stage")
-	GameManager.reset_game()
 
 func test_base_redirects_away_when_the_arc_lives_elsewhere():
 	assert_eq(_redirect({}), "", "Normal play stays in the base")
@@ -170,28 +148,5 @@ func test_base_redirects_away_when_the_arc_lives_elsewhere():
 	assert_eq(_redirect({"ena_left_nightcord": true, "honami_rescue_done": true}), "res://Maps/HonamiHouse/HonamiHouseMap.tscn", "After the rescue the player lives at Honami's house")
 	assert_eq(_redirect({"ena_left_nightcord": true, "honami_rescue_done": true, "final_confront_started": true}), "", "The final stage is in the base")
 	assert_eq(_redirect({"ena_left_nightcord": true, "game_completed": true}), "", "Epilogue stays in the base")
-	GameManager.reset_game()
 
 # ── Hội thoại ───────────────────────────────────────────────────────────────
-
-const ARC_DIALOGUE_KEYS = [
-	"base_celebration", "ena_leaves_aftermath",
-	"bounty_intro", "bounty_1_pre", "bounty_1_post", "bounty_2_pre", "bounty_2_post", "bounty_3_pre", "bounty_3_post",
-	"bounty_ambush_mid", "bounty_ambush_end",
-	"interrogation_torture_1", "interrogation_torture_2", "orders_mafuyu", "warehouse_mizuki_arrive",
-	"mizuki_police_1_pre", "mizuki_police_2_pre", "mizuki_police_done", "warehouse_mafuyu_arrive",
-	"forced_duel_pre", "forced_duel_line_1", "forced_duel_line_2", "forced_duel_line_3", "forced_duel_post", "kanade_dossier",
-	"kanade_confront_pre", "ichika_freeze_line", "mizuki_dies", "kanade_slow_pre", "kanade_death", "reveal_mafuyu", "honami_rescue",
-	"honami_options_intro", "honami_menu_prompt", "honami_training_offer_arc2", "honami_upgrade_offer",
-	"final_mafuyu_pre", "final_mafuyu_lose", "final_mafuyu_post", "ending_honami_offer", "ending_narration",
-	"epilogue_base_intro", "epilogue_honami_talk", "epilogue_honami_idle",
-]
-
-func test_every_arc_dialogue_key_exists_and_is_well_formed():
-	for key in ARC_DIALOGUE_KEYS:
-		var lines = DialogueLoader.get_lines(key)
-		assert_gt(lines.size(), 0, "Dialogue exists: " + key)
-		for line in lines:
-			assert_true(line["text"] != "", "%s has no empty lines" % key)
-			if line["type"] != "narrator":
-				assert_true(line["name"] != "", "%s: every spoken line names its speaker" % key)

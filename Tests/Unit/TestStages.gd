@@ -20,7 +20,6 @@ func _open_training_menu(stage: BaseMapStage, trainees: Array, hide_done: bool =
 # ── say() và bảng màu ──────────────────────────────────────────────────────
 
 func test_say_builds_a_line_in_the_speakers_colour():
-	GameManager.reset_game()
 	var stage := BaseMapStage.new()
 	var line := stage.say("Mafuyu", "Xin chào")
 	assert_eq(line["text"], "Xin chào", "Giữ nguyên lời thoại")
@@ -53,8 +52,6 @@ func test_every_character_colour_resolves_to_its_own_sprite():
 # ── Cảnh tự chạy và cửa ra ─────────────────────────────────────────────────
 
 func test_npc_talk_is_ignored_while_a_cutscene_runs():
-	GameManager.reset_game()
-	_drain_dialogue() # suite trước có thể để lại một hội thoại đang mở
 	var stage := PostCafeStreetMissionStage.new()
 	stage._cutscene_active = true
 	stage.talk_to_npc("Ena")
@@ -67,8 +64,6 @@ func test_npc_talk_is_ignored_while_a_cutscene_runs():
 
 # Nối dây thật: vùng tương tác của NPC do BaseMap dựng phải đi qua talk_to_npc (nơi có chốt cảnh tự chạy)
 func test_npc_zone_routes_through_the_cutscene_guard():
-	GameManager.reset_game()
-	_drain_dialogue()
 	var base = load(BASE_SCENE).instantiate()
 	var stage := PostCafeStreetMissionStage.new()
 	base.current_stage = stage
@@ -175,7 +170,6 @@ func test_lobby_stages_share_one_hall_layout():
 # ── Menu luyện tập ─────────────────────────────────────────────────────────
 
 func test_training_menu_hides_members_who_already_trained():
-	GameManager.reset_game()
 	GameManager.set_flag("training_ichika_done", true)
 	var stage := BaseMapStage.new()
 	var out := _open_training_menu(stage, ["Ichika", "Kanade"], true)
@@ -183,29 +177,23 @@ func test_training_menu_hides_members_who_already_trained():
 	assert_eq(out["started"], false, "Chọn \"Để sau.\" thì không vào luyện tập")
 	assert_false(GameManager.is_training_mode, "Chưa bắt đầu luyện tập")
 	stage.free()
-	GameManager.reset_game()
 
 func test_training_menu_cancel_does_not_run_the_before_start_hook():
-	GameManager.reset_game()
 	var fired := [0]
 	var stage := BaseMapStage.new()
 	var out := _open_training_menu(stage, ["Ichika"], false, false, "", func(): fired[0] += 1)
 	assert_eq(out["labels"], ["Ichika (5 Waves)", "Để sau."], "Một người thì không có mục cả nhóm")
 	assert_eq(fired[0], 0, "Chọn \"Để sau.\" thì không chạy before_start (cờ/khoá cảnh chỉ đặt khi thật sự vào luyện tập)")
 	stage.free()
-	GameManager.reset_game()
 
 func test_training_menu_keeps_everyone_unless_asked_to_hide():
-	GameManager.reset_game()
 	GameManager.set_flag("training_ichika_done", true)
 	var stage := BaseMapStage.new()
 	var out := _open_training_menu(stage, ["Ichika", "Kanade"])
 	assert_eq(out["labels"], ["Ichika (5 Waves)", "Kanade (5 Waves)", "Để sau."], "Không bật hide_done thì hiện đủ")
 	stage.free()
-	GameManager.reset_game()
 
 func test_training_menu_skips_the_dead_and_offers_the_group_option():
-	GameManager.reset_game()
 	var stage := BaseMapStage.new()
 	var out := _open_training_menu(stage, ["Ichika", "Honami"], false, true, "Cả hai (10 Waves)")
 	assert_eq(out["labels"], ["Ichika (5 Waves)", "Honami (5 Waves)", "Cả hai (10 Waves)", "Để sau."], "Hai người thì có thêm mục cả nhóm")
@@ -213,12 +201,10 @@ func test_training_menu_skips_the_dead_and_offers_the_group_option():
 	out = _open_training_menu(stage, ["Ichika", "Ena"], false, true, "Cả hai (10 Waves)")
 	assert_eq(out["labels"], ["Ichika (5 Waves)", "Để sau."], "Người đã chết bị bỏ, còn một người thì không có mục cả nhóm")
 	stage.free()
-	GameManager.reset_game()
 
 # ── Đặt người chơi và bệ tương tác của BaseMap ─────────────────────────────
 
 func test_base_map_sets_and_places_the_player():
-	GameManager.reset_game()
 	var base = load(BASE_SCENE).instantiate()
 	base.set_player("Ena") # chưa có người chơi: không lỗi
 	base.place_player(Vector2(3, 4))
@@ -233,7 +219,6 @@ func test_base_map_sets_and_places_the_player():
 	base.free()
 
 func test_shop_and_holo_sim_terminals_are_built_in_order():
-	GameManager.reset_game()
 	var base = load(BASE_SCENE).instantiate()
 	base._spawn_shop_and_sim()
 	var roots: Array = base.get_children()
@@ -279,7 +264,6 @@ func test_autoplaying_base_cutscenes_freeze_the_player():
 		DialogueManager.reset()
 		root.remove_child(base)
 		base.free()
-	GameManager.reset_game()
 
 # Bến Cảng chỉ mở sau khi Ena giao nhiệm vụ (cảnh harbor_arrival giả định cô ấy đã giao việc)
 func test_harbor_exit_needs_the_briefing_from_ena():
@@ -295,7 +279,6 @@ func test_harbor_exit_needs_the_briefing_from_ena():
 	DialogueManager.reset()
 	root.remove_child(base)
 	base.free()
-	GameManager.reset_game()
 
 # BaseMap._spawn_player chạy trước on_stage_start: cờ điều khiển Mizuki còn bật từ cảnh trước thì người chơi hiện ra là Mizuki chồng lên NPC
 func test_morning_after_the_report_spawns_ichika_not_mizuki():
@@ -309,7 +292,6 @@ func test_morning_after_the_report_spawns_ichika_not_mizuki():
 	assert_false(GameManager.get_flag("mizuki_control_phase"), "Cờ điều khiển Mizuki đã được tắt trước khi dựng người chơi")
 	root.remove_child(base)
 	base.free()
-	GameManager.reset_game()
 
 # Cờ npcs_greeted phải được ghi bằng set_flag chứ không dựa vào mảng sống phía sau getter
 func test_greeting_an_intro_npc_is_recorded_in_the_story_flags():
@@ -326,12 +308,9 @@ func test_greeting_an_intro_npc_is_recorded_in_the_story_flags():
 	assert_eq(GameManager.get_flag("npcs_greeted").count("Kanade"), 1, "Chào lần hai không ghi trùng")
 	root.remove_child(base)
 	base.free()
-	GameManager.reset_game()
 
 # Ai cũng đã tập xong thì nói một câu thay vì mở menu chỉ có nút "Để sau."
 func test_training_with_everyone_done_says_so_instead_of_opening_an_empty_menu():
-	GameManager.reset_game()
-	_drain_dialogue()
 	for member in ["Ichika", "Kanade"]:
 		GameManager.set_flag("training_%s_done" % member.to_lower(), true)
 	var stage := BaseMapStage.new()
@@ -341,12 +320,9 @@ func test_training_with_everyone_done_says_so_instead_of_opening_an_empty_menu()
 	assert_false(DialogueManager._in_choice, "Không mở lựa chọn chỉ có \"Để sau.\"")
 	_drain_dialogue()
 	stage.free()
-	GameManager.reset_game()
 
 # NPC chưa có gì để nói vẫn phải đáp lại: ở bước Kanade nằm giường và lúc chuẩn bị lại bài kiểm tra, bấm ENTER không được im lặng
 func test_npcs_with_nothing_to_say_still_answer():
-	GameManager.reset_game()
-	_drain_dialogue()
 	var harbor = load("res://Maps/Base/Stages/PostHarborStage.gd").new()
 	GameManager.set_flag("mizuki_control_phase", true)
 	harbor.handle_npc_interaction("Kanade")
@@ -361,7 +337,6 @@ func test_npcs_with_nothing_to_say_still_answer():
 		assert_true(DialogueManager.active, "%s lúc chuẩn bị lại đáp một dòng" % npc)
 		_drain_dialogue()
 	finale.free()
-	GameManager.reset_game()
 
 # FinaleStage tách base_celebration ở dòng bắt đầu bằng "RẦM!" (tiếng sập cửa): sửa chữ trong JSON mà quên chỗ này thì phần sau
 # cú sập rỗng và Mafuyu nói "để cô ta nguội" khi Ena vẫn còn trong phòng

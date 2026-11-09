@@ -9,22 +9,6 @@ func test_gamemanager_flags():
 	assert_eq(GameManager.get_flag("test_flag_unit"), 123, "GameManager get/set flag")
 	assert_eq(GameManager.get_flag("nonexistent_flag", 999), 999, "GameManager default flag fallback")
 
-func test_storystate_serialization():
-	var story = StoryState.new()
-	story.set_flag("prologue_phase", 2)
-	story.warehouse_wave = 3
-	story.set_flag("custom_quest_unlocked", true)
-	
-	var data = story.serialize()
-	assert_eq(data.get("warehouse_wave"), 3, "StoryState serialized warehouse_wave")
-	assert_eq(data.get("flags", {}).get("prologue_phase"), 2, "StoryState serialized prologue_phase flag")
-	
-	var new_story = StoryState.new()
-	new_story.deserialize(data)
-	assert_eq(new_story.get_flag("prologue_phase"), 2, "StoryState deserialized prologue_phase")
-	assert_eq(new_story.warehouse_wave, 3, "StoryState deserialized warehouse_wave")
-	assert_true(new_story.get_flag("custom_quest_unlocked"), "StoryState deserialized custom flag")
-
 # Nâng SP tự động sau lần phát cuối của process_level_up làm đổi máu mà thẻ HUD không biết (quái được nâng cấp lại giữa trận)
 func test_set_initial_level_tells_listeners_about_the_final_hp():
 	var guard := Guard.new()
@@ -46,20 +30,6 @@ func test_level_manager():
 	var old_level = ichika.level
 	LevelManager.gain_exp(ichika, 99999)
 	assert_gt(ichika.level, old_level, "LevelManager gain_exp triggers level up")
-
-func test_save_manager_crud():
-	var test_slot = "unit_test_core_save.json"
-	var save_res = SaveManager.save_game(test_slot)
-	assert_true(save_res, "SaveManager save_game creates file")
-	
-	var meta = SaveManager.get_save_metadata(test_slot)
-	assert_true(not meta.is_empty(), "SaveManager read preview metadata")
-	assert_true(meta.has("timestamp"), "Save metadata has timestamp")
-	
-	var del_res = SaveManager.delete_save(test_slot)
-	assert_true(del_res, "SaveManager delete_save removes file")
-	var meta_after = SaveManager.get_save_metadata(test_slot)
-	assert_true(meta_after.is_empty(), "SaveManager metadata is empty after delete")
 
 # ── StoryState ─────────────────────────────────────────────────────────────
 
@@ -97,11 +67,16 @@ func test_storystate_deserialize_starts_from_defaults():
 func test_storystate_json_roundtrip_types():
 	var src = StoryState.new()
 	src.set_flag("prologue_phase", 3)
+	src.set_flag("custom_quest_unlocked", true)
 	src.warehouse_wave = 4
 	src.training_wave = 2
-	var loaded = JSON.parse_string(JSON.stringify(src.serialize()))
+	var data = src.serialize()
+	assert_eq(data.get("flags", {}).get("prologue_phase"), 3, "serialize ghi cờ vào mục flags")
+	assert_eq(data.get("warehouse_wave"), 4, "serialize ghi warehouse_wave")
+	var loaded = JSON.parse_string(JSON.stringify(data))
 	var dst = StoryState.new()
 	dst.deserialize(loaded)
+	assert_true(dst.get_flag("custom_quest_unlocked"), "cờ ngoài danh sách mặc định cũng qua JSON")
 	assert_eq(dst.get_flag("prologue_phase"), 3, "prologue_phase qua JSON")
 	assert_true(dst.get_flag("prologue_phase", 0) >= 1, "so sánh prologue_phase >= 1 hợp lệ")
 	assert_eq(dst.warehouse_wave, 4, "warehouse_wave qua JSON")
@@ -136,30 +111,6 @@ func test_training_wave_separate_from_warehouse_wave():
 	GameManager.warehouse_wave = old_wave
 	GameManager.current_map_file = old_map
 
-func test_clear_transient_state():
-	GameManager.begin_training(["Ichika"])
-	GameManager.training_used_opponents = ["Kanade"]
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = "pm_boss"
-	GameManager.is_sandbox = true
-	GameManager.sandbox_player_team = ["x"]
-	GameManager.sandbox_enemy_team = ["y"]
-	GameManager.is_in_dialogue = true
-	HoloSimManager.is_sim_active = true
-
-	GameManager.clear_transient_state()
-	assert_false(GameManager.is_training_mode, "clear: is_training_mode")
-	assert_eq(GameManager.training_participants.size(), 0, "clear: training_participants")
-	assert_eq(GameManager.training_used_opponents.size(), 0, "clear: training_used_opponents")
-	assert_eq(GameManager.training_wave, 0, "clear: training_wave")
-	assert_false(GameManager.is_scripted_battle, "clear: is_scripted_battle")
-	assert_eq(GameManager.scripted_battle_id, "", "clear: scripted_battle_id")
-	assert_false(GameManager.is_sandbox, "clear: is_sandbox")
-	assert_eq(GameManager.sandbox_player_team.size(), 0, "clear: sandbox_player_team")
-	assert_eq(GameManager.sandbox_enemy_team.size(), 0, "clear: sandbox_enemy_team")
-	assert_false(GameManager.is_in_dialogue, "clear: is_in_dialogue")
-	assert_false(HoloSimManager.is_sim_active, "clear: HoloSimManager.is_sim_active")
-
 func test_reset_game_resets_economy_and_transient_state():
 	GameManager.credits = 9999
 	GameManager.inventory = {"potion": 77}
@@ -175,7 +126,6 @@ func test_reset_game_resets_economy_and_transient_state():
 	# Sửa inventory không được làm hỏng hằng số mặc định
 	GameManager.add_item("potion", 5)
 	assert_eq(GameManager.DEFAULT_INVENTORY["potion"], 2, "DEFAULT_INVENTORY không bị thay đổi")
-	GameManager.reset_game()
 
 # ── SaveManager ────────────────────────────────────────────────────────────
 
@@ -210,7 +160,9 @@ func test_save_game_sanitises_typed_name_and_writes_atomically():
 	assert_false(FileAccess.file_exists(SaveManager.SAVES_DIR + clean + ".json.tmp"), "không còn file .tmp sau khi ghi")
 	var meta = SaveManager.get_save_metadata(clean)
 	assert_eq(meta.get("version"), SaveManager.SAVE_VERSION, "metadata ghi đúng SAVE_VERSION")
-	assert_true(SaveManager.delete_save(clean), "dọn file save thử nghiệm")
+	assert_true(meta.has("timestamp"), "metadata có timestamp")
+	assert_true(SaveManager.delete_save(clean), "xóa save thành công")
+	assert_true(SaveManager.get_save_metadata(clean).is_empty(), "sau khi xóa không còn metadata")
 
 func test_save_roundtrip_next_level_exp():
 	var slot = "unit_test_roundtrip_slot"

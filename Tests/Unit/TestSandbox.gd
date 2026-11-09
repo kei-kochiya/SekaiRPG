@@ -91,7 +91,6 @@ func test_sandbox_enemy_limit():
 	assert_eq(menu.selected_players.size(), 4, "Chọn quá 4 nhân vật phe ta thì bị từ chối")
 	root.remove_child(menu)
 	menu.free()
-	GameManager.reset_game()
 
 # Hạ ô Level phải hạ cả nhân vật đã chọn (set_initial_level chỉ biết nâng): trước đây ô hiện Lv.20 nhưng trận vẫn đánh ở Lv.50
 func test_lowering_the_level_spinner_lowers_selected_players():
@@ -113,5 +112,23 @@ func test_lowering_the_level_spinner_lowers_selected_players():
 	assert_eq(menu.sandbox_player_instances["Ichika"].level, 35, "Nâng lại vẫn đúng")
 	root.remove_child(menu)
 	menu.free()
-	GameManager.reset_game()
+
+# Bấm "Bắt đầu" xong là đội đã chuyển cho GameManager: kéo ô Level lúc đang fade không được free các bản sao đó (trận sẽ cầm đối tượng đã bị xóa)
+func test_lowering_the_level_while_the_battle_is_starting_leaves_the_copies_alone():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var menu: Node = load(MapPaths.SANDBOX_MENU).instantiate()
+	root.add_child(menu)
+	var box := CheckBox.new()
+	menu._on_player_toggled(true, "Ichika", box)
+	box.free()
+	menu._on_player_lv_changed(40.0)
+	var before = menu.sandbox_player_instances["Ichika"]
+	menu._busy = true
+	menu._on_player_lv_changed(10.0)
+	assert_true(is_instance_valid(before), "Bản sao đang được trận giữ vẫn còn")
+	assert_true(menu.sandbox_player_instances["Ichika"] == before, "Không bị dựng lại khi đang vào trận")
+	assert_eq(before.level, 40, "Level giữ nguyên")
+	menu._busy = false
+	root.remove_child(menu)
+	menu.free()
 

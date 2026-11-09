@@ -1,66 +1,8 @@
 extends "res://Tests/Unit/BaseTest.gd"
 
 """
-Tóm tắt: Unit test cho hệ thống Chiến đấu (DamageCalculator, TurnCalculator, ProcessStatus, AIManager).
+Tóm tắt: Unit test cho hệ thống Chiến đấu (trạng thái, AI, chí mạng, hồi chiêu, phản đòn). Công thức sát thương: TestDamageCalculator; thứ tự lượt: TestTurnOrder.
 """
-
-func test_damage_calculator_raw():
-	var attacker = Ichika.new()
-	attacker.atk = 50
-	var defender = Guard.new()
-	defender.defense = 20
-	
-	var dmg = DamageCalculator.calculate_damage(attacker, defender, 1.0)
-	assert_gt(dmg, 0, "Damage is positive")
-	
-	# Test minimum damage guarantee
-	defender.defense = 9999
-	var min_dmg = DamageCalculator.calculate_damage(attacker, defender, 1.0)
-	assert_gt(min_dmg, 0, "Damage satisfies minimum threshold even against huge defense")
-	assert_lt(min_dmg, dmg, "Sàn chip damage thấp hơn đòn bình thường")
-
-func test_damage_calculator_type_chart():
-	var ichika = Ichika.new()
-	ichika.atk = 40
-	ichika.crit_rate = 0.0 # Tắt random crit để kiểm tra chính xác hệ số nguyên tố
-	ichika.type = "Pure"
-	
-	var bot = TrainingBot.new()
-	bot.type = "Mysterious" # Pure is effective against Mysterious (1.25x)
-	bot.defense = 10
-	
-	var dmg_strong = DamageCalculator.calculate_damage(ichika, bot, 1.0)
-	
-	bot.type = "Pure" # Same element (neutral)
-	var dmg_neutral = DamageCalculator.calculate_damage(ichika, bot, 1.0)
-	assert_gt(dmg_strong, dmg_neutral, "Type advantage yields higher damage")
-
-func test_damage_calculator_crit_and_break():
-	var ichika = Ichika.new()
-	ichika.atk = 60
-	ichika.crit_rate = 1.0 # Guarantee crit
-	ichika.crit_dmg = 2.0
-	ichika.type = "Pure"
-	
-	var bot = TrainingBot.new()
-	bot.type = "Mysterious"
-	bot.max_break_gauge = 40
-	bot.break_gauge = 40
-	
-	var detailed = DamageCalculator.calculate_damage_detailed(ichika, bot, 1.0)
-	assert_true(detailed["is_crit"], "calculate_damage_detailed correctly identifies critical hit")
-	assert_true(detailed["is_weakness"], "calculate_damage_detailed identifies weakness hit")
-	assert_true(detailed["is_break"], "calculate_damage_detailed triggers break on depleted gauge")
-
-func test_turn_calculator():
-	var fast = Ichika.new()
-	fast.spd = 120
-	var slow = Guard.new()
-	slow.spd = 60
-	var timeline = TurnCalculator.get_timeline([slow, fast], 1)
-	assert_eq(timeline[0]["entity"], fast, "Higher speed acts first")
-	fast.free()
-	slow.free()
 
 func test_process_status():
 	var entity = TrainingBot.new()
@@ -191,4 +133,3 @@ func test_kanade_deflect_moves_the_crit_flag_to_whoever_takes_the_damage():
 	assert_gt(direct, 0, "Và có lần không bẻ hướng")
 	kanade.free()
 	ichika.free()
-

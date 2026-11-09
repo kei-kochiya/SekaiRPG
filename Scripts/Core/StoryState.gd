@@ -6,7 +6,7 @@ Tóm tắt: StoryState là vùng nhớ chuyên dụng lưu trữ toàn bộ ti�
 
 Chức năng chính:
 - Lưu trữ bộ từ điển `flags` chứa các biến boolean/int để theo dõi trạng thái nhiệm vụ, đối thoại và mở khóa.
-- Lưu trữ biến đếm (wave, kẻ địch tiêu diệt) cho các nhiệm vụ cày cuốc (Warehouse, Harbor) và chế độ luyện tập (training_wave).
+- Lưu trữ biến đếm wave cho các nhiệm vụ cày cuốc (Warehouse, Harbor) và chế độ luyện tập (training_wave).
 - Cung cấp API để `GameManager` dễ dàng thiết lập (set), đọc (get) và khôi phục (reset) trạng thái.
 - Hỗ trợ Serialize/Deserialize dữ liệu sang JSON để phục vụ việc Save/Load Game.
 """

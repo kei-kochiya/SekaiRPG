@@ -8,7 +8,6 @@ và UpgradeManager (chi phí SP, trần chỉ số, thành viên đang gục).
 const SLOT := "unit_test_full_roundtrip"
 
 func test_a_full_save_and_load_restores_the_whole_game_state():
-	GameManager.reset_game()
 	GameManager.credits = 4321
 	GameManager.inventory = {"potion": 7, "bandage": 2}
 	GameManager.opened_chests = ["chest_a", "chest_b"]
@@ -44,10 +43,8 @@ func test_a_full_save_and_load_restores_the_whole_game_state():
 	assert_eq(restored.atk, ichika.atk, "chỉ số đã nâng")
 	assert_eq(restored.current_hp, 50, "máu hiện tại")
 	SaveManager.delete_save(SLOT)
-	GameManager.reset_game()
 
 func test_saving_over_an_existing_slot_replaces_it():
-	GameManager.reset_game()
 	GameManager.credits = 111
 	assert_true(SaveManager.save_game(SLOT), "lưu lần đầu")
 	GameManager.credits = 222
@@ -57,7 +54,6 @@ func test_saving_over_an_existing_slot_replaces_it():
 	assert_true(GameManager.load_game(SLOT), "nạp")
 	assert_eq(GameManager.credits, 222, "Slot giữ bản lưu mới nhất")
 	SaveManager.delete_save(SLOT)
-	GameManager.reset_game()
 
 # ── UpgradeManager ─────────────────────────────────────────────────────────
 
@@ -113,7 +109,6 @@ func test_bulk_upgrade_counts_successes_and_stops_when_sp_runs_out():
 # ── Trận đánh theo wave dựng từ Data/battles/mission_battles.json ──────────
 
 func test_warehouse_waves_come_from_the_json_and_scale_with_the_wave():
-	GameManager.reset_game()
 	GameManager.current_map_file = MapPaths.WAREHOUSE
 	GameManager.warehouse_wave = 2
 	var data := BattleInitializer.setup_battle()
@@ -124,40 +119,18 @@ func test_warehouse_waves_come_from_the_json_and_scale_with_the_wave():
 	assert_eq(BattleInitializer.setup_battle()["enemy_team"][0].level, 15, "Cấp tối đa 15")
 	GameManager.warehouse_wave = 1
 	assert_eq(BattleInitializer.setup_battle()["enemy_team"][0].level, 3, "Cấp tối thiểu 3")
-	GameManager.reset_game()
 
 func test_harbor_guard_waves_come_from_the_json_and_scale_with_the_wave():
-	GameManager.reset_game()
 	GameManager.current_map_file = MapPaths.HARBOR
 	GameManager.harbor_wave = 2
 	var data := BattleInitializer.setup_battle()
 	assert_eq(data["player_team"].map(func(e): return e.entity_name), ["Ichika", "Ena"], "Đội hình Bến Cảng")
 	assert_eq(data["enemy_team"].size(), 4, "4 lính gác")
 	assert_eq(data["enemy_team"][0].level, 7, "Cấp = 5 + wave")
-	GameManager.reset_game()
-
-# RES giảm sát thương theo phần trăm; mọi test sát thương khác đặt RES = 0 nên công thức này từng không được ghim
-func test_resistance_reduces_damage_by_its_percentage():
-	var attacker := Ichika.new()
-	attacker.atk = 100
-	attacker.crit_rate = 0.0
-	attacker.type = "Pure"
-	var defender := Guard.new()
-	defender.defense = 0
-	defender.type = "Pure"
-	defender.res = 0
-	assert_eq(DamageCalculator.calculate_damage(attacker, defender, 1.0), 100, "Không kháng: nguyên sát thương")
-	defender.res = 50
-	assert_eq(DamageCalculator.calculate_damage(attacker, defender, 1.0), 50, "Kháng 50%: còn một nửa")
-	defender.res = 100
-	assert_eq(DamageCalculator.calculate_damage(attacker, defender, 1.0), 5, "Kháng 100%: chạm sàn 5% ATK")
-	attacker.free()
-	defender.free()
 
 # ── Holo-Sim: sàn 30% máu được áp trước khi HUD dựng ───────────────────────
 
 func test_holosim_floor_raises_low_hp_members_to_thirty_percent_before_the_hud():
-	GameManager.reset_game()
 	HoloSimManager.is_sim_active = true
 	HoloSimManager.current_floor = 2
 	var ichika := GameManager.get_party_member("Ichika")
@@ -172,5 +145,3 @@ func test_holosim_floor_raises_low_hp_members_to_thirty_percent_before_the_hud()
 	assert_gt(mafuyu.current_hp, 0, "Người đang gục được hồi (BattleInitializer._revive_downed) rồi mới tính sàn")
 	assert_eq(data["player_team"].size(), 3, "Đội Holo-Sim gồm ba nhân vật")
 	HoloSimManager.is_sim_active = false
-	GameManager.reset_game()
-

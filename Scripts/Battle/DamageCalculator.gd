@@ -7,7 +7,7 @@ Tóm tắt: DamageCalculator phụ trách tính toán lượng sát thương cu�
 Chức năng chính:
 - Cung cấp phương thức tĩnh `calculate_damage` để xử lý công thức sát thương: raw_dmg = (ATK * Multiplier) - DEF.
 - Tự động áp dụng hệ số giảm trừ theo kháng (RES) và tương khắc thuộc tính (thông qua TypeChart).
-- Đảm bảo sát thương tối thiểu gây ra không bao giờ thấp hơn 5% ATK của người tấn công.
+- Đảm bảo sát thương tối thiểu gây ra không bao giờ thấp hơn 5% của (ATK × hệ số kỹ năng).
 """
 
 # ── Xử Lý Sát Thương ───────────────────────────────────────────────────────

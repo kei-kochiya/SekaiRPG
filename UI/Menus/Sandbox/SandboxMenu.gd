@@ -230,6 +230,9 @@ func _add_enemy_row(parent: Control, e_name: String):
 # ── Phe Ta ─────────────────────────────────────────────────────────────────
 
 func _on_player_lv_changed(new_lv: float):
+	# Đang vào trận (đội đã chuyển cho GameManager) hoặc đang mở bảng nâng cấp: các bản sao đang được giữ ở nơi khác, không được dựng lại
+	if _busy or UpgradeUI._open:
+		return
 	var lv = int(new_lv)
 	for c_name in sandbox_player_instances.keys():
 		var p = sandbox_player_instances[c_name]

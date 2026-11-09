@@ -9,28 +9,33 @@ func _line() -> Dictionary:
 	return {"text": "x", "type": "dialogue", "name": "A", "speaker": "left", "color": Color.WHITE}
 
 func test_clear_transient_state_resets_every_battle_mode():
-	GameManager.reset_game()
 	HoloSimManager.is_sim_active = true
-	GameManager.is_training_mode = true
+	GameManager.begin_training(["Ichika"])
+	GameManager.training_used_opponents = ["Kanade"]
 	GameManager.is_tutorial = true
 	GameManager.is_sandbox = true
+	GameManager.sandbox_player_team = ["x"]
+	GameManager.sandbox_enemy_team = ["y"]
 	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = "x"
+	GameManager.scripted_battle_id = "pm_boss"
 	DialogueManager.show_choice(["a", "b"])
 	GameManager.clear_transient_state()
 	assert_false(HoloSimManager.is_sim_active, "Holo-Sim không còn hoạt động")
 	assert_false(GameManager.is_training_mode, "Hết chế độ luyện tập")
+	assert_eq(GameManager.training_participants.size(), 0, "Không còn người luyện tập")
+	assert_eq(GameManager.training_used_opponents.size(), 0, "Không còn đối thủ đã dùng")
+	assert_eq(GameManager.training_wave, 0, "training_wave về 0")
 	assert_false(GameManager.is_tutorial, "Hết hướng dẫn")
 	assert_false(GameManager.is_sandbox, "Hết Sandbox")
+	assert_eq(GameManager.sandbox_player_team.size(), 0, "Đội Sandbox phe ta được xóa")
+	assert_eq(GameManager.sandbox_enemy_team.size(), 0, "Đội Sandbox phe địch được xóa")
 	assert_false(GameManager.is_scripted_battle, "Hết trận kịch bản")
 	assert_eq(GameManager.scripted_battle_id, "", "Xóa mã trận kịch bản")
 	assert_false(DialogueManager._in_choice, "Lựa chọn đang mở bị đóng")
 	assert_false(GameManager.is_in_dialogue, "Không còn khóa hội thoại")
-	GameManager.reset_game()
 
 # Quit-to-menu từ Holo-Sim rồi vào Sandbox từng làm trận Sandbox biến thành trận Holo-Sim (BattleInitializer xét cờ sim trước)
 func test_start_menu_clears_leftover_holosim_state():
-	GameManager.reset_game()
 	HoloSimManager.is_sim_active = true
 	GameManager.is_training_mode = true
 	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
@@ -40,10 +45,8 @@ func test_start_menu_clears_leftover_holosim_state():
 	assert_false(GameManager.is_training_mode, "Không còn cờ luyện tập")
 	root.remove_child(menu)
 	menu.free()
-	GameManager.reset_game()
 
 func test_dialogue_reset_closes_without_running_the_callback():
-	GameManager.reset_game()
 	var fired := [0]
 	DialogueManager.play_dialogue([_line()], func(): fired[0] += 1)
 	assert_true(DialogueManager.active, "Hội thoại đang mở")
@@ -54,11 +57,9 @@ func test_dialogue_reset_closes_without_running_the_callback():
 	assert_eq(fired[0], 0, "Callback của cảnh cũ không được chạy")
 	DialogueManager._advance_dialogue() # bấm tiếp sau khi đóng: không lỗi, không chạy callback
 	assert_eq(fired[0], 0, "Vẫn không chạy callback")
-	GameManager.reset_game()
 
 # Gọi play_dialogue lúc lựa chọn đang mở từng làm giao diện kẹt vĩnh viễn (nút ẩn nhưng _in_choice còn true)
 func test_dialogue_is_not_started_over_an_open_choice():
-	GameManager.reset_game()
 	DialogueManager.show_choice(["a", "b"])
 	var fired := [0]
 	DialogueManager.play_dialogue([_line()], func(): fired[0] += 1)
@@ -67,7 +68,6 @@ func test_dialogue_is_not_started_over_an_open_choice():
 	assert_eq(fired[0], 1, "Callback vẫn chạy để luồng cốt truyện không kẹt")
 	DialogueManager._ui.choice_selected.emit(0)
 	assert_false(DialogueManager._in_choice, "Chọn xong thì đóng lựa chọn")
-	GameManager.reset_game()
 
 func test_menu_scene_list_matches_the_scenes_that_exist():
 	assert_true("StartMenu" in GameManager.MENU_SCENES and "SandboxMenu" in GameManager.MENU_SCENES, "Hai menu chính")
@@ -81,7 +81,6 @@ func test_menu_scene_list_matches_the_scenes_that_exist():
 # ask()/play_async() từng await trên tín hiệu dùng chung: sau reset() (thoát về menu giữa chừng) coroutine cũ bị đánh thức bởi lựa chọn đầu
 # tiên của phiên sau rồi chạy tiếp mã của cảnh đã đóng. Mỗi lời gọi giờ có người chờ riêng nên coroutine cũ bị bỏ rơi.
 func test_reset_abandons_pending_asks_instead_of_waking_them_later():
-	GameManager.reset_game()
 	var seen := [0, 0, 0]
 	var first := func():
 		await DialogueManager.ask(["a", "b"])
@@ -103,11 +102,9 @@ func test_reset_abandons_pending_asks_instead_of_waking_them_later():
 	DialogueManager.play_dialogue([_line()])
 	DialogueManager._advance_dialogue()
 	assert_eq(seen[2], 0, "play_async đã reset cũng không bị đánh thức bởi hội thoại sau")
-	GameManager.reset_game()
 
 # Hai lần ask() liên tiếp (lần sau gọi ngay trong lần chạy tiếp của lần trước) nhận đúng kết quả của từng lần
 func test_back_to_back_asks_each_get_their_own_answer():
-	GameManager.reset_game()
 	var got := []
 	var chain := func():
 		got.append(await DialogueManager.ask(["a", "b", "c"]))
@@ -116,11 +113,9 @@ func test_back_to_back_asks_each_get_their_own_answer():
 	DialogueManager._ui.choice_selected.emit(2)
 	DialogueManager._ui.choice_selected.emit(1)
 	assert_eq(got, [2, 1], "Mỗi lần hỏi nhận đúng lựa chọn của nó")
-	GameManager.reset_game()
 
 # Lời gọi đến muộn của map cũ (timer/coroutine) khi người chơi đã về menu không được kéo menu sang map đó
 func test_change_map_and_scripted_battles_are_ignored_while_a_menu_is_current():
-	GameManager.reset_game()
 	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
 	_saved_root_name = root.name
 	root.name = "StartMenu"
@@ -130,7 +125,6 @@ func test_change_map_and_scripted_battles_are_ignored_while_a_menu_is_current():
 	GameManager.start_scripted_battle("ena_vs_thugs", MapPaths.CAFE, Vector2.ZERO, 0.0)
 	assert_false(GameManager.is_scripted_battle, "start_scripted_battle bị bỏ qua khi đang ở menu")
 	root.name = _saved_root_name
-	GameManager.reset_game()
 
 # "Tải game" xóa hết save rồi đóng: cột nút phải được dựng lại (trước đây "Tiếp tục" vẫn nằm đó và dẫn tới "Không tìm thấy file save")
 func test_start_menu_rebuilds_its_buttons_when_the_save_list_changes():
@@ -152,7 +146,6 @@ func test_start_menu_rebuilds_its_buttons_when_the_save_list_changes():
 
 # Lưu game chỉ khi đang đi lại ngoài Overworld: không Sandbox/trận kịch bản/luyện tập/Holo-Sim, không ở menu/trận, và người chơi chưa bị khóa
 func test_can_save_now_guards():
-	GameManager.reset_game()
 	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
 	assert_false(GameManager.can_save_now(), "Không có người chơi Overworld thì không lưu")
 	var player := OverworldPlayer.new()
@@ -171,7 +164,23 @@ func test_can_save_now_guards():
 	assert_true(GameManager.can_save_now(), "Hết các chốt chặn thì lưu lại được")
 	root.remove_child(player)
 	player.free()
-	GameManager.reset_game()
+
+# Đường dây thật: hộp "Tải game" rời cây (tree_exited) thì Start Menu tự dựng lại cột nút, không cần ai gọi tay
+func test_start_menu_listens_for_the_load_dialog_closing():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var menu: Node = load("res://UI/Menus/Start/StartMenu.tscn").instantiate()
+	root.add_child(menu)
+	var old_button: Button = menu.find_children("*", "Button", true, false)[0]
+	menu._busy = false
+	menu._on_load_menu()
+	var overlay: Node = menu.get_child(menu.get_child_count() - 1)
+	menu._built_with_save = not GameManager.has_save() # như thể danh sách save đã đổi lúc hộp đang mở
+	menu.remove_child(overlay)
+	assert_false(old_button.is_inside_tree(), "Hộp đóng lại thì cột nút cũ bị bỏ và dựng lại")
+	assert_eq(menu._built_with_save, GameManager.has_save(), "Trạng thái dựng khớp với danh sách save")
+	overlay.free()
+	root.remove_child(menu)
+	menu.free()
 
 # Tên gốc của runner đổi sang "StartMenu" trong một test: trả lại ở after_each để một lỗi giữa chừng không làm các lời gọi change_map
 # ở mọi test sau bị bỏ qua lặng lẽ
