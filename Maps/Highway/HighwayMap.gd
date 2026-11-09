@@ -1,7 +1,5 @@
 extends Node2D
 
-const TILE_SIZE = 32
-
 func _ready():
 	AudioManager.play_music("battle")
 	
@@ -27,10 +25,10 @@ func _build_highway():
 	MapUtils.place_road_asset(self, "Red_Car_Facing_Left_2.png", Vector2(16, 11))
 	
 	# Spawn NPCs
-	MapUtils.create_dummy_char(self, "Mizuki", Vector2(14, 11), Color(0.8, 0.5, 0.8))
-	MapUtils.create_dummy_char(self, "Mafuyu", Vector2(15, 10), Color(0.4, 0.3, 0.5))
+	MapUtils.create_dummy_char(self, "Mizuki", Vector2(14, 11), MapUtils.CHARACTER_COLORS["Mizuki"])
+	MapUtils.create_dummy_char(self, "Mafuyu", Vector2(15, 10), MapUtils.CHARACTER_COLORS["Mafuyu"])
 	MapUtils.create_dummy_char(self, "Thủ Tướng", Vector2(15, 12), Color(0.2, 0.2, 0.2))
-	MapUtils.create_dummy_char(self, "Ena", Vector2(20, 11), Color(0.7, 0.3, 0.1))
+	MapUtils.create_dummy_char(self, "Ena", Vector2(20, 11), MapUtils.CHARACTER_COLORS["Ena"])
 
 func _run_logic():
 	if GameManager.get_flag("pm_boss_defeated"):

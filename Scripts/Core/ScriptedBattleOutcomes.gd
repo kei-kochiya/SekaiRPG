@@ -61,9 +61,6 @@ static func apply(story: StoryState, id: String, victory: bool) -> void:
 		story.set_flag(WIN_FLAG[id], true)
 	
 	match id:
-		"harbor_boss":
-			if victory:
-				story.set_flag("harbor_boss_defeated", true)
 		"mizuki_vs_mafuyu":
 			story.set_flag("mizuki_vs_mafuyu_done", true)
 		"ena_vs_mizuki":

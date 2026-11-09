@@ -86,6 +86,8 @@ func _on_continue():
 		_error_label.visible = true
 
 func _on_load_menu():
+	if _busy:
+		return
 	var save_load_scene = preload("res://UI/Menus/SaveLoad/SaveLoadMenu.tscn").instantiate()
 	add_child(save_load_scene)
 
@@ -105,6 +107,8 @@ func _on_sandbox():
 	get_tree().change_scene_to_file(MapPaths.SANDBOX_MENU)
 
 func _on_open_options():
+	if _busy:
+		return
 	PauseMenu.show_options(true)
 
 func _on_exit():

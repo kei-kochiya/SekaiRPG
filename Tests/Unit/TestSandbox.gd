@@ -9,11 +9,7 @@ TestSandbox: Kiểm thử toàn diện logic chế độ Sandbox.
 - Đảm bảo cấu hình trận đấu Sandbox (BattleInitializer) khởi tạo đúng DefaultScenario và giữ nguyên chỉ số nâng cấp.
 """
 
-func _init():
-	pass
-
 func test_sandbox_player_isolation():
-	current_test_name = "test_sandbox_player_isolation"
 	
 	# Lấy nhân vật gốc từ campaign party
 	var original_ichika = GameManager.get_party_member("Ichika")
@@ -33,7 +29,6 @@ func test_sandbox_player_isolation():
 	assert_eq(original_ichika.max_hp, orig_hp, "Campaign party member HP must not be modified")
 
 func test_sandbox_enemy_creation_and_bosses():
-	current_test_name = "test_sandbox_enemy_creation_and_bosses"
 	
 	var mob = EntityFactory.create("Lính Cảng")
 	assert_true(mob != null, "Should create mob Guard")
@@ -47,7 +42,6 @@ func test_sandbox_enemy_creation_and_bosses():
 	assert_eq(boss.level, 30, "Boss level should scale to 30")
 
 func test_sandbox_battle_initializer():
-	current_test_name = "test_sandbox_battle_initializer"
 	
 	# Giả lập thiết lập Sandbox
 	GameManager.is_sandbox = true
@@ -79,7 +73,6 @@ func test_sandbox_battle_initializer():
 	GameManager.sandbox_enemy_team.clear()
 
 func test_sandbox_enemy_limit():
-	current_test_name = "test_sandbox_enemy_limit"
 	
 	var menu_script = load("res://UI/Menus/Sandbox/SandboxMenu.gd")
 	assert_eq(menu_script.ENEMY_LIMIT, 5, "Sandbox allows at most 5 enemies")

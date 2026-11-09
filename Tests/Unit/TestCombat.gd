@@ -53,9 +53,14 @@ func test_damage_calculator_crit_and_break():
 	assert_true(detailed["is_break"], "calculate_damage_detailed triggers break on depleted gauge")
 
 func test_turn_calculator():
-	var av_fast = TurnCalculator.get_action_value(120)
-	var av_slow = TurnCalculator.get_action_value(60)
-	assert_gt(av_slow, av_fast, "Higher speed results in lower (faster) Action Value")
+	var fast = Ichika.new()
+	fast.spd = 120
+	var slow = Guard.new()
+	slow.spd = 60
+	var timeline = TurnCalculator.get_timeline([slow, fast], 1)
+	assert_eq(timeline[0]["entity"], fast, "Higher speed acts first")
+	fast.free()
+	slow.free()
 
 func test_process_status():
 	var entity = TrainingBot.new()

@@ -1,7 +1,5 @@
 extends Node2D
 
-const TILE_SIZE = 32
-
 func _ready():
 	AudioManager.play_music("battle")
 	

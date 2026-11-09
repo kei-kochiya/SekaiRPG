@@ -26,11 +26,6 @@ func on_start(battle: Node):
 				p.damage_received_detailed.connect(hook)
 				_thorn_hooks.append({"entity": p, "hook": hook})
 
-	# Phục hồi máu nếu nhân vật còn sống
-	for p in battle.player_team:
-		if p and p.current_hp > 0:
-			p.current_hp = max(p.current_hp, int(p.max_hp * 0.3))
-
 	battle.run_battle()
 
 func _disconnect_hooks():

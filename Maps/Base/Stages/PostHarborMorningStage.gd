@@ -35,6 +35,11 @@ func get_npc_positions() -> Dictionary:
 func get_scene_lighting() -> Color:
 	return Color(0.9, 0.9, 1.0)
 
+# BaseMap._spawn_player chạy trước on_stage_start: nếu cờ Mizuki còn bật, người chơi hiện ra là Mizuki chồng lên NPC Mizuki suốt lúc fade-in
+func setup(p_map: Node2D):
+	GameManager.set_flag("mizuki_control_phase", false)
+	super.setup(p_map)
+
 func on_stage_start():
 	# Hủy góc nhìn Mizuki
 	GameManager.set_flag("mizuki_control_phase", false)
@@ -193,7 +198,6 @@ func handle_npc_interaction(npc_name: String):
 			)
 
 func _show_training_menu():
-	GameManager.set_flag("talked_to_mafuyu_training", true)
 	if not await offer_training(TRAINEES, true):
 		_check_ena_phase_trigger()
 

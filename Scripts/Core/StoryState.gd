@@ -26,7 +26,6 @@ const DEFAULT_FLAGS := {
 	"accepted_harbor_mission": false,
 	"harbor_mission_unlocked": false,
 	"harbor_mission_done": false,
-	"harbor_boss_defeated": false,
 	"harbor_intro_done": false,
 	"harbor_gate_firefight_done": false,
 	"training_ichika_done": false,

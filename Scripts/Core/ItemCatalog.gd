@@ -32,7 +32,7 @@ static func apply_effect(item_id: String, target: Entity) -> void:
 			target.heal(heal_amt)
 			print("[Item] Sử dụng Bình Máu lên ", target.entity_name, ": +", heal_amt, " HP")
 		"energy_drink":
-			target.action_gauge = 10000.0
+			target.action_gauge = TurnCalculator.ACTION_GAUGE_FULL
 			print("[Item] Sử dụng Nước Tăng Lực lên ", target.entity_name, ": Đầy thanh hành động!")
 		"bandage":
 			target.active_statuses.clear()

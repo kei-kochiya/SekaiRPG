@@ -34,7 +34,7 @@ func get_bgm_track() -> String:
 func on_stage_start():
 	map.set_player("Ichika")
 	map.place_player(Vector2(24, 17), "up")
-	map.freeze_player()
+	lock_scene()
 	map.spawn_dummy("Honami", Vector2(22, 17), map.NPC_COLORS["Honami"])
 
 	if GameManager.get_flag("final_mafuyu_defeated"):

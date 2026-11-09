@@ -260,6 +260,10 @@ func test_autoplaying_base_cutscenes_freeze_the_player():
 		"epilogue_intro": ["game_completed"],
 		"post_harbor_morning": ["mizuki_report_done"],
 		"post_harbor_report": ["harbor_mission_done", "mizuki_vs_mafuyu_done"],
+		"orders": ["interrogation_seen"],
+		"reveal": ["kanade_killed"],
+		"final": ["final_confront_started"],
+		"finale": ["pm_boss_defeated"],
 	}
 	for case_name in cases:
 		GameManager.reset_game()
@@ -289,6 +293,37 @@ func test_harbor_exit_needs_the_briefing_from_ena():
 	assert_true(DialogueManager.active, "Chưa gặp Ena: chỉ có lời nhắc, không đi Bến Cảng")
 	assert_false(base._leaving, "Không bị kẹt ở trạng thái đang rời đi")
 	DialogueManager.reset()
+	root.remove_child(base)
+	base.free()
+	GameManager.reset_game()
+
+# BaseMap._spawn_player chạy trước on_stage_start: cờ điều khiển Mizuki còn bật từ cảnh trước thì người chơi hiện ra là Mizuki chồng lên NPC
+func test_morning_after_the_report_spawns_ichika_not_mizuki():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	GameManager.reset_game()
+	GameManager.set_flag("mizuki_report_done", true)
+	GameManager.set_flag("mizuki_control_phase", true)
+	var base = load(BASE_SCENE).instantiate()
+	root.add_child(base)
+	assert_eq((base.get_node("OverworldPlayer") as OverworldPlayer).character_name, "Ichika", "Người chơi là Ichika ngay từ lúc xuất hiện")
+	assert_false(GameManager.get_flag("mizuki_control_phase"), "Cờ điều khiển Mizuki đã được tắt trước khi dựng người chơi")
+	root.remove_child(base)
+	base.free()
+	GameManager.reset_game()
+
+# Cờ npcs_greeted phải được ghi bằng set_flag chứ không dựa vào mảng sống phía sau getter
+func test_greeting_an_intro_npc_is_recorded_in_the_story_flags():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	GameManager.reset_game()
+	var base = load(BASE_SCENE).instantiate()
+	root.add_child(base)
+	assert_eq(base.current_stage.get_script().resource_path.get_file(), "IntroStage.gd", "Đúng Stage mở đầu")
+	base.current_stage._quest_phase_interact("Kanade")
+	_drain_dialogue()
+	assert_true("Kanade" in GameManager.get_flag("npcs_greeted"), "Lời chào được ghi vào cờ")
+	base.current_stage._quest_phase_interact("Kanade")
+	_drain_dialogue()
+	assert_eq(GameManager.get_flag("npcs_greeted").count("Kanade"), 1, "Chào lần hai không ghi trùng")
 	root.remove_child(base)
 	base.free()
 	GameManager.reset_game()

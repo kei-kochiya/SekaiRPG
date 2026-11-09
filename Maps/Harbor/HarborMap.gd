@@ -115,28 +115,10 @@ func _spawn_player():
 	MapUtils.spawn_player(self, Vector2(100, 350))
 
 func _build_mission_hud():
-	var canvas = CanvasLayer.new()
-	add_child(canvas)
-	
-	var panel = PanelContainer.new()
-	panel.position = Vector2(20, 20)
-	canvas.add_child(panel)
-	
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0.1, 0.2, 0.7)
-	sb.border_width_left = 4
-	sb.border_color = Color(0.2, 0.6, 1.0)
-	sb.set_content_margin_all(10)
-	panel.add_theme_stylebox_override("panel", sb)
-	
-	var label = Label.new()
-	label.add_theme_font_size_override("font_size", 16)
-	
 	var progress = ""
 	if GameManager.harbor_wave <= 3:
 		progress = "Wave " + str(GameManager.harbor_wave) + " / 3"
 	else:
 		progress = "Đã đến Boss"
 		
-	label.text = "NHIỆM VỤ: Thám thính bến cảng\nTiến độ: " + progress
-	panel.add_child(label)
+	QuestHUDBuilder.build(self)["label"].text = "NHIỆM VỤ: Thám thính bến cảng\nTiến độ: " + progress

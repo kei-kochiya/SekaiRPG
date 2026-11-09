@@ -61,8 +61,13 @@ static func run_tutorial(main: Node):
 	for step in STEPS:
 		await _show_tutorial_step(main, vbox, step[0], step[1])
 
-	# Xóa toàn bộ CanvasLayer chứa panel hướng dẫn
-	panel.get_parent().queue_free()
+	# Xóa toàn bộ CanvasLayer chứa panel hướng dẫn. Nhả khóa modal NGAY (queue_free chỉ chạy cuối frame): lượt đầu của người chơi bắt đầu
+	# trong cùng frame này, và menu lệnh không nhận focus khi PauseMenu còn báo đang có modal.
+	var canvas := panel.get_parent()
+	var scope = canvas.get_meta("modal_scope", null)
+	if scope:
+		scope.exit()
+	canvas.queue_free()
 
 # ── Xây Dựng Giao Diện ─────────────────────────────────────────────────────
 
@@ -93,9 +98,7 @@ static func _show_tutorial_step(_main: Node, vbox: VBoxContainer, title: String,
 		content (String): Nội dung hướng dẫn (hỗ trợ BBCode).
 	"""
 	# Xóa nội dung bước trước
-	for child in vbox.get_children():
-		vbox.remove_child(child)
-		child.queue_free()
+	UITheme.clear_children(vbox)
 
 	var t_lbl = Label.new()
 	t_lbl.text = title
@@ -135,20 +138,14 @@ static func _build_tutorial_panel(main: Node) -> PanelContainer:
 	main.add_child(canvas)
 
 	# ESC không mở menu tạm dừng khi hướng dẫn đang hiện (nhả khi lớp phủ bị xóa)
-	PauseMenu.push_modal()
-	canvas.tree_exiting.connect(PauseMenu.pop_modal)
+	var modal := ModalScope.new()
+	modal.enter()
+	canvas.tree_exiting.connect(modal.exit)
+	canvas.set_meta("modal_scope", modal) # run_tutorial nhả khóa ngay khi đóng, không chờ cuối frame
 
-	var dim = ColorRect.new()
-	dim.color = UITheme.overlay_dim(0.7)
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	canvas.add_child(dim)
+	canvas.add_child(UITheme.dim_layer(0.7))
 
-	var panel = PanelContainer.new()
-	panel.custom_minimum_size.x = PANEL_WIDTH
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
-	panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.ACCENT, UITheme.SP_6))
+	var panel := UITheme.centered_panel(PANEL_WIDTH)
 	canvas.add_child(panel)
 
 	var vbox = VBoxContainer.new()

@@ -4,8 +4,8 @@ extends Control
 EndingCard: màn hình kết thúc sau trận cuối với Mafuyu.
 
 Chỉ một nút chính "Tiếp tục". Bấm xong mới đánh dấu game_completed (sau khi màn hình đã tối),
-rồi sang BaseMap, nơi EpilogueStage chạy tiếp. Lưu game ngay tại màn này vẫn quay về căn cứ (FinalStage)
-(current_map_file chưa đổi) nên đoạn kết sẽ phát lại thay vì bị bỏ qua.
+rồi sang BaseMap, nơi EpilogueStage chạy tiếp. Màn này nằm trong GameManager.MENU_SCENES nên không lưu game hay tạm dừng được
+(thoát giữa chừng thì lần sau FinalStage phát lại đoạn kết thay vì bị bỏ qua).
 """
 
 const NEXT_SCENE := MapPaths.BASE

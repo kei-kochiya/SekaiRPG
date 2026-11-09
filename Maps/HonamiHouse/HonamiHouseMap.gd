@@ -39,17 +39,7 @@ func _build_house():
 	# Floor and Walls
 	MapUtils.fill_floor(self, 5, 4, 24, 15)
 	
-	for x in range(5, 26):
-		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 4), true)
-		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 16), true)
-	for y in range(4, 17):
-		MapUtils.place_tile(self, "left_vertical_wall.png", Vector2(5, y), true)
-		MapUtils.place_tile(self, "right_vertical_wall.png", Vector2(25, y), true)
-		
-	MapUtils.place_tile(self, "top_left_wall.png", Vector2(5, 4), true)
-	MapUtils.place_tile(self, "top_right_wall.png", Vector2(25, 4), true)
-	MapUtils.place_tile(self, "bottom_left_wall.png", Vector2(5, 16), true)
-	MapUtils.place_tile(self, "bottom_right_wall.png", Vector2(25, 16), true)
+	MapUtils.draw_room_walls(self, 5, 4, 25, 16)
 	
 	# Cửa ra ngoài (về Nightcord) - Dùng Sprite giả hoặc Tile
 	var door = Sprite2D.new()
@@ -81,7 +71,7 @@ func _build_house():
 	
 	# Spawn NPCs
 	var honami_pos = Vector2(15, 8)
-	MapUtils.create_dummy_char(self, "Honami", honami_pos, Color(0.5, 0.35, 0.25))
+	MapUtils.create_dummy_char(self, "Honami", honami_pos, MapUtils.CHARACTER_COLORS["Honami"])
 	var honami_zone = MapUtils.rect_zone(Vector2(32, 32), "", honami_pos * TILE_SIZE)
 	honami_zone.interacted.connect(func(): _on_npc_interacted("Honami"))
 	add_child(honami_zone)
@@ -90,28 +80,12 @@ func _build_house():
 	MapUtils.place_chest(self, "honami_clinic_chest", Vector2(18, 7), 200, "bandage", 2)
 	
 	# Spawn Player
-	var player = OverworldPlayer.new()
-	player.follow_camera = false # giữ camera cố định căn giữa căn phòng
-	
-	if GameManager.last_player_position != Vector2.ZERO:
-		player.position = GameManager.last_player_position
-	else:
-		player.position = Vector2(12 * TILE_SIZE, 8 * TILE_SIZE)
+	var player := MapUtils.spawn_player(self, Vector2(12 * TILE_SIZE, 8 * TILE_SIZE), false) # camera cố định căn giữa căn phòng
 	player.character_color = Color(0.29, 0.62, 0.62)
-	add_child(player)
 	_player = player
 
-func _place_indoor_asset(file: String, grid_pos: Vector2, _has_collision: bool, flip_h: bool = false, rot: float = 0.0):
-	var tile_pos = grid_pos * TILE_SIZE
-	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/Indoors/" + file)
-	sprite.scale = Vector2(-4 if flip_h else 4, 4)
-	sprite.position = tile_pos
-	sprite.rotation = rot
-	add_child(sprite)
-	
-	if _has_collision:
-		MapUtils.add_block(self, grid_pos)
+func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool, flip_h: bool = false, rot: float = 0.0):
+	MapUtils.place_indoor_asset(self, file, grid_pos, has_collision, flip_h, rot)
 
 func _run_logic():
 	if _is_arc2():
@@ -205,7 +179,7 @@ func _show_arc2_menu():
 			_ask_confront()
 		)
 
-# Luyện tập không giới hạn, chọn Ichika / Honami / cả hai. Không đặt cờ training_*_done.
+# Luyện tập không giới hạn, chọn Ichika / Honami / cả hai. Không ai đọc các cờ training_*_done ở giai đoạn này (TrainingWarehouseMap vẫn đánh dấu chúng).
 func _show_arc2_training_menu():
 	var members: Array = []
 	for member in ["Ichika", "Honami"]:

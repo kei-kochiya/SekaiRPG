@@ -25,6 +25,16 @@ func test_storystate_serialization():
 	assert_eq(new_story.warehouse_wave, 3, "StoryState deserialized warehouse_wave")
 	assert_true(new_story.get_flag("custom_quest_unlocked"), "StoryState deserialized custom flag")
 
+# Nâng SP tự động sau lần phát cuối của process_level_up làm đổi máu mà thẻ HUD không biết (quái được nâng cấp lại giữa trận)
+func test_set_initial_level_tells_listeners_about_the_final_hp():
+	var guard := Guard.new()
+	var seen := []
+	guard.hp_changed.connect(func(cur, mx): seen.append([cur, mx]))
+	LevelManager.set_initial_level(guard, 12)
+	assert_gt(seen.size(), 0, "Có phát hp_changed")
+	assert_eq(seen.back(), [guard.current_hp, guard.max_hp], "Lần phát cuối khớp máu thật sau khi tự nâng SP")
+	guard.free()
+
 func test_level_manager():
 	var ichika = Ichika.new()
 	LevelManager.set_initial_level(ichika, 5)

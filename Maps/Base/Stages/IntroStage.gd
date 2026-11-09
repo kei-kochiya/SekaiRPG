@@ -29,7 +29,7 @@ func handle_npc_interaction(npc_name: String):
 func _quest_phase_interact(npc_name: String):
 	var key := "safehouse_meet_" + npc_name.to_lower()
 	if npc_name not in GameManager.npcs_greeted:
-		GameManager.npcs_greeted.append(npc_name)
+		GameManager.npcs_greeted = GameManager.npcs_greeted + [npc_name]
 		DialogueManager.play_dialogue(DialogueLoader.get_lines(key), func():
 			map._refresh_quest_label()
 			_check_quest_complete()

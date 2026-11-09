@@ -5,28 +5,17 @@ class_name TurnCalculator
 Tóm tắt: TurnCalculator tính toán thứ tự hành động (Turn Order) dựa trên Action Value (AV).
 
 Chức năng chính:
-- Quy đổi chỉ số tốc độ (SPD) thành Action Value (`get_action_value`).
+- Giữ hằng số thanh hành động đầy (`ACTION_GAUGE_FULL`) mà mọi nơi trong trận dùng.
 - Dự báo danh sách lượt đi trong tương lai (`get_timeline`) với cơ chế tie-breaker để giải quyết các trường hợp trùng AV.
 - Lọc bỏ lượt của các thực thể đã bị hạ gục khỏi dòng thời gian (`remove_dead_from_timeline`).
 """
 
 # ── Cấu Hình ───────────────────────────────────────────────────────────────
 
-const BASE_VALUE = 10000.0
+# Thanh hành động đầy: tới ngưỡng này là đến lượt (Entity.action_gauge chạy 0 -> ACTION_GAUGE_FULL)
+const ACTION_GAUGE_FULL = 10000.0
 
 # ── Xử Lý Lượt Đi ──────────────────────────────────────────────────────────
-
-static func get_action_value(spd: int) -> float:
-	"""
-	Hàm này tính toán Action Value (AV) dựa trên chỉ số tốc độ (SPD).
-	
-	Args:
-		spd (int): Chỉ số tốc độ của thực thể.
-	Returns: 
-		float: Giá trị AV. Số càng thấp lượt đến càng nhanh.
-	"""
-	if spd <= 0: return 10000.0
-	return BASE_VALUE / spd
 
 static func get_timeline(entities: Array, depth: int = 20) -> Array:
 	"""
@@ -48,10 +37,10 @@ static func get_timeline(entities: Array, depth: int = 20) -> Array:
 		var current_gauge = entity.action_gauge
 		
 		# AV (Action Value) = (Khoảng cách còn lại) / Tốc độ
-		# Khoảng cách còn lại cho lượt đầu tiên là 10000 - gauge
-		# Nếu gauge > 10000, distance sẽ âm -> ưu tiên cực cao
+		# Khoảng cách còn lại cho lượt đầu tiên là ACTION_GAUGE_FULL - gauge
+		# Nếu gauge > ACTION_GAUGE_FULL, distance sẽ âm -> ưu tiên cực cao
 		for i in range(depth):
-			var distance = 10000.0 - current_gauge + (i * 10000.0)
+			var distance = ACTION_GAUGE_FULL - current_gauge + (i * ACTION_GAUGE_FULL)
 			var av_cost = distance / spd
 			
 			timeline.append({

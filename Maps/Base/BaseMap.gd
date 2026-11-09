@@ -394,21 +394,7 @@ func _refresh_quest_label():
 # ── Tile Helpers ─────────────────────────────────────────────────────────────
 
 func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool):
-	var tile_pos = grid_pos * TILE_SIZE
-	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/Indoors/" + file)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = tile_pos
-	add_child(sprite)
-	if has_collision:
-		var body = StaticBody2D.new()
-		body.position = tile_pos
-		var col = CollisionShape2D.new()
-		var shape = RectangleShape2D.new()
-		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-		col.shape = shape
-		body.add_child(col)
-		add_child(body)
+	MapUtils.place_indoor_asset(self, file, grid_pos, has_collision)
 
 func _add_room_label(text: String, grid_pos: Vector2):
 	# Bảng tên khu: căn giữa theo ô, chữ xám xanh đặc (không mờ 40% như trước) để vẫn đọc được trên sàn tối

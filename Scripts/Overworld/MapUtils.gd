@@ -41,11 +41,25 @@ static func _zone_with_shape(shape: Shape2D, prompt: String, pos: Vector2) -> In
 
 # Người chơi xuất hiện ở `default_pos`; OverworldPlayer tự nạp GameManager.last_player_position (nếu có) khi vào cây nên map không cần tự chọn
 # giữa hai vị trí như trước. Thay cho cụm OverworldPlayer.new() + if/else vị trí ở Bến Cảng, Nhà kho, Phòng tập.
-static func spawn_player(parent: Node2D, default_pos: Vector2) -> OverworldPlayer:
+static func spawn_player(parent: Node2D, default_pos: Vector2, follow_camera: bool = true) -> OverworldPlayer:
 	var player := OverworldPlayer.new()
+	player.follow_camera = follow_camera
 	player.position = default_pos
 	parent.add_child(player)
 	return player
+
+# Đồ nội thất từ Assets/Indoors tại ô lưới (scale 4, tùy chọn lật/xoay), kèm vật cản nếu `collide`; thay cho hàm
+# _place_indoor_asset chép ở BaseMap, Quán Cafe, nhà Honami và Thẩm vấn
+static func place_indoor_asset(parent: Node2D, file: String, grid_pos: Vector2, collide: bool = true, flip_h: bool = false, rot: float = 0.0) -> Sprite2D:
+	var sprite := Sprite2D.new()
+	sprite.texture = load("res://Assets/Indoors/" + file)
+	sprite.scale = Vector2(-4 if flip_h else 4, 4)
+	sprite.position = grid_pos * TILE_SIZE
+	sprite.rotation = rot
+	parent.add_child(sprite)
+	if collide:
+		add_block(parent, grid_pos)
+	return sprite
 
 # Vật cản vô hình một ô lưới (thân tĩnh 32x32); thay cho khối StaticBody2D + CollisionShape2D chép ở nhiều map
 static func add_block(parent: Node2D, grid_pos: Vector2) -> StaticBody2D:
@@ -115,17 +129,17 @@ static func fill_floor(parent: Node2D, x1: int, y1: int, x2: int, y2: int):
 	fill_tiles(parent, "floor.png", x1, y1, x2, y2)
 
 # Khung tường bao quanh hình chữ nhật ô lưới (có va chạm); thứ tự đặt giữ nguyên để thứ tự vẽ không đổi
-static func draw_room_walls(parent: Node2D, x1: int, y1: int, x2: int, y2: int):
+static func draw_room_walls(parent: Node2D, x1: int, y1: int, x2: int, y2: int, collide: bool = true):
 	for x in range(x1, x2 + 1):
-		place_tile(parent, "horizontal_wall.png", Vector2(x, y1), true)
-		place_tile(parent, "horizontal_wall.png", Vector2(x, y2), true)
+		place_tile(parent, "horizontal_wall.png", Vector2(x, y1), collide)
+		place_tile(parent, "horizontal_wall.png", Vector2(x, y2), collide)
 	for y in range(y1, y2 + 1):
-		place_tile(parent, "left_vertical_wall.png", Vector2(x1, y), true)
-		place_tile(parent, "right_vertical_wall.png", Vector2(x2, y), true)
-	place_tile(parent, "top_left_wall.png", Vector2(x1, y1), true)
-	place_tile(parent, "top_right_wall.png", Vector2(x2, y1), true)
-	place_tile(parent, "bottom_left_wall.png", Vector2(x1, y2), true)
-	place_tile(parent, "bottom_right_wall.png", Vector2(x2, y2), true)
+		place_tile(parent, "left_vertical_wall.png", Vector2(x1, y), collide)
+		place_tile(parent, "right_vertical_wall.png", Vector2(x2, y), collide)
+	place_tile(parent, "top_left_wall.png", Vector2(x1, y1), collide)
+	place_tile(parent, "top_right_wall.png", Vector2(x2, y1), collide)
+	place_tile(parent, "bottom_left_wall.png", Vector2(x1, y2), collide)
+	place_tile(parent, "bottom_right_wall.png", Vector2(x2, y2), collide)
 
 # Phá các node tại một ô (vd. tường) rồi trải sàn lên chỗ đó: mở lối đi qua tường
 static func remove_wall_at(parent: Node2D, grid_pos: Vector2):
@@ -243,46 +257,46 @@ static func create_enemy_npc(parent: Node2D, pos: Vector2, sprite_file: String):
 	root.z_index = 2
 	parent.add_child(root)
 
-static func draw_corner_walls(parent: Node2D):
+static func draw_corner_walls(parent: Node2D, collide: bool = false):
 	# Top-Left Block (Sidewalk góc Trên-Trái: X ∈ [3, 13], Y ∈ [3, 8])
 	for x in range(4, 13):
-		place_tile(parent, "horizontal_wall.png", Vector2(x, 8))
+		place_tile(parent, "horizontal_wall.png", Vector2(x, 8), collide)
 	for y in range(4, 8):
-		place_tile(parent, "right_vertical_wall.png", Vector2(13, y))
-	place_tile(parent, "top_left_wall.png", Vector2(3, 3))
-	place_tile(parent, "top_right_wall.png", Vector2(13, 3))
-	place_tile(parent, "bottom_left_wall.png", Vector2(3, 8))
-	place_tile(parent, "bottom_right_wall.png", Vector2(13, 8))
+		place_tile(parent, "right_vertical_wall.png", Vector2(13, y), collide)
+	place_tile(parent, "top_left_wall.png", Vector2(3, 3), collide)
+	place_tile(parent, "top_right_wall.png", Vector2(13, 3), collide)
+	place_tile(parent, "bottom_left_wall.png", Vector2(3, 8), collide)
+	place_tile(parent, "bottom_right_wall.png", Vector2(13, 8), collide)
 
 	# Top-Right Block (Sidewalk góc Trên-Phải: X ∈ [17, 27], Y ∈ [3, 8])
 	for x in range(18, 27):
-		place_tile(parent, "horizontal_wall.png", Vector2(x, 8))
+		place_tile(parent, "horizontal_wall.png", Vector2(x, 8), collide)
 	for y in range(4, 8):
-		place_tile(parent, "left_vertical_wall.png", Vector2(17, y))
-	place_tile(parent, "top_left_wall.png", Vector2(17, 3))
-	place_tile(parent, "top_right_wall.png", Vector2(27, 3))
-	place_tile(parent, "bottom_left_wall.png", Vector2(17, 8))
-	place_tile(parent, "bottom_right_wall.png", Vector2(27, 8))
+		place_tile(parent, "left_vertical_wall.png", Vector2(17, y), collide)
+	place_tile(parent, "top_left_wall.png", Vector2(17, 3), collide)
+	place_tile(parent, "top_right_wall.png", Vector2(27, 3), collide)
+	place_tile(parent, "bottom_left_wall.png", Vector2(17, 8), collide)
+	place_tile(parent, "bottom_right_wall.png", Vector2(27, 8), collide)
 
 	# Bottom-Left Block (Sidewalk góc Dưới-Trái: X ∈ [3, 13], Y ∈ [12, 17])
 	for x in range(4, 13):
-		place_tile(parent, "horizontal_wall.png", Vector2(x, 12))
+		place_tile(parent, "horizontal_wall.png", Vector2(x, 12), collide)
 	for y in range(13, 17):
-		place_tile(parent, "right_vertical_wall.png", Vector2(13, y))
-	place_tile(parent, "top_left_wall.png", Vector2(3, 12))
-	place_tile(parent, "top_right_wall.png", Vector2(13, 12))
-	place_tile(parent, "bottom_left_wall.png", Vector2(3, 17))
-	place_tile(parent, "bottom_right_wall.png", Vector2(13, 17))
+		place_tile(parent, "right_vertical_wall.png", Vector2(13, y), collide)
+	place_tile(parent, "top_left_wall.png", Vector2(3, 12), collide)
+	place_tile(parent, "top_right_wall.png", Vector2(13, 12), collide)
+	place_tile(parent, "bottom_left_wall.png", Vector2(3, 17), collide)
+	place_tile(parent, "bottom_right_wall.png", Vector2(13, 17), collide)
 
 	# Bottom-Right Block (Sidewalk góc Dưới-Phải: X ∈ [17, 27], Y ∈ [12, 17])
 	for x in range(18, 27):
-		place_tile(parent, "horizontal_wall.png", Vector2(x, 12))
+		place_tile(parent, "horizontal_wall.png", Vector2(x, 12), collide)
 	for y in range(13, 17):
-		place_tile(parent, "left_vertical_wall.png", Vector2(17, y))
-	place_tile(parent, "top_left_wall.png", Vector2(17, 12))
-	place_tile(parent, "top_right_wall.png", Vector2(27, 12))
-	place_tile(parent, "bottom_left_wall.png", Vector2(17, 17))
-	place_tile(parent, "bottom_right_wall.png", Vector2(27, 17))
+		place_tile(parent, "left_vertical_wall.png", Vector2(17, y), collide)
+	place_tile(parent, "top_left_wall.png", Vector2(17, 12), collide)
+	place_tile(parent, "top_right_wall.png", Vector2(27, 12), collide)
+	place_tile(parent, "bottom_left_wall.png", Vector2(17, 17), collide)
+	place_tile(parent, "bottom_right_wall.png", Vector2(27, 17), collide)
 
 static func place_chest(parent: Node2D, chest_id: String, grid_pos: Vector2, credits: int = 150, item: String = "potion", count: int = 1):
 	var chest = TreasureChest.new()

@@ -5,7 +5,7 @@ func on_start(main: Node):
 	# Prologue Fix: Đảm bảo Ichika luôn đi đầu
 	for p in main.player_team:
 		if p.entity_name == "Ichika":
-			p.action_gauge = 10000.0
+			p.action_gauge = TurnCalculator.ACTION_GAUGE_FULL
 	
 	main._regenerate_timeline()
 	main.run_battle()

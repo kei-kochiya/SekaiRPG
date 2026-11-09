@@ -134,18 +134,4 @@ func _remove_wall_at(grid_pos: Vector2):
 	MapUtils.remove_wall_at(self, grid_pos)
 
 func _build_mission_hud():
-	var canvas = CanvasLayer.new()
-	add_child(canvas)
-	var panel = PanelContainer.new()
-	panel.position = Vector2(20, 20)
-	canvas.add_child(panel)
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0, 0, 0.6)
-	sb.border_width_left = 4
-	sb.border_color = Color(1.0, 0.9, 0.2)
-	sb.set_content_margin_all(10)
-	panel.add_theme_stylebox_override("panel", sb)
-	var label = Label.new()
-	label.add_theme_font_size_override("font_size", 16)
-	label.text = "MỤC TIÊU: Dọn dẹp kho hàng\nTiến độ: Wave " + str(mini(GameManager.warehouse_wave, 5)) + " / 5"
-	panel.add_child(label)
+	QuestHUDBuilder.build(self)["label"].text = "MỤC TIÊU: Dọn dẹp kho hàng\nTiến độ: Wave " + str(mini(GameManager.warehouse_wave, 5)) + " / 5"

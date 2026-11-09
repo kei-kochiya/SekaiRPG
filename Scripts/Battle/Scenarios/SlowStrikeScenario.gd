@@ -16,7 +16,7 @@ func on_start(main: Node):
 	for p in main.player_team:
 		if p.entity_name == "Ichika":
 			p.cooldowns.erase(STRIKE) # bỏ hồi chiêu khởi đầu của tuyệt kỹ
-			p.action_gauge = 10000.0 # Ichika ra đòn trước
+			p.action_gauge = TurnCalculator.ACTION_GAUGE_FULL # Ichika ra đòn trước
 	for e in main.enemy_team:
 		for i in range(MAX_BLEED):
 			e.add_status({"type": "Bleed", "duration": 3})

@@ -75,9 +75,10 @@ func after_each():
 	Engine.time_scale = 1.0
 	_reset_shared_state()
 
-# Trạng thái autoload mà test hay để lại: hội thoại/lựa chọn đang mở và ScreenFade.busy (runner chạy đồng bộ nên tween fade không bao giờ
-# xong). Dọn trước và sau mỗi test để một test hỏng giữa chừng không làm các test sau sai theo.
+# Trạng thái autoload mà test hay để lại: toàn bộ trạng thái chơi (GameManager.reset_game), hội thoại/lựa chọn đang mở và ScreenFade.busy (runner
+# chạy đồng bộ nên tween fade không bao giờ xong). Dọn trước và sau mỗi test để một test hỏng giữa chừng không làm các test sau sai theo.
 func _reset_shared_state() -> void:
+	GameManager.reset_game() # kể cả cờ Holo-Sim/kịch bản/luyện tập: test chết giữa chừng không được làm sai các test sau
 	DialogueManager.reset()
 	ScreenFade.busy = false
 

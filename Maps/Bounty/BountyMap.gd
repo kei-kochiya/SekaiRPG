@@ -1,4 +1,4 @@
-extends Node2D
+extends StoryMap
 
 """
 BountyMap: khu phố đêm, nơi Ena (điều khiển được) nhận ba hợp đồng truy sát theo thứ tự.
@@ -13,7 +13,7 @@ Luồng được suy ra hoàn toàn từ cờ nên tải save vẫn tiếp tục
 const TILE_SIZE = 32
 const MAP_PATH := MapPaths.BOUNTY
 const NEXT_PATH := MapPaths.INTERROGATION
-const ENA_COLOR := Color(0.72, 0.38, 0.16)
+const ENA_COLOR: Color = MapUtils.CHARACTER_COLORS["Ena"]
 const POLICE_COLOR := Color(0.35, 0.5, 0.85)
 const NIGHT := Color(0.5, 0.52, 0.72)
 
@@ -323,26 +323,10 @@ func _start_battle(id: String) -> void:
 	var p := get_node_or_null("OverworldPlayer") as Node2D
 	await GameManager.start_scripted_battle(id, MAP_PATH, p.global_position if p else Vector2.ZERO, 1.0)
 
-func _go(path: String) -> void:
-	await GameManager.change_map(path, 1.0)
-
-# Phát một đoạn hội thoại và chờ xong; khóa thiếu (mảng rỗng) thì chạy tiếp ngay
-func _say(key: String) -> void:
-	await _play(DialogueLoader.get_lines(key))
-
-func _narrate(text: String) -> void:
-	await _play([{"text": text, "type": "narrator"}])
-
-func _play(lines: Array) -> void:
-	await DialogueManager.play_async(lines)
-
 # ── Tiện ích dựng cảnh ─────────────────────────────────────────────────────
 
 func _npc(p_name: String, grid_pos: Vector2, color: Color, sprite_file: String = "") -> Node2D:
 	return MapUtils.create_dummy_char(self, p_name, grid_pos, color, sprite_file)
-
-func _tile(file: String, g: Vector2, collide: bool = false) -> void:
-	MapUtils.place_tile(self, file, g, collide)
 
 func _wall(file: String, g: Vector2, skip: Vector2) -> void:
 	if g != skip:
@@ -350,18 +334,6 @@ func _wall(file: String, g: Vector2, skip: Vector2) -> void:
 
 func _road(file: String, g: Vector2) -> void:
 	MapUtils.place_road_asset(self, file, g)
-
-func _block(g: Vector2) -> void:
-	MapUtils.add_block(self, g)
-
-func _rect(pos: Vector2, size: Vector2, color: Color) -> ColorRect:
-	var r := ColorRect.new()
-	r.position = pos
-	r.size = size
-	r.color = color
-	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(r)
-	return r
 
 func _zone(pos: Vector2, size: Vector2, prompt: String, action: Callable) -> void:
 	var zone := MapUtils.rect_zone(size, prompt, pos)

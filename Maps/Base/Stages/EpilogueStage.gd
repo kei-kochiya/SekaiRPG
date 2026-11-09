@@ -70,7 +70,7 @@ func _show_honami_menu():
 	opts.append("[Hủy]")
 	var idx: int = await DialogueManager.ask(opts)
 	if idx == 0:
-		# Luyện tập không giới hạn: chọn Ichika, Honami hoặc cả hai (cả hai = 10 wave). Không đặt cờ training_*_done.
+		# Luyện tập không giới hạn: chọn Ichika, Honami hoặc cả hai (cả hai = 10 wave). Stage này không đọc các cờ training_*_done (dù TrainingWarehouseMap vẫn đánh dấu chúng).
 		# Khoá cảnh trước khi chuyển để chặn tương tác lặp trong lúc fade.
 		offer_training(TRAINEES, false, lock_scene, true, "Cả hai (10 Waves)")
 	elif idx == 1:

@@ -165,7 +165,7 @@ func run_battle():
 			continue
 			
 		_advance_action_gauges(av_passed)
-		actor.action_gauge = max(0.0, actor.action_gauge - 10000.0)
+		actor.action_gauge = max(0.0, actor.action_gauge - TurnCalculator.ACTION_GAUGE_FULL)
 		
 		if scenario:
 			scenario.on_turn_start(self, actor)

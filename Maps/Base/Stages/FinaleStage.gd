@@ -153,6 +153,15 @@ func _on_aftermath_done():
 	GameManager.store_map_state(NEXT_SCENE, Vector2.ZERO)
 	get_tree().change_scene_to_file(NEXT_SCENE)
 
+# Cửa ra bị khóa suốt Stage này; trong chế độ chuẩn bị người chơi đi lại được nên cần một dòng dẫn truyện thay vì im lặng
+func handle_exit() -> bool:
+	if _prep_mode:
+		DialogueManager.play_dialogue([{
+			"text": "Chưa phải lúc rời đi. Hãy chuẩn bị xong rồi nói chuyện với Mafuyu để làm lại bài kiểm tra.",
+			"type": "narrator"
+		}])
+	return true
+
 func handle_npc_interaction(npc_name: String):
 	if not _prep_mode or npc_name != "Mafuyu":
 		return

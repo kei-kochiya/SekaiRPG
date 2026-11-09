@@ -117,3 +117,28 @@ func test_back_to_back_asks_each_get_their_own_answer():
 	DialogueManager._ui.choice_selected.emit(1)
 	assert_eq(got, [2, 1], "Mỗi lần hỏi nhận đúng lựa chọn của nó")
 	GameManager.reset_game()
+
+# Lời gọi đến muộn của map cũ (timer/coroutine) khi người chơi đã về menu không được kéo menu sang map đó
+func test_change_map_and_scripted_battles_are_ignored_while_a_menu_is_current():
+	GameManager.reset_game()
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	_saved_root_name = root.name
+	root.name = "StartMenu"
+	GameManager.current_map_file = MapPaths.CAFE
+	GameManager.change_map(MapPaths.HARBOR, 0.0)
+	assert_eq(GameManager.current_map_file, MapPaths.CAFE, "change_map bị bỏ qua khi đang ở menu")
+	GameManager.start_scripted_battle("ena_vs_thugs", MapPaths.CAFE, Vector2.ZERO, 0.0)
+	assert_false(GameManager.is_scripted_battle, "start_scripted_battle bị bỏ qua khi đang ở menu")
+	root.name = _saved_root_name
+	GameManager.reset_game()
+
+# Tên gốc của runner đổi sang "StartMenu" trong một test: trả lại ở after_each để một lỗi giữa chừng không làm các lời gọi change_map
+# ở mọi test sau bị bỏ qua lặng lẽ
+var _saved_root_name := ""
+
+func after_each() -> void:
+	if _saved_root_name != "":
+		((Engine.get_main_loop() as SceneTree).current_scene).name = _saved_root_name
+		_saved_root_name = ""
+	super.after_each()
+

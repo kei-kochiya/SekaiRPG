@@ -68,28 +68,13 @@ func _fill_floor(x1, y1, x2, y2):
 	MapUtils.fill_floor(self, x1, y1, x2, y2)
 
 func _draw_room_walls(x1, y1, x2, y2):
-	for x in range(x1, x2 + 1):
-		_place_tile("horizontal_wall.png", Vector2(x, y1))
-		_place_tile("horizontal_wall.png", Vector2(x, y2))
-	for y in range(y1, y2 + 1):
-		_place_tile("left_vertical_wall.png", Vector2(x1, y))
-		_place_tile("right_vertical_wall.png", Vector2(x2, y))
-	_place_tile("top_left_wall.png", Vector2(x1, y1))
-	_place_tile("top_right_wall.png", Vector2(x2, y1))
-	_place_tile("bottom_left_wall.png", Vector2(x1, y2))
-	_place_tile("bottom_right_wall.png", Vector2(x2, y2))
+	MapUtils.draw_room_walls(self, x1, y1, x2, y2, false) # quán không có người chơi đi lại: khỏi dựng vật cản
 
 func _place_tile(file: String, grid_pos: Vector2):
 	MapUtils.place_tile(self, file, grid_pos, false)
 
 func _place_indoor_asset(file: String, grid_pos: Vector2, _has_collision: bool, flip_h: bool = false, rot: float = 0.0):
-	var tile_pos = grid_pos * TILE_SIZE
-	var sprite = Sprite2D.new()
-	sprite.texture = load("res://Assets/Indoors/" + file)
-	sprite.scale = Vector2(-4 if flip_h else 4, 4)
-	sprite.position = tile_pos
-	sprite.rotation = rot
-	add_child(sprite)
+	MapUtils.place_indoor_asset(self, file, grid_pos, false, flip_h, rot)
 
 func _run_logic():
 	if GameManager.get_flag("ena_vs_thugs_done"):

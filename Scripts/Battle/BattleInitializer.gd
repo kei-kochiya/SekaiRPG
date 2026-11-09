@@ -290,8 +290,6 @@ static func build_final_mafuyu() -> Entity:
 	if ally:
 		boss.crit_rate = maxf(boss.crit_rate, ally.crit_rate)
 		boss.crit_dmg = maxf(boss.crit_dmg, ally.crit_dmg)
-	boss.max_break_gauge = 400
-	boss.break_gauge = 400
 	boss.current_hp = boss.max_hp
 	floor_ref.free()
 	return boss
@@ -314,11 +312,9 @@ static func _party_level(char_name: String, fallback: int) -> int:
 	var member: Entity = GameManager.get_party_member(char_name)
 	return member.level if member else fallback
 
-static func _setup_scripted_battle(battle_id: String) -> Dictionary:
-	"""
-	Khởi tạo các trận đấu theo kịch bản cốt truyện.
-	"""
-	var registry = {
+# Bảng id -> hàm dựng của mọi trận kịch bản (tách ra để test liệt kê được các id và kiểm tra nơi gọi dùng đúng id)
+static func _scripted_registry() -> Dictionary:
+	return {
 		"mizuki_vs_mafuyu": func():
 			var mafuyu := _character_enemy("Mafuyu", 100)
 			mafuyu.entity_name = "Mafuyu (BOSS)"
@@ -378,7 +374,15 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 		"street_survival": func():
 			return _battle(["Ichika", "Mizuki"], _create_enemies("terrorist", 3, 20), StreetSurvivalScenario.new()),
 	}
-	
+
+static func scripted_battle_ids() -> Array:
+	return _scripted_registry().keys()
+
+static func _setup_scripted_battle(battle_id: String) -> Dictionary:
+	"""
+	Khởi tạo các trận đấu theo kịch bản cốt truyện.
+	"""
+	var registry := _scripted_registry()
 	if registry.has(battle_id):
 		return registry[battle_id].call()
 	
@@ -394,6 +398,10 @@ static func _setup_holosim_battle() -> Dictionary:
 		if p: p_team.append(p)
 		
 	HoloSimManager.apply_blessings_to_team(p_team)
+	# Còn sống thì vào tầng với ít nhất 30% máu (làm ở đây, trước khi dựng HUD, để thẻ nhân vật hiện đúng số máu)
+	for p in p_team:
+		if p.current_hp > 0:
+			p.current_hp = maxi(p.current_hp, int(p.max_hp * 0.3))
 	
 	var e_team = []
 	var enemies = info.get("enemies", ["Lính Cảng"])

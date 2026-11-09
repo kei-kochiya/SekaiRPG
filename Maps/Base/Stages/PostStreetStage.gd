@@ -30,7 +30,7 @@ func _show_training_menu():
 
 func _play_honami_invasion():
 	# Spawn Honami ở cửa chính
-	map.spawn_dummy("Honami", Vector2(24, 21), Color(0.5, 0.35, 0.25))
+	map.spawn_dummy("Honami", Vector2(24, 21), map.NPC_COLORS["Honami"])
 
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("base_honami_invasion"), func():
 		GameManager.set_flag("honami_house_unlocked", true)

@@ -311,8 +311,8 @@ func _input(event):
 	if is_modal_open() or not _can_pause():
 		return
 	# Failsafe: Nếu cờ báo đang hội thoại nhưng UI không hiển thị, tự động reset.
-	# Bỏ qua khi có modal: Shop/Upgrade dùng start_dialogue() làm khóa di chuyển (push_modal/pop_modal).
-	if GameManager.is_in_dialogue and not DialogueManager.visible and not is_modal_open():
+	# (Các modal như UpgradeUI dùng start_dialogue() làm khóa di chuyển nhưng đã bị loại ở dòng is_modal_open() phía trên.)
+	if GameManager.is_in_dialogue and not DialogueManager.visible:
 		GameManager.end_dialogue()
 
 	if not GameManager.is_in_dialogue:

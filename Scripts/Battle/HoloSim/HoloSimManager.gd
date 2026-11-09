@@ -53,7 +53,7 @@ func apply_blessings_to_team(team: Array):
 			member.add_temp_mod("crit_dmg", 0.50)
 
 func is_rest_floor(floor_num: int) -> bool:
-	return floor_num == 4 or floor_num == 9
+	return get_floor_info(floor_num).get("is_rest", false)
 
 func get_floor_info(floor_num: int) -> Dictionary:
 	match floor_num:

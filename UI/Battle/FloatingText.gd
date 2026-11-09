@@ -96,7 +96,7 @@ static func spawn(parent: Node, amount: int, damage_type: String, pos: Vector2, 
 		ft.float_color = COLORS["crit"]
 	else:
 		ft.text = "-%d" % amount
-		ft.float_color = COLORS.get(damage_type, Color.RED)
+		ft.float_color = COLORS.get(damage_type, COLORS["physical"])
 		
 	ft.position = pos
 	parent.add_child(ft)

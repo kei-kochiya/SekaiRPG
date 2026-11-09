@@ -106,13 +106,8 @@ func _place_cars():
 func _place_characters():
 	if GameManager.get_flag("street_mission_fully_done"):
 		# Sandbox/Thăm lại: Chỉ spawn Player và 1 lối ra
-		var player = OverworldPlayer.new()
-		if GameManager.last_player_position != Vector2.ZERO:
-			player.position = GameManager.last_player_position
-		else:
-			player.position = Vector2(15 * TILE_SIZE, 11 * TILE_SIZE)
+		var player := MapUtils.spawn_player(self, Vector2(15 * TILE_SIZE, 11 * TILE_SIZE))
 		player.character_color = Color(0.29, 0.62, 0.62)
-		add_child(player)
 		
 		# Thêm 1 exit zone để về Base
 		var exit = MapUtils.rect_zone(Vector2(96, 32), "Rời khỏi đường phố", Vector2(15 * TILE_SIZE, 13 * TILE_SIZE))
@@ -147,13 +142,7 @@ func _spawn_dummy(p_name: String, grid_pos: Vector2, color: Color):
 	node.set_meta("npc_name", p_name)
 
 func _draw_corner_walls():
-	var first_new = get_child_count()
-	MapUtils.draw_corner_walls(self)
-	# MapUtils.draw_corner_walls không tạo va chạm nên thêm thân tĩnh cho từng ô tường vừa vẽ (để người chơi không đi xuyên tường)
-	for i in range(first_new, get_child_count()):
-		var tile = get_child(i)
-		if tile is Sprite2D:
-			MapUtils.add_block(self, tile.position / TILE_SIZE)
+	MapUtils.draw_corner_walls(self, true) # có va chạm để người chơi không đi xuyên tường
 
 func _draw_street_walls():
 	# 1. Tường trên viền map (Y = 3, chừa lối đi X ∈ [14, 16])
@@ -197,7 +186,7 @@ func _run_logic():
 				await ScreenFade.fade_in(1.0)
 				
 				# Spawn Honami
-				MapUtils.create_dummy_char(self, "Honami", Vector2(16, 11), Color(0.5, 0.35, 0.25))
+				MapUtils.create_dummy_char(self, "Honami", Vector2(16, 11), MapUtils.CHARACTER_COLORS["Honami"])
 				
 				DialogueManager.play_dialogue(DialogueLoader.get_lines("street_honami_encounter"), func():
 					GameManager.set_flag("street_mission_fully_done", true)

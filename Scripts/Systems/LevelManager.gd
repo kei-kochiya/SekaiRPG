@@ -119,6 +119,7 @@ static func set_initial_level(entity: Entity, target_level: int):
 		entity.skill_points = target_level * (3 if entity.is_character else 2)
 		if not entity.is_character:
 			_auto_upgrade_monster(entity)
+		entity.hp_changed.emit(entity.current_hp, entity.max_hp)
 		return
 	
 	target_level = clamp(target_level, 1, MAX_LEVEL)
@@ -132,6 +133,8 @@ static func set_initial_level(entity: Entity, target_level: int):
 		_auto_upgrade_monster(entity)
 		
 	entity.current_exp = 0
+	# Tự nâng SP ở trên đổi máu tối đa sau lần phát cuối của process_level_up: báo cho thẻ đang hiển thị (vd. quái được nâng cấp lại giữa trận)
+	entity.hp_changed.emit(entity.current_hp, entity.max_hp)
 
 # ── Nâng Cấp Tự Động ───────────────────────────────────────────────────────
 

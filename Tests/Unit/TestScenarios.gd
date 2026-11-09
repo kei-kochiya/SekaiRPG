@@ -84,3 +84,33 @@ func test_prime_minister_calls_two_guards_once_below_half_hp():
 	sc.on_turn_start(main, pm)
 	assert_eq(main.enemy_team.size(), 3, "the call for help happens only once")
 	main.free()
+
+# Trận kịch bản thường (không phải trận định mệnh) thua thì phải hiện banner thất bại, không im lặng
+func test_a_scripted_battle_wipe_shows_the_defeat_banner_once():
+	var ichika := Ichika.new()
+	ichika.current_hp = 0
+	var main := FakeBattleMain.new([ichika], [Guard.new()])
+	var scenario := ScriptedBattleScenario.new()
+	assert_true(scenario.check_battle_end(main), "Cả đội gục thì trận kết thúc")
+	assert_eq(main.hud.results, [false], "Banner thất bại hiện đúng một lần")
+	assert_true(main.battle_over, "battle_over được đặt")
+	assert_true(scenario.check_battle_end(main), "Gọi lại vẫn kết thúc")
+	assert_eq(main.hud.results.size(), 1, "Không hiện banner lần hai")
+	ichika.free()
+	main.free()
+
+# Cả hai phe cùng gục: get_victory_status báo thắng nên banner cũng phải là thắng chứ không phải thất bại
+func test_a_simultaneous_wipe_shows_victory_like_the_outcome_says():
+	var ichika := Ichika.new()
+	ichika.current_hp = 0
+	var guard := Guard.new()
+	guard.current_hp = 0
+	var main := FakeBattleMain.new([ichika], [guard])
+	var scenario := ScriptedBattleScenario.new()
+	assert_true(scenario.check_battle_end(main), "Hai phe cùng gục thì trận kết thúc")
+	assert_eq(main.hud.results, [true], "Banner thắng, khớp với get_victory_status")
+	assert_true(scenario.get_victory_status(main), "Kết quả được ghi là thắng")
+	main.free()
+	ichika.free()
+	guard.free()
+

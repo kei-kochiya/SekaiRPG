@@ -7,7 +7,7 @@ Tóm tắt: Kẻ địch Xạ Thủ Bắn Tỉa Ngầm (Sniper).
 Đặc điểm:
 - Hệ: Mysterious (Khắc chế Pure, Yếu trước Pure).
 - Sát thương đơn mục tiêu cực mạnh, có tỷ lệ chí mạng cao (Crit Rate 35%).
-- Kỹ năng: Bắn Tỉa Chí Mạng (Headshot) và Lựu Đạn Khói (Smoke Screen).
+- Kỹ năng: Bắn Tỉa Trúng Đích (Headshot) và Lựu Đạn Khói (Smoke Screen).
 """
 
 func _init():

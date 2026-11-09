@@ -65,7 +65,11 @@ func test_defeat_banner_matches_what_happens_after_a_scripted_loss():
 			"harbor": assert_true(text.contains("Bến Cảng"), "%s: quay lại Bến Cảng" % id)
 			"continue": assert_eq(text, "KẾT THÚC TRẬN ĐẤU", "%s: câu chuyện đi tiếp" % id)
 			"retry": assert_true(text.contains("thử lại"), "%s: đánh lại" % id)
-	assert_eq(DEFEAT_KIND.size(), 24, "Đủ 24 trận kịch bản trong registry")
+	var known: Array = DEFEAT_KIND.keys()
+	var registry: Array = BattleInitializer.scripted_battle_ids()
+	known.sort()
+	registry.sort()
+	assert_eq(known, registry, "Mọi trận trong registry đều có kiểu kết cục trong bảng này (và ngược lại)")
 	hud.free()
 
 func test_hitstop_remembers_the_game_speed_it_found():
@@ -137,3 +141,20 @@ func test_sandbox_menu_frees_the_previous_battles_player_copies():
 	root.remove_child(menu)
 	menu.free()
 	GameManager.reset_game()
+
+# Hướng dẫn trận đầu nhả khóa modal NGAY khi đóng (không chờ queue_free cuối frame): lượt đầu bắt đầu trong cùng frame và menu lệnh
+# không nhận focus bàn phím/tay cầm khi PauseMenu còn báo có modal
+func test_the_tutorial_modal_can_be_released_before_its_canvas_is_freed():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var host := Node.new()
+	root.add_child(host)
+	var tutorial = load("res://Scripts/Battle/BattleTutorial.gd")
+	var panel: Control = tutorial._build_tutorial_panel(host)
+	assert_true(PauseMenu.is_modal_open(), "Đang hiện hướng dẫn: có modal")
+	var scope = panel.get_parent().get_meta("modal_scope", null)
+	assert_true(scope != null, "ModalScope được gắn vào lớp hướng dẫn")
+	scope.exit()
+	assert_false(PauseMenu.is_modal_open(), "Nhả khóa ngay, trước khi lớp bị xóa")
+	root.remove_child(host)
+	host.free() # tree_exiting gọi exit() lần nữa: phải vô hại (idempotent)
+	assert_false(PauseMenu.is_modal_open(), "Không bị nhả hai lần làm lệch bộ đếm")

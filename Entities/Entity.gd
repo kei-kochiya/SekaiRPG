@@ -47,7 +47,7 @@ signal level_changed(new_level: int)
 var untargetable: bool = false
 
 # ── Cơ chế lượt đi ─────────────────────────────────────────────────────────
-var action_gauge: float = 0.0 # Thanh hành động (0 - 10000)
+var action_gauge: float = 0.0 # Thanh hành động (0 - TurnCalculator.ACTION_GAUGE_FULL)
 
 # ── Tham chiếu ngữ cảnh chiến đấu ───────────────────────────────────────────
 var allies: Array = []

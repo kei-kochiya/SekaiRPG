@@ -10,7 +10,7 @@ Chức năng chính:
 - Điều phối các chế độ chơi đặc biệt: Sandbox, Training, Scripted Battle.
 - Xử lý luồng sau khi trận chiến kết thúc (tính exp, kích hoạt sự kiện, chuyển cảnh).
 - Quản lý tùy chọn cài đặt hệ thống (Volume, Battle Speed, Skip Battle).
-- Cung cấp các hàm hỗ trợ chung (filter, entity factory).
+- Cung cấp các hàm hỗ trợ chung (tra cứu thành viên, loại mục tiêu của kỹ năng).
 """
 
 # ── Tham chiếu đến các Manager thành phần ──────────────────────────────────
@@ -179,7 +179,7 @@ func _init_party():
 	LevelManager.set_initial_level(party["Mizuki"], 25)
 	LevelManager.set_initial_level(party["Honami"], 25)
 
-# ── Hàm Hỗ Trợ Dữ Liệu (Engine/Filter) ─────────────────────────────────────
+# ── Hàm Hỗ Trợ Dữ Liệu ──────────────────────────────────────────────────────
 func get_skill_target_type(entity: Entity, action_name: String) -> String:
 	if action_name == "attack": return "enemy"
 	for s in entity.skills:

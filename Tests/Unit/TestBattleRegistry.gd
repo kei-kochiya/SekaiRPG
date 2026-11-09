@@ -25,6 +25,11 @@ var EXPECTED := {
 	"ichika_vs_kanade_slow": [["Ichika"], 1, 60, SlowStrikeScenario, "Kanade"],
 	"street_skirmish": [["Ichika", "Mizuki"], 3, 20, DefaultScenario, "Terrorist"],
 	"street_survival": [["Ichika", "Mizuki"], 3, 20, StreetSurvivalScenario, "Terrorist"],
+	"ops_ena": [["Ena"], BattleInitializer.OPS_ENA_COUNT, BattleInitializer.OPS_ENA_LEVEL, ConvoyWavesScenario, "Terrorist"],
+	"ena_vs_mizuki": [["Ena"], 1, 25, ScriptedBattleScenario, "Mizuki"],
+	"mizuki_vs_ena_forced": [["Mizuki"], 1, 20, ForcedDuelScenario, "Ena"],
+	"training_trial": [["Ichika"], 2, 20, TrainingTrialScenario, "Ena"],
+	"honami_spar": [["Ichika"], 1, 25, SparringScenario, "Honami"],
 }
 
 func test_scripted_battle_setups_are_unchanged():
@@ -55,7 +60,6 @@ func test_final_mafuyu_keeps_her_mirror_and_floor():
 	var boss := BattleInitializer.build_final_mafuyu()
 	assert_true(boss.level >= BattleInitializer.FINAL_BOSS_FLOOR_LEVEL, "never below the floor level")
 	assert_eq(boss.current_hp, boss.max_hp, "full HP at the start")
-	assert_eq(boss.max_break_gauge, 400, "break gauge 400")
 	boss.free()
 
 func test_every_registry_battle_builds_non_empty_teams():

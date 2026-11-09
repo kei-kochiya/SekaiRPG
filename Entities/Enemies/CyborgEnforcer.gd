@@ -7,7 +7,7 @@ Tóm tắt: Kẻ địch Vệ Binh Cơ Giới Giáp Thép (Cyborg Enforcer).
 Đặc điểm:
 - Hệ: Cute (Khắc chế Cool, Yếu trước Happy).
 - Chống chịu cực cao (HP 500, DEF 60), Break Gauge dày (180).
-- Kỹ năng: Nện Khiên Năng Lượng (Shield Slam - Choáng 1 lượt) và Khiên Phản Lực (Bảo vệ đồng minh).
+- Kỹ năng: Nện Khiên Năng Lượng (Shield Slam - Choáng 1 lượt) và Bật Khiên Bảo Hộ (tự tăng thủ).
 """
 
 func _init():

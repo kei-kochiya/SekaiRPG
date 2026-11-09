@@ -46,6 +46,34 @@ func test_every_literal_dialogue_key_in_code_exists():
 	for key in found:
 		assert_gt(DialogueLoader.get_lines(key).size(), 0, "dialogue key '%s' (%s) exists" % [key, found[key][0]])
 
+# Một id trận gõ sai ở nơi gọi cho ra đội hình rỗng, tức là thắng ngay mà không ai hay: mọi id ghi thẳng trong mã phải có trong registry
+func test_every_scripted_battle_id_in_code_is_registered():
+	var found := _literals(["start_scripted_battle", "_start_battle", "_battle"])
+	assert_gt(found.size(), 12, "Tìm thấy các id trận kịch bản được gọi trong mã")
+	var registry: Array = BattleInitializer.scripted_battle_ids()
+	for id in found:
+		assert_true(id in registry, "trận '%s' (%s) có trong BattleInitializer registry" % [id, found[id][0]])
+
+# Cờ chỉ ghi mà không ai đọc (hay ngược lại) là dấu hiệu đoạn mã đọc đã bị xóa mà cờ còn sót, như harbor_boss_defeated từng bị
+func test_every_story_flag_is_both_written_and_read_somewhere():
+	var written := _literals(["set_flag"])
+	var read := _literals(["get_flag"])
+	# Các cờ đặt/đọc bằng tên dựng động hoặc bảng dữ liệu: training_*_done (GameManager.TRAINING_DONE_FLAGS), bounty_N_done, các cờ trong bảng kết quả trận
+	for flag in ScriptedBattleOutcomes.FATED.values() + ScriptedBattleOutcomes.WIN_FLAG.values():
+		written[flag] = ["ScriptedBattleOutcomes"]
+	for flag in GameManager.TRAINING_DONE_FLAGS:
+		written[flag] = ["GameManager.TRAINING_DONE_FLAGS"]
+		read[flag] = ["GameManager.TRAINING_DONE_FLAGS"]
+	for i in range(1, 4):
+		read["bounty_%d_done" % i] = ["BountyMap (khóa dựng bằng \"bounty_%d_done\")"] # đọc bằng tên dựng động
+	var problems: Array = []
+	for flag in StoryState.DEFAULT_FLAGS:
+		if not written.has(flag):
+			problems.append("%s: không nơi nào ghi" % flag)
+		if not read.has(flag):
+			problems.append("%s: không nơi nào đọc" % flag)
+	assert_eq(problems, [], "Mọi cờ trong DEFAULT_FLAGS vừa được ghi vừa được đọc")
+
 func test_settings_survive_a_save_and_load():
 	var had_file := FileAccess.file_exists(GameSettings.PATH)
 	var old_bytes := FileAccess.get_file_as_bytes(GameSettings.PATH) if had_file else PackedByteArray()

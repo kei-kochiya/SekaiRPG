@@ -6,8 +6,8 @@ Tóm tắt: Kẻ địch Chuyên Viên Nhiễu Sóng (Cyber Jammer).
 
 Đặc điểm:
 - Hệ: Happy (Khắc chế Cute, Yếu trước Cool).
-- Quấy nhiễu điện tử: Khóa kỹ năng đối thủ hoặc cường hóa hành động cho đồng minh.
-- Kỹ năng: Hack Nhiễu Hệ Thống (System Hack) và Cường Hóa Tác Chiến (Adrenaline Hack).
+- Quấy nhiễu điện tử: Làm choáng đối thủ hoặc đẩy nhanh thanh hành động của đồng minh.
+- Kỹ năng: Hack Nhiễu Hệ Thống (System Hack) và Xung Trợ Lực.
 """
 
 func _init():
@@ -48,7 +48,7 @@ func overclock_ally(target: Variant = null):
 		
 	print(entity_name, " phát [Xung Trợ Lực Đồng Minh] lên ", ally_target.entity_name)
 	ally_target.add_temp_mod("atk", 25)
-	ally_target.action_gauge = min(10000.0, ally_target.action_gauge + 3000.0)
+	ally_target.action_gauge = min(TurnCalculator.ACTION_GAUGE_FULL, ally_target.action_gauge + 3000.0)
 
 func get_portrait_path() -> String:
 	return "res://Assets/Icons/poison.png"

@@ -1,4 +1,4 @@
-extends Node2D
+extends StoryMap
 
 """
 InterrogationMap: kho của Cảnh sát Quốc tế (phòng thẩm vấn + sân sau). Giai đoạn suy ra từ cờ: A = Ena bị tra tấn (cảnh quay),
@@ -9,10 +9,6 @@ trong test) thì chỉ dựng phòng như cảnh A, không chạy logic.
 const TILE_SIZE = 32
 const MAP_PATH := MapPaths.INTERROGATION
 const BASE_PATH := MapPaths.BASE
-const COLORS := {
-	"Mafuyu": Color(0.4, 0.3, 0.5), "Ena": Color(0.72, 0.38, 0.16), "Kanade": Color(0.8, 0.8, 0.9),
-	"Mizuki": Color(0.85, 0.65, 0.8), "Ichika": Color(0.29, 0.62, 0.62),
-}
 const POLICE := Color(0.35, 0.5, 0.85)
 const CHAIR := Vector2(16, 9)
 const DOOR := Vector2(16, 17)
@@ -224,7 +220,7 @@ func _debris(node: Node2D) -> void:
 
 func _spawn_player(char_name: String, grid_pos: Vector2, facing: String) -> void:
 	var p := OverworldPlayer.new()
-	p.character_color = COLORS[char_name]
+	p.character_color = MapUtils.CHARACTER_COLORS[char_name]
 	p.set_facing(facing)
 	add_child(p)
 	p.character_name = char_name
@@ -238,7 +234,7 @@ func _spawn_player(char_name: String, grid_pos: Vector2, facing: String) -> void
 			c.limit_bottom = 624
 
 func _person(p_name: String, grid_pos: Vector2) -> Node2D:
-	return _npc(p_name, grid_pos, COLORS.get(p_name, POLICE))
+	return _npc(p_name, grid_pos, MapUtils.CHARACTER_COLORS.get(p_name, POLICE))
 
 func _police(grid_pos: Vector2, captain: bool = false) -> void:
 	_npc("Đại Úy Cảnh Sát" if captain else "Cảnh Sát", grid_pos, POLICE, "captain.svg" if captain else "police.svg")
@@ -374,33 +370,34 @@ func _beat() -> void:
 	await get_tree().create_timer(0.8, false).timeout
 	await ScreenFade.fade_in(0.9)
 
+# Số lượt đi bộ đang chạy: người chơi bị khóa suốt lúc NPC đi (chỉ khóa hội thoại thì các đoạn đi bộ ~4 giây để người chơi chạy lung tung,
+# đích của Ena tính theo vị trí người chơi lúc gọi, và tự lưu game vẫn chạy giữa cảnh)
+var _walking := 0
+
 # Đi tới ô lưới (nhân vật có thể không còn trong map thì bỏ qua); `free_after` để xóa sau khi tới (Kanade bỏ đi)
 func _walk(node: Node2D, grid: Vector2, secs: float, free_after: bool = false) -> void:
 	if node == null:
 		return
+	_walking += 1
+	_freeze_player(true)
 	var tw := node.create_tween()
 	tw.tween_property(node, "position", grid * TILE_SIZE, secs).set_trans(Tween.TRANS_SINE)
 	await tw.finished
+	_walking -= 1
+	if _walking == 0:
+		_freeze_player(false)
 	if free_after:
 		node.queue_free()
+
+func _freeze_player(on: bool) -> void:
+	var player := get_node_or_null("OverworldPlayer")
+	if player:
+		player.set_physics_process(not on)
 
 func _battle(id: String) -> void:
 	_busy = true
 	var p := get_node_or_null("OverworldPlayer") as Node2D
 	await GameManager.start_scripted_battle(id, MAP_PATH, p.global_position if p else Vector2.ZERO, 1.0)
-
-func _go(path: String) -> void:
-	await GameManager.change_map(path, 1.0)
-
-# Phát một đoạn hội thoại và chờ xong; khóa thiếu (mảng rỗng) thì chạy tiếp ngay
-func _say(key: String) -> void:
-	await _play(DialogueLoader.get_lines(key))
-
-func _narrate(text: String) -> void:
-	await _play([{"text": text, "type": "narrator"}])
-
-func _play(lines: Array) -> void:
-	await DialogueManager.play_async(lines)
 
 # ── Tiện ích dựng cảnh ─────────────────────────────────────────────────────
 
@@ -417,17 +414,8 @@ func _ring(x1: int, y1: int, x2: int, y2: int, skip: Vector2 = Vector2(-99, -99)
 	_tile("bottom_left_wall.png", Vector2(x1, y2), true)
 	_tile("bottom_right_wall.png", Vector2(x2, y2), true)
 
-func _tile(file: String, g: Vector2, collide: bool = false) -> void:
-	MapUtils.place_tile(self, file, g, collide)
-
 func _indoor(file: String, g: Vector2, collide: bool = true) -> void:
-	var sp := Sprite2D.new()
-	sp.texture = load("res://Assets/Indoors/" + file)
-	sp.scale = Vector2(4, 4)
-	sp.position = g * TILE_SIZE
-	add_child(sp)
-	if collide:
-		_block(g)
+	MapUtils.place_indoor_asset(self, file, g, collide)
 
 func _crate(g: Vector2) -> void:
 	var p := g * TILE_SIZE - Vector2(14, 14)
@@ -436,18 +424,6 @@ func _crate(g: Vector2) -> void:
 	_rect(p + Vector2(3, 12), Vector2(22, 3), Color(0.33, 0.23, 0.13))
 	_rect(p + Vector2(12, 3), Vector2(3, 22), Color(0.33, 0.23, 0.13))
 	_block(g)
-
-func _block(g: Vector2) -> void:
-	MapUtils.add_block(self, g)
-
-func _rect(pos: Vector2, size: Vector2, color: Color, parent: Node = null) -> ColorRect:
-	var r := ColorRect.new()
-	r.position = pos
-	r.size = size
-	r.color = color
-	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	(parent if parent else self).add_child(r)
-	return r
 
 func _disc(pos: Vector2, radius: float, color: Color) -> void:
 	var d := Polygon2D.new()

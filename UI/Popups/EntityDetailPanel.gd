@@ -185,7 +185,7 @@ func _make_skill_row(e: Entity, s: Dictionary) -> HBoxContainer:
 	var cd: int = e.cooldowns.get(s["method"], 0)
 	var state_text = "Sẵn sàng"
 	var state_color = UITheme.SUCCESS
-	if cd >= 99:
+	if cd >= CooldownManager.LOCKED_FOR_BATTLE:
 		state_text = "Hết lượt"
 		state_color = UITheme.TEXT_MUTED
 	elif cd > 0:

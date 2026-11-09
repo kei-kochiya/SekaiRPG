@@ -208,6 +208,8 @@ func _make_btn(label: String, action_name: String, enabled: bool, kind: UITheme.
 
 func _focus_first_enabled(container: Container):
 	"""Đưa focus bàn phím/tay cầm vào nút khả dụng đầu tiên của danh sách."""
+	if PauseMenu.is_modal_open():
+		return # bảng Chi tiết/Kỹ năng đang mở: lượt mới không được cướp focus ra sau lớp phủ
 	for c in container.get_children():
 		if c is Button and not c.disabled and not c.is_queued_for_deletion():
 			UITheme.focus_later(c)

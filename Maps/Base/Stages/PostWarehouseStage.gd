@@ -32,9 +32,8 @@ func on_stage_start():
 func _do_morning_transition(lighting: CanvasModulate):
 	await ScreenFade.fade_out(1.0)
 	# Khoảng đen 1 giây: ScreenFade không còn bận nhưng cảnh chưa xong, nên khóa cảnh (người chơi + NPC) trong lúc đợi
-	lock_scene()
+	lock_scene() # giữ khóa tới hết đoạn thoại cuối: lưu giữa chừng sẽ mang cờ mở khóa Bến Cảng mà bỏ lỡ hai đoạn thoại sáng
 	await map.get_tree().create_timer(1.0, false).timeout
-	unlock_scene()
 	
 	AudioManager.play_music("base")
 	
@@ -46,6 +45,7 @@ func _do_morning_transition(lighting: CanvasModulate):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("kanade_upgrade_intro"), func():
 			map._refresh_quest_label()
 			lighting.queue_free() # Xóa lighting sau khi xong transition
+			unlock_scene()
 		)
 	)
 
