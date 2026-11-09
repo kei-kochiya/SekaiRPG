@@ -34,7 +34,6 @@ var _light_tex: GradientTexture2D
 var _screen: ColorRect
 var _npcs: Dictionary = {}
 
-signal _line_done
 
 func _ready() -> void:
 	_phase = _pick_phase()
@@ -412,15 +411,7 @@ func _narrate(text: String) -> void:
 	await _play([{"text": text, "type": "narrator"}])
 
 func _play(lines: Array) -> void:
-	if lines.is_empty():
-		return
-	var state := {"done": false}
-	DialogueManager.play_dialogue(lines, func():
-		state["done"] = true
-		_line_done.emit()
-	)
-	if not state["done"]:
-		await _line_done
+	await DialogueManager.play_async(lines)
 
 # ── Tiện ích dựng cảnh ─────────────────────────────────────────────────────
 

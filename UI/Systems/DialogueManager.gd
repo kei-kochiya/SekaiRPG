@@ -62,6 +62,20 @@ func play_dialogue(lines: Array, on_complete: Callable = Callable()) -> void:
 	GameManager.start_dialogue()
 	_show_current_line()
 
+signal _async_line_done
+
+# Phát một đoạn hội thoại và chờ tới khi xong (dùng với await). Mảng rỗng (vd. khóa hội thoại thiếu) thì trả về ngay.
+func play_async(lines: Array) -> void:
+	if lines.is_empty():
+		return
+	var state := {"done": false}
+	play_dialogue(lines, func():
+		state["done"] = true
+		_async_line_done.emit()
+	)
+	if not state["done"]: # play_dialogue có thể đã gọi callback ngay (đang có hội thoại khác): khi đó không chờ
+		await _async_line_done
+
 # Hiện danh sách lựa chọn rồi chờ người chơi chọn: trả về chỉ số được chọn (dùng với await)
 func ask(options: Array) -> int:
 	show_choice(options)

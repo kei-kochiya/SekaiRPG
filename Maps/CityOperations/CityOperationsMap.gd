@@ -74,8 +74,8 @@ func _setup_scene(char_name: String, _location: String, light_color: Color):
 	# Spawn character
 	MapUtils.create_dummy_char(self, char_name, Vector2(12, 10), Color(0.8, 0.8, 0.8))
 	# Spawn terrorists
-	MapUtils.create_dummy_char(self, "Terrorist1", Vector2(18, 9), Color(1, 0, 0))
-	MapUtils.create_dummy_char(self, "Terrorist2", Vector2(18, 11), Color(1, 0, 0))
+	MapUtils.create_dummy_char(self, "Khủng Bố 1", Vector2(18, 9), Color(1, 0, 0))
+	MapUtils.create_dummy_char(self, "Khủng Bố 2", Vector2(18, 11), Color(1, 0, 0))
 
 func _start_battle(battle_key: String):
 	GameManager.is_scripted_battle = true

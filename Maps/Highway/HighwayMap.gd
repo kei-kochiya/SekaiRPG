@@ -37,7 +37,7 @@ func _build_highway():
 	# Spawn NPCs
 	MapUtils.create_dummy_char(self, "Mizuki", Vector2(14, 11), Color(0.8, 0.5, 0.8))
 	MapUtils.create_dummy_char(self, "Mafuyu", Vector2(15, 10), Color(0.4, 0.3, 0.5))
-	MapUtils.create_dummy_char(self, "PrimeMinister", Vector2(15, 12), Color(0.2, 0.2, 0.2))
+	MapUtils.create_dummy_char(self, "Thủ Tướng", Vector2(15, 12), Color(0.2, 0.2, 0.2))
 	MapUtils.create_dummy_char(self, "Ena", Vector2(20, 11), Color(0.7, 0.3, 0.1))
 
 func _run_logic():

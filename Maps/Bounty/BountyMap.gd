@@ -29,7 +29,6 @@ var _mod: CanvasModulate
 var _light_tex: GradientTexture2D
 var _hud_label: Label
 
-signal _line_done
 
 func _ready() -> void:
 	AudioManager.play_music("map")
@@ -344,15 +343,7 @@ func _narrate(text: String) -> void:
 	await _play([{"text": text, "type": "narrator"}])
 
 func _play(lines: Array) -> void:
-	if lines.is_empty():
-		return
-	var state := {"done": false}
-	DialogueManager.play_dialogue(lines, func():
-		state["done"] = true
-		_line_done.emit()
-	)
-	if not state["done"]:
-		await _line_done
+	await DialogueManager.play_async(lines)
 
 # ── Tiện ích dựng cảnh ─────────────────────────────────────────────────────
 
