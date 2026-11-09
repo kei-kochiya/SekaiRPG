@@ -13,10 +13,10 @@ const TRAINEES := ["Ichika", "Kanade", "Ena", "Mizuki"]
 
 func get_npc_positions() -> Dictionary:
 	return {
-		"Ena": Vector2(21 * map.TILE_SIZE, 13 * map.TILE_SIZE),
+		"Ena": Vector2(21 * map.TILE_SIZE, 12 * map.TILE_SIZE), # lên một ô để vùng nói chuyện không chồng lên bệ Holo-Sim (20, 15)
 		"Kanade": Vector2(23 * map.TILE_SIZE, 13 * map.TILE_SIZE),
 		"Mizuki": Vector2(27 * map.TILE_SIZE, 13 * map.TILE_SIZE),
-		"Mafuyu": Vector2(24 * map.TILE_SIZE, 11 * map.TILE_SIZE),
+		"Mafuyu": Vector2(25 * map.TILE_SIZE, 12 * map.TILE_SIZE), # lệch khỏi ô cửa phía bắc (24, 10) để không chắn lối vào Khu Nghỉ Ngơi
 	}
 
 # Ánh sáng dịu nhẹ buổi chiều; BaseMap áp trước fade_in nên không bị "nháy sáng"

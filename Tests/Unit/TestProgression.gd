@@ -217,9 +217,43 @@ func test_ena_trigger_waits_for_open_choice_menus():
 	base.free()
 	GameManager.reset_game()
 
+# Giai đoạn của PostHarborStage do cờ mafuyu_honami_talked quyết định (trước đây là harbor_wave > 5)
+func test_post_harbor_phase_follows_the_honami_talk_flag():
+	GameManager.reset_game()
+	var base = load(BASE_SCENE).instantiate()
+	var stage = load("res://Maps/Base/Stages/PostHarborStage.gd").new()
+	base.add_child(stage)
+	stage.setup(base)
+	stage.on_stage_start() # chưa nói chuyện với Mafuyu về Honami: buổi họp đầu
+	assert_true(DialogueManager.active, "Chưa nói về Honami thì phát buổi họp đầu")
+	_drain_dialogue()
+	assert_true(GameManager.get_flag("harbor_meeting_p1_done"), "Buổi họp đầu chỉ phát một lần")
+	assert_false(GameManager.get_flag("harbor_mizuki_snack_done"), "Chưa tới cảnh ăn vặt")
+	stage.on_stage_start()
+	assert_false(DialogueManager.active, "Họp xong rồi thì vào lại căn cứ không phát lại")
+	GameManager.set_flag("mafuyu_honami_talked", true) # đã nói về Honami: sang cảnh Mizuki ăn vặt
+	stage.on_stage_start()
+	assert_true(DialogueManager.active, "Đã nói về Honami thì phát cảnh Mizuki ăn vặt")
+	_drain_dialogue()
+	assert_true(GameManager.get_flag("harbor_mizuki_snack_done"), "Cảnh ăn vặt đã xem")
+	stage.on_stage_start()
+	assert_false(DialogueManager.active, "Xem rồi thì không phát lại")
+	base.free()
+	GameManager.reset_game()
+
+func test_alleyway_monologue_follows_the_honami_talk_flag():
+	GameManager.reset_game()
+	var alley = load("res://Maps/Alleyway/AlleywayMap.gd").new()
+	assert_eq(alley._dialogue_key(), "honami_alleyway", "Chưa nói chuyện với Mafuyu: phần 1")
+	GameManager.set_flag("mafuyu_honami_talked", true)
+	assert_eq(alley._dialogue_key(), "honami_alleyway_p2", "Đã nói chuyện: phần 2")
+	assert_true(DialogueLoader.get_lines("honami_alleyway").size() > 0 and DialogueLoader.get_lines("honami_alleyway_p2").size() > 0, "Cả hai đoạn hội thoại đều có")
+	alley.free()
+	GameManager.reset_game()
+
 func test_mizuki_snack_scene_plays_only_once():
 	GameManager.reset_game()
-	GameManager.story.harbor_wave = 6
+	GameManager.set_flag("mafuyu_honami_talked", true)
 	var base = load(BASE_SCENE).instantiate()
 	var stage = load("res://Maps/Base/Stages/PostHarborStage.gd").new()
 	base.add_child(stage)

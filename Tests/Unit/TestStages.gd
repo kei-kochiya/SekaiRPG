@@ -104,12 +104,60 @@ func test_arc2_cutscene_stages_keep_the_exit_shut():
 	assert_false(open_stage.handle_exit(), "Stage thường để BaseMap tự xử lý cửa ra")
 	open_stage.free()
 
+# ── Bố cục NPC ─────────────────────────────────────────────────────────────
+
+# Cờ dẫn tới từng Stage của Base (khớp BaseMap._init_stage)
+const STAGE_FLAGS := {
+	"intro": [], "post_warehouse": ["harbor_mission_unlocked"], "post_harbor": ["harbor_mission_done"],
+	"post_harbor_control": ["harbor_mission_done", "mizuki_control_phase"], "post_harbor_morning": ["mizuki_report_done"],
+	"post_cafe": ["ena_cafe_done"], "post_street": ["street_mission_fully_done"], "honami_unlocked": ["honami_house_unlocked"],
+	"finale": ["pm_boss_defeated"], "orders": ["interrogation_seen"], "reveal": ["kanade_killed"],
+	"final": ["final_confront_started"], "epilogue": ["game_completed"],
+}
+const DOORWAYS := [Vector2(24, 10), Vector2(24, 20), Vector2(17, 15), Vector2(31, 15)]
+const TERMINALS := [Vector2(16, 15), Vector2(20, 15)]
+# Kanade nằm trên giường ở Khu Nghỉ Ngơi sau chuyến Bến Cảng (chủ ý của cốt truyện)
+const ALLOWED_ON_BLOCKED := {"post_harbor": ["Kanade"], "post_harbor_control": ["Kanade"]}
+
+# Không NPC nào đứng trong tường/đồ đạc, chắn ô cửa, hay có vùng nói chuyện chồng lên bệ cửa hàng/Holo-Sim
+func test_no_base_npc_stands_in_a_wall_a_doorway_or_on_a_terminal():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var problems: Array = []
+	for stage_name in STAGE_FLAGS:
+		GameManager.reset_game()
+		for flag in STAGE_FLAGS[stage_name]:
+			GameManager.set_flag(flag, true)
+		var base = load(BASE_SCENE).instantiate()
+		root.add_child(base) # _ready dựng map và NPC; cảnh mở đầu chờ fade nên không chạy trong test
+		var blocked := {}
+		var npcs := {}
+		for c in base.get_children():
+			if c is StaticBody2D and c.get_child_count() > 0:
+				blocked[(c.position / base.TILE_SIZE).round()] = true
+			elif c.has_meta("is_npc") and not c.is_queued_for_deletion():
+				npcs[c.get_meta("npc_name")] = c.position
+		assert_gt(npcs.size(), 0, "%s: có NPC" % stage_name)
+		for npc in npcs:
+			var tile: Vector2 = (npcs[npc] / base.TILE_SIZE).round()
+			if blocked.has(tile) and not (npc in ALLOWED_ON_BLOCKED.get(stage_name, [])):
+				problems.append("%s/%s đứng trên ô bị chặn %s" % [stage_name, npc, tile])
+			for door in DOORWAYS:
+				if absf(tile.x - door.x) <= 0.5 and absf(tile.y - door.y) <= 1.0:
+					problems.append("%s/%s chắn cửa %s" % [stage_name, npc, door])
+			for terminal in TERMINALS:
+				if npcs[npc].distance_to(terminal * base.TILE_SIZE) < 80.0:
+					problems.append("%s/%s chồng lên bệ %s" % [stage_name, npc, terminal])
+		root.remove_child(base)
+		base.free()
+	GameManager.reset_game()
+	assert_eq(problems, [], "Bố cục NPC hợp lệ ở mọi Stage")
+
 # ── Sảnh dùng chung ────────────────────────────────────────────────────────
 
 # PostStreetStage và HonamiHouseUnlockedStage dùng chung bố cục sảnh: đổi một chỗ phải đổi cả hai
 func test_lobby_stages_share_one_hall_layout():
 	var base = load(BASE_SCENE).instantiate()
-	var tiles := {"Ena": Vector2(17, 11), "Kanade": Vector2(23, 13), "Mizuki": Vector2(19, 12), "Mafuyu": Vector2(24, 11)}
+	var tiles := {"Ena": Vector2(28, 13), "Kanade": Vector2(23, 13), "Mizuki": Vector2(19, 12), "Mafuyu": Vector2(25, 12)}
 	for file in ["PostStreetStage", "HonamiHouseUnlockedStage"]:
 		var stage: BaseMapStage = load("res://Maps/Base/Stages/%s.gd" % file).new()
 		stage.map = base

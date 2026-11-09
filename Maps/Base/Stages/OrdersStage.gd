@@ -19,7 +19,7 @@ func _init():
 func get_npc_positions() -> Dictionary:
 	return {
 		"Mafuyu": Vector2(24 * map.TILE_SIZE, 12 * map.TILE_SIZE),
-		"Kanade": Vector2(21 * map.TILE_SIZE, 13 * map.TILE_SIZE),
+		"Kanade": Vector2(21 * map.TILE_SIZE, 12 * map.TILE_SIZE), # lên một ô để vùng nói chuyện không chồng lên bệ Holo-Sim (20, 15)
 		"Mizuki": Vector2(27 * map.TILE_SIZE, 13 * map.TILE_SIZE),
 	}
 

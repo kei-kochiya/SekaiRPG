@@ -8,7 +8,7 @@ func get_npc_positions() -> Dictionary:
 	}
 	
 	if GameManager.get_flag("mizuki_control_phase"):
-		pos["Ichika"] = Vector2(21 * map.TILE_SIZE, 15 * map.TILE_SIZE)
+		pos["Ichika"] = Vector2(23 * map.TILE_SIZE, 16 * map.TILE_SIZE) # tránh vùng của bệ Holo-Sim (20, 15)
 	else:
 		pos["Mizuki"] = Vector2(35 * map.TILE_SIZE, 13 * map.TILE_SIZE)
 		
@@ -31,13 +31,14 @@ func on_stage_start():
 		)
 		return
 	
-	if GameManager.story.harbor_wave <= 5:
+	# Giai đoạn do cờ mafuyu_honami_talked quyết định (trước đây suy ra từ harbor_wave > 5)
+	if not GameManager.get_flag("mafuyu_honami_talked"):
 		if not GameManager.get_flag("harbor_meeting_p1_done"):
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("base_meeting_p1"), func():
 				GameManager.set_flag("harbor_meeting_p1_done", true)
 				map._refresh_quest_label()
 			)
-	elif GameManager.story.harbor_wave >= 6 and not GameManager.get_flag("harbor_mizuki_snack_done"):
+	elif not GameManager.get_flag("harbor_mizuki_snack_done"):
 		_play_mizuki_snack_sequence()
 
 func _play_mizuki_snack_sequence():
@@ -71,7 +72,6 @@ func _handle_normal_interactions(npc_name: String):
 	if npc_name == "Mafuyu" and not GameManager.get_flag("mafuyu_honami_talked"):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("mafuyu_honami_info"), func():
 			GameManager.set_flag("mafuyu_honami_talked", true)
-			GameManager.story.harbor_wave = 6
 			await GameManager.change_map(MapPaths.ALLEYWAY, 1.5)
 		)
 	else:

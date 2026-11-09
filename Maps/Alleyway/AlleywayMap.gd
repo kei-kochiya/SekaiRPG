@@ -4,7 +4,7 @@ extends Node2D
 AlleywayMap: Cánh đồng tối - Scene kết thúc nhiệm vụ Harbor.
 
 Honami đợi trong ngõ hẻm ban đêm. Diễn ra monologue kết thúc của cô sau trận Boss.
-Số wave hờn quyết định dùng hội thoại nào (harbor_wave <= 5 hay > 5).
+Cờ mafuyu_honami_talked quyết định dùng hội thoại nào (chưa/đã nói chuyện với Mafuyu về Honami).
 Kết thúc chuyển về BaseMap_PostHarbor.
 """
 
@@ -86,13 +86,11 @@ func _spawn_honami():
 	
 	_map_root.add_child(root)
 
+# Chưa nói chuyện với Mafuyu: monologue phần 1 (sau trận thắng boss lần đầu); đã nói: phần 2 (cuộc gặp tiếp theo ở hẻm)
+func _dialogue_key() -> String:
+	return "honami_alleyway_p2" if GameManager.get_flag("mafuyu_honami_talked") else "honami_alleyway"
+
 func _play_sequence():
-	# harbor_wave <= 5: Honami monologue phần 1 (sau trận thắng boss lần đầu)
-	# harbor_wave > 5:  Honami monologue phần 2 (sau của phần harbor tiếp theo)
-	var key = "honami_alleyway"
-	if GameManager.story.harbor_wave > 5:
-		key = "honami_alleyway_p2"
-		
-	DialogueManager.play_dialogue(DialogueLoader.get_lines(key), func():
+	DialogueManager.play_dialogue(DialogueLoader.get_lines(_dialogue_key()), func():
 		await GameManager.change_map(MapPaths.BASE, 1.5)
 	)

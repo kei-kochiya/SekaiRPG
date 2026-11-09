@@ -164,6 +164,6 @@ func on_battle_completed(_main: Node, is_victory: bool):
 	_unlock_skills()
 
 	if is_victory:
-		GameManager.story.set_flag("street_survival_done", true)
+		GameManager.set_flag("street_survival_done", true)
 
 	GameManager.finish_battle(is_victory, kill_count)

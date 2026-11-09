@@ -66,35 +66,35 @@ static func get_current_quest() -> QuestDef:
 	Xác định Quest đang hoạt động dựa trên các mốc cờ StoryState hiện tại.
 	"""
 	# Hồi kết 2 (sau khi Thủ Tướng chết): xét từ mốc muộn nhất về trước
-	if GameManager.story.get_flag("game_completed"):
+	if GameManager.get_flag("game_completed"):
 		return get_quest("quest_16_new_nightcord")
-	elif GameManager.story.get_flag("honami_rescue_done"):
+	elif GameManager.get_flag("honami_rescue_done"):
 		return get_quest("quest_15_last_nocturne")
-	elif GameManager.story.get_flag("kanade_unmasked"):
+	elif GameManager.get_flag("kanade_unmasked"):
 		return get_quest("quest_14_mole")
-	elif GameManager.story.get_flag("ena_captured"):
+	elif GameManager.get_flag("ena_captured"):
 		return get_quest("quest_13_interrogation")
-	elif GameManager.story.get_flag("ena_left_nightcord"):
+	elif GameManager.get_flag("ena_left_nightcord"):
 		return get_quest("quest_12_bounty")
-	elif GameManager.story.get_flag("pm_boss_defeated"):
+	elif GameManager.get_flag("pm_boss_defeated"):
 		return get_quest("quest_11_next_pm")
-	elif GameManager.story.get_flag("finale_done") or GameManager.story.get_flag("pm_arc_started"):
+	elif GameManager.get_flag("finale_done") or GameManager.get_flag("pm_arc_started"):
 		return get_quest("quest_10_finale")
-	elif GameManager.story.get_flag("honami_house_unlocked") or GameManager.story.get_flag("street_mission_fully_done"):
+	elif GameManager.get_flag("honami_house_unlocked") or GameManager.get_flag("street_mission_fully_done"):
 		return get_quest("quest_09_honami_clinic")
-	elif GameManager.story.get_flag("ena_cafe_done"):
+	elif GameManager.get_flag("ena_cafe_done"):
 		return get_quest("quest_08_street_ambush")
-	elif GameManager.story.get_flag("mizuki_report_done"):
+	elif GameManager.get_flag("mizuki_report_done"):
 		return get_quest("quest_07_morning_cafe")
-	elif GameManager.story.get_flag("harbor_mission_done"):
+	elif GameManager.get_flag("harbor_mission_done"):
 		return get_quest("quest_06_post_harbor")
-	elif GameManager.story.get_flag("accepted_harbor_mission") or GameManager.story.get_flag("harbor_mission_unlocked"):
+	elif GameManager.get_flag("accepted_harbor_mission") or GameManager.get_flag("harbor_mission_unlocked"):
 		return get_quest("quest_05_harbor")
 	elif GameManager.warehouse_wave > 5:
 		return get_quest("quest_04_post_warehouse")
-	elif GameManager.story.get_flag("warehouse_mission_accepted"):
+	elif GameManager.get_flag("warehouse_mission_accepted"):
 		return get_quest("quest_03_warehouse")
-	elif GameManager.story.get_flag("prologue_phase", 0) >= 1 and GameManager.current_map_file != PROLOGUE_MAP:
+	elif GameManager.get_flag("prologue_phase", 0) >= 1 and GameManager.current_map_file != PROLOGUE_MAP:
 		# Thắng trận mở màn xong vẫn còn ở ngõ vắng chờ Mafuyu đưa về; quest 2 chỉ bắt đầu khi tới căn cứ
 		return get_quest("quest_02_safehouse_intro")
 	else:

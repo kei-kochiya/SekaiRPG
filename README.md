@@ -37,7 +37,7 @@ Run only some suites by naming them after `--`:
 godot --headless --path . res://Tests/TestRunnerScene.tscn -- TestResources TestCombat
 ```
 
-`TestResources` loads every `.gd`, `.tscn` and `.tres` file of the game (not the editor addons), so it catches parse errors and broken paths even in code the other suites never touch. The runner exits 1 on any failure, an unknown suite name, a suite that does not compile, or a test that runs no assertion. `TestStaticChecks` scans the code for story flags and dialogue keys that do not exist, and `TestBattleRegistry` pins the setup of every existing scripted battle so a cleanup cannot silently change the hand-tuned difficulty. New tests: add a `func test_*()` to a suite in `Tests/Unit/` (see `BaseTest.gd` for `assert_*` helpers).
+`TestResources` loads every `.gd`, `.tscn` and `.tres` file of the game (not the editor addons), so it catches parse errors and broken paths even in code the other suites never touch. The runner exits 1 on any failure, an unknown suite name, a suite that does not compile, or a test that runs no assertion. `TestStaticChecks` scans the code for story flags and dialogue keys that do not exist, and `TestBattleRegistry` pins the setup of every existing scripted battle so a cleanup cannot silently change the hand-tuned difficulty. `TestStages` and `TestOverworld` cover the Base-map stage helpers and the interaction-zone arbitration; `TestOutcomes` covers the scripted-battle outcome tables. New tests: add a `func test_*()` to a suite in `Tests/Unit/` (see `BaseTest.gd` for `assert_*` helpers).
 
 Screenshots of UI screens for visual checks (needs a window, not headless):
 
@@ -55,7 +55,7 @@ Data/       Dialogue (storyline/*.json) and mission battle teams (battles/*.json
 Entities/   Entity.gd base class, Characters/ (6), Enemies/ (13)
 Maps/       Overworld maps; most build themselves in code with Scripts/Overworld/MapUtils
 Quests/     QuestDefinition resources and QuestRegistry
-Scripts/    Battle/ (engine, scenarios, HoloSim), Core/ (GameManager, SaveManager, StoryState, GameSettings), Overworld/, Systems/, Editor/ (theme builder)
+Scripts/    Battle/ (engine, scenarios, HoloSim, EntityFactory), Core/ (GameManager, SaveManager, StoryState, GameSettings, MapPaths, ItemCatalog, ScriptedBattleOutcomes), Overworld/, Systems/, Editor/ (theme builder)
 Tests/      TestRunner, Unit/ suites, screenshot tool
 UI/         UITheme (design tokens), Battle/, Effects/, HoloSim/, Menus/, Popups/, Systems/
 addons/     godot_mcp (editor tooling, see below)
@@ -63,7 +63,9 @@ addons/     godot_mcp (editor tooling, see below)
 
 How it fits together:
 
-- **`GameManager`** (autoload) holds the party, credits, inventory and `StoryState` flags, and routes battles and scene changes. `SaveManager` serialises it to JSON.
+- **`GameManager`** (autoload) holds the party, credits, inventory and `StoryState` flags, and routes battles and scene changes. `SaveManager` serialises it to JSON. Read and write story flags through `GameManager.get_flag/set_flag` (`GameManager.story` is only touched by save/load).
+- Scene changes go through `GameManager.change_map(path, fade, player_pos)` and scripted battles through `GameManager.start_scripted_battle(id, return_map, player_pos, fade)`; both cancel themselves if the scene changed during the fade (quit to menu, load). Scene paths live in `MapPaths`; item data in `ItemCatalog`; the flags and retreat rules each scripted battle writes in `ScriptedBattleOutcomes`; monster/character construction by name in `EntityFactory`.
+- **Base map stories**: `BaseMap` picks one `BaseMapStage` per story phase (`_init_stage`). Stages share `offer_training`, `lock_scene/unlock_scene`, `say`, and `LobbyStage` (the lobby layout used after the street mission); NPC clicks reach a stage through `talk_to_npc`, which ignores them during a cutscene. When interaction zones overlap, only the zone nearest the player reacts (`InteractableZone`).
 - **`Scripts/Battle/Main.gd`** runs the turn loop. `BattleInitializer` builds the teams and picks a `BattleScenario` from `Scripts/Battle/Scenarios/` (default, scripted, prologue, harbor boss, street survival, prime minister, holo-sim, forced loss/duel, frozen ally, slow strike, training trial, convoy waves, sparring); scenarios hook into the loop (`on_start`, `on_turn_start`, `on_action_executed`, `on_entity_died`, `check_battle_end`...) and use `Main.add_combatant()`, `refresh_battle_state()` and `end_battle()` instead of touching the teams or the HUD directly.
 - Persistent party members live across battles and into saves, so in-battle stat changes must go through `Entity.add_temp_mod()`; they are reverted when the battle scene exits.
 - **Combat rules** — damage = `(ATK × skill − DEF) × (1 − RES/100) × element`, minimum 5% of ATK. Element chart: Cool > Happy > Cute > Cool, and Pure ↔ Mysterious, ×1.25 (×0.8 when resisted). Break damage is `0.4 × dmg + 25` on a weakness hit and `0.15 × dmg + 10` on a neutral hit; breaking an enemy stuns it one turn and pushes it back 3000 AV.
