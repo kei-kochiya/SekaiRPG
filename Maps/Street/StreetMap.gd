@@ -52,14 +52,14 @@ func _build_street():
 	_place_characters()
 
 func _draw_corners():
+	# Sàn phủ cả khu rồi đường vẽ đè lên; cây rải theo công thức trên các ô không phải đường
+	MapUtils.fill_floor(self, 3, 3, 27, 17)
 	for x in range(3, 28):
 		for y in range(3, 18):
 			var is_horiz_road = (y >= 9 and y <= 11)
 			var is_vert_road = (x >= 14 and x <= 16)
-			if not is_horiz_road and not is_vert_road:
-				MapUtils.place_tile(self, "floor.png", Vector2(x, y))
-				if (x * 7 + y * 13) % 5 == 0:
-					MapUtils.place_tile(self, "tree.png", Vector2(x, y))
+			if not is_horiz_road and not is_vert_road and (x * 7 + y * 13) % 5 == 0:
+				MapUtils.place_tile(self, "tree.png", Vector2(x, y))
 
 func _draw_roads():
 	for x in range(3, 28):
