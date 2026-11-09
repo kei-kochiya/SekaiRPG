@@ -6,7 +6,7 @@ SparringScenario: Honami thử phản xạ của Ichika trong căn phòng trốn
 
 Honami chỉ PHÒNG THỦ: không ra đòn và không nhận sát thương (is_harbor). Ichika tự chọn FREE_TURNS lượt đầu,
 đến lượt kế tiếp đòn Ảnh Sát được tung ra (ép) và bị Honami chặn đứng, rồi buổi tập kết thúc.
-Không thể thắng; kết quả luôn là cờ honami_spar_done (FATED_BATTLES), cả đội được hồi đầy máu.
+Không thể thắng; kết quả luôn là cờ honami_spar_done (ScriptedBattleOutcomes.FATED), cả đội được hồi đầy máu.
 """
 
 const FREE_TURNS := 3

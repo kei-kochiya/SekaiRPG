@@ -47,9 +47,7 @@ func _run_logic():
 		_briefing_then_battle("ops_honami")
 	else:
 		# All done, transition to Highway Map
-		await ScreenFade.fade_out(1.0)
-		GameManager.store_map_state("res://Maps/Highway/HighwayMap.tscn", Vector2.ZERO)
-		get_tree().change_scene_to_file("res://Maps/Highway/HighwayMap.tscn")
+		await GameManager.change_map(MapPaths.HIGHWAY, 1.0)
 
 func _start_battle_after_pause(battle_key: String):
 	await get_tree().create_timer(1.0).timeout
@@ -78,10 +76,4 @@ func _setup_scene(char_name: String, _location: String, light_color: Color):
 	MapUtils.create_dummy_char(self, "Khủng Bố 2", Vector2(18, 11), Color(1, 0, 0))
 
 func _start_battle(battle_key: String):
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = battle_key
-	GameManager.last_player_position = Vector2.ZERO
-	GameManager.store_map_state("res://Maps/CityOperations/CityOperationsMap.tscn", Vector2.ZERO)
-	
-	await ScreenFade.fade_out(1.0)
-	GameManager.trigger_battle()
+	GameManager.start_scripted_battle(battle_key, MapPaths.CITY_OPS, Vector2.ZERO, 1.0)

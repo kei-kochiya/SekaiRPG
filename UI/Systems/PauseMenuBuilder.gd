@@ -21,12 +21,9 @@ static func build_base_ui(menu: Node) -> Dictionary:
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	menu.add_child(root)
 
-	var dim := ColorRect.new()
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dim.color = UITheme.overlay_dim(0.78)
-	root.add_child(dim)
+	root.add_child(UITheme.dim_layer(0.78))
 
-	var panel := _centered_panel(PAUSE_WIDTH)
+	var panel := UITheme.centered_panel(PAUSE_WIDTH)
 	root.add_child(panel)
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", UITheme.SP_3)
@@ -46,7 +43,7 @@ static func build_base_ui(menu: Node) -> Dictionary:
 	guide_panel.visible = false
 	root.add_child(guide_panel)
 
-	var options_panel := _centered_panel(OPTIONS_WIDTH)
+	var options_panel := UITheme.centered_panel(OPTIONS_WIDTH)
 	options_panel.visible = false
 	root.add_child(options_panel)
 
@@ -58,27 +55,8 @@ static func build_base_ui(menu: Node) -> Dictionary:
 		"options_panel": options_panel,
 	}
 
-static func _centered_panel(width: int) -> PanelContainer:
-	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
-	panel.custom_minimum_size.x = width
-	panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.ACCENT, UITheme.SP_6))
-	return panel
-
-static func create_button(txt: String, callback: Callable, kind: UITheme.Kind = UITheme.Kind.SECONDARY) -> Button:
-	var btn := Button.new()
-	btn.text = txt
-	UITheme.style_button(btn, kind)
-	if callback.is_valid():
-		btn.pressed.connect(callback)
-	return btn
-
 static func build_guide_panel(guide_panel: PanelContainer, on_close: Callable = Callable()) -> void:
-	for child in guide_panel.get_children():
-		guide_panel.remove_child(child)
-		child.queue_free()
+	UITheme.clear_children(guide_panel)
 
 	var outer := VBoxContainer.new()
 	outer.add_theme_constant_override("separation", UITheme.SP_3)
@@ -89,11 +67,11 @@ static func build_guide_panel(guide_panel: PanelContainer, on_close: Callable = 
 	var title := UITheme.make_label("Cẩm nang chiến đấu", UITheme.FS_TITLE, UITheme.BREAK)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(title)
-	var close_btn := create_button("Đóng", on_close, UITheme.Kind.GHOST)
+	var close_btn := UITheme.make_button("Đóng", UITheme.Kind.GHOST, UITheme.FS_LABEL, on_close)
 	if not on_close.is_valid():
 		close_btn.pressed.connect(func(): guide_panel.visible = false)
 	header.add_child(close_btn)
-	close_btn.call_deferred("grab_focus")
+	UITheme.focus_later(close_btn)
 
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL

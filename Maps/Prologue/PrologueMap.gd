@@ -107,10 +107,7 @@ func _setup_phase_0():
 func _play_phase_0_intro():
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase0"), func():
 		GameManager.is_tutorial = true
-		GameManager.is_scripted_battle = true
-		GameManager.scripted_battle_id = "prologue"
-		GameManager.store_map_state("res://Maps/Prologue/PrologueMap.tscn", Vector2.ZERO)
-		GameManager.trigger_battle()
+		GameManager.start_scripted_battle("prologue", MapPaths.PROLOGUE)
 	)
 
 # ─────────────────────────────────────────────
@@ -194,8 +191,8 @@ func _transition_to_safehouse() -> void:
 	await ScreenFade.fade_out(0.6)
 	await get_tree().create_timer(1.0).timeout
 	GameManager.last_player_position = Vector2.ZERO
-	GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+	GameManager.store_map_state(MapPaths.BASE, Vector2.ZERO)
+	get_tree().change_scene_to_file(MapPaths.BASE)
 
 func _create_dead_body(pos: Vector2):
 	var root = Node2D.new()

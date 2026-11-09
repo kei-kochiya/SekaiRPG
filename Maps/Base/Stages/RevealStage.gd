@@ -10,10 +10,13 @@ mafuyu_reveal_done + honami_rescue_done chỉ được đặt SAU khi màn hình
 (lưu/tải giữa chừng chỉ khiến cảnh phát lại, không bao giờ kẹt ở Base).
 """
 
-const NEXT_SCENE := "res://Maps/HonamiHouse/HonamiHouseMap.tscn"
+const NEXT_SCENE := MapPaths.HONAMI_HOUSE
 
-var _cutscene_active: bool = false
 var _phase: int = 0 # 0 = nghe Mafuyu, 1 = Honami tới
+
+# Cửa ra bị khoá suốt cảnh này
+func _init():
+	exit_locked = true
 
 func get_npc_positions() -> Dictionary:
 	return {
@@ -28,17 +31,13 @@ func get_bgm_track() -> String:
 	return "night"
 
 func on_stage_start():
-	var player = map.get_node_or_null("OverworldPlayer")
-	if player:
-		player.character_color = map.NPC_COLORS["Ichika"]
-		player.position = Vector2(23 * map.TILE_SIZE, 16 * map.TILE_SIZE)
-		player.set_facing("right")
+	map.set_player("Ichika")
+	map.place_player(Vector2(23, 16), "right")
 
 	if GameManager.get_flag("honami_rescue_done"):
 		return
 
-	_cutscene_active = true
-	map.freeze_player()
+	lock_scene()
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("reveal_mafuyu"), _on_reveal_done)
 
 func _on_reveal_done():
@@ -69,13 +68,6 @@ func _on_rescue_done():
 	GameManager.set_flag("honami_rescue_done", true)
 	GameManager.store_map_state(NEXT_SCENE, Vector2.ZERO)
 	get_tree().change_scene_to_file(NEXT_SCENE)
-
-func handle_npc_interaction(_npc_name: String):
-	if _cutscene_active: return
-
-# Cửa ra bị khoá suốt cảnh này (xử lý xong, không làm gì)
-func handle_exit() -> bool:
-	return true
 
 func get_quest_text() -> String:
 	if _phase == 0:

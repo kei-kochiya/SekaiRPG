@@ -19,6 +19,12 @@ const SETTLE_FRAMES = 20
 var _failed_checks: int = 0
 
 func _ready():
+	# Dọn file save giả còn sót từ lần chụp bị ngắt giữa chừng (xem TestRunner._sweep_leftover_test_saves)
+	var saves := DirAccess.open(SaveManager.SAVES_DIR)
+	if saves:
+		for f in saves.get_files():
+			if f.begins_with("zz_capture_"):
+				saves.remove(f)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	var shots := OS.get_cmdline_user_args()
 	if shots.is_empty():
@@ -85,6 +91,9 @@ func _capture(shot: String):
 	print("[Capture] Saved " + OUT_DIR + file)
 	root.queue_free()
 	await get_tree().process_frame
+	# Tín hiệu vật lý của shot trước (vd. body_exited của InteractableZone) chỉ chạy ở bước vật lý kế tiếp: chờ cho nó xong
+	# kẻo nó tắt nút ENTER ảo của shot "mobile" ngay sau đó (ảnh chụp lúc có lúc không).
+	await get_tree().physics_frame
 
 func _settle():
 	for i in range(SETTLE_FRAMES):
@@ -242,9 +251,9 @@ func _build_battle() -> Node:
 	GameManager.sandbox_player_team.clear()
 	GameManager.sandbox_enemy_team.clear()
 	for n in ["Ichika", "Kanade", "Mafuyu", "Ena"]:
-		GameManager.sandbox_player_team.append(GameManager.create_sandbox_entity(n))
+		GameManager.sandbox_player_team.append(EntityFactory.create(n))
 	for n in ["Kidnapper", "Khủng Bố", "Vệ Binh Cơ Giới"]:
-		var enemy = GameManager.create_sandbox_entity(n)
+		var enemy = EntityFactory.create(n)
 		LevelManager.set_initial_level(enemy, 5)
 		GameManager.sandbox_enemy_team.append(enemy)
 	return load("res://Scripts/Battle/BattleScene.tscn").instantiate()

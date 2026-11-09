@@ -22,25 +22,9 @@ const SAVE_VERSION = "1.0"
 # Tên slot dành riêng cho Quick Save / Auto-Save: người chơi không được đặt trùng khi lưu thủ công
 const RESERVED_SLOT_NAMES = ["quicksave", "autosave"]
 
-const FALLBACK_MAP = "res://Maps/Base/BaseMap.tscn"
+const FALLBACK_MAP = MapPaths.BASE
 # Map luyện tập không thể khôi phục từ save (cần training_participants...), nên lưu như đang đứng ở Base
-const TRAINING_MAP = "res://Maps/Warehouse/TrainingWarehouseMap.tscn"
-
-const MAP_NAMES = {
-	"res://Maps/Prologue/PrologueMap.tscn": "Hẻm vắng (Mở màn)",
-	"res://Maps/Base/BaseMap.tscn": "Căn cứ Nightcord (Safehouse)",
-	"res://Maps/Warehouse/WarehouseMap.tscn": "Nhà kho cũ",
-	"res://Maps/Warehouse/TrainingWarehouseMap.tscn": "Phòng tập Nhà kho",
-	"res://Maps/Cafe/CafeMap.tscn": "Quán Cafe",
-	"res://Maps/Harbor/HarborMap.tscn": "Bến cảng thành phố",
-	"res://Maps/Alleyway/AlleywayMap.tscn": "Hẻm nhỏ",
-	"res://Maps/Street/StreetMap.tscn": "Ngã tư đường phố",
-	"res://Maps/HonamiHouse/HonamiHouseMap.tscn": "Phòng khám Honami",
-	"res://Maps/CityOperations/CityOperationsMap.tscn": "Khu tác chiến phòng vệ",
-	"res://Maps/Highway/HighwayMap.tscn": "Xa lộ đêm",
-	"res://Maps/Bounty/BountyMap.tscn": "Khu phố đêm (Tiền thưởng)",
-	"res://Maps/Interrogation/InterrogationMap.tscn": "Kho Cảnh sát Quốc tế"
-}
+const TRAINING_MAP = MapPaths.TRAINING
 
 # Mô tả lỗi của lần save_game/load_game gần nhất ("" nếu thành công); GameManager sao chép ra last_save_error/last_load_error
 static var last_error: String = ""
@@ -56,7 +40,7 @@ static func ensure_saves_dir() -> void:
 # ── Helpers Metadata ───────────────────────────────────────────────────────
 
 static func get_map_display_name(map_file: String) -> String:
-	return MAP_NAMES.get(map_file, map_file.get_file().get_basename())
+	return MapPaths.NAMES.get(map_file, map_file.get_file().get_basename())
 
 static func _get_timestamp_string() -> String:
 	var dt = Time.get_datetime_dict_from_system()

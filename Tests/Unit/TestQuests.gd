@@ -82,3 +82,21 @@ func test_arc2_quest_chain():
 		GameManager.story.set_flag(step[0], true)
 		assert_eq(QuestRegistry.get_current_quest().quest_id, step[1], "%s -> %s" % [step[0], step[1]])
 	GameManager.reset_game()
+
+# Metadata mô tả của quest (stage vào, kịch bản trận, file hội thoại, điều kiện cờ) không do code đọc, nên dễ trôi lệch khi
+# game đổi; test này biến chúng thành hợp đồng: mọi tham chiếu phải còn tồn tại.
+func test_quest_metadata_references_exist():
+	var global_classes := []
+	for entry in ProjectSettings.get_global_class_list():
+		global_classes.append(entry["class"])
+	for q in QuestRegistry.get_all_quests():
+		if q.entry_stage_script != "":
+			assert_true(ResourceLoader.exists(q.entry_stage_script), "%s: stage script exists (%s)" % [q.quest_id, q.entry_stage_script])
+		if q.battle_scenario_class != "":
+			assert_true(q.battle_scenario_class in global_classes, "%s: battle scenario class exists (%s)" % [q.quest_id, q.battle_scenario_class])
+		for file in q.dialogue_files:
+			assert_true(FileAccess.file_exists(file), "%s: dialogue file exists (%s)" % [q.quest_id, file])
+		for conditions in [q.pre_conditions, q.post_conditions]:
+			for flag in conditions:
+				# Điều kiện có thể là cờ hoặc bộ đếm tiến độ của StoryState (warehouse_wave...)
+				assert_true(StoryState.DEFAULT_FLAGS.has(flag) or flag in StoryState.COUNTER_NAMES, "%s: condition is a story flag or counter (%s)" % [q.quest_id, flag])

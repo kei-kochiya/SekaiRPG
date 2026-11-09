@@ -8,7 +8,7 @@ rồi sang BaseMap, nơi EpilogueStage chạy tiếp. Lưu game ngay tại màn 
 (current_map_file chưa đổi) nên đoạn kết sẽ phát lại thay vì bị bỏ qua.
 """
 
-const NEXT_SCENE := "res://Maps/Base/BaseMap.tscn"
+const NEXT_SCENE := MapPaths.BASE
 const COLUMN_WIDTH = 520
 const TITLE_SIZE = 96
 
@@ -55,13 +55,10 @@ func _build():
 
 	var button_row := CenterContainer.new()
 	column.add_child(button_row)
-	var btn := Button.new()
-	btn.text = "Tiếp tục"
+	var btn := UITheme.make_button("Tiếp tục", UITheme.Kind.PRIMARY, UITheme.FS_HEADING, _on_continue)
 	btn.custom_minimum_size.x = 240
-	UITheme.style_button(btn, UITheme.Kind.PRIMARY, UITheme.FS_HEADING)
-	btn.pressed.connect(_on_continue)
 	button_row.add_child(btn)
-	btn.call_deferred("grab_focus")
+	UITheme.focus_later(btn)
 
 func _on_continue():
 	if _leaving:

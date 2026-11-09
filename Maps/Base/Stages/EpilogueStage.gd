@@ -11,7 +11,6 @@ Chạy khi: game_completed. Đoạn mở đầu (epilogue_base_intro) phát mộ
 # Chỉ những người này còn đồng hành với Ichika ở giai đoạn này
 const TRAINEES := ["Ichika", "Honami"]
 
-var _cutscene_active: bool = false
 var _talked_this_visit: bool = false
 # true khi đây là lượt ghé Base thứ hai trở đi (đoạn mở đầu đã xem từ trước): lúc đó Honami mới rủ đi quán bar
 var _visit_after_intro: bool = false
@@ -33,21 +32,18 @@ func on_stage_start():
 	GameManager.set_flag("mizuki_control_phase", false)
 	GameManager.set_flag("ena_control_phase", false)
 
-	var player = map.get_node_or_null("OverworldPlayer")
-	if player:
-		player.character_color = map.NPC_COLORS["Ichika"]
+	map.set_player("Ichika")
 
 	if not GameManager.get_flag("epilogue_intro_done"):
 		_cutscene_active = true
-		if player:
-			player.position = Vector2(24 * map.TILE_SIZE, 18 * map.TILE_SIZE)
+		map.place_player(Vector2(24, 18))
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("epilogue_base_intro"), func():
 			GameManager.set_flag("epilogue_intro_done", true)
 			_cutscene_active = false
 		)
 
 func handle_npc_interaction(npc_name: String):
-	if _cutscene_active or npc_name != "Honami": return
+	if npc_name != "Honami": return
 
 	# Lượt ghé thứ hai trở đi: lời rủ đi quán bar (chương 17) thay cho đoạn trò chuyện đầu lượt
 	if not _talked_this_visit and _visit_after_intro and not GameManager.get_flag("epilogue_bar_invite_done"):
@@ -74,7 +70,9 @@ func _show_honami_menu():
 	opts.append("[Hủy]")
 	var idx: int = await DialogueManager.ask(opts)
 	if idx == 0:
-		_show_training_menu()
+		# Luyện tập không giới hạn: chọn Ichika, Honami hoặc cả hai (cả hai = 10 wave). Không đặt cờ training_*_done.
+		# Khoá cảnh trước khi chuyển để chặn tương tác lặp trong lúc fade.
+		offer_training(TRAINEES, false, lock_scene, true, "Cả hai (10 Waves)")
 	elif idx == 1:
 		_open_upgrade()
 	elif bar_idx >= 0 and idx == bar_idx:
@@ -84,8 +82,7 @@ func _show_honami_menu():
 # Phát ngay tại Base: màn hình tối đi, một lớp nền ấm che lên bản đồ làm "quán", hết cảnh thì trả lại Base.
 # Truyện dừng ở lời mời nên không có phần trả lời; cờ epilogue_bar_done chỉ để cảnh không phát lại.
 func _go_to_bar():
-	_cutscene_active = true
-	map.freeze_player()
+	lock_scene()
 	await ScreenFade.fade_out(1.0)
 	var venue := CanvasLayer.new()
 	venue.layer = 4
@@ -100,40 +97,11 @@ func _go_to_bar():
 		venue.queue_free()
 		GameManager.set_flag("epilogue_bar_done", true)
 		await ScreenFade.fade_in(1.0)
-		map.unfreeze_player()
-		_cutscene_active = false
+		unlock_scene()
 	)
 
 func _open_upgrade():
 	open_upgrade_ui(TRAINEES)
-
-# Luyện tập không giới hạn: chọn Ichika, Honami hoặc cả hai (cả hai = 10 wave). Không đặt cờ training_*_done.
-func _show_training_menu():
-	var members: Array = []
-	for member in TRAINEES:
-		if GameManager.is_member_alive_in_story(member):
-			members.append(member)
-
-	var opts: Array = []
-	var groups: Array = []
-	for member in members:
-		opts.append("%s (5 Waves)" % member)
-		groups.append([member])
-	if members.size() > 1:
-		opts.append("Cả hai (10 Waves)")
-		groups.append(members.duplicate())
-	opts.append("Để sau.")
-
-	var idx: int = await DialogueManager.ask(opts)
-	if idx >= groups.size(): return
-
-	_cutscene_active = true # chặn tương tác lặp trong lúc chuyển cảnh
-	map.freeze_player()
-	GameManager.begin_training(groups[idx])
-
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
 
 # Không còn nơi nào để đi tối nay: chỉ một dòng dẫn truyện, không đổi map
 func handle_exit() -> bool:

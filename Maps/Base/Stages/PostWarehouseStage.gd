@@ -1,5 +1,8 @@
 extends BaseMapStage
 
+# Mafuyu chỉ cho luyện tập hai người này ở giai đoạn đầu; ai đã tập xong thì không hiện nữa
+const TRAINEES := ["Ichika", "Kanade"]
+
 func get_npc_positions() -> Dictionary:
 	return {
 		"Mafuyu": Vector2(10 * map.TILE_SIZE, 14 * map.TILE_SIZE),
@@ -64,30 +67,10 @@ func _handle_training_dialogue():
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("mafuyu_training_intro"), func():
 			GameManager.talked_to_mafuyu_training = true
 			map._refresh_quest_label()
-			_show_training_options()
+			offer_training(TRAINEES, true)
 		)
 	else:
-		_show_training_options()
-
-func _show_training_options():
-	var opts: Array = []
-	var mapping: Array = []
-	if not GameManager.get_flag("training_ichika_done"):
-		opts.append("Ichika (5 Waves)")
-		mapping.append("Ichika")
-	if not GameManager.get_flag("training_kanade_done"):
-		opts.append("Kanade (5 Waves)")
-		mapping.append("Kanade")
-	opts.append("Để sau.")
-	
-	var idx: int = await DialogueManager.ask(opts)
-	if opts[idx] == "Để sau.": return
-	
-	GameManager.begin_training([mapping[idx]])
-	
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
+		offer_training(TRAINEES, true)
 
 func _handle_harbor_mission():
 	if not GameManager.accepted_harbor_mission:

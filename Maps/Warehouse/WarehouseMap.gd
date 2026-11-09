@@ -47,9 +47,7 @@ func _ready():
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave5_start"))
 
 func _return_to_base_with_fade():
-	await ScreenFade.fade_out(1.5)
-	GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+	await GameManager.change_map(MapPaths.BASE, 1.5)
 
 func _spawn_player():
 	var p = OverworldPlayer.new()
@@ -86,7 +84,7 @@ func _create_enemy_zone(pos: Vector2):
 	
 	zone.interacted.connect(func():
 		var player = get_node("OverworldPlayer")
-		GameManager.store_map_state("res://Maps/Warehouse/WarehouseMap.tscn", player.global_position)
+		GameManager.store_map_state(MapPaths.WAREHOUSE, player.global_position)
 		GameManager.trigger_battle()
 	)
 	add_child(root)

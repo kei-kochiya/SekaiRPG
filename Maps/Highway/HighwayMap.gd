@@ -46,9 +46,7 @@ func _run_logic():
 		if not GameManager.get_flag("finale_done"):
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("pm_boss_aftermath"), func():
 				# Transition to BaseMap for celebration
-				await ScreenFade.fade_out(1.0)
-				GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", Vector2.ZERO)
-				get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+				await GameManager.change_map(MapPaths.BASE, 1.0)
 			)
 	elif not GameManager.get_flag("pm_car_scene_done"):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("pm_car_ride"), func():
@@ -65,8 +63,4 @@ func _run_logic():
 		)
 
 func _start_boss_battle():
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = "pm_boss"
-	GameManager.store_map_state("res://Maps/Highway/HighwayMap.tscn", Vector2.ZERO)
-	await ScreenFade.fade_out(1.0)
-	GameManager.trigger_battle()
+	GameManager.start_scripted_battle("pm_boss", MapPaths.HIGHWAY, Vector2.ZERO, 1.0)

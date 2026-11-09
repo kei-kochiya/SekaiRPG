@@ -11,16 +11,19 @@ Cờ finale_done + ena_left_nightcord chỉ được đặt SAU khi màn hình �
 nên lưu/tải giữa chừng chỉ khiến cảnh phát lại từ đầu, không bao giờ kẹt ở Base.
 """
 
-const NEXT_SCENE := "res://Maps/Bounty/BountyMap.tscn"
+const NEXT_SCENE := MapPaths.BOUNTY
 # Ai được luyện tập/nâng cấp trong lúc chuẩn bị lại bài kiểm tra: cả đội chính
 const PREP_TRAINEES := MAIN_TEAM
 
-var _cutscene_active: bool = false
 # Sau khi thua bài kiểm tra: người chơi được tự do chuẩn bị (luyện tập, nâng cấp) rồi nói chuyện với Mafuyu để làm lại
 var _prep_mode: bool = false
 var _honami: Node2D = null
 # Phần của base_celebration từ tiếng sập cửa trở đi: chỉ phát sau khi Ena đã bước ra tới cửa
 var _after_slam: Array = []
+
+# Cửa ra bị khoá suốt cảnh này, kể cả lúc chuẩn bị lại
+func _init():
+	exit_locked = true
 
 func get_npc_positions() -> Dictionary:
 	return {
@@ -34,17 +37,14 @@ func get_scene_lighting() -> Color:
 	return Color(0.9, 0.9, 1.0)
 
 func on_stage_start():
-	var player = map.get_node_or_null("OverworldPlayer")
-	if player:
-		player.character_color = map.NPC_COLORS["Ichika"]
-		player.position = Vector2(25 * map.TILE_SIZE, 17 * map.TILE_SIZE)
+	map.set_player("Ichika")
+	map.place_player(Vector2(25, 17))
 	
 	if GameManager.get_flag("finale_done"):
 		return
 	
 	# Cảnh tự chạy: khoá người chơi cho tới khi sang map khác
-	_cutscene_active = true
-	map.freeze_player()
+	lock_scene()
 	_next_beat()
 
 # Chuỗi cảnh: Khóa huấn luyện sinh tử (chương 10) -> bài kiểm tra ngày thứ bảy (trận) -> chào mừng thành viên thứ năm
@@ -82,8 +82,7 @@ func _enter_prep_mode():
 		GameManager.set_flag("training_trial_prep_seen", true)
 	DialogueManager.play_dialogue(lines, func():
 		_prep_mode = true
-		_cutscene_active = false
-		map.unfreeze_player()
+		unlock_scene()
 		map._refresh_quest_label() # HUD được dựng trước on_stage_start nên phải làm mới để hiện lời nhắc chuẩn bị
 	)
 
@@ -91,29 +90,12 @@ func _enter_prep_mode():
 func _show_prep_menu():
 	var idx: int = await DialogueManager.ask(["[Bắt đầu bài kiểm tra]", "[Luyện tập]", "[Nâng cấp]", "[Hủy]"])
 	if idx == 0:
-		_cutscene_active = true
-		map.freeze_player()
+		lock_scene()
 		_start_trial()
 	elif idx == 1:
-		_show_prep_training_menu()
+		offer_training(PREP_TRAINEES, false, lock_scene, true)
 	elif idx == 2:
 		open_upgrade_ui(PREP_TRAINEES)
-
-func _show_prep_training_menu():
-	var members: Array = PREP_TRAINEES.filter(func(m): return GameManager.is_member_alive_in_story(m))
-	var opts: Array = []
-	for m in members:
-		opts.append("%s (5 Waves)" % m)
-	opts.append("Để sau.")
-	var idx: int = await DialogueManager.ask(opts)
-	if idx >= members.size():
-		return
-	_cutscene_active = true
-	map.freeze_player()
-	GameManager.begin_training([members[idx]])
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
 
 func _start_trial():
 	# Lần đầu: lời mở đầu bài kiểm tra. Làm lại sau khi chuẩn bị thì vào thẳng trận (Mafuyu đã nói ở lúc thua)
@@ -123,11 +105,7 @@ func _start_trial():
 	GameManager.set_flag("training_trial_started", true)
 	GameManager.set_flag("training_trial_prep_seen", false)
 	DialogueManager.play_dialogue(lines, func():
-		GameManager.is_scripted_battle = true
-		GameManager.scripted_battle_id = "training_trial"
-		GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", Vector2.ZERO)
-		await ScreenFade.fade_out(1.0)
-		GameManager.trigger_battle()
+		GameManager.start_scripted_battle("training_trial", MapPaths.BASE, Vector2.ZERO, 1.0)
 	)
 
 func _start_celebration():
@@ -179,13 +157,9 @@ func _on_aftermath_done():
 	get_tree().change_scene_to_file(NEXT_SCENE)
 
 func handle_npc_interaction(npc_name: String):
-	if _cutscene_active or not _prep_mode or npc_name != "Mafuyu":
+	if not _prep_mode or npc_name != "Mafuyu":
 		return
 	_show_prep_menu()
-
-# Cửa ra bị khoá suốt cảnh này (xử lý xong, không làm gì)
-func handle_exit() -> bool:
-	return true
 
 func get_quest_text() -> String:
 	if _prep_mode:

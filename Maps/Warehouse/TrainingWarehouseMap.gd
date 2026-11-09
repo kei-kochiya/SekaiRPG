@@ -57,12 +57,9 @@ func _spawn_enemy_wave():
 
 func _complete_training():
 	for p in GameManager.training_participants:
-		if p == "Ichika": GameManager.set_flag("training_ichika_done", true)
-		if p == "Kanade": GameManager.set_flag("training_kanade_done", true)
-		if p == "Ena": GameManager.set_flag("training_ena_done", true)
-		if p == "Mizuki": GameManager.set_flag("training_mizuki_done", true)
-		if p == "Mafuyu": GameManager.set_flag("training_mafuyu_done", true)
-		if p == "Honami": GameManager.set_flag("training_honami_done", true)
+		var flag: String = "training_%s_done" % p.to_lower() # khớp GameManager.TRAINING_DONE_FLAGS
+		if flag in GameManager.TRAINING_DONE_FLAGS:
+			GameManager.set_flag(flag, true)
 	
 	GameManager.end_training()
 	# Hồi máu đầy cho party sau khi luyện tập xong
@@ -75,9 +72,7 @@ func _complete_training():
 	)
 
 func _return_to_base():
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+	await GameManager.change_map(MapPaths.BASE, 1.0)
 
 func _create_enemy_zone(pos: Vector2):
 	var root = Node2D.new()
@@ -101,7 +96,7 @@ func _create_enemy_zone(pos: Vector2):
 	
 	zone.interacted.connect(func():
 		var player = get_node("OverworldPlayer")
-		GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", player.global_position)
+		GameManager.store_map_state(MapPaths.TRAINING, player.global_position)
 		GameManager.trigger_battle()
 	)
 	add_child(root)

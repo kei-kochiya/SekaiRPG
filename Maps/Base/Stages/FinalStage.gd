@@ -11,11 +11,15 @@ Chạy khi: final_confront_started && !game_completed. Ba trạng thái con, suy
 Lưu/tải giữa chừng chỉ khiến cảnh phát lại (current_map_file luôn là Base trong cả ba trạng thái).
 """
 
-const HOUSE_SCENE := "res://Maps/HonamiHouse/HonamiHouseMap.tscn"
-const ENDING_SCENE := "res://UI/Menus/Ending/EndingCard.tscn"
+const HOUSE_SCENE := MapPaths.HONAMI_HOUSE
+const ENDING_SCENE := MapPaths.ENDING_CARD
 const BATTLE_ID := "final_mafuyu"
 
 var _honami: Node2D = null
+
+# Cửa ra bị khoá suốt cảnh này
+func _init():
+	exit_locked = true
 
 func get_npc_positions() -> Dictionary:
 	return {
@@ -29,11 +33,8 @@ func get_bgm_track() -> String:
 	return "night"
 
 func on_stage_start():
-	var player = map.get_node_or_null("OverworldPlayer")
-	if player:
-		player.character_color = map.NPC_COLORS["Ichika"]
-		player.position = Vector2(24 * map.TILE_SIZE, 17 * map.TILE_SIZE)
-		player.set_facing("up")
+	map.set_player("Ichika")
+	map.place_player(Vector2(24, 17), "up")
 	map.freeze_player()
 	_honami = map.spawn_dummy("Honami", Vector2(22, 17), map.NPC_COLORS["Honami"])
 
@@ -54,11 +55,7 @@ func _play_sequence(keys: Array, on_done: Callable, index: int = 0):
 	)
 
 func _start_battle():
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = BATTLE_ID
-	GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", Vector2.ZERO)
-	await ScreenFade.fade_out(1.0)
-	GameManager.trigger_battle()
+	GameManager.start_scripted_battle(BATTLE_ID, MapPaths.BASE, Vector2.ZERO, 1.0)
 
 func _on_lost():
 	# Thua: về nhà Honami, luyện thêm rồi quay lại
@@ -70,15 +67,8 @@ func _on_lost():
 
 func _open_end_card():
 	await ScreenFade.fade_out(1.5)
-	GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", Vector2.ZERO)
+	GameManager.store_map_state(MapPaths.BASE, Vector2.ZERO)
 	get_tree().change_scene_to_file(ENDING_SCENE)
-
-func handle_npc_interaction(_npc_name: String):
-	pass
-
-# Cửa ra bị khoá suốt cảnh này
-func handle_exit() -> bool:
-	return true
 
 func get_quest_text() -> String:
 	if GameManager.get_flag("final_mafuyu_defeated"):

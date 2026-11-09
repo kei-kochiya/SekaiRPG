@@ -115,12 +115,12 @@ static func _build_battle() -> Dictionary:
 	var current_map = GameManager.current_map_file
 	var battle_key = ""
 	
-	if current_map == "res://Maps/Harbor/HarborMap.tscn":
+	if current_map == MapPaths.HARBOR:
 		if GameManager.harbor_route == "boss" or GameManager.harbor_wave > 3:
 			battle_key = "harbor_boss"
 		else:
 			battle_key = "harbor_guards"
-	elif current_map == "res://Maps/Warehouse/WarehouseMap.tscn":
+	elif current_map == MapPaths.WAREHOUSE:
 		battle_key = "warehouse"
 	elif GameManager.prologue_phase == 0:
 		battle_key = "prologue"
@@ -200,14 +200,6 @@ static func _create_enemies(type_id: String, count: int, lv: int) -> Array:
 		team.append(e)
 	return team
 
-static var character_classes = {
-	"Ichika": Ichika,
-	"Kanade": Kanade,
-	"Mafuyu": Mafuyu,
-	"Ena": Ena,
-	"Mizuki": Mizuki,
-	"Honami": Honami
-}
 
 # Bản sao luyện tập chỉ dựng lại chỉ số theo cấp; chép thêm điểm kỹ năng đã nâng để bản sao mạnh bằng nhân vật thật.
 static func _mirror_upgrades(clone: Entity, source: Entity) -> void:
@@ -233,7 +225,7 @@ static func _setup_training_battle() -> Dictionary:
 		var real_p = GameManager.get_party_member(p_name)
 		if real_p:
 			# Tạo bản sao (fresh instance) cùng class, cùng level — HP luôn đầy
-			var clone_class = character_classes.get(p_name)
+			var clone_class = EntityFactory.CHARACTERS.get(p_name)
 			if clone_class:
 				var clone = clone_class.new()
 				LevelManager.set_initial_level(clone, real_p.level)
@@ -262,7 +254,7 @@ static func _setup_training_battle() -> Dictionary:
 			GameManager.training_used_opponents.append(e_name)
 			
 			# Luôn dùng fresh instance cho đối thủ
-			var enemy_class = character_classes.get(e_name)
+			var enemy_class = EntityFactory.CHARACTERS.get(e_name)
 			if enemy_class:
 				var enemy = enemy_class.new()
 				LevelManager.set_initial_level(enemy, target_lv)
@@ -279,7 +271,7 @@ static func _setup_training_battle() -> Dictionary:
 # Bản sao của một thành viên (cùng cấp, chép cả điểm nâng cấp) để làm đối thủ trong trận kịch bản.
 # `factors` nhân thêm lên từng chỉ số (độ khó); thiếu thành viên thật thì dựng bản cấp 25.
 static func _mirror_party_member(p_name: String, factors: Dictionary = {}) -> Entity:
-	var clone: Entity = character_classes[p_name].new()
+	var clone: Entity = EntityFactory.CHARACTERS[p_name].new()
 	var source: Entity = GameManager.get_party_member(p_name)
 	LevelManager.set_initial_level(clone, source.level if source else 25)
 	if source:
@@ -323,7 +315,7 @@ static func _battle(party_names: Array, enemies: Array, scenario: BattleScenario
 
 # Kẻ địch là nhân vật chính (cùng class với thành viên), dựng mới ở cấp cho trước
 static func _character_enemy(char_name: String, lv: int) -> Entity:
-	var e: Entity = character_classes[char_name].new()
+	var e: Entity = EntityFactory.CHARACTERS[char_name].new()
 	LevelManager.set_initial_level(e, lv)
 	return e
 
@@ -419,20 +411,9 @@ static func _setup_holosim_battle() -> Dictionary:
 	for i in range(enemies.size()):
 		var e_type = enemies[i]
 		var e_lv = levels[i] if i < levels.size() else 10
-		var inst: Entity = null
-		match e_type:
-			"Kidnapper": inst = Kidnapper.new()
-			"Nhân Viên Kho": inst = WarehouseWorker.new()
-			"Lính Cảng": inst = Guard.new()
-			"Thug": inst = Thug.new()
-			"Terrorist": inst = Terrorist.new()
-			"Drone Trinh Sát": inst = ReconDrone.new()
-			"Xạ Thủ Bắn Tỉa": inst = Sniper.new()
-			"Vệ Binh Cơ Giới": inst = CyborgEnforcer.new()
-			"Chuyên Viên Nhiễu Sóng": inst = CyberJammer.new()
-			"Đội Trưởng (BOSS)": inst = Captain.new()
-			"Thủ Tướng (FINAL BOSS)": inst = PrimeMinister.new()
-			_: inst = Guard.new()
+		var inst: Entity = EntityFactory.create(e_type)
+		if inst == null:
+			inst = Guard.new() # tên lạ trong bảng tầng: dùng lính gác mặc định
 		LevelManager.set_initial_level(inst, e_lv)
 		e_team.append(inst)
 		

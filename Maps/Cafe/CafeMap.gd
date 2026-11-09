@@ -135,21 +135,13 @@ func _run_logic():
 		)
 
 func _trigger_mizuki_battle():
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = "ena_vs_mizuki"
-	GameManager.store_map_state("res://Maps/Cafe/CafeMap.tscn", Vector2.ZERO)
-	GameManager.trigger_battle()
+	GameManager.start_scripted_battle("ena_vs_mizuki", MapPaths.CAFE)
 
 func _trigger_thugs_battle():
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = "ena_vs_thugs"
-	GameManager.store_map_state("res://Maps/Cafe/CafeMap.tscn", Vector2.ZERO)
-	GameManager.trigger_battle()
+	GameManager.start_scripted_battle("ena_vs_thugs", MapPaths.CAFE)
 
 func _return_to_base():
 	GameManager.set_flag("ena_cafe_done", true)
 	# Trả quyền điều khiển lại cho Ichika
 	GameManager.set_flag("ena_control_phase", false)
-	await ScreenFade.fade_out(1.5)
-	GameManager.last_player_position = Vector2.ZERO
-	get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+	await GameManager.change_map(MapPaths.BASE, 1.5)

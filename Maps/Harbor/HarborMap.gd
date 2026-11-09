@@ -110,7 +110,7 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 			GameManager.is_scripted_battle = true
 			GameManager.scripted_battle_id = "harbor_boss"
 		
-		GameManager.store_map_state("res://Maps/Harbor/HarborMap.tscn", get_node("OverworldPlayer").global_position)
+		GameManager.store_map_state(MapPaths.HARBOR, get_node("OverworldPlayer").global_position)
 		# Lần đầu chạm trán lính gác ở cổng (chương 4): đoạn súng nổ ở cổng phát một lần, rồi mới vào trận
 		if route != "boss" and GameManager.harbor_wave <= 1 and not GameManager.get_flag("harbor_gate_firefight_done"):
 			GameManager.set_flag("harbor_gate_firefight_done", true)

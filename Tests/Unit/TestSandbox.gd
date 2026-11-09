@@ -21,7 +21,7 @@ func test_sandbox_player_isolation():
 	var orig_lv = original_ichika.level
 	
 	# Tạo nhân vật Sandbox và nâng cấp lên level 50
-	var sandbox_ichika = GameManager.create_sandbox_entity("Ichika")
+	var sandbox_ichika = EntityFactory.create("Ichika")
 	LevelManager.set_initial_level(sandbox_ichika, 50)
 	
 	assert_ne(sandbox_ichika, original_ichika, "Sandbox entity must be a separate instance")
@@ -35,11 +35,11 @@ func test_sandbox_player_isolation():
 func test_sandbox_enemy_creation_and_bosses():
 	current_test_name = "test_sandbox_enemy_creation_and_bosses"
 	
-	var mob = GameManager.create_sandbox_entity("Lính Cảng")
+	var mob = EntityFactory.create("Lính Cảng")
 	assert_true(mob != null, "Should create mob Guard")
 	assert_eq(mob.entity_name, "Lính Cảng", "Mob entity_name should match")
 	
-	var boss = GameManager.create_sandbox_entity("Đội Trưởng (BOSS)")
+	var boss = EntityFactory.create("Đội Trưởng (BOSS)")
 	assert_true(boss != null, "Should create boss Captain")
 	assert_eq(boss.entity_name, "Đội Trưởng", "Boss entity_name should match")
 	
@@ -54,13 +54,13 @@ func test_sandbox_battle_initializer():
 	GameManager.sandbox_player_team.clear()
 	GameManager.sandbox_enemy_team.clear()
 	
-	var p1 = GameManager.create_sandbox_entity("Kanade")
+	var p1 = EntityFactory.create("Kanade")
 	LevelManager.set_initial_level(p1, 20)
 	UpgradeManager.upgrade_stat(p1, "atk") # Nâng cấp 1 lần ATK
 	var p1_atk = p1.atk
 	GameManager.sandbox_player_team.append(p1)
 	
-	var e1 = GameManager.create_sandbox_entity("Thủ Tướng (FINAL BOSS)")
+	var e1 = EntityFactory.create("Thủ Tướng (FINAL BOSS)")
 	LevelManager.set_initial_level(e1, 25)
 	GameManager.sandbox_enemy_team.append(e1)
 	

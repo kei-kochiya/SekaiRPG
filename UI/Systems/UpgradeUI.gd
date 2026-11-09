@@ -79,7 +79,7 @@ func show_ui(chars: Array[Entity]):
 	_rebuild_char_list()
 	_rebuild_stats()
 	if not _char_buttons.is_empty():
-		_focus_later.call_deferred(_char_buttons[0])
+		UITheme.focus_later(_char_buttons[0])
 
 func close_ui():
 	"""Đóng giao diện, nhả khóa hội thoại và cờ modal đúng một lần rồi phát tín hiệu `closed`."""
@@ -96,18 +96,11 @@ func close_ui():
 # Xây dựng khung UI; phần danh sách nhân vật và chỉ số được dựng khi `show_ui`
 func _build_ui():
 	# Lớp nền tối mờ (Dimmer) toàn màn hình để loại bỏ hoàn toàn hiện tượng xuyên thấu
-	var dimmer = ColorRect.new()
+	var dimmer = UITheme.dim_layer(0.78)
 	dimmer.name = "ModalDimmer"
-	dimmer.color = UITheme.overlay_dim(0.78)
-	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(dimmer)
 
-	var panel = PanelContainer.new()
-	panel.custom_minimum_size.x = PANEL_WIDTH
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
-	panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.ACCENT, UITheme.SP_6))
+	var panel = UITheme.centered_panel(PANEL_WIDTH)
 	add_child(panel)
 
 	var main_hbox = HBoxContainer.new()
@@ -156,10 +149,10 @@ func _build_ui():
 	var head = HBoxContainer.new()
 	head.add_theme_constant_override("separation", UITheme.SP_3)
 	right_vbox.add_child(head)
-	head.add_child(_cell("Chỉ số", COL_NAME, UITheme.TEXT_MUTED, UITheme.FS_CAPTION))
-	head.add_child(_cell("Hiện tại", COL_VALUE, UITheme.TEXT_MUTED, UITheme.FS_CAPTION, HORIZONTAL_ALIGNMENT_RIGHT))
-	head.add_child(_cell("Mỗi điểm", COL_GAIN, UITheme.TEXT_MUTED, UITheme.FS_CAPTION, HORIZONTAL_ALIGNMENT_CENTER))
-	head.add_child(_cell("Nâng cấp", 0, UITheme.TEXT_MUTED, UITheme.FS_CAPTION))
+	head.add_child(UITheme.make_cell("Chỉ số", COL_NAME, UITheme.TEXT_MUTED, UITheme.FS_CAPTION))
+	head.add_child(UITheme.make_cell("Hiện tại", COL_VALUE, UITheme.TEXT_MUTED, UITheme.FS_CAPTION, HORIZONTAL_ALIGNMENT_RIGHT))
+	head.add_child(UITheme.make_cell("Mỗi điểm", COL_GAIN, UITheme.TEXT_MUTED, UITheme.FS_CAPTION, HORIZONTAL_ALIGNMENT_CENTER))
+	head.add_child(UITheme.make_cell("Nâng cấp", 0, UITheme.TEXT_MUTED, UITheme.FS_CAPTION))
 
 	stat_vbox = VBoxContainer.new()
 	stat_vbox.name = "StatVBox"
@@ -173,24 +166,14 @@ func _build_ui():
 	var footer = HBoxContainer.new()
 	footer.alignment = BoxContainer.ALIGNMENT_END
 	right_vbox.add_child(footer)
-	_close_btn = Button.new()
-	_close_btn.text = "Đóng"
-	UITheme.style_button(_close_btn, UITheme.Kind.GHOST)
+	_close_btn = UITheme.make_button("Đóng", UITheme.Kind.GHOST, UITheme.FS_LABEL, close_ui)
 	_close_btn.custom_minimum_size.x = 128
-	_close_btn.pressed.connect(close_ui)
 	footer.add_child(_close_btn)
-
-func _cell(text: String, min_width: int, color: Color, size: int, align: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> Label:
-	var lbl = UITheme.make_label(text, size, color, align)
-	lbl.custom_minimum_size.x = min_width
-	return lbl
 
 # ── Tiện Ích Cập Nhật UI ───────────────────────────────────────────────────
 
 func _rebuild_char_list():
-	for c in char_list.get_children():
-		char_list.remove_child(c)
-		c.queue_free()
+	UITheme.clear_children(char_list)
 	_char_buttons.clear()
 	for i in range(characters.size()):
 		var btn = Button.new()
@@ -219,9 +202,7 @@ func _select_character(i: int):
 	_rebuild_stats()
 
 func _rebuild_stats():
-	for c in stat_vbox.get_children():
-		stat_vbox.remove_child(c)
-		c.queue_free()
+	UITheme.clear_children(stat_vbox)
 	_stat_rows.clear()
 
 	var entity = characters[selected_index]
@@ -232,13 +213,13 @@ func _rebuild_stats():
 		row.add_theme_constant_override("separation", UITheme.SP_3)
 		stat_vbox.add_child(row)
 
-		var name_lbl = _cell(STAT_LABELS[stat], COL_NAME, UITheme.TEXT, UITheme.FS_LABEL)
+		var name_lbl = UITheme.make_cell(STAT_LABELS[stat], COL_NAME, UITheme.TEXT, UITheme.FS_LABEL)
 		name_lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(name_lbl)
-		var val_lbl = _cell("", COL_VALUE, UITheme.TEXT, UITheme.FS_LABEL, HORIZONTAL_ALIGNMENT_RIGHT)
+		var val_lbl = UITheme.make_cell("", COL_VALUE, UITheme.TEXT, UITheme.FS_LABEL, HORIZONTAL_ALIGNMENT_RIGHT)
 		val_lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(val_lbl)
-		var gain_lbl = _cell("", COL_GAIN, UITheme.TEXT_MUTED, UITheme.FS_BODY, HORIZONTAL_ALIGNMENT_CENTER)
+		var gain_lbl = UITheme.make_cell("", COL_GAIN, UITheme.TEXT_MUTED, UITheme.FS_BODY, HORIZONTAL_ALIGNMENT_CENTER)
 		gain_lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(gain_lbl)
 
@@ -248,12 +229,9 @@ func _rebuild_stats():
 
 		var buttons: Array[Button] = []
 		for step in STEPS:
-			var b = Button.new()
-			b.text = step[0]
-			UITheme.style_button(b, UITheme.Kind.SECONDARY, UITheme.FS_BODY)
+			var b = UITheme.make_button(step[0], UITheme.Kind.SECONDARY, UITheme.FS_BODY, _on_upgrade_pressed.bind(stat, step[1]))
 			b.custom_minimum_size.x = 64
 			b.set_meta("count", step[1])
-			b.pressed.connect(_on_upgrade_pressed.bind(stat, step[1]))
 			btn_container.add_child(b)
 			buttons.append(b)
 
@@ -305,8 +283,3 @@ func _keep_focus():
 			siblings[i].grab_focus()
 			return
 	_close_btn.grab_focus()
-
-# Focus trễ một nhịp (sau khi các node queue_free() đã dọn); bỏ qua nếu nút đã bị xóa/gỡ khỏi cây trước đó
-func _focus_later(ctrl):
-	if is_instance_valid(ctrl) and ctrl.is_inside_tree():
-		ctrl.grab_focus()

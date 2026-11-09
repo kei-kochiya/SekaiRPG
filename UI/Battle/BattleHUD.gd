@@ -87,27 +87,21 @@ func _build_ui():
 	_turn_banner.modulate.a = 0.0
 	add_child(_turn_banner)
 
-	var info_btn = Button.new()
-	info_btn.text = "Chi tiết"
-	UITheme.style_button(info_btn, UITheme.Kind.SECONDARY, UITheme.FS_BODY)
+	var info_btn = UITheme.make_button("Chi tiết", UITheme.Kind.SECONDARY, UITheme.FS_BODY, _on_info_pressed)
 	info_btn.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	info_btn.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	info_btn.offset_left = SIDE_MARGIN
 	info_btn.offset_bottom = -SIDE_MARGIN
-	info_btn.pressed.connect(_on_info_pressed)
 	add_child(info_btn)
 
 	# Nút Skip Battle (Chỉ hiện khi Option bật và không phải kịch bản/boss/hướng dẫn)
 	if allow_skip and GameManager.skip_battle_enabled and not GameManager.is_scripted_battle and not GameManager.is_tutorial:
-		var skip_btn = Button.new()
-		skip_btn.text = "Bỏ qua trận đấu"
-		UITheme.style_button(skip_btn, UITheme.Kind.SECONDARY, UITheme.FS_BODY)
+		var skip_btn = UITheme.make_button("Bỏ qua trận đấu", UITheme.Kind.SECONDARY, UITheme.FS_BODY, func(): skip_requested.emit())
 		skip_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 		skip_btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 		skip_btn.grow_vertical = Control.GROW_DIRECTION_BEGIN
 		skip_btn.offset_right = -SIDE_MARGIN
 		skip_btn.offset_bottom = -SIDE_MARGIN
-		skip_btn.pressed.connect(func(): skip_requested.emit())
 		add_child(skip_btn)
 
 	_info_panel = EntityDetailPanelClass.new()

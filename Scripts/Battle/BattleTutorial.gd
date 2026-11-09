@@ -117,7 +117,7 @@ static func _show_tutorial_step(_main: Node, vbox: VBoxContainer, title: String,
 	btn.custom_minimum_size.x = 160
 	btn.size_flags_horizontal = Control.SIZE_SHRINK_END
 	vbox.add_child(btn)
-	btn.call_deferred("grab_focus")
+	UITheme.focus_later(btn)
 
 	await btn.pressed
 

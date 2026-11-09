@@ -177,7 +177,7 @@ func test_every_map_scene_has_a_save_slot_name():
 		for file_name in DirAccess.get_files_at("res://Maps/" + dir_name):
 			if file_name.ends_with(".tscn"):
 				var path := "res://Maps/%s/%s" % [dir_name, file_name]
-				assert_true(SaveManager.MAP_NAMES.has(path), "Ô save có tên đọc được cho " + path)
+				assert_true(MapPaths.NAMES.has(path), "Ô save có tên đọc được cho " + path)
 
 # ── Cảnh ở căn cứ ───────────────────────────────────────────────────────────
 
@@ -237,9 +237,9 @@ func test_mizuki_snack_scene_plays_only_once():
 func test_losing_a_finale_fight_retreats_to_base_and_reopens_training():
 	GameManager.reset_game()
 	for id in ["ops_kanade", "ops_ichika", "ops_honami", "pm_boss"]:
-		assert_true(id in GameManager.RETREAT_ON_LOSS, "%s: thua thì rút về căn cứ" % id)
+		assert_true(id in ScriptedBattleOutcomes.RETREAT_ON_LOSS, "%s: thua thì rút về căn cứ" % id)
 	for id in ["bounty_ambush", "mizuki_vs_mafuyu", "final_mafuyu", "street_skirmish"]:
-		assert_false(id in GameManager.RETREAT_ON_LOSS, "%s giữ cách xử lý thua riêng" % id)
+		assert_false(id in ScriptedBattleOutcomes.RETREAT_ON_LOSS, "%s giữ cách xử lý thua riêng" % id)
 
 	for flag in GameManager.TRAINING_DONE_FLAGS:
 		GameManager.set_flag(flag, true)

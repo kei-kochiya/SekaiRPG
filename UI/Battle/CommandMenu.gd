@@ -56,9 +56,7 @@ func _build_shell():
 	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title_row.add_child(title_label)
 	
-	var info_btn = Button.new()
-	info_btn.text = "Kỹ năng"
-	UITheme.style_button(info_btn, UITheme.Kind.GHOST, UITheme.FS_BODY)
+	var info_btn = UITheme.make_button("Kỹ năng", UITheme.Kind.GHOST, UITheme.FS_BODY)
 	info_btn.custom_minimum_size.y = 32
 	info_btn.pressed.connect(func(): if current_entity: _skill_detail_popup.display_entity_skills(current_entity))
 	title_row.add_child(info_btn)
@@ -161,7 +159,7 @@ func _show_items():
 	for item_id in GameManager.inventory:
 		var count = GameManager.inventory[item_id]
 		if count <= 0: continue
-		var item_info = GameManager.ITEM_CATALOG.get(item_id, {"name": item_id})
+		var item_info = ItemCatalog.ITEMS.get(item_id, {"name": item_id})
 		var btn = _make_btn("%s (x%d)" % [item_info["name"], count], "", true)
 		btn.pressed.connect(func():
 			chosen_action = "item:" + item_id
@@ -169,9 +167,7 @@ func _show_items():
 		)
 		target_container.add_child(btn)
 		
-	var back_btn = Button.new()
-	back_btn.text = "‹ Quay lại"
-	UITheme.style_button(back_btn, UITheme.Kind.GHOST)
+	var back_btn = UITheme.make_button("‹ Quay lại", UITheme.Kind.GHOST)
 	back_btn.pressed.connect(func():
 		action_container.visible = true
 		target_container.visible = false
@@ -203,11 +199,9 @@ func _on_target_picked(target: Entity):
 
 func _make_btn(label: String, action_name: String, enabled: bool, kind: UITheme.Kind = UITheme.Kind.SECONDARY) -> Button:
 	"""Khởi tạo một nút bấm trong menu."""
-	var btn = Button.new()
-	btn.text = label
+	var btn = UITheme.make_button(label, kind)
 	btn.disabled = not enabled
-	UITheme.style_button(btn, kind)
-	
+
 	if action_name != "":
 		btn.pressed.connect(_on_action_picked.bind(action_name))
 	
@@ -217,7 +211,7 @@ func _focus_first_enabled(container: Container):
 	"""Đưa focus bàn phím/tay cầm vào nút khả dụng đầu tiên của danh sách."""
 	for c in container.get_children():
 		if c is Button and not c.disabled and not c.is_queued_for_deletion():
-			c.call_deferred("grab_focus")
+			UITheme.focus_later(c)
 			return
 
 func _clear(container: Container):

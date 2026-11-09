@@ -66,14 +66,14 @@ func _build_ui():
 	_options_panel = ui_nodes["options_panel"]
 	var vbox = ui_nodes["vbox"]
 
-	_btn_resume = PauseMenuBuilder.create_button("Tiếp tục", _on_resume, UITheme.Kind.PRIMARY)
-	_btn_quick_save = PauseMenuBuilder.create_button(QUICK_SAVE_LABEL, _on_quick_save)
-	_btn_save_load = PauseMenuBuilder.create_button("Lưu / Tải game", _on_open_save_load_menu)
-	_btn_guide = PauseMenuBuilder.create_button("Hướng dẫn", _on_guide)
-	_btn_options = PauseMenuBuilder.create_button("Tùy chọn", _on_options)
+	_btn_resume = UITheme.make_button("Tiếp tục", UITheme.Kind.PRIMARY, UITheme.FS_LABEL, _on_resume)
+	_btn_quick_save = UITheme.make_button(QUICK_SAVE_LABEL, UITheme.Kind.SECONDARY, UITheme.FS_LABEL, _on_quick_save)
+	_btn_save_load = UITheme.make_button("Lưu / Tải game", UITheme.Kind.SECONDARY, UITheme.FS_LABEL, _on_open_save_load_menu)
+	_btn_guide = UITheme.make_button("Hướng dẫn", UITheme.Kind.SECONDARY, UITheme.FS_LABEL, _on_guide)
+	_btn_options = UITheme.make_button("Tùy chọn", UITheme.Kind.SECONDARY, UITheme.FS_LABEL, _on_options)
 	for btn in [_btn_resume, _btn_quick_save, _btn_save_load, _btn_guide, _btn_options]:
 		vbox.add_child(btn)
-	vbox.add_child(PauseMenuBuilder.create_button("Thoát ra Menu", _on_quit, UITheme.Kind.GHOST))
+	vbox.add_child(UITheme.make_button("Thoát ra Menu", UITheme.Kind.GHOST, UITheme.FS_LABEL, _on_quit))
 
 # Đưa mọi lớp phủ về trạng thái ban đầu (chỉ còn bảng chính), dùng mỗi lần mở/đóng menu
 func _reset_views():
@@ -88,7 +88,7 @@ func _reset_views():
 # Quay lại bảng chính từ một lớp phủ con (Hướng dẫn / Tùy chọn)
 func _show_main_panel(focus: Control):
 	_panel.visible = true
-	focus.call_deferred("grab_focus")
+	UITheme.focus_later(focus)
 
 # Không mở menu bằng ESC ở các scene menu ("Lưu nhanh" sẽ ghi đè quicksave bằng trạng thái mặc định).
 # `show_options(true)` từ StartMenu vẫn dùng được vì không đi qua `toggle()`.
@@ -146,9 +146,7 @@ func _close_options():
 
 func _build_options_vbox(from_main_menu: bool):
 	_options_from_main_menu = from_main_menu
-	for child in _options_panel.get_children():
-		_options_panel.remove_child(child)
-		child.queue_free()
+	UITheme.clear_children(_options_panel)
 
 	var vbox = VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", UITheme.SP_4)
@@ -203,10 +201,10 @@ func _build_options_vbox(from_main_menu: bool):
 	)
 	vbox.add_child(_option_row("Bỏ qua trận đánh", btn_skip))
 
-	vbox.add_child(PauseMenuBuilder.create_button("Đóng", _close_options, UITheme.Kind.PRIMARY))
+	vbox.add_child(UITheme.make_button("Đóng", UITheme.Kind.PRIMARY, UITheme.FS_LABEL, _close_options))
 
 	_options_panel.visible = true
-	check.call_deferred("grab_focus")
+	UITheme.focus_later(check)
 
 func _option_row(text: String, control: Control) -> HBoxContainer:
 	var row = HBoxContainer.new()
@@ -245,17 +243,17 @@ func _show_password_dialog(target_check: CheckButton):
 	edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	edit.placeholder_text = "****"
 	vbox.add_child(edit)
-	edit.call_deferred("grab_focus")
+	UITheme.focus_later(edit)
 
 	var hb = HBoxContainer.new()
 	hb.alignment = BoxContainer.ALIGNMENT_CENTER
 	hb.add_theme_constant_override("separation", UITheme.SP_2)
 	vbox.add_child(hb)
 
-	var btn_ok = PauseMenuBuilder.create_button("Xác nhận", Callable(), UITheme.Kind.PRIMARY)
+	var btn_ok = UITheme.make_button("Xác nhận", UITheme.Kind.PRIMARY)
 	hb.add_child(btn_ok)
 
-	var btn_cancel = PauseMenuBuilder.create_button("Hủy", Callable(), UITheme.Kind.GHOST)
+	var btn_cancel = UITheme.make_button("Hủy", UITheme.Kind.GHOST)
 	hb.add_child(btn_cancel)
 
 	var on_confirm = func():
@@ -280,7 +278,7 @@ func _free_pw_dialog():
 	if is_instance_valid(_pw_dialog):
 		_pw_dialog.queue_free()
 		if _options_panel.visible and is_instance_valid(_pw_target):
-			_pw_target.call_deferred("grab_focus")
+			UITheme.focus_later(_pw_target)
 	_pw_dialog = null
 
 # ── Điều Khiển ─────────────────────────────────────────────────────────────
@@ -332,7 +330,7 @@ func toggle():
 	_reset_views()
 	if visible:
 		_refresh_save_buttons()
-		_btn_resume.call_deferred("grab_focus")
+		UITheme.focus_later(_btn_resume)
 
 func _on_resume():
 	toggle()
@@ -368,5 +366,5 @@ func _on_quit():
 	visible = false
 	get_tree().paused = false
 	_reset_views()
-	get_tree().change_scene_to_file("res://UI/Menus/Start/StartMenu.tscn")
+	get_tree().change_scene_to_file(MapPaths.START_MENU)
 

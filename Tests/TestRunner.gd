@@ -10,7 +10,18 @@ Thoát với exit code 0 nếu tất cả đạt, 1 nếu có lỗi.
 
 const UNIT_DIR = "res://Tests/Unit/"
 
+# Test lưu file thử vào user://saves/ (unit_test_*, zz_capture_*). Nếu một lần chạy trước bị ngắt giữa chừng, các file đó còn lại
+# và nút "Tiếp tục" sẽ chọn nhầm chúng làm save mới nhất: dọn sạch trước mỗi lần chạy.
+func _sweep_leftover_test_saves():
+	var dir := DirAccess.open(SaveManager.SAVES_DIR)
+	if dir == null:
+		return
+	for f in dir.get_files():
+		if f.begins_with("unit_test_") or f.begins_with("zz_capture_"):
+			dir.remove(f)
+
 func _ready():
+	_sweep_leftover_test_saves()
 	print("\n" + "=".repeat(65))
 	print("       SEKAI RPG — AUTOMATED TEST SUITE")
 	print("=".repeat(65))

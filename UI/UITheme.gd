@@ -134,6 +134,35 @@ static func backdrop() -> TextureRect:
 static func overlay_dim(alpha: float = 0.6) -> Color:
 	return Color(INK_900.r, INK_900.g, INK_900.b, alpha)
 
+# Lớp mờ phủ toàn màn hình dưới hộp thoại modal; thay cho cụm ColorRect + full rect + overlay_dim chép ở ShopMenu, UpgradeUI,
+# SaveLoadMenu, HoloBlessingSelectUI và PauseMenuBuilder
+static func dim_layer(alpha: float) -> ColorRect:
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = overlay_dim(alpha)
+	return dim
+
+# Panel modal neo giữa màn hình, rộng tối thiểu `width`, vạch accent vàng; thay cho `_centered_panel` ở PauseMenuBuilder
+# và cụm dựng panel chép ở ShopMenu, UpgradeUI
+static func centered_panel(width: int) -> PanelContainer:
+	var p := PanelContainer.new()
+	p.set_anchors_preset(Control.PRESET_CENTER)
+	p.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	p.grow_vertical = Control.GROW_DIRECTION_BOTH
+	p.custom_minimum_size.x = width
+	p.add_theme_stylebox_override("panel", panel(INK_800, INK_600, ACCENT, SP_6))
+	return p
+
+# Tỷ lệ tương phản WCAG giữa hai màu; thay cho `_contrast`/`_luminance` chép ở DialogueUI và TestUITheme
+static func contrast(a: Color, b: Color) -> float:
+	var la := _luminance(a)
+	var lb := _luminance(b)
+	return (maxf(la, lb) + 0.05) / (minf(la, lb) + 0.05)
+
+static func _luminance(c: Color) -> float:
+	var l := c.srgb_to_linear()
+	return 0.2126 * l.r + 0.7152 * l.g + 0.0722 * l.b
+
 # ── Control helper ─────────────────────────────────────────────────────────
 
 static func font_body() -> Font:
@@ -204,20 +233,51 @@ static func make_label(text: String, size: int = FS_BODY, color: Color = TEXT, a
 	style_label(l, size, color)
 	return l
 
+# Nhãn một ô của bảng: make_label + độ rộng tối thiểu cố định; thay cho `_cell` chép ở UpgradeUI và EntityDetailPanel
+static func make_cell(text: String, min_width: int, color: Color, size: int, align: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> Label:
+	var lbl := make_label(text, size, color, align)
+	lbl.custom_minimum_size.x = min_width
+	return lbl
+
+# Gỡ ngay mọi node con rồi queue_free (gỡ trước để layout/focus không còn thấy chúng trong frame này);
+# thay cho vòng `remove_child(c); c.queue_free()` chép khắp UI. Chỗ chỉ queue_free() có thời điểm khác nên không dùng hàm này.
+static func clear_children(node: Node) -> void:
+	for c in node.get_children():
+		node.remove_child(c)
+		c.queue_free()
+
+# Focus trễ một nhịp (sau khi các node queue_free() đã dọn); bỏ qua nếu nút đã bị xóa/gỡ khỏi cây trước đó.
+# Thay cho `_focus_later` + `.call_deferred(...)` chép ở SaveLoadMenu, UpgradeUI, EntityDetailPanel, SkillDetailPopup.
+static func focus_later(ctrl) -> void:
+	var grab := func():
+		if is_instance_valid(ctrl) and ctrl.is_inside_tree():
+			ctrl.grab_focus()
+	grab.call_deferred()
+
 static func style_button(btn: Button, kind: Kind = Kind.SECONDARY, size: int = FS_LABEL) -> void:
 	var boxes := button_boxes(kind)
 	for state in boxes:
 		btn.add_theme_stylebox_override(state, boxes[state])
-	var fg := TEXT_ON_ACCENT if kind == Kind.PRIMARY else TEXT
-	btn.add_theme_color_override("font_color", fg)
-	btn.add_theme_color_override("font_hover_color", fg)
-	btn.add_theme_color_override("font_pressed_color", fg)
-	btn.add_theme_color_override("font_focus_color", fg)
+	tint_button_text(btn, TEXT_ON_ACCENT if kind == Kind.PRIMARY else TEXT)
 	btn.add_theme_color_override("font_disabled_color", TEXT_DISABLED)
 	btn.add_theme_font_override("font", font_display())
 	btn.add_theme_font_size_override("font_size", size)
 	btn.custom_minimum_size.y = maxf(btn.custom_minimum_size.y, MIN_TOUCH)
 	btn.focus_mode = Control.FOCUS_ALL
+
+# Đổi màu chữ của nút ở cả bốn trạng thái (trừ disabled); thay cho vòng lặp font_*_color chép ở style_button, SaveLoadMenu và SandboxMenu
+static func tint_button_text(btn: Button, color: Color) -> void:
+	for color_name in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		btn.add_theme_color_override(color_name, color)
+
+# Dựng nút đã style, tùy chọn nối sẵn `pressed`; thay cho cụm Button.new() + text + style_button + pressed.connect chép khắp UI
+static func make_button(text: String, kind: Kind = Kind.SECONDARY, size: int = FS_LABEL, on_press: Callable = Callable()) -> Button:
+	var btn := Button.new()
+	btn.text = text
+	style_button(btn, kind, size)
+	if on_press.is_valid():
+		btn.pressed.connect(on_press)
+	return btn
 
 static func button_boxes(kind: Kind) -> Dictionary:
 	var normal_bg: Color

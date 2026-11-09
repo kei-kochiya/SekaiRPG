@@ -146,7 +146,7 @@ func on_battle_completed(battle: Node, is_victory: bool):
 
 func _return_to_base():
 	await ScreenFade.fade_out(1.0)
-	GameManager.get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+	GameManager.get_tree().change_scene_to_file(MapPaths.BASE)
 
 func _show_blessing_selection(battle: Node):
 	var options = HoloBlessing.get_random_blessings(3, HoloSimManager.active_blessings)
@@ -165,4 +165,4 @@ func _show_blessing_selection(battle: Node):
 
 func _go_to_next_floor():
 	await ScreenFade.fade_out(0.6)
-	GameManager.get_tree().change_scene_to_file("res://Scripts/Battle/BattleScene.tscn")
+	GameManager.get_tree().change_scene_to_file(MapPaths.BATTLE_SCENE)

@@ -133,9 +133,7 @@ func _place_characters():
 		exit.interacted.connect(func():
 			var idx: int = await DialogueManager.ask(["[Trở về Nightcord]", "[Hủy]"])
 			if idx == 0:
-				await ScreenFade.fade_out(1.0)
-				GameManager.last_player_position = Vector2.ZERO
-				get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+				await GameManager.change_map(MapPaths.BASE, 1.0)
 		)
 		add_child(exit)
 		return
@@ -246,18 +244,10 @@ func _run_logic():
 		)
 
 func _trigger_skirmish_battle():
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = "street_skirmish"
-	GameManager.store_map_state("res://Maps/Street/StreetMap.tscn", Vector2.ZERO)
-	GameManager.trigger_battle()
+	GameManager.start_scripted_battle("street_skirmish", MapPaths.STREET)
 
 func _trigger_survival_battle():
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = "street_survival"
-	GameManager.store_map_state("res://Maps/Street/StreetMap.tscn", Vector2.ZERO)
-	GameManager.trigger_battle()
+	GameManager.start_scripted_battle("street_survival", MapPaths.STREET)
 
 func _return_to_base():
-	await ScreenFade.fade_out(1.5)
-	GameManager.last_player_position = Vector2.ZERO
-	get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+	await GameManager.change_map(MapPaths.BASE, 1.5)

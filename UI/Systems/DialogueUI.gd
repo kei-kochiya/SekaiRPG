@@ -179,22 +179,18 @@ func display_choices(options: Array):
 	"""
 	choice_panel.visible = true
 	# Gỡ nút cũ ngay (queue_free chỉ xóa cuối frame) để focus không rơi vào nút cũ
-	for c in choice_box.get_children():
-		choice_box.remove_child(c)
-		c.queue_free()
+	UITheme.clear_children(choice_box)
 	var first: Button = null
 	for i in options.size():
-		var btn = Button.new()
-		btn.text = options[i]
+		var btn = UITheme.make_button(options[i], UITheme.Kind.SECONDARY, UITheme.FS_LABEL)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		UITheme.style_button(btn, UITheme.Kind.SECONDARY, UITheme.FS_LABEL)
 		btn.pressed.connect(func(): choice_selected.emit(i))
 		choice_box.add_child(btn)
 		if first == null:
 			first = btn
 	
 	if first:
-		first.call_deferred("grab_focus")
+		UITheme.focus_later(first)
 
 # Xóa nội dung trên màn hình
 func clear():
@@ -212,19 +208,10 @@ func clear():
 # Màu tên người nói lấy từ dữ liệu (nhiều màu tối): nâng sáng dần tới khi đạt tương phản tối thiểu trên nền hộp thoại
 func _readable(c: Color) -> Color:
 	for i in 8:
-		if _contrast(c, UITheme.INK_900) >= MIN_CONTRAST:
+		if UITheme.contrast(c, UITheme.INK_900) >= MIN_CONTRAST:
 			break
 		c = c.lerp(Color.WHITE, 0.15)
 	return c
-
-func _contrast(a: Color, b: Color) -> float:
-	var la := _luminance(a)
-	var lb := _luminance(b)
-	return (maxf(la, lb) + 0.05) / (minf(la, lb) + 0.05)
-
-func _luminance(c: Color) -> float:
-	var l := c.srgb_to_linear()
-	return 0.2126 * l.r + 0.7152 * l.g + 0.0722 * l.b
 
 # Cập nhật hình ảnh và animation cho chân dung nhân vật
 func _update_portraits(character_name: String, side: String):

@@ -124,18 +124,10 @@ func _update_sprite_frame():
 	_sprite.frame = row * 3 + _anim_frame
 
 func _update_character_from_color(c: Color):
-	var color_map = {
-		"Mafuyu": Color(0.4, 0.3, 0.5),
-		"Ena": Color(0.72, 0.38, 0.16),
-		"Kanade": Color(0.8, 0.8, 0.9),
-		"Mizuki": Color(0.85, 0.65, 0.8),
-		"Ichika": Color(0.29, 0.62, 0.62),
-		"Honami": Color(0.5, 0.35, 0.25)
-	}
 	var best_name = "Ichika"
 	var min_dist = 100.0
-	for name_key in color_map:
-		var target_c: Color = color_map[name_key]
+	for name_key in MapUtils.CHARACTER_COLORS:
+		var target_c: Color = MapUtils.CHARACTER_COLORS[name_key]
 		var dist = abs(c.r - target_c.r) + abs(c.g - target_c.g) + abs(c.b - target_c.b)
 		if dist < min_dist:
 			min_dist = dist

@@ -16,7 +16,7 @@ const MAX_SKILLS_UNSCROLLED = 4
 var _content_vbox: VBoxContainer
 var _close_btn: Button
 var _prev_focus: Control = null
-var _modal_pushed: bool = false
+var _modal := ModalScope.new()
 
 func _init():
 	visible = false
@@ -38,7 +38,7 @@ func _init():
 	panel.add_child(_content_vbox)
 
 func _exit_tree():
-	_set_modal(false)
+	_modal.exit()
 
 func _input(event):
 	if visible and event.is_action_pressed("ui_cancel"):
@@ -96,9 +96,7 @@ func display_entity_skills(entity: Entity):
 
 # Xóa nội dung cũ và dựng hàng tiêu đề (tiêu đề + nút Đóng)
 func _reset(title_text: String):
-	for c in _content_vbox.get_children():
-		_content_vbox.remove_child(c)
-		c.queue_free()
+	UITheme.clear_children(_content_vbox)
 
 	var header = HBoxContainer.new()
 	header.add_theme_constant_override("separation", UITheme.SP_3)
@@ -112,11 +110,8 @@ func _reset(title_text: String):
 	UITheme.style_title(title, UITheme.FS_HEADING, UITheme.TEXT)
 	header.add_child(title)
 
-	_close_btn = Button.new()
-	_close_btn.text = "Đóng"
-	UITheme.style_button(_close_btn, UITheme.Kind.GHOST)
+	_close_btn = UITheme.make_button("Đóng", UITheme.Kind.GHOST, UITheme.FS_LABEL, _close)
 	_close_btn.custom_minimum_size.x = 96
-	_close_btn.pressed.connect(_close)
 	header.add_child(_close_btn)
 
 func _make_details(text: String, size: int) -> Label:
@@ -130,28 +125,13 @@ func _open():
 	if not visible and is_inside_tree():
 		_prev_focus = get_viewport().gui_get_focus_owner()
 	visible = true
-	_set_modal(true)
-	_focus_later.call_deferred(_close_btn)
+	_modal.enter()
+	UITheme.focus_later(_close_btn)
 
 func _close():
 	visible = false
-	_set_modal(false)
+	_modal.exit() # báo PauseMenu để ESC đóng popup thay vì mở menu tạm dừng
 	# Trả focus về nút đã mở popup (nút "Kỹ năng" của CommandMenu)
 	if is_instance_valid(_prev_focus) and _prev_focus.is_visible_in_tree():
-		_focus_later.call_deferred(_prev_focus)
+		UITheme.focus_later(_prev_focus)
 	_prev_focus = null
-
-# Báo PauseMenu để ESC đóng popup thay vì mở menu tạm dừng; push/pop luôn cân bằng nhờ cờ `_modal_pushed`
-func _set_modal(on: bool):
-	if on == _modal_pushed:
-		return
-	_modal_pushed = on
-	if on:
-		PauseMenu.push_modal()
-	else:
-		PauseMenu.pop_modal()
-
-# Focus trễ một nhịp (sau khi các node queue_free() đã dọn); bỏ qua nếu nút đã bị xóa/gỡ khỏi cây trước đó
-func _focus_later(ctrl):
-	if is_instance_valid(ctrl) and ctrl.is_inside_tree():
-		ctrl.grab_focus()

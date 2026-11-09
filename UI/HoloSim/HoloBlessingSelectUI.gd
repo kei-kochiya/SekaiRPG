@@ -14,25 +14,20 @@ const CARD_HEIGHT = 288
 
 var cards_container: HBoxContainer
 var _card_buttons: Array[Button] = []
-var _modal_pushed: bool = false
+var _modal := ModalScope.new()
 var _chosen: bool = false
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 150
-	PauseMenu.push_modal()
-	_modal_pushed = true
+	_modal.enter()
 	_build_ui()
 
 func _exit_tree():
-	if _modal_pushed:
-		_modal_pushed = false
-		PauseMenu.pop_modal()
+	_modal.exit()
 
 func setup_options(options: Array):
-	for c in cards_container.get_children():
-		cards_container.remove_child(c)
-		c.queue_free()
+	UITheme.clear_children(cards_container)
 	_card_buttons.clear()
 
 	for opt in options:
@@ -40,13 +35,10 @@ func setup_options(options: Array):
 
 	# Focus thẻ đầu tiên để chọn được ngay bằng bàn phím / tay cầm
 	if not _card_buttons.is_empty():
-		_card_buttons[0].call_deferred("grab_focus")
+		UITheme.focus_later(_card_buttons[0])
 
 func _build_ui():
-	var dimmer = ColorRect.new()
-	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dimmer.color = UITheme.overlay_dim(0.85)
-	add_child(dimmer)
+	add_child(UITheme.dim_layer(0.85))
 
 	var vbox = VBoxContainer.new()
 	vbox.set_anchors_preset(Control.PRESET_CENTER)
@@ -90,9 +82,7 @@ func _create_blessing_card(data: Dictionary) -> PanelContainer:
 	desc_lbl.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	vbox.add_child(desc_lbl)
 
-	var btn = Button.new()
-	btn.text = "Chọn này"
-	UITheme.style_button(btn, UITheme.Kind.SECONDARY, UITheme.FS_BODY)
+	var btn = UITheme.make_button("Chọn này", UITheme.Kind.SECONDARY, UITheme.FS_BODY)
 	btn.pressed.connect(func():
 		if _chosen:
 			return

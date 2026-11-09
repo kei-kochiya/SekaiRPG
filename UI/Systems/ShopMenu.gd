@@ -18,23 +18,20 @@ var _feedback_label: Label
 var _items_container: VBoxContainer
 var _close_btn: Button
 var _rows: Dictionary = {}
-var _modal_pushed: bool = false
+var _modal := ModalScope.new()
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 120
 	get_tree().paused = true
-	PauseMenu.push_modal()
-	_modal_pushed = true
+	_modal.enter()
 	_build_ui()
 	_refresh()
 	_focus_first_buyable()
 
 func _exit_tree():
 	get_tree().paused = false
-	if _modal_pushed:
-		_modal_pushed = false
-		PauseMenu.pop_modal()
+	_modal.exit()
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
@@ -42,17 +39,9 @@ func _input(event):
 		queue_free()
 
 func _build_ui():
-	var dim = ColorRect.new()
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dim.color = UITheme.overlay_dim(0.78)
-	add_child(dim)
+	add_child(UITheme.dim_layer(0.78))
 
-	var panel = PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
-	panel.custom_minimum_size.x = PANEL_WIDTH
-	panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.ACCENT, UITheme.SP_6))
+	var panel = UITheme.centered_panel(PANEL_WIDTH)
 	add_child(panel)
 
 	var vbox = VBoxContainer.new()
@@ -82,22 +71,19 @@ func _build_ui():
 	vbox.add_child(_items_container)
 
 	var first = true
-	for item_id in GameManager.ITEM_CATALOG:
+	for item_id in ItemCatalog.ITEMS:
 		if not first:
 			_items_container.add_child(HSeparator.new())
 		first = false
-		_add_item_row(item_id, GameManager.ITEM_CATALOG[item_id])
+		_add_item_row(item_id, ItemCatalog.ITEMS[item_id])
 
 	vbox.add_child(HSeparator.new())
 
 	var footer = HBoxContainer.new()
 	footer.alignment = BoxContainer.ALIGNMENT_END
 	vbox.add_child(footer)
-	_close_btn = Button.new()
-	_close_btn.text = "Đóng cửa hàng"
-	UITheme.style_button(_close_btn, UITheme.Kind.GHOST)
+	_close_btn = UITheme.make_button("Đóng cửa hàng", UITheme.Kind.GHOST, UITheme.FS_LABEL, queue_free)
 	_close_btn.custom_minimum_size.x = 192
-	_close_btn.pressed.connect(queue_free)
 	footer.add_child(_close_btn)
 
 func _add_item_row(item_id: String, data: Dictionary):
@@ -124,12 +110,9 @@ func _add_item_row(item_id: String, data: Dictionary):
 	var short_lbl = UITheme.make_label("", UITheme.FS_CAPTION, UITheme.DANGER_TEXT)
 	meta.add_child(short_lbl)
 
-	var buy_btn = Button.new()
-	buy_btn.text = "Mua (%d Credits)" % data["price"]
-	UITheme.style_button(buy_btn, UITheme.Kind.SECONDARY, UITheme.FS_BODY)
+	var buy_btn = UITheme.make_button("Mua (%d Credits)" % data["price"], UITheme.Kind.SECONDARY, UITheme.FS_BODY, _buy_item.bind(item_id))
 	buy_btn.custom_minimum_size.x = 176
 	buy_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	buy_btn.pressed.connect(_buy_item.bind(item_id))
 	row.add_child(buy_btn)
 
 	_rows[item_id] = {"owned": owned_lbl, "short": short_lbl, "buy": buy_btn}
@@ -138,7 +121,7 @@ func _add_item_row(item_id: String, data: Dictionary):
 func _refresh():
 	_credits_value.text = "%d Credits" % GameManager.credits
 	for item_id in _rows:
-		var price: int = GameManager.ITEM_CATALOG[item_id]["price"]
+		var price: int = ItemCatalog.ITEMS[item_id]["price"]
 		var missing = price - GameManager.credits
 		var ref: Dictionary = _rows[item_id]
 		ref["owned"].text = "Đang có: %d" % GameManager.get_item_count(item_id)
@@ -146,7 +129,7 @@ func _refresh():
 		ref["buy"].disabled = missing > 0
 
 func _buy_item(item_id: String):
-	var data: Dictionary = GameManager.ITEM_CATALOG[item_id]
+	var data: Dictionary = ItemCatalog.ITEMS[item_id]
 	if GameManager.spend_credits(data["price"]):
 		GameManager.add_item(item_id, 1)
 		_feedback_label.text = "Đã mua %s" % data["name"]
@@ -165,6 +148,6 @@ func _focus_first_buyable():
 	for item_id in _rows:
 		var btn: Button = _rows[item_id]["buy"]
 		if not btn.disabled:
-			btn.call_deferred("grab_focus")
+			UITheme.focus_later(btn)
 			return
-	_close_btn.call_deferred("grab_focus")
+	UITheme.focus_later(_close_btn)

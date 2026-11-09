@@ -23,13 +23,11 @@ func get_scene_lighting() -> Color:
 
 func on_stage_start():
 	if GameManager.get_flag("mizuki_vs_mafuyu_done") and not GameManager.get_flag("mizuki_report_done"):
-		var p = map.get_node_or_null("OverworldPlayer")
-		if p: p.character_color = map.NPC_COLORS["Mizuki"]
+		map.set_player("Mizuki")
 		
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_report_p2"), func():
 			GameManager.set_flag("mizuki_report_done", true)
-			await ScreenFade.fade_out(1.5)
-			get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+			await GameManager.change_map(MapPaths.BASE, 1.5)
 		)
 		return
 	
@@ -47,10 +45,8 @@ func _play_mizuki_snack_sequence():
 		# Đánh dấu đã xem để vào lại căn cứ (tải save, đi Holo-Sim...) không phát lại cảnh này
 		GameManager.set_flag("harbor_mizuki_snack_done", true)
 		GameManager.set_flag("mizuki_control_phase", true)
-		var player = map.get_node_or_null("OverworldPlayer")
-		if player:
-			player.character_color = map.NPC_COLORS["Mizuki"]
-			player.position = Vector2(35 * map.TILE_SIZE, 13 * map.TILE_SIZE)
+		map.set_player("Mizuki")
+		map.place_player(Vector2(35, 13))
 		map._spawn_npcs() 
 		map._refresh_quest_label()
 	)
@@ -68,10 +64,7 @@ func _handle_mizuki_interactions(npc_name: String):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("mizuki_trash_talk_ena"))
 	elif npc_name == "Mafuyu":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_report_p1"), func():
-			GameManager.is_scripted_battle = true
-			GameManager.scripted_battle_id = "mizuki_vs_mafuyu"
-			GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", Vector2.ZERO)
-			GameManager.trigger_battle()
+			GameManager.start_scripted_battle("mizuki_vs_mafuyu", MapPaths.BASE)
 		)
 
 func _handle_normal_interactions(npc_name: String):
@@ -79,9 +72,7 @@ func _handle_normal_interactions(npc_name: String):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("mafuyu_honami_info"), func():
 			GameManager.set_flag("mafuyu_honami_talked", true)
 			GameManager.story.harbor_wave = 6
-			await ScreenFade.fade_out(1.5)
-			GameManager.last_player_position = Vector2.ZERO
-			get_tree().change_scene_to_file("res://Maps/Alleyway/AlleywayMap.tscn")
+			await GameManager.change_map(MapPaths.ALLEYWAY, 1.5)
 		)
 	else:
 		DialogueManager.play_dialogue([{"text": "...", "type": "dialogue", "name": npc_name, "color": Color.WHITE}])

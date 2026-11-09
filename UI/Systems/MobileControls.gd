@@ -104,9 +104,7 @@ func _circle(diameter: float, bg: Color, border: Color) -> Panel:
 
 # Nút bấm tròn theo UITheme; không nhận focus để không cướp focus bàn phím/tay cầm của menu
 func _round_button(text: String, diameter: int, kind: UITheme.Kind) -> Button:
-	var btn := Button.new()
-	btn.text = text
-	UITheme.style_button(btn, kind, UITheme.FS_BODY)
+	var btn := UITheme.make_button(text, kind, UITheme.FS_BODY)
 	var boxes := UITheme.button_boxes(kind)
 	for state in boxes:
 		var sb: StyleBoxFlat = boxes[state]

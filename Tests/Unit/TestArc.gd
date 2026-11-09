@@ -21,10 +21,10 @@ func test_every_arc_battle_builds_valid_teams():
 			assert_true(e != null, "%s player team has no null members" % id)
 
 func test_fated_and_win_flags_exist_in_story_state():
-	for id in GameManager.FATED_BATTLES:
-		assert_true(StoryState.DEFAULT_FLAGS.has(GameManager.FATED_BATTLES[id]), "Flag exists for fated battle " + id)
-	for id in GameManager.WIN_FLAG_BATTLES:
-		assert_true(StoryState.DEFAULT_FLAGS.has(GameManager.WIN_FLAG_BATTLES[id]), "Flag exists for win-flag battle " + id)
+	for id in ScriptedBattleOutcomes.FATED:
+		assert_true(StoryState.DEFAULT_FLAGS.has(ScriptedBattleOutcomes.FATED[id]), "Flag exists for fated battle " + id)
+	for id in ScriptedBattleOutcomes.WIN_FLAG:
+		assert_true(StoryState.DEFAULT_FLAGS.has(ScriptedBattleOutcomes.WIN_FLAG[id]), "Flag exists for win-flag battle " + id)
 	for id in ["mizuki_police_done", "last_scripted_win", "last_scripted_loss"]:
 		assert_true(StoryState.DEFAULT_FLAGS.has(id), "Default flag " + id)
 

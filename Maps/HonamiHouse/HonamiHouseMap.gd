@@ -1,9 +1,9 @@
 extends Node2D
 
 const TILE_SIZE = 32
-const HOUSE_SCENE := "res://Maps/HonamiHouse/HonamiHouseMap.tscn"
-const TRAINING_SCENE := "res://Maps/Warehouse/TrainingWarehouseMap.tscn"
-const BASE_SCENE := "res://Maps/Base/BaseMap.tscn"
+const HOUSE_SCENE := MapPaths.HONAMI_HOUSE
+const TRAINING_SCENE := MapPaths.TRAINING
+const BASE_SCENE := MapPaths.BASE
 
 # Hồi kết 2 (sau khi Honami cứu Ichika): nhà Honami là trung tâm cuối cùng, người chơi tự chọn lúc nào đối đầu Mafuyu
 const CONFRONT_WARNING := "Đây là trận cuối cùng. Nếu thất bại, cô sẽ tỉnh lại ngay tại căn nhà này và còn có thể luyện tập thêm."
@@ -82,9 +82,7 @@ func _build_house():
 			return
 		var idx: int = await DialogueManager.ask(["[Trở về Nightcord]", "[Ở lại]"])
 		if idx == 0:
-			await ScreenFade.fade_out(1.0)
-			GameManager.last_player_position = Vector2.ZERO
-			get_tree().change_scene_to_file("res://Maps/Base/BaseMap.tscn")
+			await GameManager.change_map(MapPaths.BASE, 1.0)
 	)
 	add_child(zone)
 	
@@ -160,11 +158,7 @@ func _run_logic():
 func _start_spar():
 	_busy = true
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_spar_pre"), func():
-		GameManager.is_scripted_battle = true
-		GameManager.scripted_battle_id = "honami_spar"
-		GameManager.store_map_state(HOUSE_SCENE, Vector2.ZERO)
-		await ScreenFade.fade_out(1.0)
-		GameManager.trigger_battle()
+		GameManager.start_scripted_battle("honami_spar", HOUSE_SCENE, Vector2.ZERO, 1.0)
 	)
 
 func _on_npc_interacted(npc_name: String):

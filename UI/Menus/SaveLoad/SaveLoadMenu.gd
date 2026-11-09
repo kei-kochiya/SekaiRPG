@@ -26,7 +26,7 @@ var _confirm_layer: Control = null
 var _confirm_origin: Control = null
 var _prev_focus: Control = null
 var _busy: bool = false
-var _modal_pushed: bool = false
+var _modal := ModalScope.new()
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -34,14 +34,11 @@ func _ready():
 	_check_mode()
 	_build_ui()
 	_refresh_slots()
-	PauseMenu.push_modal()
-	_modal_pushed = true
+	_modal.enter()
 	_focus_default()
 
 func _exit_tree():
-	if _modal_pushed:
-		_modal_pushed = false
-		PauseMenu.pop_modal()
+	_modal.exit()
 
 func _check_mode():
 	# Từ StartMenu chưa có trạng thái game thật nên không cho Lưu mới / Ghi đè
@@ -65,19 +62,7 @@ func _build_ui():
 	for c in get_children():
 		c.queue_free()
 
-	var dim = ColorRect.new()
-	dim.color = UITheme.overlay_dim(0.85)
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(dim)
-
-	var center = CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(center)
-
-	_panel = PanelContainer.new()
-	_panel.custom_minimum_size.x = PANEL_WIDTH
-	_panel.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_600, UITheme.ACCENT, UITheme.SP_6))
-	center.add_child(_panel)
+	_panel = _add_shell(self, 0.85, PANEL_WIDTH, UITheme.INK_600, UITheme.ACCENT)
 
 	var vbox = VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", UITheme.SP_3)
@@ -105,7 +90,7 @@ func _build_ui():
 		new_save_edit.text_submitted.connect(func(_t): _on_create_new_save())
 		new_save_box.add_child(new_save_edit)
 
-		_new_save_btn = _make_button("Lưu mới", _on_create_new_save, UITheme.Kind.PRIMARY)
+		_new_save_btn = UITheme.make_button("Lưu mới", UITheme.Kind.PRIMARY, UITheme.FS_LABEL, _on_create_new_save)
 		_new_save_btn.custom_minimum_size.x = 128
 		new_save_box.add_child(_new_save_btn)
 
@@ -133,9 +118,23 @@ func _build_ui():
 	_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	footer.add_child(_status_label)
 
-	_close_btn = _make_button("Đóng", _on_back_pressed, UITheme.Kind.GHOST, UITheme.FS_LABEL)
+	_close_btn = UITheme.make_button("Đóng", UITheme.Kind.GHOST, UITheme.FS_LABEL, _on_back_pressed)
 	_close_btn.custom_minimum_size.x = 128
 	footer.add_child(_close_btn)
+
+# Lớp mờ + khung giữa màn hình dùng chung cho hộp thoại chính và hộp xác nhận (chỉ khác độ mờ, độ rộng, viền, vạch màu)
+func _add_shell(parent: Control, dim_alpha: float, width: int, border: Color, accent: Color) -> PanelContainer:
+	parent.add_child(UITheme.dim_layer(dim_alpha))
+
+	var center = CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	parent.add_child(center)
+
+	var shell = PanelContainer.new()
+	shell.custom_minimum_size.x = width
+	shell.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, border, accent, UITheme.SP_6))
+	center.add_child(shell)
+	return shell
 
 func _set_status(msg: String, color: Color = UITheme.TEXT_MUTED):
 	if _status_label == null:
@@ -147,9 +146,7 @@ func _set_status(msg: String, color: Color = UITheme.TEXT_MUTED):
 
 # `focus_kind`/`focus_path`: nút cần giữ focus sau khi dựng lại danh sách (rỗng = không đổi focus)
 func _refresh_slots(focus_kind: String = "", focus_path: String = ""):
-	for c in slot_container.get_children():
-		slot_container.remove_child(c)
-		c.queue_free()
+	UITheme.clear_children(slot_container)
 
 	var slots = SaveManager.get_all_save_slots()
 	if slots.is_empty():
@@ -214,18 +211,17 @@ func _create_slot_row(data: Dictionary, is_first: bool):
 	row.add_child(actions)
 
 	var load_kind = UITheme.Kind.PRIMARY if (is_first and not is_in_game_mode) else UITheme.Kind.SECONDARY
-	var btn_load = _make_button("Tải game", func(): _on_load_save(full_path), load_kind, UITheme.FS_BODY)
+	var btn_load = UITheme.make_button("Tải game", load_kind, UITheme.FS_BODY, func(): _on_load_save(full_path))
 	_tag_button(btn_load, "load", full_path)
 	actions.add_child(btn_load)
 
 	if is_in_game_mode:
-		var btn_overwrite = _make_button("Ghi đè", func(): _confirm_overwrite(full_path), UITheme.Kind.SECONDARY, UITheme.FS_BODY)
+		var btn_overwrite = UITheme.make_button("Ghi đè", UITheme.Kind.SECONDARY, UITheme.FS_BODY, func(): _confirm_overwrite(full_path))
 		_tag_button(btn_overwrite, "overwrite", full_path)
 		actions.add_child(btn_overwrite)
 
-	var btn_del = _make_button("Xóa", func(): _confirm_delete(full_path), UITheme.Kind.GHOST, UITheme.FS_BODY)
-	for color_name in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
-		btn_del.add_theme_color_override(color_name, UITheme.DANGER_TEXT)
+	var btn_del = UITheme.make_button("Xóa", UITheme.Kind.GHOST, UITheme.FS_BODY, func(): _confirm_delete(full_path))
+	UITheme.tint_button_text(btn_del, UITheme.DANGER_TEXT)
 	_tag_button(btn_del, "delete", full_path)
 	actions.add_child(btn_del)
 
@@ -234,13 +230,6 @@ func _make_meta_label(text: String) -> Label:
 	lbl.clip_text = true
 	lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	return lbl
-
-func _make_button(text: String, callback: Callable, kind: UITheme.Kind = UITheme.Kind.SECONDARY, size: int = UITheme.FS_LABEL) -> Button:
-	var btn = Button.new()
-	btn.text = text
-	UITheme.style_button(btn, kind, size)
-	btn.pressed.connect(callback)
-	return btn
 
 func _tag_button(btn: Button, kind: String, path: String):
 	btn.set_meta("slot_kind", kind)
@@ -252,16 +241,16 @@ func _focus_default():
 	if is_in_game_mode and new_save_edit != null:
 		# Trên điện thoại, focus vào ô nhập sẽ bật bàn phím ảo nên dừng ở nút Lưu mới
 		var target: Control = _new_save_btn if OS.has_feature("mobile") else new_save_edit
-		_focus_later.call_deferred(target)
+		UITheme.focus_later(target)
 		return
 	_focus_first_slot_or_close()
 
 func _focus_first_slot_or_close():
 	for c in slot_container.find_children("*", "Button", true, false):
 		if not c.disabled:
-			_focus_later.call_deferred(c)
+			UITheme.focus_later(c)
 			return
-	_focus_later.call_deferred(_close_btn)
+	UITheme.focus_later(_close_btn)
 
 func _restore_focus(kind: String, path: String):
 	for c in slot_container.find_children("*", "Button", true, false):
@@ -356,19 +345,7 @@ func _show_confirmation(title_text: String, msg_text: String, confirm_text: Stri
 	_confirm_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(_confirm_layer)
 
-	var dim = ColorRect.new()
-	dim.color = UITheme.overlay_dim(0.7)
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_confirm_layer.add_child(dim)
-
-	var center = CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_confirm_layer.add_child(center)
-
-	var dialog = PanelContainer.new()
-	dialog.custom_minimum_size.x = DIALOG_WIDTH
-	dialog.add_theme_stylebox_override("panel", UITheme.panel(UITheme.INK_800, UITheme.INK_500, UITheme.DANGER, UITheme.SP_6))
-	center.add_child(dialog)
+	var dialog = _add_shell(_confirm_layer, 0.7, DIALOG_WIDTH, UITheme.INK_500, UITheme.DANGER)
 
 	var vbox = VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", UITheme.SP_4)
@@ -384,18 +361,18 @@ func _show_confirmation(title_text: String, msg_text: String, confirm_text: Stri
 	hbox.add_theme_constant_override("separation", UITheme.SP_2)
 	vbox.add_child(hbox)
 
-	var btn_no = _make_button("Hủy", func(): _close_confirmation(), UITheme.Kind.GHOST)
+	var btn_no = UITheme.make_button("Hủy", UITheme.Kind.GHOST, UITheme.FS_LABEL, func(): _close_confirmation())
 	btn_no.custom_minimum_size.x = 112
 	hbox.add_child(btn_no)
 
-	var btn_yes = _make_button(confirm_text, func():
+	var btn_yes = UITheme.make_button(confirm_text, UITheme.Kind.DANGER, UITheme.FS_LABEL, func():
 		_close_confirmation(false)
 		on_confirm.call()
-	, UITheme.Kind.DANGER)
+	)
 	hbox.add_child(btn_yes)
 
 	# Mặc định focus vào Hủy để tránh lỡ tay xóa/ghi đè
-	_focus_later.call_deferred(btn_no)
+	UITheme.focus_later(btn_no)
 
 func _close_confirmation(restore_focus: bool = true):
 	if _confirm_layer == null:
@@ -404,7 +381,7 @@ func _close_confirmation(restore_focus: bool = true):
 	_confirm_layer = null
 	_set_background_focusable(true)
 	if restore_focus and is_instance_valid(_confirm_origin):
-		_focus_later.call_deferred(_confirm_origin)
+		UITheme.focus_later(_confirm_origin)
 	_confirm_origin = null
 
 func _set_background_focusable(on: bool):
@@ -423,12 +400,7 @@ func _on_back_pressed():
 	if get_parent() != get_tree().root:
 		# Trả focus về nút đã mở hộp thoại này (Tải game / Lưu-Tải game)
 		if is_instance_valid(_prev_focus) and _prev_focus.is_inside_tree():
-			_focus_later.call_deferred(_prev_focus)
+			UITheme.focus_later(_prev_focus)
 		queue_free()
 		return
-	get_tree().change_scene_to_file("res://UI/Menus/Start/StartMenu.tscn")
-
-# Focus trễ một nhịp (sau khi các node queue_free() đã dọn); bỏ qua nếu nút đã bị xóa/gỡ khỏi cây trước đó
-func _focus_later(ctrl):
-	if is_instance_valid(ctrl) and ctrl.is_inside_tree():
-		ctrl.grab_focus()
+	get_tree().change_scene_to_file(MapPaths.START_MENU)

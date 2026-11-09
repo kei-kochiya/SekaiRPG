@@ -10,9 +10,11 @@ Cờ ena_kill_ordered chỉ được đặt SAU khi màn hình đã tối, ngay 
 (lưu/tải giữa chừng chỉ khiến cảnh phát lại, không bao giờ kẹt ở Base).
 """
 
-const NEXT_SCENE := "res://Maps/Interrogation/InterrogationMap.tscn"
+const NEXT_SCENE := MapPaths.INTERROGATION
 
-var _cutscene_active: bool = false
+# Cửa ra bị khoá suốt cảnh này
+func _init():
+	exit_locked = true
 
 func get_npc_positions() -> Dictionary:
 	return {
@@ -29,16 +31,13 @@ func get_bgm_track() -> String:
 	return "night"
 
 func on_stage_start():
-	var player = map.get_node_or_null("OverworldPlayer")
-	if player:
-		player.character_color = map.NPC_COLORS["Ichika"]
-		player.position = Vector2(24 * map.TILE_SIZE, 17 * map.TILE_SIZE)
+	map.set_player("Ichika")
+	map.place_player(Vector2(24, 17))
 
 	if GameManager.get_flag("ena_kill_ordered"):
 		return
 
-	_cutscene_active = true
-	map.freeze_player()
+	lock_scene()
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("orders_mafuyu"), _on_orders_done)
 
 func _on_orders_done():
@@ -46,13 +45,6 @@ func _on_orders_done():
 	GameManager.set_flag("ena_kill_ordered", true)
 	GameManager.store_map_state(NEXT_SCENE, Vector2.ZERO)
 	get_tree().change_scene_to_file(NEXT_SCENE)
-
-func handle_npc_interaction(_npc_name: String):
-	if _cutscene_active: return
-
-# Cửa ra bị khoá suốt cảnh này (xử lý xong, không làm gì)
-func handle_exit() -> bool:
-	return true
 
 func get_quest_text() -> String:
 	return "MỤC TIÊU: Nghe lệnh của Mafuyu."

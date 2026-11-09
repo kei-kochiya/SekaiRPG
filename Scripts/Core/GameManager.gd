@@ -18,7 +18,7 @@ var story: StoryState = StoryState.new()
 
 # ── Biến Quản Lý Trạng Thái ────────────────────────────────────────────────
 
-var current_map_file: String = "res://Maps/Prologue/PrologueMap.tscn"
+var current_map_file: String = MapPaths.PROLOGUE
 var last_player_position: Vector2 = Vector2.ZERO
 
 var is_training_mode: bool = false
@@ -39,13 +39,6 @@ var is_scripted_battle: bool = false
 var scripted_battle_id: String = ""
 var sandbox_player_team: Array = []
 var sandbox_enemy_team: Array = []
-
-var available_sandbox_chars = ["Ichika", "Kanade", "Mafuyu", "Ena", "Mizuki", "Honami"]
-var available_sandbox_monsters = [
-	"Lính Cảng", "Kidnapper", "Giang Hồ", "Target", "Nhân Viên Kho", 
-	"Khủng Bố", "Drone Trinh Sát", "Xạ Thủ Bắn Tỉa", "Vệ Binh Cơ Giới", 
-	"Chuyên Viên Nhiễu Sóng", "Đội Trưởng (BOSS)", "Thủ Tướng (FINAL BOSS)"
-]
 
 # battle_speed là số giây chờ giữa các nhịp trong trận (nhỏ hơn = nhanh hơn)
 const BATTLE_SPEED_FAST := 0.6
@@ -74,27 +67,6 @@ var credits: int = DEFAULT_CREDITS
 var inventory: Dictionary = DEFAULT_INVENTORY.duplicate()
 var opened_chests: Array = []
 
-const ITEM_CATALOG := {
-	"potion": {
-		"name": "Bình Máu",
-		"desc": "Hồi phục 40% HP tối đa cho 1 mục tiêu.",
-		"price": 80,
-		"type": "heal"
-	},
-	"energy_drink": {
-		"name": "Nước Tăng Lực",
-		"desc": "Làm đầy thanh hành động (Hành động ngay lập tức).",
-		"price": 120,
-		"type": "energy"
-	},
-	"bandage": {
-		"name": "Băng Cứu Thương",
-		"desc": "Xóa toàn bộ hiệu ứng trạng thái bất lợi (Debuff).",
-		"price": 60,
-		"type": "cleanse"
-	}
-}
-
 func add_credits(amt: int):
 	credits = max(0, credits + amt)
 
@@ -117,18 +89,7 @@ func use_item(item_id: String, target: Entity) -> bool:
 	if inventory[item_id] <= 0:
 		inventory.erase(item_id)
 		
-	match item_id:
-		"potion":
-			var heal_amt = int(target.max_hp * 0.4)
-			target.heal(heal_amt)
-			print("[Item] Sử dụng Bình Máu lên ", target.entity_name, ": +", heal_amt, " HP")
-		"energy_drink":
-			target.action_gauge = 10000.0
-			print("[Item] Sử dụng Nước Tăng Lực lên ", target.entity_name, ": Đầy thanh hành động!")
-		"bandage":
-			target.active_statuses.clear()
-			target.status_changed.emit(target.active_statuses)
-			print("[Item] Sử dụng Băng Cứu Thương lên ", target.entity_name, ": Xóa sạch debuff!")
+	ItemCatalog.apply_effect(item_id, target)
 	return true
 
 func is_chest_opened(chest_id: String) -> bool:
@@ -224,28 +185,6 @@ func get_skill_target_type(entity: Entity, action_name: String) -> String:
 		if s["method"] == action_name:
 			return s.get("target", "enemy")
 	return "enemy"
-
-func create_sandbox_entity(e_name: String) -> Entity:
-	match e_name:
-		"Ichika": return Ichika.new()
-		"Kanade": return Kanade.new()
-		"Mafuyu": return Mafuyu.new()
-		"Ena": return Ena.new()
-		"Mizuki": return Mizuki.new()
-		"Honami": return Honami.new()
-		"Lính Cảng": return Guard.new()
-		"Kidnapper": return Kidnapper.new()
-		"Giang Hồ": return Thug.new()
-		"Target": return TrainingBot.new()
-		"Nhân Viên Kho": return WarehouseWorker.new()
-		"Khủng Bố": return Terrorist.new()
-		"Drone Trinh Sát": return ReconDrone.new()
-		"Xạ Thủ Bắn Tỉa": return Sniper.new()
-		"Vệ Binh Cơ Giới": return CyborgEnforcer.new()
-		"Chuyên Viên Nhiễu Sóng": return CyberJammer.new()
-		"Đội Trưởng (BOSS)": return Captain.new()
-		"Thủ Tướng (FINAL BOSS)": return PrimeMinister.new()
-	return Entity.new()
 
 # ── Kết nối StoryState (Flags & Variables) ─────────────────────────────────
 var warehouse_wave: int:
@@ -370,7 +309,7 @@ func has_save() -> bool:
 func reset_game():
 	story.reset()
 	last_player_position = Vector2.ZERO
-	current_map_file = "res://Maps/Prologue/PrologueMap.tscn"
+	current_map_file = MapPaths.PROLOGUE
 	last_load_error = ""
 	last_save_error = ""
 	last_battle_max_lv = 1
@@ -427,6 +366,33 @@ func grant_training_exp() -> void:
 		if entity:
 			LevelManager.gain_exp(entity, amount)
 
+# Bắt đầu một trận kịch bản: ghi nhớ map để quay lại sau trận (kèm vị trí người chơi), tùy chọn fade-out rồi vào BattleScene.
+# Kết quả trận do _handle_scripted_battle_finish xử lý (xem ScriptedBattleOutcomes).
+# Chạy trên autoload nên sống lâu hơn map: nếu scene đã đổi trong lúc fade (thoát về menu/tải game) thì hủy trận.
+func start_scripted_battle(id: String, return_map: String, player_pos: Vector2 = Vector2.ZERO, fade: float = 0.0) -> void:
+	var scene := get_tree().current_scene
+	is_scripted_battle = true
+	scripted_battle_id = id
+	store_map_state(return_map, player_pos)
+	if fade > 0.0:
+		await ScreenFade.fade_out(fade)
+		if get_tree().current_scene != scene:
+			is_scripted_battle = false
+			scripted_battle_id = ""
+			return
+	trigger_battle()
+
+# Sang một map khác: fade-out, ghi nhớ map đích rồi đổi scene. Chạy trên autoload nên không chết theo map đang bị đóng;
+# nếu scene đã đổi trong lúc fade (người chơi tải game/thoát về menu) thì bỏ qua, không kéo scene mới đi chỗ khác.
+func change_map(path: String, fade: float = 1.0, player_pos: Vector2 = Vector2.ZERO) -> void:
+	var scene := get_tree().current_scene
+	if fade > 0.0:
+		await ScreenFade.fade_out(fade)
+		if get_tree().current_scene != scene:
+			return
+	store_map_state(path, player_pos)
+	get_tree().change_scene_to_file(path)
+
 # Ghi nhớ bản đồ và vị trí hiện tại
 func store_map_state(map_path: String, player_pos: Vector2):
 	current_map_file = map_path
@@ -447,7 +413,7 @@ func full_heal_party():
 # Chuyển cảnh đến trận chiến
 func trigger_battle():
 	AudioManager.play_music("battle")
-	get_tree().change_scene_to_file("res://Scripts/Battle/BattleScene.tscn")
+	get_tree().change_scene_to_file(MapPaths.BATTLE_SCENE)
 
 func finish_battle(victory: bool, count: int = 1):
 	"""
@@ -459,7 +425,7 @@ func finish_battle(victory: bool, count: int = 1):
 	Returns: Không có
 	"""
 	if is_sandbox:
-		get_tree().change_scene_to_file("res://UI/Menus/Sandbox/SandboxMenu.tscn")
+		get_tree().change_scene_to_file(MapPaths.SANDBOX_MENU)
 		return
 
 	if is_scripted_battle:
@@ -488,41 +454,13 @@ func finish_battle(victory: bool, count: int = 1):
 		# Thua trận nhiệm vụ: về căn cứ, mở lại luyện tập cho người chơi cày thêm rồi quay lại
 		reset_training_progress()
 			
-	if story.get_flag("harbor_boss_defeated") and current_map_file == "res://Maps/Harbor/HarborMap.tscn":
+	if story.get_flag("harbor_boss_defeated") and current_map_file == MapPaths.HARBOR:
 		await get_tree().create_timer(1.5, false).timeout 
 		await ScreenFade.fade_out(0.8)
 		last_player_position = Vector2.ZERO
-		get_tree().change_scene_to_file("res://Maps/Alleyway/AlleywayMap.tscn")
+		get_tree().change_scene_to_file(MapPaths.ALLEYWAY)
 	else:
 		get_tree().change_scene_to_file(current_map_file)
-
-# Các trận kịch bản có kết cục cố định theo cốt truyện: cờ được ghi dù thắng hay thua (thua là chủ ý).
-const FATED_BATTLES = {
-	"bounty_ambush": "ena_captured",
-	"mizuki_vs_ena_forced": "ena_killed",
-	"mizuki_vs_kanade": "mizuki_killed",
-	"ichika_vs_kanade_slow": "kanade_killed",
-	"honami_spar": "honami_spar_done", # buổi thử phản xạ không thể thắng; cờ ghi dù kết quả ra sao
-}
-
-# Các trận chỉ ghi cờ khi thắng; thua thì map phát lại để đánh lại.
-const WIN_FLAG_BATTLES = {
-	"bounty_1": "bounty_1_done",
-	"bounty_2": "bounty_2_done",
-	"bounty_3": "bounty_3_done",
-	"final_mafuyu": "final_mafuyu_defeated",
-	"training_trial": "training_trial_won",
-	"mizuki_police_2": "mizuki_police_done",
-	"ops_kanade": "ops_kanade_done",
-	"ops_ena": "ops_ena_done",
-	"ops_ichika": "ops_ichika_done",
-	"ops_honami": "ops_honami_done",
-	"pm_boss": "pm_boss_defeated",
-}
-
-# Các trận cốt truyện khó của màn Tác chiến/Thủ Tướng: thua thì về căn cứ trước nhiệm vụ để luyện tập thêm (không đánh lại ngay tại chỗ).
-# Tiến độ nhiệm vụ nằm trong cờ (ops_*_done) nên Mafuyu cho tiếp tục đúng chỗ.
-const RETREAT_ON_LOSS = ["ops_kanade", "ops_ena", "ops_ichika", "ops_honami", "pm_boss"]
 
 const TRAINING_DONE_FLAGS = [
 	"training_ichika_done", "training_kanade_done", "training_ena_done",
@@ -542,56 +480,30 @@ func _retreat_to_base() -> void:
 
 # Đặt căn cứ làm map hiện tại (người chơi xuất hiện ở vị trí mặc định)
 func _set_base_as_current_map() -> void:
-	current_map_file = "res://Maps/Base/BaseMap.tscn"
+	current_map_file = MapPaths.BASE
 	last_player_position = Vector2.ZERO
 
 func _handle_scripted_battle_finish(victory: bool):
+	var id := scripted_battle_id
 	# Thua trận kịch bản: hồi đầy máu để lần đánh lại không bắt đầu với đồng đội đã gục
-	if not victory or FATED_BATTLES.has(scripted_battle_id):
+	if ScriptedBattleOutcomes.heals_party(id, victory):
 		full_heal_party()
+	ScriptedBattleOutcomes.apply(story, id, victory)
 	
-	# Map đọc hai cờ này để biết trận vừa rồi thắng hay thua (map cần phân biệt khi cờ riêng không đủ)
-	story.set_flag("last_scripted_win", scripted_battle_id if victory else "")
-	story.set_flag("last_scripted_loss", "" if victory else scripted_battle_id)
-	
-	if FATED_BATTLES.has(scripted_battle_id):
-		story.set_flag(FATED_BATTLES[scripted_battle_id], true)
-	elif victory and WIN_FLAG_BATTLES.has(scripted_battle_id):
-		story.set_flag(WIN_FLAG_BATTLES[scripted_battle_id], true)
-	
-	if scripted_battle_id == "harbor_boss":
+	if id == "harbor_boss":
+		# Boss Bến Cảng có đường chuyển cảnh riêng: thắng thì sang hẻm sau trận, thua thì về lại bến cảng
 		is_scripted_battle = false
 		scripted_battle_id = ""
 		if victory:
-			story.set_flag("harbor_boss_defeated", true)
 			await get_tree().create_timer(1.5, false).timeout
 			await ScreenFade.fade_out(0.8)
 			last_player_position = Vector2.ZERO
-			get_tree().change_scene_to_file("res://Maps/Alleyway/AlleywayMap.tscn")
+			get_tree().change_scene_to_file(MapPaths.ALLEYWAY)
 		else:
-			get_tree().change_scene_to_file("res://Maps/Harbor/HarborMap.tscn")
+			get_tree().change_scene_to_file(MapPaths.HARBOR)
 		return
-	elif scripted_battle_id == "mizuki_vs_mafuyu":
-		story.set_flag("mizuki_vs_mafuyu_done", true)
-	elif scripted_battle_id == "ena_vs_mizuki":
-		story.set_flag("ena_vs_mizuki_done", true)
-		story.set_flag("ena_vs_mizuki_won", victory)
-	elif scripted_battle_id == "ena_vs_thugs":
-		story.set_flag("ena_vs_thugs_done", true)
-		story.set_flag("ena_vs_thugs_won", victory)
-	elif scripted_battle_id == "street_skirmish":
-		# Chỉ tính xong khi thắng; thua thì StreetMap phát lại đoạn mở đầu để đánh lại
-		if victory:
-			story.set_flag("street_skirmish_done", true)
-			story.set_flag("street_skirmish_won", true)
-	elif scripted_battle_id == "street_survival":
-		story.set_flag("street_survival_done", true)
-		story.set_flag("street_survival_won", victory)
-	elif scripted_battle_id == "training_trial":
-		# Thua bài kiểm tra: FinaleStage cho chuẩn bị thêm (luyện tập/nâng cấp) thay vì ép đánh lại ngay
-		story.set_flag("training_trial_failed", not victory)
 	
-	if not victory and scripted_battle_id in RETREAT_ON_LOSS:
+	if ScriptedBattleOutcomes.retreats_to_base(id, victory):
 		_retreat_to_base()
 	
 	is_scripted_battle = false
@@ -606,6 +518,6 @@ func _apply_victory_rewards(count: int):
 		grant_training_exp()
 	elif current_map_file.contains("Warehouse"):
 		story.warehouse_wave += 1
-	if current_map_file == "res://Maps/Harbor/HarborMap.tscn":
+	if current_map_file == MapPaths.HARBOR:
 		# Trận Boss Bến Cảng luôn là trận kịch bản (xử lý ở _handle_scripted_battle_finish) nên ở đây chỉ đếm wave lính gác
 		story.harbor_wave += 1

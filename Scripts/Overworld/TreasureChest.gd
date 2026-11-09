@@ -80,7 +80,7 @@ func _on_interacted():
 	if reward_item != "" and reward_item_count > 0:
 		GameManager.add_item(reward_item, reward_item_count)
 		
-	var item_name = GameManager.ITEM_CATALOG.get(reward_item, {}).get("name", reward_item)
+	var item_name = ItemCatalog.ITEMS.get(reward_item, {}).get("name", reward_item)
 	var msg = "Bạn đã mở rương kho báu!\nNhận được: %d Credits" % reward_credits
 	if reward_item != "" and reward_item_count > 0:
 		msg += " và %d %s" % [reward_item_count, item_name]

@@ -79,9 +79,9 @@ func test_new_dialogue_keys_exist():
 func test_new_story_flags_have_defaults():
 	for flag in NEW_FLAGS:
 		assert_true(StoryState.DEFAULT_FLAGS.has(flag), "default flag exists: " + flag)
-	assert_eq(GameManager.FATED_BATTLES.get("honami_spar"), "honami_spar_done", "spar sets its flag win or lose")
-	assert_eq(GameManager.WIN_FLAG_BATTLES.get("training_trial"), "training_trial_won", "trial sets its flag on a win")
-	assert_true("ops_ena" in GameManager.RETREAT_ON_LOSS, "losing the convoy fight retreats like the other ops")
+	assert_eq(ScriptedBattleOutcomes.FATED.get("honami_spar"), "honami_spar_done", "spar sets its flag win or lose")
+	assert_eq(ScriptedBattleOutcomes.WIN_FLAG.get("training_trial"), "training_trial_won", "trial sets its flag on a win")
+	assert_true("ops_ena" in ScriptedBattleOutcomes.RETREAT_ON_LOSS, "losing the convoy fight retreats like the other ops")
 
 func test_new_battles_build_valid_teams():
 	GameManager.reset_game()

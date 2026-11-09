@@ -11,8 +11,8 @@ Luồng được suy ra hoàn toàn từ cờ nên tải save vẫn tiếp tục
 """
 
 const TILE_SIZE = 32
-const MAP_PATH := "res://Maps/Bounty/BountyMap.tscn"
-const NEXT_PATH := "res://Maps/Interrogation/InterrogationMap.tscn"
+const MAP_PATH := MapPaths.BOUNTY
+const NEXT_PATH := MapPaths.INTERROGATION
 const ENA_COLOR := Color(0.72, 0.38, 0.16)
 const POLICE_COLOR := Color(0.35, 0.5, 0.85)
 const NIGHT := Color(0.5, 0.52, 0.72)
@@ -324,16 +324,10 @@ func _ambush() -> void:
 
 func _start_battle(id: String) -> void:
 	var p := get_node_or_null("OverworldPlayer") as Node2D
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = id
-	GameManager.store_map_state(MAP_PATH, p.global_position if p else Vector2.ZERO)
-	await ScreenFade.fade_out(1.0)
-	GameManager.trigger_battle()
+	await GameManager.start_scripted_battle(id, MAP_PATH, p.global_position if p else Vector2.ZERO, 1.0)
 
 func _go(path: String) -> void:
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state(path, Vector2.ZERO)
-	get_tree().change_scene_to_file(path)
+	await GameManager.change_map(path, 1.0)
 
 # Phát một đoạn hội thoại và chờ xong; khóa thiếu (mảng rỗng) thì chạy tiếp ngay
 func _say(key: String) -> void:

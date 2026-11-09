@@ -61,13 +61,10 @@ func _build():
 	column.add_child(_error_label)
 
 func _add_button(parent: Control, text: String, handler: Callable, kind: UITheme.Kind = UITheme.Kind.SECONDARY) -> Button:
-	var btn := Button.new()
-	btn.text = text
-	UITheme.style_button(btn, kind, UITheme.FS_HEADING if kind == UITheme.Kind.PRIMARY else UITheme.FS_LABEL)
-	btn.pressed.connect(handler)
+	var btn := UITheme.make_button(text, kind, UITheme.FS_HEADING if kind == UITheme.Kind.PRIMARY else UITheme.FS_LABEL, handler)
 	parent.add_child(btn)
 	if kind == UITheme.Kind.PRIMARY:
-		btn.call_deferred("grab_focus")
+		UITheme.focus_later(btn)
 	return btn
 
 # Đang chạy một lần chuyển cảnh (fade): bấm thêm nút khác hay bấm đúp không được chạy lần thứ hai
@@ -95,14 +92,14 @@ func _on_new_game():
 	_busy = true
 	await ScreenFade.fade_out(1.0)
 	GameManager.reset_game()
-	get_tree().change_scene_to_file("res://Maps/Prologue/PrologueMap.tscn")
+	get_tree().change_scene_to_file(MapPaths.PROLOGUE)
 
 func _on_sandbox():
 	if _busy:
 		return
 	_busy = true
 	await ScreenFade.fade_out(0.5)
-	get_tree().change_scene_to_file("res://UI/Menus/Sandbox/SandboxMenu.tscn")
+	get_tree().change_scene_to_file(MapPaths.SANDBOX_MENU)
 
 func _on_open_options():
 	PauseMenu.show_options(true)

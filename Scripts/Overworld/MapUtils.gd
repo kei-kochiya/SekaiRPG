@@ -6,6 +6,17 @@ const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 const PERSON_ROOT = "res://Assets/Person/"
 const ROAD_ROOT = "res://Assets/Roads/"
 
+# Màu đại diện của từng nhân vật chính: nguồn duy nhất cho nhãn NPC trên map (BaseMap.NPC_COLORS) và cho việc OverworldPlayer
+# đoán sprite từ màu (thay cho hai bảng riêng đã lệch nhau ở màu Honami)
+const CHARACTER_COLORS := {
+	"Mafuyu": Color(0.4,  0.3,  0.5),
+	"Ena":    Color(0.72, 0.38, 0.16),
+	"Kanade": Color(0.8,  0.8,  0.9),
+	"Mizuki": Color(0.85, 0.65, 0.8),
+	"Ichika": Color(0.29, 0.62, 0.62),
+	"Honami": Color(1.0, 0.67, 0.53),
+}
+
 static func place_tile(parent: Node2D, file: String, grid_pos: Vector2, has_collision: bool = false):
 	var sprite = Sprite2D.new()
 	sprite.texture = load(ASSET_ROOT + file)

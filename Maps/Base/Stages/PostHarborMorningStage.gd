@@ -9,7 +9,8 @@ Quản lý chuỗi sự kiện thức dậy, các lựa chọn tương tác bu�
 hoặc luyện tập được thỏa mãn.
 """
 
-var _cutscene_active: bool = false
+# Mafuyu cho luyện tập bốn người này; ai đã tập xong thì không hiện nữa
+const TRAINEES := ["Ichika", "Kanade", "Ena", "Mizuki"]
 
 func get_npc_positions() -> Dictionary:
 	var pos = {
@@ -39,12 +40,7 @@ func on_stage_start():
 	GameManager.set_flag("mizuki_control_phase", false)
 	
 	# Đảm bảo player là đúng nhân vật
-	var player = map.get_node_or_null("OverworldPlayer")
-	if player:
-		if GameManager.get_flag("ena_control_phase"):
-			player.character_color = map.NPC_COLORS["Ena"]
-		else:
-			player.character_color = map.NPC_COLORS["Ichika"]
+	map.set_player("Ena" if GameManager.get_flag("ena_control_phase") else "Ichika")
 	
 	# Reset training flags
 	if not GameManager.get_flag("post_harbor_training_reset"):
@@ -57,7 +53,7 @@ func on_stage_start():
 	# Đặt người chơi (Ichika) cạnh giường ban đầu nếu chưa xem cutscene
 	if not GameManager.get_flag("post_harbor_morning_done"):
 		_cutscene_active = true
-		if player: player.position = Vector2(6 * map.TILE_SIZE, 6 * map.TILE_SIZE)
+		map.place_player(Vector2(6, 6))
 		
 	if not GameManager.get_flag("post_harbor_morning_done"):
 		_play_morning_cutscene()
@@ -88,9 +84,7 @@ func _check_ena_phase_trigger():
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("ena_bored_intro"), func():
 				GameManager.set_flag("ena_cafe_unlocked", true)
 				GameManager.set_flag("ena_control_phase", true)
-				var player = map.get_node_or_null("OverworldPlayer")
-				if player:
-					player.character_color = map.NPC_COLORS["Ena"]
+				map.set_player("Ena")
 				map._spawn_npcs()
 				map._refresh_quest_label()
 			)
@@ -122,8 +116,7 @@ func _simulate_food_run():
 	GameManager.set_flag("post_harbor_morning_done", true)
 	map._spawn_npcs() # Respawn để dời Ena ra sảnh chính
 	
-	var player = map.get_node_or_null("OverworldPlayer")
-	if player: player.position = Vector2(24 * map.TILE_SIZE, 20 * map.TILE_SIZE) # Trở về từ cửa sổ/cửa chính
+	map.place_player(Vector2(24, 20)) # Trở về từ cửa sổ/cửa chính
 	
 	_update_ena_visuals()
 	
@@ -149,8 +142,6 @@ func _set_ena_hanging(hanging: bool):
 		body.rotation_degrees = 180.0 if hanging else 0.0
 
 func handle_npc_interaction(npc_name: String):
-	if _cutscene_active: return
-	
 	var is_ena = GameManager.get_flag("ena_control_phase")
 	
 	if not is_ena:
@@ -176,9 +167,7 @@ func handle_npc_interaction(npc_name: String):
 	elif npc_name == "Mizuki":
 		if is_ena:
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("ena_invite_mizuki"), func():
-				await ScreenFade.fade_out(1.0)
-				GameManager.last_player_position = Vector2.ZERO
-				get_tree().change_scene_to_file("res://Maps/Cafe/CafeMap.tscn")
+				await GameManager.change_map(MapPaths.CAFE, 1.0)
 			)
 		else:
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_mizuki"))
@@ -188,7 +177,7 @@ func handle_npc_interaction(npc_name: String):
 			if not GameManager.get_flag("ena_released"):
 				DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_ena_hanging"))
 			else:
-				DialogueManager.play_dialogue([{"text": "Xê ra! Chị mày đang đau lưng!", "type": "dialogue", "name": "Ena", "color": Color("#b86028")}])
+				DialogueManager.play_dialogue([say("Ena", "Xê ra! Chị mày đang đau lưng!")])
 				
 	elif npc_name == "Mafuyu":
 		if not GameManager.get_flag("ena_released"):
@@ -205,34 +194,8 @@ func handle_npc_interaction(npc_name: String):
 
 func _show_training_menu():
 	GameManager.set_flag("talked_to_mafuyu_training", true)
-	
-	var opts: Array = []
-	var mapping = []
-	if not GameManager.get_flag("training_ichika_done"):
-		opts.append("Ichika (5 Waves)")
-		mapping.append("Ichika")
-	if not GameManager.get_flag("training_kanade_done"):
-		opts.append("Kanade (5 Waves)")
-		mapping.append("Kanade")
-	if not GameManager.get_flag("training_ena_done"):
-		opts.append("Ena (5 Waves)")
-		mapping.append("Ena")
-	if not GameManager.get_flag("training_mizuki_done"):
-		opts.append("Mizuki (5 Waves)")
-		mapping.append("Mizuki")
-	
-	opts.append("Để sau.")
-	
-	var idx: int = await DialogueManager.ask(opts)
-	if opts[idx] == "Để sau.":
+	if not await offer_training(TRAINEES, true):
 		_check_ena_phase_trigger()
-		return
-
-	GameManager.begin_training([mapping[idx]])
-	
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
 
 func get_quest_text() -> String:
 	if not GameManager.get_flag("ena_released"):

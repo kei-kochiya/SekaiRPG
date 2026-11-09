@@ -39,7 +39,7 @@ func _ready():
 	_build_lists()
 	_setup_controls()
 	ScreenFade.fade_in(0.5)
-	player_side.get_node("Scroll/CharList").get_child(0).call_deferred("grab_focus")
+	UITheme.focus_later(player_side.get_node("Scroll/CharList").get_child(0))
 
 # ── Giao diện ──────────────────────────────────────────────────────────────
 
@@ -143,10 +143,8 @@ func _add_level_row(side: VBoxContainer) -> SpinBox:
 	return spin
 
 func _make_step_button(text: String, tip: String) -> Button:
-	var btn = Button.new()
-	btn.text = text
+	var btn = UITheme.make_button(text, UITheme.Kind.SECONDARY, UITheme.FS_HEADING)
 	btn.tooltip_text = tip
-	UITheme.style_button(btn, UITheme.Kind.SECONDARY, UITheme.FS_HEADING)
 	btn.custom_minimum_size.x = UITheme.MIN_TOUCH
 	return btn
 
@@ -158,7 +156,7 @@ func _build_lists():
 	var hover_row = UITheme.box(UITheme.INK_700, Color.TRANSPARENT, UITheme.RADIUS_SM, UITheme.SP_1, UITheme.SP_1)
 	var char_list = player_side.get_node("Scroll/CharList")
 	char_list.add_theme_constant_override("separation", UITheme.SP_1)
-	for c_name in GameManager.available_sandbox_chars:
+	for c_name in EntityFactory.SANDBOX_CHARACTERS:
 		var btn = CheckBox.new()
 		btn.text = c_name
 		btn.custom_minimum_size.y = UITheme.MIN_TOUCH
@@ -175,16 +173,12 @@ func _build_lists():
 
 	var enemy_list = enemy_side.get_node("Scroll/EnemyList")
 	enemy_list.add_theme_constant_override("separation", UITheme.SP_1)
-	var all_enemies = GameManager.available_sandbox_chars + GameManager.available_sandbox_monsters
+	var all_enemies = EntityFactory.SANDBOX_CHARACTERS + EntityFactory.SANDBOX_MONSTERS
 	for e_name in all_enemies:
 		_add_enemy_row(enemy_list, e_name)
 
-	clear_enemy_btn = Button.new()
-	clear_enemy_btn.text = "Xóa hết địch"
-	UITheme.style_button(clear_enemy_btn, UITheme.Kind.GHOST, UITheme.FS_BODY)
-	for color_name in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
-		clear_enemy_btn.add_theme_color_override(color_name, UITheme.DANGER_TEXT)
-	clear_enemy_btn.pressed.connect(_on_clear_enemies)
+	clear_enemy_btn = UITheme.make_button("Xóa hết địch", UITheme.Kind.GHOST, UITheme.FS_BODY, _on_clear_enemies)
+	UITheme.tint_button_text(clear_enemy_btn, UITheme.DANGER_TEXT)
 	_enemy_count_label = enemy_side.get_node("SelectedLabel")
 	var enemy_footer = _make_footer(enemy_side, _enemy_count_label)
 	enemy_footer.add_child(clear_enemy_btn)
@@ -245,7 +239,7 @@ func _on_player_toggled(is_on: bool, c_name: String, chk: CheckBox):
 		if not selected_players.has(c_name):
 			selected_players.append(c_name)
 			if not sandbox_player_instances.has(c_name):
-				var p = GameManager.create_sandbox_entity(c_name)
+				var p = EntityFactory.create(c_name)
 				LevelManager.set_initial_level(p, int(player_lv_spin.value))
 				sandbox_player_instances[c_name] = p
 	else:
@@ -339,7 +333,7 @@ func _on_start():
 	# Khởi tạo phe địch
 	var e_lv = int(enemy_lv_spin.value)
 	for e_name in selected_enemies:
-		var enemy = GameManager.create_sandbox_entity(e_name)
+		var enemy = EntityFactory.create(e_name)
 		LevelManager.set_initial_level(enemy, e_lv)
 		GameManager.sandbox_enemy_team.append(enemy)
 
@@ -355,4 +349,4 @@ func _on_back():
 	GameManager.sandbox_player_team.clear()
 	GameManager.sandbox_enemy_team.clear()
 	await ScreenFade.fade_out(0.5)
-	get_tree().change_scene_to_file("res://UI/Menus/Start/StartMenu.tscn")
+	get_tree().change_scene_to_file(MapPaths.START_MENU)

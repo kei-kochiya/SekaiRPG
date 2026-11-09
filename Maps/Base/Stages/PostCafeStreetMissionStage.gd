@@ -8,7 +8,8 @@ PostCafeStreetMissionStage: Kịch bản sảnh chính sau sự kiện Quán Caf
 - Tiến trình tiếp tục khi Ichika nói chuyện với Mizuki và đi ra cửa chính.
 """
 
-var _cutscene_active: bool = false
+# Mafuyu cho luyện tập bốn người này (không ẩn ai đã tập xong)
+const TRAINEES := ["Ichika", "Kanade", "Ena", "Mizuki"]
 
 func get_npc_positions() -> Dictionary:
 	return {
@@ -27,15 +28,12 @@ func on_stage_start():
 	GameManager.set_flag("mizuki_control_phase", false)
 	GameManager.set_flag("ena_control_phase", false)
 	
-	var player = map.get_node_or_null("OverworldPlayer")
-	if player:
-		player.character_color = map.NPC_COLORS["Ichika"]
+	map.set_player("Ichika")
 		
 	# Nếu chưa bắt đầu nhiệm vụ, tự động chạy cutscene giao nhiệm vụ của Mafuyu
 	if not GameManager.get_flag("street_mission_started"):
 		_cutscene_active = true
-		if player:
-			player.position = Vector2(24 * map.TILE_SIZE, 15 * map.TILE_SIZE)
+		map.place_player(Vector2(24, 15))
 		
 		# Đợi màn hình fade-in hoàn tất rồi mới thoại
 		await map.get_tree().create_timer(0.5).timeout
@@ -46,36 +44,21 @@ func on_stage_start():
 		)
 
 func handle_npc_interaction(npc_name: String):
-	if _cutscene_active: return
-	
 	if npc_name == "Kanade":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("talk_kanade_post"), func():
 			open_upgrade_ui()
 		)
 	elif npc_name == "Mafuyu":
-		DialogueManager.play_dialogue([{"text": "Hãy chuẩn bị thật kỹ trước khi xuất phát thám thính.", "type": "dialogue", "name": "Mafuyu", "color": Color("#665588")}], func():
-			_show_training_menu()
+		DialogueManager.play_dialogue([say("Mafuyu", "Hãy chuẩn bị thật kỹ trước khi xuất phát thám thính.")], func():
+			offer_training(TRAINEES)
 		)
 	elif npc_name == "Ena":
-		DialogueManager.play_dialogue([{"text": "Hừ... Chị mệt đứt cả hơi sau vụ quán Cafe rồi, hai đứa đi thám thính cẩn thận đấy.", "type": "dialogue", "name": "Ena", "color": Color("#b86028")}])
+		DialogueManager.play_dialogue([say("Ena", "Hừ... Chị mệt đứt cả hơi sau vụ quán Cafe rồi, hai đứa đi thám thính cẩn thận đấy.")])
 	elif npc_name == "Mizuki":
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("lobby_street_mission_ready_mizuki"), func():
 			GameManager.set_flag("street_mission_ready", true)
 			map._refresh_quest_label()
 		)
-
-func _show_training_menu():
-	var opts: Array = ["Ichika (5 Waves)", "Kanade (5 Waves)", "Ena (5 Waves)", "Mizuki (5 Waves)", "Để sau."]
-	var mapping = ["Ichika", "Kanade", "Ena", "Mizuki"]
-	
-	var idx: int = await DialogueManager.ask(opts)
-	if opts[idx] == "Để sau.": return
-	
-	GameManager.begin_training([mapping[idx]])
-	
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state("res://Maps/Warehouse/TrainingWarehouseMap.tscn", Vector2.ZERO)
-	get_tree().change_scene_to_file("res://Maps/Warehouse/TrainingWarehouseMap.tscn")
 
 func get_quest_text() -> String:
 	if not GameManager.get_flag("street_mission_ready"):

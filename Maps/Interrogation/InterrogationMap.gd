@@ -7,8 +7,8 @@ trong test) thì chỉ dựng phòng như cảnh A, không chạy logic.
 """
 
 const TILE_SIZE = 32
-const MAP_PATH := "res://Maps/Interrogation/InterrogationMap.tscn"
-const BASE_PATH := "res://Maps/Base/BaseMap.tscn"
+const MAP_PATH := MapPaths.INTERROGATION
+const BASE_PATH := MapPaths.BASE
 const COLORS := {
 	"Mafuyu": Color(0.4, 0.3, 0.5), "Ena": Color(0.72, 0.38, 0.16), "Kanade": Color(0.8, 0.8, 0.9),
 	"Mizuki": Color(0.85, 0.65, 0.8), "Ichika": Color(0.29, 0.62, 0.62),
@@ -392,16 +392,10 @@ func _walk(node: Node2D, grid: Vector2, secs: float, free_after: bool = false) -
 func _battle(id: String) -> void:
 	_busy = true
 	var p := get_node_or_null("OverworldPlayer") as Node2D
-	GameManager.is_scripted_battle = true
-	GameManager.scripted_battle_id = id
-	GameManager.store_map_state(MAP_PATH, p.global_position if p else Vector2.ZERO)
-	await ScreenFade.fade_out(1.0)
-	GameManager.trigger_battle()
+	await GameManager.start_scripted_battle(id, MAP_PATH, p.global_position if p else Vector2.ZERO, 1.0)
 
 func _go(path: String) -> void:
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state(path, Vector2.ZERO)
-	get_tree().change_scene_to_file(path)
+	await GameManager.change_map(path, 1.0)
 
 # Phát một đoạn hội thoại và chờ xong; khóa thiếu (mảng rỗng) thì chạy tiếp ngay
 func _say(key: String) -> void:

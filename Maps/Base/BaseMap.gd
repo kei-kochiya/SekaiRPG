@@ -8,18 +8,12 @@ Chứa toàn bộ logic xây dựng bản đồ (Visual) và điều phối các
 const TILE_SIZE = 32
 
 # Các map của Hồi kết 2 (dùng chuỗi, không preload, để Base vẫn nạp được khi thiếu một map)
-const BOUNTY_SCENE := "res://Maps/Bounty/BountyMap.tscn"
-const INTERROGATION_SCENE := "res://Maps/Interrogation/InterrogationMap.tscn"
-const HONAMI_HOUSE_SCENE := "res://Maps/HonamiHouse/HonamiHouseMap.tscn"
+const BOUNTY_SCENE := MapPaths.BOUNTY
+const INTERROGATION_SCENE := MapPaths.INTERROGATION
+const HONAMI_HOUSE_SCENE := MapPaths.HONAMI_HOUSE
 
-const NPC_COLORS := {
-	"Mafuyu": Color(0.4,  0.3,  0.5),
-	"Ena":    Color(0.72, 0.38, 0.16),
-	"Kanade": Color(0.8,  0.8,  0.9),
-	"Mizuki": Color(0.85, 0.65, 0.8),
-	"Ichika": Color(0.29, 0.62, 0.62),
-	"Honami": Color(1.0, 0.67, 0.53),
-}
+# Bảng màu nhân vật dùng chung với OverworldPlayer (một nguồn duy nhất ở MapUtils)
+const NPC_COLORS := MapUtils.CHARACTER_COLORS
 
 var current_stage: BaseMapStage
 var _quest_label: Label
@@ -168,6 +162,20 @@ func unfreeze_player() -> void:
 	if player:
 		player.set_physics_process(true)
 
+# Đổi nhân vật người chơi theo tên (màu -> sprite); thay cho khối get_node_or_null("OverworldPlayer") + character_color chép ở nhiều Stage
+func set_player(char_name: String) -> void:
+	var player := get_node_or_null("OverworldPlayer") as OverworldPlayer
+	if player:
+		player.character_color = NPC_COLORS[char_name]
+
+# Đặt người chơi tại ô lưới (và hướng nhìn nếu có); thay cho `player.position = Vector2(x * TILE_SIZE, y * TILE_SIZE)` chép ở nhiều Stage
+func place_player(grid_pos: Vector2, facing: String = "") -> void:
+	var player := get_node_or_null("OverworldPlayer") as OverworldPlayer
+	if player:
+		player.position = grid_pos * TILE_SIZE
+		if facing != "":
+			player.set_facing(facing)
+
 # ── Map Construction (Dùng chung cho mọi Stage) ───────────────────────────────
 
 func _build_map():
@@ -251,7 +259,7 @@ func _create_npc(npc_name: String, pos: Vector2, color: Color):
 	root.add_child(zone)
 	
 	zone.interacted.connect(func():
-		if current_stage: current_stage.handle_npc_interaction(npc_name)
+		if current_stage: current_stage.talk_to_npc(npc_name)
 	)
 	
 	var sb = StaticBody2D.new()
@@ -308,97 +316,83 @@ func _on_exit_interacted():
 	if GameManager.get_flag("honami_house_unlocked"):
 		var idx: int = await DialogueManager.ask(["[Đến nhà Honami]", "[Đi dạo (Khu phố)]", "[Hủy]"])
 		if idx == 0:
-			_leave_to("res://Maps/HonamiHouse/HonamiHouseMap.tscn")
+			_leave_to(MapPaths.HONAMI_HOUSE)
 		elif idx == 1:
-			_leave_to("res://Maps/Street/StreetMap.tscn")
+			_leave_to(MapPaths.STREET)
 		else:
 			_leaving = false
 	elif (GameManager.accepted_harbor_mission or GameManager.get_flag("harbor_mission_unlocked")) and not GameManager.harbor_mission_done:
-		_leave_to("res://Maps/Harbor/HarborMap.tscn")
+		_leave_to(MapPaths.HARBOR)
 	# Kiểm tra chuyển cảnh sang StreetMap
 	elif GameManager.get_flag("ena_cafe_done") and not GameManager.get_flag("street_survival_done"):
 		if GameManager.get_flag("street_mission_ready"):
-			_leave_to("res://Maps/Street/StreetMap.tscn")
+			_leave_to(MapPaths.STREET)
 		else:
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("lobby_street_mission_not_ready"))
 			_leaving = false
 	# Chỉ đi Warehouse nếu chưa xong 5 wave
 	elif GameManager.warehouse_mission_accepted and GameManager.warehouse_wave <= 5:
-		_leave_to("res://Maps/Warehouse/WarehouseMap.tscn")
+		_leave_to(MapPaths.WAREHOUSE)
 	else:
 		DialogueManager.play_dialogue([{"text": "Bạn chưa có lý do gì để ra ngoài lúc này.", "type": "narrator"}])
 		_leaving = false
 
 func _leave_to(scene_path: String):
 	_leaving = true
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state(scene_path, Vector2.ZERO)
-	get_tree().change_scene_to_file(scene_path)
+	await GameManager.change_map(scene_path, 1.0)
 
 func _spawn_shop_and_sim():
 	# 1. Máy bán hàng tự động (Shop)
-	var shop_root = Node2D.new()
-	shop_root.position = Vector2(16 * TILE_SIZE, 15 * TILE_SIZE)
-	
 	var shop_vis = Sprite2D.new()
 	var shop_tex = load("res://Assets/Sprites/chest_closed.svg")
 	if shop_tex:
 		shop_vis.texture = shop_tex
 		shop_vis.scale = Vector2(0.8, 0.8)
 		shop_vis.position = Vector2(0, -10)
-	shop_root.add_child(shop_vis)
-	
-	shop_root.add_child(MapUtils.make_world_label("Cửa Hàng", UITheme.ACCENT, -48.0))
-	
-	var shop_zone = InteractableZone.new()
-	shop_zone.prompt_text = "Mở Cửa Hàng (Shop)"
-	var sz_col = CollisionShape2D.new()
-	var sz_shape = CircleShape2D.new()
-	sz_shape.radius = 38.0
-	sz_col.shape = sz_shape
-	shop_zone.add_child(sz_col)
-	shop_zone.interacted.connect(func():
-		var shop_menu = ShopMenu.new()
-		add_child(shop_menu)
-	)
-	shop_root.add_child(shop_zone)
-	add_child(shop_root)
+	_build_terminal(Vector2(16, 15), shop_vis, "Cửa Hàng", UITheme.ACCENT, "Mở Cửa Hàng (Shop)", _open_shop)
 
 	# 2. Terminal Mô Phỏng Holo-Sim (Roguelite Leo Tháp)
-	var sim_root = Node2D.new()
-	sim_root.position = Vector2(20 * TILE_SIZE, 15 * TILE_SIZE)
-	
 	var sim_vis = ColorRect.new()
 	sim_vis.size = Vector2(20, 24)
 	sim_vis.position = Vector2(-10, -24)
 	sim_vis.color = Color(0.2, 0.8, 1.0)
-	sim_root.add_child(sim_vis)
+	_build_terminal(Vector2(20, 15), sim_vis, "Holo-Sim (Leo Tháp)", UITheme.BREAK, "Máy Mô Phỏng Holo-Sim", _on_sim_interacted)
+
+# Dựng một bệ tương tác (hình + nhãn + vùng chạm bán kính 38) tại ô lưới; thay cho hai khối gần giống nhau của cửa hàng và Holo-Sim
+func _build_terminal(grid_pos: Vector2, visual: Node, label_text: String, label_color: Color, prompt: String, on_interact: Callable):
+	var root = Node2D.new()
+	root.position = grid_pos * TILE_SIZE
+	root.add_child(visual)
+	root.add_child(MapUtils.make_world_label(label_text, label_color, -48.0))
 	
-	sim_root.add_child(MapUtils.make_world_label("Holo-Sim (Leo Tháp)", UITheme.BREAK, -48.0))
-	
-	var sim_zone = InteractableZone.new()
-	sim_zone.prompt_text = "Máy Mô Phỏng Holo-Sim"
-	var mz_col = CollisionShape2D.new()
-	var mz_shape = CircleShape2D.new()
-	mz_shape.radius = 38.0
-	mz_col.shape = mz_shape
-	sim_zone.add_child(mz_col)
-	sim_zone.interacted.connect(func():
-		var idx: int = await DialogueManager.ask(["[Bắt đầu Leo Tháp (Tầng 1-10)]", "[Xem Kỷ Lục]", "[Rời khỏi]"])
-		if idx == 0:
-			await ScreenFade.fade_out(0.8)
-			var p = get_node_or_null("OverworldPlayer")
-			var p_pos = p.global_position if p else Vector2.ZERO
-			GameManager.store_map_state("res://Maps/Base/BaseMap.tscn", p_pos)
-			HoloSimManager.start_new_run()
-			get_tree().change_scene_to_file("res://Scripts/Battle/BattleScene.tscn")
-		elif idx == 1:
-			DialogueManager.play_dialogue([
-				{"text": "Kỷ lục leo tháp cao nhất của bạn: Tầng %d / 10." % HoloSimManager.high_score_floor, "type": "narrator"}
-			])
-	)
-	sim_root.add_child(sim_zone)
-	add_child(sim_root)
+	var zone = InteractableZone.new()
+	zone.prompt_text = prompt
+	var zone_col = CollisionShape2D.new()
+	var zone_shape = CircleShape2D.new()
+	zone_shape.radius = 38.0
+	zone_col.shape = zone_shape
+	zone.add_child(zone_col)
+	zone.interacted.connect(on_interact)
+	root.add_child(zone)
+	add_child(root)
+
+func _open_shop():
+	var shop_menu = ShopMenu.new()
+	add_child(shop_menu)
+
+func _on_sim_interacted():
+	var idx: int = await DialogueManager.ask(["[Bắt đầu Leo Tháp (Tầng 1-10)]", "[Xem Kỷ Lục]", "[Rời khỏi]"])
+	if idx == 0:
+		await ScreenFade.fade_out(0.8)
+		var p = get_node_or_null("OverworldPlayer")
+		var p_pos = p.global_position if p else Vector2.ZERO
+		GameManager.store_map_state(MapPaths.BASE, p_pos)
+		HoloSimManager.start_new_run()
+		get_tree().change_scene_to_file(MapPaths.BATTLE_SCENE)
+	elif idx == 1:
+		DialogueManager.play_dialogue([
+			{"text": "Kỷ lục leo tháp cao nhất của bạn: Tầng %d / 10." % HoloSimManager.high_score_floor, "type": "narrator"}
+		])
 
 # ── Quest HUD ────────────────────────────────────────────────────────────────
 
