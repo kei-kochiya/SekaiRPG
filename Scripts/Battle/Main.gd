@@ -410,9 +410,7 @@ func _setup_sandbox_exit_button():
 	ctrl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cl.add_child(ctrl)
 	
-	var btn = Button.new()
-	btn.text = "Thoát trận"
-	UITheme.style_button(btn, UITheme.Kind.DANGER, UITheme.FS_BODY)
+	var btn = UITheme.make_button("Thoát trận", UITheme.Kind.DANGER, UITheme.FS_BODY)
 	btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	btn.position = Vector2(-140, 16)

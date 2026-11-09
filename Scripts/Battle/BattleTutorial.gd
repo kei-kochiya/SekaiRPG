@@ -111,9 +111,7 @@ static func _show_tutorial_step(_main: Node, vbox: VBoxContainer, title: String,
 	c_lbl.add_theme_color_override("default_color", UITheme.TEXT)
 	vbox.add_child(c_lbl)
 
-	var btn = Button.new()
-	btn.text = "Tiếp theo"
-	UITheme.style_button(btn, UITheme.Kind.PRIMARY)
+	var btn = UITheme.make_button("Tiếp theo", UITheme.Kind.PRIMARY)
 	btn.custom_minimum_size.x = 160
 	btn.size_flags_horizontal = Control.SIZE_SHRINK_END
 	vbox.add_child(btn)
