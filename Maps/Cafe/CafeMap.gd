@@ -8,7 +8,7 @@ say xỉn của Ena, các lựa chọn rẽ nhánh dẫn đến các trận chi�
 kết cục sau trận đấu trước khi quay trở lại căn cứ.
 """
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 
 func _ready():
 	AudioManager.play_music("map")

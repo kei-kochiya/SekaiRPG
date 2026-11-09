@@ -17,7 +17,6 @@ Chức năng chính:
 
 const SPEED = 250.0
 const ANIM_FRAME_TIME = 0.16
-const SPRITE_ROOT = "res://Assets/Sprites/"
 
 # Tên node cố định: InteractableZone và GameManager.can_save_now tìm người chơi theo tên này
 func _init() -> void:
@@ -106,20 +105,15 @@ func set_facing(dir: String) -> void:
 func _update_sprite_texture():
 	if not _sprite:
 		return
-	var path = SPRITE_ROOT + character_name.to_lower() + ".svg"
-	if ResourceLoader.exists(path):
-		_sprite.texture = load(path)
-		_sprite.hframes = 3
-		_sprite.vframes = 4
-		_update_sprite_frame()
-	else:
-		# Fallback nếu chưa có sprite cụ thể
-		var fallback_path = SPRITE_ROOT + "ichika.svg"
-		if ResourceLoader.exists(fallback_path):
-			_sprite.texture = load(fallback_path)
-			_sprite.hframes = 3
-			_sprite.vframes = 4
-			_update_sprite_frame()
+	var path := MapUtils.get_character_sprite_path(character_name)
+	if path == "":
+		path = MapUtils.get_character_sprite_path("ichika") # chưa có sprite riêng thì dùng của Ichika
+	if path == "":
+		return
+	_sprite.texture = load(path)
+	_sprite.hframes = 3
+	_sprite.vframes = 4
+	_update_sprite_frame()
 
 func _update_sprite_frame():
 	if not _sprite:

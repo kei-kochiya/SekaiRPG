@@ -8,7 +8,7 @@ Cờ mafuyu_honami_talked quyết định dùng hội thoại nào (chưa/đã n
 Kết thúc chuyển về BaseMap_PostHarbor.
 """
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 
 var _map_root: Node2D
 var _lighting: CanvasModulate

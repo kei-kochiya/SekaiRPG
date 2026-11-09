@@ -13,7 +13,7 @@ Thiết kế ngã tư chuyên nghiệp (Level Design & Set Dressing):
 - 4 góc vỉa hè được bao bọc bởi tường xám khép kín, nối góc hoàn hảo (giống PrologueMap).
 """
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 
 var _lighting: CanvasModulate
 

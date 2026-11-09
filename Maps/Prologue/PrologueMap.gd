@@ -10,7 +10,7 @@ Chứa 2 phase:
 
 var has_triggered_outro: bool = false
 
-const TILE_SIZE = 32 # 8x8 tiles scaled 4x
+const TILE_SIZE = MapUtils.TILE_SIZE
 
 func _ready():
 	AudioManager.play_music("map")

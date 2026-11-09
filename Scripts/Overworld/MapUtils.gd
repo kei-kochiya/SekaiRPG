@@ -81,11 +81,12 @@ static func add_backdrop(parent: Node2D, color: Color) -> ColorRect:
 	parent.add_child(bg)
 	return bg
 
-# Camera cố định căn giữa map, zoom 1.5 (thay cho cụm Camera2D chép ở Cafe, Phố, Xa lộ, Tác chiến, nhà Honami)
-static func add_fixed_camera(parent: Node2D) -> Camera2D:
+# Camera cố định căn giữa map (ô lưới `center`, mặc định (15, 10), zoom 1.5); thay cho cụm Camera2D chép ở Cafe, Phố, Xa lộ, Tác chiến,
+# nhà Honami và Thẩm vấn. Người chơi đi kèm phải có follow_camera = false, nếu không camera nào vào cây trước sẽ là camera hiện hành.
+static func add_fixed_camera(parent: Node2D, center: Vector2 = Vector2(15, 10), zoom: float = 1.5) -> Camera2D:
 	var cam := Camera2D.new()
-	cam.position = Vector2(15 * TILE_SIZE, 10 * TILE_SIZE)
-	cam.zoom = Vector2(1.5, 1.5)
+	cam.position = center * TILE_SIZE
+	cam.zoom = Vector2(zoom, zoom)
 	parent.add_child(cam)
 	return cam
 
@@ -201,7 +202,7 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 	var root = Node2D.new()
 	root.position = grid_pos * TILE_SIZE
 	
-	if p_name.begins_with("Khủng Bố") or p_name.begins_with("Terrorist"):
+	if p_name.begins_with("Khủng Bố"):
 		var sprite = Sprite2D.new()
 		sprite.texture = load(PERSON_ROOT + "terrorist.svg")
 		sprite.scale = Vector2(1, 1)

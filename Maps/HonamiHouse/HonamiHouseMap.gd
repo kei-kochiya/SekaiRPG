@@ -1,6 +1,6 @@
 extends Node2D
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 const HOUSE_SCENE := MapPaths.HONAMI_HOUSE
 const TRAINING_SCENE := MapPaths.TRAINING
 const BASE_SCENE := MapPaths.BASE

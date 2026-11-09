@@ -8,7 +8,7 @@ Kẻ địch sinh ngẫu nhiên (có thể là nhân vật trong nhóm hoặc m�
 Hoàn thành chuyển về BaseMap_PostWarehouse.
 """
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 
 var max_waves = 5
 

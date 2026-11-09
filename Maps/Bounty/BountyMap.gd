@@ -10,7 +10,7 @@ Luồng được suy ra hoàn toàn từ cờ nên tải save vẫn tiếp tục
 - Quay lại với `ena_captured`: `bounty_ambush_end` rồi chuyển sang InterrogationMap.
 """
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 const MAP_PATH := MapPaths.BOUNTY
 const NEXT_PATH := MapPaths.INTERROGATION
 const ENA_COLOR: Color = MapUtils.CHARACTER_COLORS["Ena"]
@@ -26,7 +26,6 @@ const CONTRACTS := [
 
 var _busy := false
 var _mod: CanvasModulate
-var _light_tex: GradientTexture2D
 var _hud_label: Label
 
 
@@ -43,7 +42,6 @@ func _ready() -> void:
 	_mod = CanvasModulate.new()
 	_mod.color = NIGHT
 	add_child(_mod)
-	_light_tex = _make_light_tex()
 
 	_build_district()
 	if GameManager.get_flag("ena_captured"):
@@ -339,25 +337,3 @@ func _zone(pos: Vector2, size: Vector2, prompt: String, action: Callable) -> voi
 	var zone := MapUtils.rect_zone(size, prompt, pos)
 	zone.interacted.connect(action)
 	add_child(zone)
-
-func _make_light_tex() -> GradientTexture2D:
-	var tex := GradientTexture2D.new()
-	tex.width = 128
-	tex.height = 128
-	tex.fill = GradientTexture2D.FILL_RADIAL
-	tex.fill_from = Vector2(0.5, 0.5)
-	tex.fill_to = Vector2(1.0, 0.5)
-	var grad := Gradient.new()
-	grad.set_color(0, Color.WHITE)
-	grad.set_color(1, Color(1, 1, 1, 0))
-	tex.gradient = grad
-	return tex
-
-func _light(pos: Vector2, color: Color, energy: float, radius: float) -> void:
-	var l := PointLight2D.new()
-	l.texture = _light_tex
-	l.texture_scale = radius / 64.0
-	l.color = color
-	l.energy = energy
-	l.position = pos
-	add_child(l)

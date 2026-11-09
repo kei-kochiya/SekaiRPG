@@ -6,7 +6,7 @@ B = Mizuki dọn hai toán cảnh sát rồi bị ép đấu Ena, C = sân sau: 
 trong test) thì chỉ dựng phòng như cảnh A, không chạy logic.
 """
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 const MAP_PATH := MapPaths.INTERROGATION
 const BASE_PATH := MapPaths.BASE
 const POLICE := Color(0.35, 0.5, 0.85)
@@ -26,7 +26,6 @@ var _phase: int = Phase.NONE
 var _busy := false
 var _armed := false # chỉ cho cảnh sát tự kích hoạt sau khi map đã ổn định (tránh nổ trận ngay khi nạp)
 var _mod: CanvasModulate
-var _light_tex: GradientTexture2D
 var _screen: ColorRect
 var _npcs: Dictionary = {}
 
@@ -200,15 +199,11 @@ func _cast_c() -> void:
 		_lay_down(kanade)
 	else:
 		_debris(kanade)
-	_spawn_player("Ichika", Vector2(8, 12.5), "right")
-	_fixed_camera() # tạo sau người chơi nên thành camera hiện hành
+	_spawn_player("Ichika", Vector2(8, 12.5), "right", false)
+	_fixed_camera()
 
 func _fixed_camera() -> void:
-	var cam := Camera2D.new()
-	cam.position = Vector2(16, 10) * TILE_SIZE
-	cam.zoom = Vector2(1.4, 1.4)
-	add_child(cam)
-	cam.make_current()
+	MapUtils.add_fixed_camera(self, Vector2(16, 10), 1.4)
 
 # Mảnh kim loại lơ lửng quanh Kanade (từ trường)
 func _debris(node: Node2D) -> void:
@@ -218,8 +213,10 @@ func _debris(node: Node2D) -> void:
 		tw.tween_property(shard, "position:y", shard.position.y - 5.0, 0.7 + 0.1 * i).set_trans(Tween.TRANS_SINE)
 		tw.tween_property(shard, "position:y", shard.position.y + 5.0, 0.7 + 0.1 * i).set_trans(Tween.TRANS_SINE)
 
-func _spawn_player(char_name: String, grid_pos: Vector2, facing: String) -> void:
+# `follow_camera` tắt ở cảnh dùng camera cố định (giai đoạn C); giai đoạn B camera đi theo người chơi, bị chặn trong khu vực
+func _spawn_player(char_name: String, grid_pos: Vector2, facing: String, follow_camera: bool = true) -> void:
 	var p := OverworldPlayer.new()
+	p.follow_camera = follow_camera
 	p.character_color = MapUtils.CHARACTER_COLORS[char_name]
 	p.set_facing(facing)
 	add_child(p)
@@ -440,23 +437,3 @@ func _zone(pos: Vector2, radius: float, prompt: String, action: Callable) -> Int
 	zone.interacted.connect(action)
 	add_child(zone)
 	return zone
-
-# Đèn điểm dùng texture gradient tròn tự tạo (không thêm tài nguyên nhị phân)
-func _light(pos: Vector2, color: Color, energy: float, radius: float, parent: Node = null) -> void:
-	if _light_tex == null:
-		_light_tex = GradientTexture2D.new()
-		_light_tex.width = 128
-		_light_tex.height = 128
-		_light_tex.fill = GradientTexture2D.FILL_RADIAL
-		_light_tex.fill_from = Vector2(0.5, 0.5)
-		_light_tex.fill_to = Vector2(1.0, 0.5)
-		_light_tex.gradient = Gradient.new()
-		_light_tex.gradient.set_color(0, Color.WHITE)
-		_light_tex.gradient.set_color(1, Color(1, 1, 1, 0))
-	var l := PointLight2D.new()
-	l.texture = _light_tex
-	l.texture_scale = radius / 64.0
-	l.color = color
-	l.energy = energy
-	l.position = pos
-	(parent if parent else self).add_child(l)

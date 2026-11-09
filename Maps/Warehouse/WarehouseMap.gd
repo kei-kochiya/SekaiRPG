@@ -8,7 +8,7 @@ Sửa là cấp độ tăng dần (Lv3 →3 →6 →... →15).
 Hoàn thành chuyển về BaseMap_PostWarehouse.
 """
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 
 func _ready():
 	AudioManager.play_music("map")

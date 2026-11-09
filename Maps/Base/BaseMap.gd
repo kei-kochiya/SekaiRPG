@@ -5,7 +5,7 @@ BaseMap: Lớp điều khiển chính (Shell) cho Safehouse.
 Chứa toàn bộ logic xây dựng bản đồ (Visual) và điều phối các Stage (Kịch bản).
 """
 
-const TILE_SIZE = 32
+const TILE_SIZE = MapUtils.TILE_SIZE
 
 # Các map của Hồi kết 2 (dùng chuỗi, không preload, để Base vẫn nạp được khi thiếu một map)
 const BOUNTY_SCENE := MapPaths.BOUNTY
@@ -276,11 +276,8 @@ func _spawn_player():
 		player.position = Vector2(35 * TILE_SIZE, 13 * TILE_SIZE)
 	else:
 		player.position = Vector2(24 * TILE_SIZE, 18 * TILE_SIZE)
-		
-	if GameManager.last_player_position != Vector2.ZERO:
-		player.position = GameManager.last_player_position
-		
-	add_child(player)
+
+	add_child(player) # OverworldPlayer tự nạp last_player_position khi vào cây
 
 func _spawn_transitions():
 	var exit = MapUtils.rect_zone(Vector2(64, 32), "Rời khỏi nhà", Vector2(24 * TILE_SIZE, 21 * TILE_SIZE))

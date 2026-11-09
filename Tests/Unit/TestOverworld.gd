@@ -138,3 +138,33 @@ func test_zone_and_player_factories():
 	root.remove_child(parent)
 	parent.free()
 	GameManager.reset_game()
+
+# Camera cố định dùng chung: mặc định căn giữa (15, 10) zoom 1.5; Thẩm vấn truyền tâm/zoom riêng
+func test_fixed_camera_defaults_and_overrides():
+	var parent := Node2D.new()
+	var plain := MapUtils.add_fixed_camera(parent)
+	assert_eq(plain.position, Vector2(15, 10) * MapUtils.TILE_SIZE, "Tâm mặc định (15, 10)")
+	assert_eq(plain.zoom, Vector2(1.5, 1.5), "Zoom mặc định 1.5")
+	var custom := MapUtils.add_fixed_camera(parent, Vector2(16, 10), 1.4)
+	assert_eq(custom.position, Vector2(16, 10) * MapUtils.TILE_SIZE, "Tâm tùy chọn")
+	assert_eq(custom.zoom, Vector2(1.4, 1.4), "Zoom tùy chọn")
+	assert_eq(parent.get_child_count(), 2, "Mỗi lời gọi thêm đúng một camera")
+	parent.free()
+
+# Đèn dùng chung của StoryMap: texture dựng một lần rồi dùng lại; bán kính px = texture_scale * 64
+func test_story_map_lights_share_one_texture_and_honour_the_parent():
+	var map := StoryMap.new()
+	var other := Node2D.new()
+	map.add_child(other)
+	map._light(Vector2(10, 20), Color(1, 0.8, 0.5), 0.7, 128.0)
+	map._light(Vector2(30, 40), Color.WHITE, 1.0, 64.0, other)
+	var on_map := map.get_children().filter(func(c): return c is PointLight2D)
+	var on_other := other.get_children().filter(func(c): return c is PointLight2D)
+	assert_eq(on_map.size(), 1, "Không truyền parent: đèn gắn vào map")
+	assert_eq(on_other.size(), 1, "Có parent: đèn gắn vào parent")
+	assert_eq((on_map[0] as PointLight2D).texture_scale, 2.0, "Bán kính 128px = scale 2")
+	assert_eq((on_other[0] as PointLight2D).texture_scale, 1.0, "Bán kính 64px = scale 1")
+	assert_eq((on_map[0] as PointLight2D).position, Vector2(10, 20), "Vị trí đèn")
+	assert_eq((on_map[0] as PointLight2D).texture, (on_other[0] as PointLight2D).texture, "Hai đèn dùng chung một texture")
+	map.free()
+
