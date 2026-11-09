@@ -270,6 +270,14 @@ static func tint_button_text(btn: Button, color: Color) -> void:
 	for color_name in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 		btn.add_theme_color_override(color_name, color)
 
+# Giữ focus bàn phím/tay cầm trên đúng nút này: phím mũi tên/Tab không nhảy sang các điều khiển phía sau lớp phủ
+# (dùng cho hộp thoại chỉ có một nút để focus).
+static func trap_focus(btn: Control) -> void:
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		btn.set_focus_neighbor(side, NodePath("."))
+	btn.focus_next = NodePath(".")
+	btn.focus_previous = NodePath(".")
+
 # Dựng nút đã style, tùy chọn nối sẵn `pressed`; thay cho cụm Button.new() + text + style_button + pressed.connect chép khắp UI
 static func make_button(text: String, kind: Kind = Kind.SECONDARY, size: int = FS_LABEL, on_press: Callable = Callable()) -> Button:
 	var btn := Button.new()

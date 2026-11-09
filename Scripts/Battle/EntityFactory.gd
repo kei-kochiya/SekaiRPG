@@ -2,8 +2,9 @@ class_name EntityFactory
 extends RefCounted
 
 """
-EntityFactory: bảng DUY NHẤT từ tên → lớp thực thể (nhân vật và quái) dùng cho Sandbox, Holo-Sim và các trận bản sao.
+EntityFactory: bảng DUY NHẤT từ TÊN HIỂN THỊ → lớp thực thể (nhân vật và quái) dùng cho Sandbox, Holo-Sim và các trận bản sao.
 Trước đây bảng này bị chép ở GameManager (Sandbox), BattleInitializer (bản sao) và HoloSim (match).
+Bảng id kỹ thuật → lớp quái (dữ liệu trận, kịch bản) là BattleInitializer.enemy_classes; TestOutcomes giữ hai bảng khớp nhau.
 """
 
 # Nhân vật chơi được: tên → lớp

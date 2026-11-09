@@ -34,9 +34,6 @@ func on_stage_start():
 	map.set_player("Ichika")
 	map.place_player(Vector2(24, 17))
 
-	if GameManager.get_flag("ena_kill_ordered"):
-		return
-
 	lock_scene()
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("orders_mafuyu"), _on_orders_done)
 

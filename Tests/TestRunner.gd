@@ -20,7 +20,11 @@ func _sweep_leftover_test_saves():
 		if f.begins_with("unit_test_") or f.begins_with("zz_capture_"):
 			dir.remove(f)
 
+# Bộ đếm lỗi script của engine (xem ScriptErrorCounter): giữ tham chiếu suốt phiên chạy
+var _error_counter := ScriptErrorCounter.new()
+
 func _ready():
+	OS.add_logger(_error_counter)
 	_sweep_leftover_test_saves()
 	print("\n" + "=".repeat(65))
 	print("       SEKAI RPG — AUTOMATED TEST SUITE")

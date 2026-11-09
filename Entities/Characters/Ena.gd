@@ -28,7 +28,7 @@ func _init():
 	skills = [
 		{"name": "Nét Cọ Tàn Nhẫn", "method": "brush_stroke", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
 		{"name": "Bức Tranh Độc Đáo", "method": "toxic_criticism", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Trúng độc (Poison) trong 3 lượt.\nTỷ lệ: 100% ATK."},
-		{"name": "Kiệt Tác Dang Dở", "method": "masterpiece", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương xuyên thấu cực lớn, gây Poison và hồi máu cho đồng đội yếu nhất.\nTỷ lệ: 250% ATK (Sát thương) / 150% ATK (Hồi máu)."},
+		{"name": "Kiệt Tác Dang Dở", "method": "masterpiece", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương cực lớn, gây Poison và hồi máu cho đồng đội yếu nhất.\nTỷ lệ: 250% ATK (Sát thương) / 150% ATK (Hồi máu)."},
 	]
 
 # ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────

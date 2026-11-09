@@ -1,5 +1,8 @@
 extends BaseMapStage
 
+# Bốn người cần làm quen để xong nhiệm vụ mở đầu
+const INTRO_NPCS := ["Mafuyu", "Ena", "Kanade", "Mizuki"]
+
 func get_npc_positions() -> Dictionary:
 	return {
 		"Mafuyu": Vector2(10 * map.TILE_SIZE, 14 * map.TILE_SIZE),
@@ -58,8 +61,7 @@ func _talk_casual(npc_name: String):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
 
 func _check_quest_complete():
-	var quests = ["Mafuyu", "Ena", "Kanade", "Mizuki"]
-	for n in quests:
+	for n in INTRO_NPCS:
 		if n not in GameManager.npcs_greeted: return
 	GameManager.intro_quest_done = true
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("quest_intro_complete"), func():
@@ -69,8 +71,7 @@ func _check_quest_complete():
 func get_quest_text() -> String:
 	if not GameManager.intro_quest_done:
 		var remaining: Array = []
-		var quests = ["Mafuyu", "Ena", "Kanade", "Mizuki"]
-		for n in quests:
+		for n in INTRO_NPCS:
 			if n not in GameManager.npcs_greeted: remaining.append(n)
 		return "MỤC TIÊU: Làm quen với mọi người\nCòn lại: " + ", ".join(remaining)
 	elif not GameManager.warehouse_mission_accepted:

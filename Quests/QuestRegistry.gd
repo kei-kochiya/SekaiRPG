@@ -14,7 +14,6 @@ Chức năng:
 """
 
 const QUEST_DIR = "res://Quests/Definitions/"
-const PROLOGUE_MAP = "res://Maps/Prologue/PrologueMap.tscn"
 
 const QUEST_FILES = [
 	"Q01_Prologue.tres",
@@ -94,7 +93,7 @@ static func get_current_quest() -> QuestDef:
 		return get_quest("quest_04_post_warehouse")
 	elif GameManager.get_flag("warehouse_mission_accepted"):
 		return get_quest("quest_03_warehouse")
-	elif GameManager.get_flag("prologue_phase", 0) >= 1 and GameManager.current_map_file != PROLOGUE_MAP:
+	elif GameManager.get_flag("prologue_phase", 0) >= 1 and GameManager.current_map_file != MapPaths.PROLOGUE:
 		# Thắng trận mở màn xong vẫn còn ở ngõ vắng chờ Mafuyu đưa về; quest 2 chỉ bắt đầu khi tới căn cứ
 		return get_quest("quest_02_safehouse_intro")
 	else:

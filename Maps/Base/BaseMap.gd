@@ -179,18 +179,18 @@ func place_player(grid_pos: Vector2, facing: String = "") -> void:
 # ── Map Construction (Dùng chung cho mọi Stage) ───────────────────────────────
 
 func _build_map():
-	_fill_floor(5, 2, 43, 20)
-	_draw_room_walls(5, 2, 43, 10)   # Rest Area
-	_draw_room_walls(5, 10, 17, 20)  # Office
-	_draw_room_walls(17, 10, 31, 20) # Hall
-	_draw_room_walls(31, 10, 43, 20) # Dining
+	MapUtils.fill_floor(self, 5, 2, 43, 20)
+	MapUtils.draw_room_walls(self, 5, 2, 43, 10)   # Rest Area
+	MapUtils.draw_room_walls(self, 5, 10, 17, 20)  # Office
+	MapUtils.draw_room_walls(self, 17, 10, 31, 20) # Hall
+	MapUtils.draw_room_walls(self, 31, 10, 43, 20) # Dining
 	
-	_remove_wall_at(Vector2(17, 15))
-	_remove_wall_at(Vector2(31, 15))
-	_remove_wall_at(Vector2(24, 10))
-	_place_tile("door_1.png", Vector2(24, 10), false)
-	_remove_wall_at(Vector2(24, 20))
-	_place_tile("door_1.png", Vector2(24, 20), false)
+	MapUtils.remove_wall_at(self, Vector2(17, 15))
+	MapUtils.remove_wall_at(self, Vector2(31, 15))
+	MapUtils.remove_wall_at(self, Vector2(24, 10))
+	MapUtils.place_tile(self, "door_1.png", Vector2(24, 10))
+	MapUtils.remove_wall_at(self, Vector2(24, 20))
+	MapUtils.place_tile(self, "door_1.png", Vector2(24, 20))
 	
 	_add_room_label("Khu Nghỉ Ngơi", Vector2(24, 4))
 	# Ba phòng dưới: để bảng tên ở hàng sát tường dưới (hàng 19) vì NPC luôn đứng ở hàng 11-17, tên không bị sprite đè
@@ -275,7 +275,6 @@ func _create_npc(npc_name: String, pos: Vector2, color: Color):
 
 func _spawn_player():
 	var player = OverworldPlayer.new()
-	player.name = "OverworldPlayer"
 	
 	# Nếu Mizuki Control Phase đang bật, đổi màu Player thành Mizuki
 	if GameManager.get_flag("mizuki_control_phase"):
@@ -321,7 +320,11 @@ func _on_exit_interacted():
 			_leave_to(MapPaths.STREET)
 		else:
 			_leaving = false
-	elif (GameManager.accepted_harbor_mission or GameManager.get_flag("harbor_mission_unlocked")) and not GameManager.harbor_mission_done:
+	elif GameManager.get_flag("harbor_mission_unlocked") and not GameManager.accepted_harbor_mission:
+		# Chưa nhận nhiệm vụ từ Ena: cảnh Bến Cảng (harbor_arrival) giả định cô ấy đã giao việc
+		DialogueManager.play_dialogue([{"text": "Ena đang đợi để giao nhiệm vụ Bến Cảng. Nên gặp cô ấy trước khi đi.", "type": "narrator"}])
+		_leaving = false
+	elif GameManager.accepted_harbor_mission and not GameManager.harbor_mission_done:
 		_leave_to(MapPaths.HARBOR)
 	# Kiểm tra chuyển cảnh sang StreetMap
 	elif GameManager.get_flag("ena_cafe_done") and not GameManager.get_flag("street_survival_done"):
@@ -409,15 +412,6 @@ func _refresh_quest_label():
 
 # ── Tile Helpers ─────────────────────────────────────────────────────────────
 
-func _fill_floor(x1, y1, x2, y2):
-	MapUtils.fill_floor(self, x1, y1, x2, y2)
-
-func _draw_room_walls(x1, y1, x2, y2):
-	MapUtils.draw_room_walls(self, x1, y1, x2, y2)
-
-func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
-	MapUtils.place_tile(self, file, grid_pos, has_collision)
-
 func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool):
 	var tile_pos = grid_pos * TILE_SIZE
 	var sprite = Sprite2D.new()
@@ -434,9 +428,6 @@ func _place_indoor_asset(file: String, grid_pos: Vector2, has_collision: bool):
 		col.shape = shape
 		body.add_child(col)
 		add_child(body)
-
-func _remove_wall_at(grid_pos: Vector2):
-	MapUtils.remove_wall_at(self, grid_pos)
 
 func _add_room_label(text: String, grid_pos: Vector2):
 	# Bảng tên khu: căn giữa theo ô, chữ xám xanh đặc (không mờ 40% như trước) để vẫn đọc được trên sàn tối

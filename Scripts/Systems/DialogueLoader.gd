@@ -56,10 +56,14 @@ func _load_single_file(file_path: String) -> void:
 
 	var parsed: Variant = JSON.parse_string(text)
 	if parsed == null or not parsed is Dictionary:
+		GameLogger.warn("DialogueLoader", "File hội thoại không phải JSON object, bỏ qua: " + file_path)
 		return
 
 	var new_data: Dictionary = parsed as Dictionary
 	for key in new_data:
+		if _data.has(key):
+			# Thứ tự duyệt thư mục phụ thuộc hệ điều hành nên khóa trùng giữa hai file sẽ ra kết quả không ổn định
+			GameLogger.warn("DialogueLoader", "Khóa hội thoại trùng giữa các file: %s (từ %s)" % [key, file_path])
 		_data[key] = new_data[key]
 
 # ── API Truy Xuất ──────────────────────────────────────────────────────────
@@ -74,6 +78,7 @@ func get_lines(key: String) -> Array:
 		Array: Mảng các dòng thoại đã chuẩn hóa (chứa type, text, name, speaker, color). Trả về mảng trống nếu không tìm thấy.
 	"""
 	if not _data.has(key):
+		GameLogger.warn("DialogueLoader", "Không có hội thoại với khóa: " + key)
 		return []
 
 	var raw: Array = _data[key]

@@ -14,20 +14,6 @@ func _zone(pos: Vector2, parent: Node) -> InteractableZone:
 	parent.add_child(zone)
 	return zone
 
-# Các suite chạy trước (TestMaps dựng map có fade_in) có thể để ScreenFade.busy kẹt ở true vì runner chạy đồng bộ, không có frame để tween xong;
-# InteractableZone bỏ qua phím khi đang fade nên bài này tự đặt lại rồi trả về như cũ.
-var _was_busy := false
-
-func before_each() -> void:
-	super.before_each()
-	_was_busy = ScreenFade.busy
-	ScreenFade.busy = false
-	GameManager.end_dialogue() # _refresh_targets bỏ qua khi đang hội thoại
-
-func after_each() -> void:
-	ScreenFade.busy = _was_busy
-	super.after_each()
-
 func _press_enter(zone: InteractableZone) -> void:
 	var ev := InputEventAction.new()
 	ev.action = "ui_accept"
@@ -97,3 +83,33 @@ func test_a_freed_zone_leaves_the_arbitration_list():
 	root.remove_child(holder)
 	holder.free()
 	assert_eq(InteractableZone._inside.size(), 0, "Danh sách sạch sau khi dọn")
+
+# ── MapUtils: vật cản và tấm lát ───────────────────────────────────────────
+
+func test_blocks_and_tiled_rectangles_cover_the_expected_cells():
+	var parent := Node2D.new()
+	var block := MapUtils.add_block(parent, Vector2(3, 4))
+	assert_eq(block.position, Vector2(3, 4) * MapUtils.TILE_SIZE, "Vật cản đặt đúng ô lưới")
+	assert_eq(((block.get_child(0) as CollisionShape2D).shape as RectangleShape2D).size, Vector2(32, 32), "Vật cản vừa một ô")
+
+	var before := parent.get_child_count()
+	MapUtils.place_tile(parent, "horizontal_wall.png", Vector2(1, 1), true)
+	assert_eq(parent.get_child_count(), before + 2, "Ô tường có va chạm = sprite + một vật cản")
+	assert_eq((parent.get_child(parent.get_child_count() - 1) as Node2D).position, Vector2(32, 32), "Vật cản của ô tường nằm đúng ô")
+
+	var area := Node2D.new()
+	MapUtils.fill_tiles(area, "water_body.png", 2, 3, 11, 5, true) # 10 x 3 ô
+	assert_eq(area.get_child_count(), 2, "Cả hình chữ nhật chỉ còn một sprite và một vật cản")
+	var tiles: Sprite2D = area.get_child(0)
+	assert_eq(tiles.region_rect.size, tiles.texture.get_size() * Vector2(10, 3), "Sprite lát đủ 10 x 3 ô")
+	assert_eq(tiles.position, Vector2(2, 3) * 32 - Vector2(16, 16), "Sprite bắt đầu ở góc trên trái của ô (2, 3)")
+	var wall: StaticBody2D = area.get_child(1)
+	assert_eq(wall.position, Vector2(2 + 11, 3 + 5) * 32 / 2.0, "Vật cản phủ chính giữa vùng")
+	assert_eq(((wall.get_child(0) as CollisionShape2D).shape as RectangleShape2D).size, Vector2(10, 3) * 32, "Vật cản phủ cả vùng")
+
+	var floor_only := Node2D.new()
+	MapUtils.fill_floor(floor_only, 0, 0, 4, 4)
+	assert_eq(floor_only.get_child_count(), 1, "Sàn không có va chạm: chỉ một sprite")
+	parent.free()
+	area.free()
+	floor_only.free()

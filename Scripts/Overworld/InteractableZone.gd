@@ -123,8 +123,7 @@ func _process(_delta):
 
 # Nút ENTER ảo (chỉ có trên mobile, là autoload) bật khi người chơi đứng trong vùng này
 func _set_mobile_interact(on: bool) -> void:
-	if has_node("/root/MobileControls"):
-		get_node("/root/MobileControls").set_interact_visible(on)
+	MobileControls.set_interact_visible(on)
 
 # Vùng bị gỡ (NPC dựng lại, đổi scene) lúc người chơi còn đứng trong: tắt nút ENTER ảo đang bật
 func _exit_tree() -> void:

@@ -35,6 +35,11 @@ var _enemy_count_label: Label
 @onready var controls_side: VBoxContainer = $HBox/Controls
 
 func _ready():
+	# Nhân vật phe ta của trận Sandbox trước do menu lần trước dựng, menu này dựng bản mới: giải phóng bản cũ cho khỏi rò rỉ
+	for old in GameManager.sandbox_player_team:
+		if is_instance_valid(old):
+			old.queue_free()
+	GameManager.sandbox_player_team.clear()
 	_apply_theme()
 	_build_lists()
 	_setup_controls()
@@ -321,6 +326,7 @@ func _on_start():
 		_show_status("Vui lòng chọn ít nhất 1 kẻ địch!", UITheme.DANGER_TEXT)
 		return
 
+	GameManager.clear_transient_state()
 	GameManager.is_sandbox = true
 	GameManager.sandbox_player_team.clear()
 	GameManager.sandbox_enemy_team.clear()
@@ -350,3 +356,9 @@ func _on_back():
 	GameManager.sandbox_enemy_team.clear()
 	await ScreenFade.fade_out(0.5)
 	get_tree().change_scene_to_file(MapPaths.START_MENU)
+
+# Bản nhân vật đã dựng nhưng không đưa vào trận (bỏ chọn, hoặc quay lại menu chính) không còn ai giữ: giải phóng
+func _exit_tree() -> void:
+	for p in sandbox_player_instances.values():
+		if is_instance_valid(p) and not GameManager.sandbox_player_team.has(p):
+			p.queue_free()

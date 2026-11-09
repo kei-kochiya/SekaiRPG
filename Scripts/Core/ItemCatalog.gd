@@ -10,20 +10,17 @@ const ITEMS := {
 	"potion": {
 		"name": "Bình Máu",
 		"desc": "Hồi phục 40% HP tối đa cho 1 mục tiêu.",
-		"price": 80,
-		"type": "heal"
+		"price": 80
 	},
 	"energy_drink": {
 		"name": "Nước Tăng Lực",
 		"desc": "Làm đầy thanh hành động (Hành động ngay lập tức).",
-		"price": 120,
-		"type": "energy"
+		"price": 120
 	},
 	"bandage": {
 		"name": "Băng Cứu Thương",
 		"desc": "Xóa toàn bộ hiệu ứng trạng thái bất lợi (Debuff).",
-		"price": 60,
-		"type": "cleanse"
+		"price": 60
 	}
 }
 

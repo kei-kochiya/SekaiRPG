@@ -17,6 +17,34 @@ const CHARACTER_COLORS := {
 	"Honami": Color(1.0, 0.67, 0.53),
 }
 
+# Vật cản vô hình một ô lưới (thân tĩnh 32x32); thay cho khối StaticBody2D + CollisionShape2D chép ở nhiều map
+static func add_block(parent: Node2D, grid_pos: Vector2) -> StaticBody2D:
+	var body := StaticBody2D.new()
+	body.position = grid_pos * TILE_SIZE
+	var col := CollisionShape2D.new()
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(TILE_SIZE, TILE_SIZE)
+	col.shape = shape
+	body.add_child(col)
+	parent.add_child(body)
+	return body
+
+# Nền màu phủ kín khung nhìn phía sau map nhỏ (thay cho ColorRect 2000x2000 chép ở các map cảnh cố định)
+static func add_backdrop(parent: Node2D, color: Color) -> ColorRect:
+	var bg := ColorRect.new()
+	bg.size = Vector2(2000, 2000)
+	bg.color = color
+	parent.add_child(bg)
+	return bg
+
+# Camera cố định căn giữa map, zoom 1.5 (thay cho cụm Camera2D chép ở Cafe, Phố, Xa lộ, Tác chiến, nhà Honami)
+static func add_fixed_camera(parent: Node2D) -> Camera2D:
+	var cam := Camera2D.new()
+	cam.position = Vector2(15 * TILE_SIZE, 10 * TILE_SIZE)
+	cam.zoom = Vector2(1.5, 1.5)
+	parent.add_child(cam)
+	return cam
+
 static func place_tile(parent: Node2D, file: String, grid_pos: Vector2, has_collision: bool = false):
 	var sprite = Sprite2D.new()
 	sprite.texture = load(ASSET_ROOT + file)
@@ -25,28 +53,36 @@ static func place_tile(parent: Node2D, file: String, grid_pos: Vector2, has_coll
 	parent.add_child(sprite)
 	
 	if has_collision:
-		var body = StaticBody2D.new()
-		body.position = sprite.position
-		var col = CollisionShape2D.new()
-		var shape = RectangleShape2D.new()
-		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-		col.shape = shape
-		body.add_child(col)
-		parent.add_child(body)
+		add_block(parent, grid_pos)
 
-# Sàn phẳng phủ kín hình chữ nhật ô lưới [x1..x2] x [y1..y2] (không va chạm). Chỉ MỘT Sprite2D lát gạch (texture_repeat) thay vì
-# mỗi ô một sprite: map lớn (Prologue 70x70, Bến Cảng, Nhà kho) từng dựng hàng nghìn node mỗi lần vào. Hình ảnh giống hệt ô-từng-ô.
-static func fill_floor(parent: Node2D, x1: int, y1: int, x2: int, y2: int):
-	var tex := load(ASSET_ROOT + "floor.png") as Texture2D
+# Lát kín hình chữ nhật ô lưới [x1..x2] x [y1..y2] bằng MỘT Sprite2D lát gạch (texture_repeat) thay vì mỗi ô một sprite: map lớn
+# (Prologue 70x70, Bến Cảng, Nhà kho) từng dựng hàng nghìn node mỗi lần vào. Hình ảnh giống hệt ô-từng-ô. `collide` thêm MỘT thân
+# tĩnh hình chữ nhật phủ cả vùng (thay cho một thân mỗi ô).
+static func fill_tiles(parent: Node2D, file: String, x1: int, y1: int, x2: int, y2: int, collide: bool = false):
+	var tex := load(ASSET_ROOT + file) as Texture2D
+	var cells := Vector2(x2 - x1 + 1, y2 - y1 + 1)
 	var sprite := Sprite2D.new()
 	sprite.texture = tex
 	sprite.scale = Vector2(4, 4)
 	sprite.centered = false
 	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	sprite.region_enabled = true
-	sprite.region_rect = Rect2(Vector2.ZERO, tex.get_size() * Vector2(x2 - x1 + 1, y2 - y1 + 1))
+	sprite.region_rect = Rect2(Vector2.ZERO, tex.get_size() * cells)
 	sprite.position = Vector2(x1, y1) * TILE_SIZE - Vector2(TILE_SIZE, TILE_SIZE) / 2.0 # ô (x, y) có tâm tại (x, y) * TILE_SIZE
 	parent.add_child(sprite)
+	if collide:
+		var body := StaticBody2D.new()
+		body.position = Vector2(x1 + x2, y1 + y2) * TILE_SIZE / 2.0
+		var col := CollisionShape2D.new()
+		var shape := RectangleShape2D.new()
+		shape.size = cells * TILE_SIZE
+		col.shape = shape
+		body.add_child(col)
+		parent.add_child(body)
+
+# Sàn phẳng (không va chạm): xem fill_tiles
+static func fill_floor(parent: Node2D, x1: int, y1: int, x2: int, y2: int):
+	fill_tiles(parent, "floor.png", x1, y1, x2, y2)
 
 # Khung tường bao quanh hình chữ nhật ô lưới (có va chạm); thứ tự đặt giữ nguyên để thứ tự vẽ không đổi
 static func draw_room_walls(parent: Node2D, x1: int, y1: int, x2: int, y2: int):

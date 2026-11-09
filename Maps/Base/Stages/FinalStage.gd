@@ -15,7 +15,6 @@ const HOUSE_SCENE := MapPaths.HONAMI_HOUSE
 const ENDING_SCENE := MapPaths.ENDING_CARD
 const BATTLE_ID := "final_mafuyu"
 
-var _honami: Node2D = null
 
 # Cửa ra bị khoá suốt cảnh này
 func _init():
@@ -36,7 +35,7 @@ func on_stage_start():
 	map.set_player("Ichika")
 	map.place_player(Vector2(24, 17), "up")
 	map.freeze_player()
-	_honami = map.spawn_dummy("Honami", Vector2(22, 17), map.NPC_COLORS["Honami"])
+	map.spawn_dummy("Honami", Vector2(22, 17), map.NPC_COLORS["Honami"])
 
 	if GameManager.get_flag("final_mafuyu_defeated"):
 		_play_sequence(["final_mafuyu_post", "ending_honami_offer", "ending_narration"], _open_end_card)

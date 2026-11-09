@@ -29,7 +29,7 @@ const BLESSING_CATALOG := {
 	"blessing_thorn": {
 		"id": "blessing_thorn",
 		"name": "Giáp Gai Phản Đòn",
-		"desc": "Khi nhận sát thương, phản lại 35% sát thương nhận vào cho kẻ tấn công."
+		"desc": "Khi nhận sát thương, phản lại 35% sát thương nhận vào cho một kẻ địch ngẫu nhiên còn sống."
 	},
 	"blessing_break": {
 		"id": "blessing_break",
@@ -39,12 +39,12 @@ const BLESSING_CATALOG := {
 	"blessing_heal_kill": {
 		"id": "blessing_heal_kill",
 		"name": "Hấp Thu Sinh Lực",
-		"desc": "Hạ gục bất kỳ kẻ địch nào lập tức hồi 25% Max HP cho người hạ gục."
+		"desc": "Hạ gục bất kỳ kẻ địch nào lập tức hồi 25% Max HP cho đồng đội còn sống đứng đầu đội hình."
 	},
 	"blessing_undying": {
 		"id": "blessing_undying",
 		"name": "Dòng Máu Bất Tử",
-		"desc": "Khi nhận đòn chí tử lần đầu trong trận, giữ lại 1 HP và hồi ngay 40% HP."
+		"desc": "Khi cả đội gục ngã lần đầu trong trận, hồi sinh toàn đội với 40% HP."
 	}
 }
 

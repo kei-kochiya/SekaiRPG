@@ -112,7 +112,7 @@ func _exit_tree():
 			e.clear_temp_mods()
 			e.untargetable = false # kịch bản có thể đặt cờ này lên nhân vật bền vững (vd. Ichika bị đóng băng)
 	# Kẻ địch và bản sao dựng riêng cho trận này không còn ai giữ: giải phóng để không rò rỉ node mồ côi.
-	# Sandbox giữ các nhân vật phe ta (menu dùng lại để đánh tiếp) nhưng kẻ địch được dựng mới mỗi lần bắt đầu.
+	# Sandbox giữ các nhân vật phe ta tới lần SandboxMenu kế tiếp (menu dựng bản mới và giải phóng bản cũ); kẻ địch dựng mới mỗi trận.
 	var disposable: Array = enemy_team if GameManager.is_sandbox else all_entities
 	for e in disposable:
 		if is_instance_valid(e) and not persistent.has(e):

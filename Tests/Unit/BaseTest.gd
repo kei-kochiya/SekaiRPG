@@ -66,13 +66,27 @@ func assert_lt(actual, expected, message: String = ""):
 
 # Hook chạy quanh MỖI test: test nào đụng vào trạng thái toàn cục (GameManager, Engine...) tự dọn lại ở after_each.
 func before_each():
-	pass
+	_reset_shared_state()
 
 func after_each():
 	# Mặc định trả lại các trạng thái toàn cục dễ bị test làm bẩn (suite sau không phải tự reset_game mới chạy đúng)
 	GameManager.is_sandbox = false
 	GameManager.reduce_motion = false
 	Engine.time_scale = 1.0
+	_reset_shared_state()
+
+# Trạng thái autoload mà test hay để lại: hội thoại/lựa chọn đang mở và ScreenFade.busy (runner chạy đồng bộ nên tween fade không bao giờ
+# xong). Dọn trước và sau mỗi test để một test hỏng giữa chừng không làm các test sau sai theo.
+func _reset_shared_state() -> void:
+	DialogueManager.reset()
+	ScreenFade.busy = false
+
+# Chạy hết hội thoại đang mở (kể cả hội thoại mới mở ra từ callback của hội thoại trước)
+func _drain_dialogue() -> void:
+	var guard := 0
+	while DialogueManager.active and guard < 50:
+		DialogueManager._advance_dialogue()
+		guard += 1
 
 func run_all_tests() -> Dictionary:
 	var methods = get_method_list()
@@ -84,11 +98,18 @@ func run_all_tests() -> Dictionary:
 	for m_name in test_methods:
 		current_test_name = m_name
 		var before := passed_count + failed_count
+		var script_errors_before := ScriptErrorCounter.snapshot()
 		before_each()
 		call(m_name)
 		after_each()
-		if passed_count + failed_count == before:
-			# Test lỗi giữa chừng (script error) hoặc quên assert sẽ không bao giờ được tính là đạt
+		if ScriptErrorCounter.snapshot() != script_errors_before:
+			# Test chết giữa chừng (gọi hàm không tồn tại, null...): các assert trước đó đạt cũng không cứu được
+			failed_count += 1
+			var crash = "[FAIL] %s: lỗi script trong lúc chạy: %s" % [m_name, ScriptErrorCounter.last_message]
+			failures.append(crash)
+			push_error(crash)
+		elif passed_count + failed_count == before:
+			# Quên assert sẽ không bao giờ được tính là đạt
 			failed_count += 1
 			var err = "[FAIL] %s: không có assertion nào được chạy" % m_name
 			failures.append(err)

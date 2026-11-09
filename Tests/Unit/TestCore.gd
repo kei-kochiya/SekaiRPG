@@ -29,8 +29,9 @@ func test_level_manager():
 	var ichika = Ichika.new()
 	LevelManager.set_initial_level(ichika, 5)
 	assert_eq(ichika.level, 5, "LevelManager initial level")
-	assert_gt(ichika.max_hp, 100, "LevelManager scales max_hp with level")
-	assert_gt(ichika.atk, 10, "LevelManager scales atk with level")
+	var level_one := Ichika.new() # Ichika mới dựng đã có 175 HP / 150 ATK nên phải so với cấp 1 chứ không với một ngưỡng cố định
+	assert_gt(ichika.max_hp, level_one.max_hp, "LevelManager scales max_hp with level")
+	assert_gt(ichika.atk, level_one.atk, "LevelManager scales atk with level")
 	
 	var old_level = ichika.level
 	LevelManager.gain_exp(ichika, 99999)

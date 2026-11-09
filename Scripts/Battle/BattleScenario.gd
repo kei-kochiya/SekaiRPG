@@ -1,4 +1,4 @@
-extends Node
+extends RefCounted
 class_name BattleScenario
 
 """
@@ -46,10 +46,7 @@ func get_allowed_actions(_main: Node, _actor: Entity) -> Array:
 
 # Phát một đoạn hội thoại và chờ tới khi xong (dùng trong các hook có thể await).
 func say_lines(key: String):
-	var done := [false]
-	DialogueManager.play_dialogue(DialogueLoader.get_lines(key), func(): done[0] = true)
-	while not done[0]:
-		await (Engine.get_main_loop() as SceneTree).process_frame
+	await DialogueManager.play_async(DialogueLoader.get_lines(key))
 
 func on_action_executed(_main: Node, _actor: Entity, _action: String, _target: Entity):
 	"""Gọi sau khi một hành động (đòn đánh/kỹ năng/vật phẩm) được thực thi xong."""

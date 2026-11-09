@@ -40,9 +40,6 @@ func on_stage_start():
 	map.set_player("Ichika")
 	map.place_player(Vector2(25, 17))
 	
-	if GameManager.get_flag("finale_done"):
-		return
-	
 	# Cảnh tự chạy: khoá người chơi cho tới khi sang map khác
 	lock_scene()
 	_next_beat()

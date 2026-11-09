@@ -35,11 +35,11 @@ func on_stage_start():
 	map.set_player("Ichika")
 
 	if not GameManager.get_flag("epilogue_intro_done"):
-		_cutscene_active = true
+		lock_scene()
 		map.place_player(Vector2(24, 18))
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("epilogue_base_intro"), func():
 			GameManager.set_flag("epilogue_intro_done", true)
-			_cutscene_active = false
+			unlock_scene()
 		)
 
 func handle_npc_interaction(npc_name: String):
@@ -74,7 +74,7 @@ func _show_honami_menu():
 		# Khoá cảnh trước khi chuyển để chặn tương tác lặp trong lúc fade.
 		offer_training(TRAINEES, false, lock_scene, true, "Cả hai (10 Waves)")
 	elif idx == 1:
-		_open_upgrade()
+		open_upgrade_ui(TRAINEES)
 	elif bar_idx >= 0 and idx == bar_idx:
 		_go_to_bar()
 
@@ -99,9 +99,6 @@ func _go_to_bar():
 		await ScreenFade.fade_in(1.0)
 		unlock_scene()
 	)
-
-func _open_upgrade():
-	open_upgrade_ui(TRAINEES)
 
 # Không còn nơi nào để đi tối nay: chỉ một dòng dẫn truyện, không đổi map
 func handle_exit() -> bool:

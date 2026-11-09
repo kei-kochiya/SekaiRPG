@@ -1,4 +1,5 @@
 # SekaiRPG PowerShell Automated Test Suite Runner
+# Dùng: $env:GODOT_BIN = "<đường dẫn godot>"; ./Scripts/run_tests.ps1 [TênSuite ...]
 $ErrorActionPreference = "Stop"
 
 Write-Host "======================================================" -ForegroundColor Cyan
@@ -7,19 +8,19 @@ Write-Host "======================================================" -ForegroundC
 
 $GodotBin = if ($env:GODOT_BIN) { $env:GODOT_BIN } else { "godot" }
 
-# Check if Godot exists or try standard local location
 if (-not (Get-Command $GodotBin -ErrorAction SilentlyContinue)) {
-    $DefaultLocalGodot = "C:\Users\Admin\Desktop\Godot\Godot_v4.6.1-stable_win64_console.exe"
-    if (Test-Path $DefaultLocalGodot) {
-        $GodotBin = $DefaultLocalGodot
-    } else {
-        Write-Error "[ERROR] Godot executable not found. Please set `$env:GODOT_BIN."
-        exit 1
-    }
+    Write-Error "[ERROR] Godot executable '$GodotBin' not found. Set `$env:GODOT_BIN or add godot to PATH."
+    exit 1
 }
 
+$ProjectDir = Split-Path -Parent $PSScriptRoot
+
 Write-Host "[INFO] Executing headless test runner using $GodotBin..." -ForegroundColor Green
-& $GodotBin --headless Tests/TestRunnerScene.tscn
+if ($args.Count -gt 0) {
+    & $GodotBin --headless --path $ProjectDir res://Tests/TestRunnerScene.tscn -- @args
+} else {
+    & $GodotBin --headless --path $ProjectDir res://Tests/TestRunnerScene.tscn
+}
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "[SUCCESS] All tests executed and passed successfully!" -ForegroundColor Green

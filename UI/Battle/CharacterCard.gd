@@ -115,6 +115,11 @@ func set_active(active: bool):
 
 # ── Signal ─────────────────────────────────────────────────────────────────
 
+var _dead: bool = false
+# HP ở lần cập nhật trước, để nhận ra mức tăng (hồi máu); -1 = chưa có
+var _last_hp: int = -1
+var _last_max_hp: int = -1
+
 func _connect_signals():
 	entity.hp_changed.connect(_on_hp_changed)
 	entity.died.connect(_on_died)
@@ -146,11 +151,20 @@ func _on_hp_changed(cur: int, m_hp: int):
 	hp_bar.max_value = m_hp
 	create_tween().tween_property(hp_bar, "value", cur, 0.3).set_trans(Tween.TRANS_CUBIC)
 	hp_label.text = "%d / %d" % [cur, m_hp]
+	if _dead and cur > 0:
+		_dead = false # hồi sinh (vd. Dòng Máu Bất Tử): bỏ làm mờ
+		modulate = Color.WHITE
+	# Lên cấp nâng max_hp và hồi đầy cùng lúc: đó không phải hồi máu nên không hiện số
+	if _last_hp >= 0 and cur > _last_hp and m_hp == _last_max_hp:
+		_spawn_heal_text(cur - _last_hp)
+	_last_hp = cur
+	_last_max_hp = m_hp
 	var ratio := float(cur) / maxf(1.0, float(m_hp))
 	var fill_color := UITheme.SUCCESS if ratio > 0.5 else (UITheme.WARNING if ratio > 0.25 else UITheme.DANGER_TEXT)
 	hp_bar.add_theme_stylebox_override("fill", UITheme.box(fill_color, Color.TRANSPARENT, UITheme.RADIUS_SM, 0, 0))
 
 func _on_died():
+	_dead = true
 	modulate = Color(0.55, 0.55, 0.55, 0.65)
 
 func _on_status_changed(statuses: Array):
@@ -167,6 +181,14 @@ func _on_status_changed(statuses: Array):
 		var text: String = info["label"] if counts[type_name] == 1 else "%s x%d" % [info["label"], counts[type_name]]
 		status_row.add_child(UITheme.chip(text, info["color"], UITheme.FS_CAPTION, UITheme.status_icon(type_name)))
 	status_row.visible = not counts.is_empty()
+
+# Số hồi máu nổi (xanh) khi HP tăng trong trận: thuốc, kỹ năng hồi, ban phước Holo-Sim
+func _spawn_heal_text(amount: int):
+	if not is_inside_tree():
+		return
+	var spawn_pos := global_position + Vector2(size.x / 2, 0)
+	var overlay := get_tree().get_first_node_in_group("ui_overlay")
+	FloatingText.spawn(overlay if overlay else get_tree().root, amount, "heal", spawn_pos, false, false)
 
 func _on_damage_received_detailed(amt: int, type: String, is_crit: bool, is_break: bool):
 	var spawn_pos := global_position + Vector2(size.x / 2, 0)

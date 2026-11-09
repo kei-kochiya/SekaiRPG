@@ -5,7 +5,7 @@ func on_stage_start():
 	map.set_player("Ichika")
 		
 	if not GameManager.get_flag("honami_unlocked_intro_done"):
-		_cutscene_active = true
+		lock_scene()
 		map.place_player(Vector2(24, 20))
 		
 		DialogueManager.play_dialogue([
@@ -15,7 +15,7 @@ func on_stage_start():
 			say("Mafuyu", "Thôi bỏ đi. Từ giờ cô được phép tự do đi lại giữa hai bên.")
 		], func():
 			GameManager.set_flag("honami_unlocked_intro_done", true)
-			_cutscene_active = false
+			unlock_scene()
 			map._refresh_quest_label()
 		)
 	elif GameManager.get_flag("finale_retreated"):
@@ -72,4 +72,4 @@ func _start_finale_arc():
 func get_quest_text() -> String:
 	if GameManager.get_flag("pm_arc_started"):
 		return "MỤC TIÊU: Nói chuyện với Mafuyu để tiếp tục nhiệm vụ (hoặc luyện tập thêm trước khi quay lại)."
-	return "MỤC TIÊU: Bạn đã được phép đi lại tự do. Luyện tập qua lại giữa Nightcord và nhà Honami."
+	return "MỤC TIÊU: Bạn đã được phép đi lại tự do. Luyện tập qua lại giữa Nightcord và nhà Honami.\nKhi sẵn sàng, nói chuyện với Mafuyu và chọn [Báo cáo Intel]."

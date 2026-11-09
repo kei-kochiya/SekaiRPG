@@ -224,7 +224,6 @@ func _debris(node: Node2D) -> void:
 
 func _spawn_player(char_name: String, grid_pos: Vector2, facing: String) -> void:
 	var p := OverworldPlayer.new()
-	p.name = "OverworldPlayer"
 	p.character_color = COLORS[char_name]
 	p.set_facing(facing)
 	add_child(p)
@@ -319,8 +318,8 @@ func _run_b() -> void:
 			var spots := {"Mafuyu": Vector2(16, 13.6), "Ichika": Vector2(14, 14), "Kanade": Vector2(18, 14)}
 			for n in spots:
 				_walk(_person(n, DOOR + Vector2(0, -0.4)), spots[n], 1.6)
-				await get_tree().create_timer(0.5).timeout
-			await get_tree().create_timer(1.0).timeout
+				await get_tree().create_timer(0.5, false).timeout
+			await get_tree().create_timer(1.0, false).timeout
 			await _say("warehouse_mafuyu_arrive")
 			g.set_flag("warehouse_arrival_done", true)
 		else:
@@ -372,7 +371,7 @@ func _beat() -> void:
 	await ScreenFade.fade_out(0.7)
 	_npcs["Ena"].get_child(0).rotation = 0.3
 	_mod.color = Color(0.3, 0.28, 0.4)
-	await get_tree().create_timer(0.8).timeout
+	await get_tree().create_timer(0.8, false).timeout
 	await ScreenFade.fade_in(0.9)
 
 # Đi tới ô lưới (nhân vật có thể không còn trong map thì bỏ qua); `free_after` để xóa sau khi tới (Kanade bỏ đi)
@@ -439,14 +438,7 @@ func _crate(g: Vector2) -> void:
 	_block(g)
 
 func _block(g: Vector2) -> void:
-	var body := StaticBody2D.new()
-	body.position = g * TILE_SIZE
-	var col := CollisionShape2D.new()
-	var shape := RectangleShape2D.new()
-	shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-	col.shape = shape
-	body.add_child(col)
-	add_child(body)
+	MapUtils.add_block(self, g)
 
 func _rect(pos: Vector2, size: Vector2, color: Color, parent: Node = null) -> ColorRect:
 	var r := ColorRect.new()

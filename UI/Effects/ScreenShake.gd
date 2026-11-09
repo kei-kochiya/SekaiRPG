@@ -17,6 +17,8 @@ var shake_intensity: float = 0.0
 var shake_timer: float = 0.0
 var original_offset: Vector2 = Vector2.ZERO
 var _hitstops: int = 0
+# Tốc độ game trước khi hit-stop đầu tiên bắt đầu (kịch bản như SlowStrike có thể đang làm chậm)
+var _scale_before_hitstop: float = 1.0
 
 # ── Khởi Tạo & Vòng Lặp ────────────────────────────────────────────────────
 
@@ -58,6 +60,8 @@ func hitstop(duration: float = 0.1):
 	"""
 	if GameManager.reduce_motion:
 		return
+	if _hitstops == 0:
+		_scale_before_hitstop = Engine.time_scale
 	_hitstops += 1
 	Engine.time_scale = 0.05
 	await get_tree().create_timer(duration, true, false, true).timeout
@@ -65,7 +69,7 @@ func hitstop(duration: float = 0.1):
 	_hitstops -= 1
 	if _hitstops <= 0:
 		_hitstops = 0
-		Engine.time_scale = 1.0
+		Engine.time_scale = _scale_before_hitstop
 
 # ── Xử Lý Frame ────────────────────────────────────────────────────────────
 

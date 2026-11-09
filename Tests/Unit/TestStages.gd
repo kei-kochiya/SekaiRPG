@@ -7,13 +7,6 @@ khoá cảnh/cửa ra, đặt người chơi, bảng màu nhân vật duy nhất
 
 const BASE_SCENE = "res://Maps/Base/BaseMap.tscn"
 
-# Chạy hết hội thoại đang mở (kể cả hội thoại mới mở ra từ callback của hội thoại trước)
-func _drain_dialogue() -> void:
-	var guard := 0
-	while DialogueManager.active and guard < 50:
-		DialogueManager._advance_dialogue()
-		guard += 1
-
 # Mở menu luyện tập, đọc nhãn các nút rồi chọn nút cuối ("Để sau."): trả về {"labels": [...], "started": kết quả offer_training}
 func _open_training_menu(stage: BaseMapStage, trainees: Array, hide_done: bool = false, alive_only: bool = false, group_label: String = "", before_start: Callable = Callable()) -> Dictionary:
 	var out := {"labels": [], "started": null}
@@ -114,6 +107,13 @@ const STAGE_FLAGS := {
 	"finale": ["pm_boss_defeated"], "orders": ["interrogation_seen"], "reveal": ["kanade_killed"],
 	"final": ["final_confront_started"], "epilogue": ["game_completed"],
 }
+# Stage mà BaseMap._init_stage phải chọn cho từng bộ cờ ở trên: nếu thang cốt truyện đổi, bài kiểm tra bố cục không được âm thầm kiểm tra nhầm Stage
+const STAGE_SCRIPTS := {
+	"intro": "IntroStage.gd", "post_warehouse": "PostWarehouseStage.gd", "post_harbor": "PostHarborStage.gd",
+	"post_harbor_control": "PostHarborStage.gd", "post_harbor_morning": "PostHarborMorningStage.gd",
+	"post_cafe": "PostCafeStreetMissionStage.gd", "post_street": "PostStreetStage.gd", "honami_unlocked": "HonamiHouseUnlockedStage.gd",
+	"finale": "FinaleStage.gd", "orders": "OrdersStage.gd", "reveal": "RevealStage.gd", "final": "FinalStage.gd", "epilogue": "EpilogueStage.gd",
+}
 const DOORWAYS := [Vector2(24, 10), Vector2(24, 20), Vector2(17, 15), Vector2(31, 15)]
 const TERMINALS := [Vector2(16, 15), Vector2(20, 15)]
 # Kanade nằm trên giường ở Khu Nghỉ Ngơi sau chuyến Bến Cảng (chủ ý của cốt truyện)
@@ -136,6 +136,7 @@ func test_no_base_npc_stands_in_a_wall_a_doorway_or_on_a_terminal():
 				blocked[(c.position / base.TILE_SIZE).round()] = true
 			elif c.has_meta("is_npc") and not c.is_queued_for_deletion():
 				npcs[c.get_meta("npc_name")] = c.position
+		assert_eq(base.current_stage.get_script().resource_path.get_file(), STAGE_SCRIPTS[stage_name], "%s: bộ cờ chọn đúng Stage" % stage_name)
 		assert_gt(npcs.size(), 0, "%s: có NPC" % stage_name)
 		for npc in npcs:
 			var tile: Vector2 = (npcs[npc] / base.TILE_SIZE).round()
@@ -245,3 +246,49 @@ func test_shop_and_holo_sim_terminals_are_built_in_order():
 	assert_eq(roots[0].get_child(2).prompt_text, "Mở Cửa Hàng (Shop)", "Gợi ý của cửa hàng")
 	assert_eq(roots[1].get_child(2).prompt_text, "Máy Mô Phỏng Holo-Sim", "Gợi ý của Holo-Sim")
 	base.free()
+
+# ── Cảnh tự chạy phải khoá người chơi ──────────────────────────────────────
+
+# Cảnh tự chạy chỉ chặn NPC (_cutscene_active) mà không đóng băng người chơi từng cho phép bấm ENTER ở bệ Holo-Sim giữa lúc chờ,
+# rồi hội thoại của cảnh chen lên lựa chọn đang mở làm kẹt giao diện. lock_scene() đóng băng người chơi nên cả hai đều không xảy ra.
+func test_autoplaying_base_cutscenes_freeze_the_player():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var cases := {
+		"post_cafe": ["ena_cafe_done"],
+		"post_street_invasion": ["street_mission_fully_done", "post_street_trained_once"],
+		"honami_unlocked_intro": ["honami_house_unlocked"],
+		"epilogue_intro": ["game_completed"],
+		"post_harbor_morning": ["mizuki_report_done"],
+		"post_harbor_report": ["harbor_mission_done", "mizuki_vs_mafuyu_done"],
+	}
+	for case_name in cases:
+		GameManager.reset_game()
+		for flag in cases[case_name]:
+			GameManager.set_flag(flag, true)
+		var base = load(BASE_SCENE).instantiate()
+		root.add_child(base) # _ready dựng map/người chơi; on_stage_start chờ fade nên tự gọi bên dưới
+		var player: Node = base.get_node("OverworldPlayer")
+		assert_true(player.is_physics_processing(), "%s: người chơi đi lại được trước cảnh" % case_name)
+		base.current_stage.on_stage_start()
+		assert_false(player.is_physics_processing(), "%s: cảnh tự chạy đóng băng người chơi" % case_name)
+		assert_true(base.current_stage._cutscene_active, "%s: và chặn NPC" % case_name)
+		DialogueManager.reset()
+		root.remove_child(base)
+		base.free()
+	GameManager.reset_game()
+
+# Bến Cảng chỉ mở sau khi Ena giao nhiệm vụ (cảnh harbor_arrival giả định cô ấy đã giao việc)
+func test_harbor_exit_needs_the_briefing_from_ena():
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	GameManager.reset_game()
+	GameManager.set_flag("harbor_mission_unlocked", true)
+	var base = load(BASE_SCENE).instantiate()
+	root.add_child(base)
+	assert_eq(base.current_stage.get_script().resource_path.get_file(), "PostWarehouseStage.gd", "Đúng Stage sau Nhà kho")
+	base._on_exit_interacted()
+	assert_true(DialogueManager.active, "Chưa gặp Ena: chỉ có lời nhắc, không đi Bến Cảng")
+	assert_false(base._leaving, "Không bị kẹt ở trạng thái đang rời đi")
+	DialogueManager.reset()
+	root.remove_child(base)
+	base.free()
+	GameManager.reset_game()

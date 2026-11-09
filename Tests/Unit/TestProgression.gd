@@ -7,13 +7,6 @@ hồi máu khi rời Holo-Sim, HP và kỷ lục lưu trong save, tên map, gợ
 
 const BASE_SCENE = "res://Maps/Base/BaseMap.tscn"
 
-# Chạy hết hội thoại đang mở (kể cả hội thoại mới mở ra từ callback của hội thoại trước)
-func _drain_dialogue() -> void:
-	var guard := 0
-	while DialogueManager.active and guard < 50:
-		DialogueManager._advance_dialogue()
-		guard += 1
-
 # ── Luyện tập ───────────────────────────────────────────────────────────────
 
 func test_training_clone_has_the_real_characters_upgrades():

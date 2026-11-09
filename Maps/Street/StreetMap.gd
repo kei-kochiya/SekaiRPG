@@ -21,10 +21,7 @@ func _ready():
 	AudioManager.play_music("battle") # Đổi sang nhạc căng thẳng
 	
 	# Tạo hình nền tối
-	var bg = ColorRect.new()
-	bg.size = Vector2(2000, 2000)
-	bg.color = Color(0.08, 0.08, 0.1)
-	add_child(bg)
+	MapUtils.add_backdrop(self, Color(0.08, 0.08, 0.1))
 	
 	_lighting = CanvasModulate.new()
 	_lighting.color = Color(1.0, 1.0, 1.0)
@@ -34,10 +31,7 @@ func _ready():
 	_build_street()
 	
 	# Camera căn giữa
-	var cam = Camera2D.new()
-	cam.position = Vector2(15 * TILE_SIZE, 10 * TILE_SIZE)
-	cam.zoom = Vector2(1.5, 1.5)
-	add_child(cam)
+	MapUtils.add_fixed_camera(self)
 	
 	await ScreenFade.fade_in(1.0)
 	_run_logic()
@@ -113,7 +107,6 @@ func _place_characters():
 	if GameManager.get_flag("street_mission_fully_done"):
 		# Sandbox/Thăm lại: Chỉ spawn Player và 1 lối ra
 		var player = OverworldPlayer.new()
-		player.name = "OverworldPlayer"
 		if GameManager.last_player_position != Vector2.ZERO:
 			player.position = GameManager.last_player_position
 		else:
@@ -167,14 +160,7 @@ func _draw_corner_walls():
 	for i in range(first_new, get_child_count()):
 		var tile = get_child(i)
 		if tile is Sprite2D:
-			var body = StaticBody2D.new()
-			body.position = tile.position
-			var col = CollisionShape2D.new()
-			var shape = RectangleShape2D.new()
-			shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-			col.shape = shape
-			body.add_child(col)
-			add_child(body)
+			MapUtils.add_block(self, tile.position / TILE_SIZE)
 
 func _draw_street_walls():
 	# 1. Tường trên viền map (Y = 3, chừa lối đi X ∈ [14, 16])

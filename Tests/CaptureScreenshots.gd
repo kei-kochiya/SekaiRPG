@@ -35,6 +35,7 @@ func _ready():
 	get_tree().quit(1 if _failed_checks > 0 else 0)
 
 func _reset_overlays():
+	DialogueManager.reset() # lựa chọn còn mở từ shot trước sẽ chặn play_dialogue của shot sau
 	# Autoload giữ trạng thái giữa các shot trong cùng một lần chạy nên phải dọn trước mỗi shot.
 	PauseMenu.visible = false
 	get_tree().paused = false
@@ -82,6 +83,7 @@ func _capture(shot: String):
 				root = load(shot).instantiate()
 	if root == null:
 		printerr("[Capture] Shot không hợp lệ: " + shot)
+		_failed_checks += 1 # tên shot gõ sai không được báo thành công
 		return
 	add_child(root)
 	await _settle()
@@ -319,6 +321,8 @@ func _build_choices() -> Node:
 		var f := get_viewport().gui_get_focus_owner()
 		var first: Node = DialogueManager._ui.choice_box.get_child(0)
 		print("[Check] choices focus ok=", f == first, " children=", DialogueManager._ui.choice_box.get_child_count())
+		if f != first:
+			_failed_checks += 1
 	check.call()
 	return Control.new()
 
@@ -402,6 +406,8 @@ func _build_mobile() -> Node:
 	drag.position = base + Vector2(60, -35)
 	mc._input(drag)
 	print("[Check] mobile joystick_touch=", mc._joystick_touch, " (mong đợi 0), dir=", mc._current_dir)
+	if mc._joystick_touch != 0:
+		_failed_checks += 1
 	var holder := Control.new()
 	holder.add_child(_backdrop(Color.DARK_OLIVE_GREEN))
 	holder.tree_exiting.connect(func():

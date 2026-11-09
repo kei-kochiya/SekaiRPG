@@ -57,7 +57,6 @@ func _build_shell():
 	title_row.add_child(title_label)
 	
 	var info_btn = UITheme.make_button("Kỹ năng", UITheme.Kind.GHOST, UITheme.FS_BODY)
-	info_btn.custom_minimum_size.y = 32
 	info_btn.pressed.connect(func(): if current_entity: _skill_detail_popup.display_entity_skills(current_entity))
 	title_row.add_child(info_btn)
 	

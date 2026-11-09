@@ -9,7 +9,6 @@ Kết thúc chuyển về BaseMap_PostHarbor.
 """
 
 const TILE_SIZE = 32
-const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 var _map_root: Node2D
 var _lighting: CanvasModulate
@@ -50,21 +49,7 @@ func _build_map():
 	_place_tile("top_right_wall.png", Vector2(4, 0), true)
 
 func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
-	var tile_pos = grid_pos * TILE_SIZE
-	var sprite = Sprite2D.new()
-	sprite.texture = load(ASSET_ROOT + file)
-	sprite.scale = Vector2(4, 4)
-	sprite.position = tile_pos
-	_map_root.add_child(sprite)
-	if has_collision:
-		var body = StaticBody2D.new()
-		body.position = tile_pos
-		var col = CollisionShape2D.new()
-		var shape = RectangleShape2D.new()
-		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-		col.shape = shape
-		body.add_child(col)
-		_map_root.add_child(body)
+	MapUtils.place_tile(_map_root, file, grid_pos, has_collision)
 
 func _spawn_honami():
 	var root = Node2D.new()

@@ -163,7 +163,4 @@ func on_battle_completed(_main: Node, is_victory: bool):
 	# Buff của Mafuyu là chỉ số tạm thời: Main._exit_tree sẽ gỡ. Đảm bảo tắt cờ skills_disabled
 	_unlock_skills()
 
-	if is_victory:
-		GameManager.set_flag("street_survival_done", true)
-
 	GameManager.finish_battle(is_victory, kill_count)

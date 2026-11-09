@@ -41,7 +41,7 @@ func test_every_story_flag_in_code_is_declared():
 		assert_true(StoryState.DEFAULT_FLAGS.has(flag), "flag '%s' (%s) is declared in StoryState.DEFAULT_FLAGS" % [flag, found[flag][0]])
 
 func test_every_literal_dialogue_key_in_code_exists():
-	var found := _literals(["get_lines", "say_lines"])
+	var found := _literals(["get_lines", "say_lines", "_say"]) # _say: lối tắt thoại của BountyMap/InterrogationMap
 	assert_gt(found.size(), 80, "Found the dialogue keys used by the code")
 	for key in found:
 		assert_gt(DialogueLoader.get_lines(key).size(), 0, "dialogue key '%s' (%s) exists" % [key, found[key][0]])

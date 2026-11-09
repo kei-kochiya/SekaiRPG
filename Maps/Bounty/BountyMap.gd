@@ -201,7 +201,6 @@ func _marker(pos: Vector2) -> void:
 
 func _spawn_player() -> void:
 	var p := OverworldPlayer.new()
-	p.name = "OverworldPlayer"
 	p.character_color = ENA_COLOR
 	p.set_facing("right")
 	add_child(p)
@@ -315,7 +314,7 @@ func _ambush() -> void:
 	GameManager.start_dialogue() # khóa Ena trong lúc cảnh sát áp sát
 	_siren()
 	_police_ring(center, true)
-	await get_tree().create_timer(1.3).timeout
+	await get_tree().create_timer(1.3, false).timeout
 	GameManager.end_dialogue()
 	await _say("bounty_ambush_mid")
 	await _start_battle("bounty_ambush")
@@ -353,14 +352,7 @@ func _road(file: String, g: Vector2) -> void:
 	MapUtils.place_road_asset(self, file, g)
 
 func _block(g: Vector2) -> void:
-	var body := StaticBody2D.new()
-	body.position = g * TILE_SIZE
-	var col := CollisionShape2D.new()
-	var shape := RectangleShape2D.new()
-	shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-	col.shape = shape
-	body.add_child(col)
-	add_child(body)
+	MapUtils.add_block(self, g)
 
 func _rect(pos: Vector2, size: Vector2, color: Color) -> ColorRect:
 	var r := ColorRect.new()

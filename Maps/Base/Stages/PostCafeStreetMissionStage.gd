@@ -32,14 +32,14 @@ func on_stage_start():
 		
 	# Nếu chưa bắt đầu nhiệm vụ, tự động chạy cutscene giao nhiệm vụ của Mafuyu
 	if not GameManager.get_flag("street_mission_started"):
-		_cutscene_active = true
+		lock_scene()
 		map.place_player(Vector2(24, 15))
 		
 		# Đợi màn hình fade-in hoàn tất rồi mới thoại
-		await map.get_tree().create_timer(0.5).timeout
+		await map.get_tree().create_timer(0.5, false).timeout
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("lobby_street_mission_start"), func():
 			GameManager.set_flag("street_mission_started", true)
-			_cutscene_active = false
+			unlock_scene()
 			map._refresh_quest_label()
 		)
 

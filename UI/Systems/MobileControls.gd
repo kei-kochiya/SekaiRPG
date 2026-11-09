@@ -59,7 +59,7 @@ func _process(_delta):
 
 	var is_paused = get_tree().paused
 	var in_dialogue = GameManager.is_in_dialogue
-	var in_battle = (cur_scene != null and cur_scene.name == "BattleRoot")
+	var in_battle = (cur_scene != null and cur_scene.name == GameManager.BATTLE_SCENE_NAME)
 
 	if (in_dialogue or is_paused) and _root.visible:
 		_root.visible = false

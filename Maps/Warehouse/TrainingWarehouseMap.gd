@@ -41,7 +41,6 @@ func _ready():
 
 func _spawn_player():
 	var player = OverworldPlayer.new()
-	player.name = "OverworldPlayer"
 	# Start near the door of the big training warehouse
 	if GameManager.last_player_position == Vector2.ZERO:
 		player.position = Vector2(15 * TILE_SIZE, 18 * TILE_SIZE)

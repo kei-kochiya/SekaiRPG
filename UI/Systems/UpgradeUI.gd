@@ -74,12 +74,16 @@ func show_ui(chars: Array[Entity]):
 	visible = true
 	if not _open:
 		_open = true
+		_prev_focus = get_viewport().gui_get_focus_owner()
 		PauseMenu.push_modal()
 		GameManager.start_dialogue()
 	_rebuild_char_list()
 	_rebuild_stats()
 	if not _char_buttons.is_empty():
 		UITheme.focus_later(_char_buttons[0])
+
+# Điều khiển giữ focus trước khi mở bảng nâng cấp: trả lại khi đóng (xem close_ui)
+var _prev_focus: Control
 
 func close_ui():
 	"""Đóng giao diện, nhả khóa hội thoại và cờ modal đúng một lần rồi phát tín hiệu `closed`."""
@@ -89,6 +93,9 @@ func close_ui():
 	visible = false
 	GameManager.end_dialogue()
 	PauseMenu.pop_modal()
+	if is_instance_valid(_prev_focus) and _prev_focus.is_visible_in_tree():
+		UITheme.focus_later(_prev_focus)
+	_prev_focus = null
 	closed.emit()
 
 # ── Xây Dựng Cấu Trúc UI ───────────────────────────────────────────────────

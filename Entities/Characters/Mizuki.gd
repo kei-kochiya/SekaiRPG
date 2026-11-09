@@ -28,7 +28,7 @@ func _init():
 	skills = [
 		{"name": "Ruy Băng Trói Buộc", "method": "ribbon_bind", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
 		{"name": "Bí Mật Cay Đắng", "method": "bitter_secret", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và gây Trúng độc (Poison) trong 3 lượt.\nTỷ lệ: 100% ATK."},
-		{"name": "Rối Độc Thoại", "method": "lonely_marionette", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương xuyên thấu (Pure DMG) và gây Poison mạnh trong 4 lượt.\nTỷ lệ: 250% ATK."},
+		{"name": "Rối Độc Thoại", "method": "lonely_marionette", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương cực lớn và gây Poison mạnh trong 4 lượt.\nTỷ lệ: 250% ATK."},
 	]
 
 # ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────

@@ -6,7 +6,7 @@ Base vắng tanh, chỉ còn Mafuyu và Ichika, ánh sáng tối. Mafuyu hé l�
 (reveal_mafuyu), rời đi; Honami xông vào đưa Ichika đi (honami_rescue) -> sang nhà Honami.
 
 Chạy khi: kanade_killed && !honami_rescue_done.
-mafuyu_reveal_done + honami_rescue_done chỉ được đặt SAU khi màn hình đã tối, ngay trước khi đổi scene
+honami_rescue_done chỉ được đặt SAU khi màn hình đã tối, ngay trước khi đổi scene
 (lưu/tải giữa chừng chỉ khiến cảnh phát lại, không bao giờ kẹt ở Base).
 """
 
@@ -33,9 +33,6 @@ func get_bgm_track() -> String:
 func on_stage_start():
 	map.set_player("Ichika")
 	map.place_player(Vector2(23, 16), "right")
-
-	if GameManager.get_flag("honami_rescue_done"):
-		return
 
 	lock_scene()
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("reveal_mafuyu"), _on_reveal_done)
@@ -64,7 +61,6 @@ func _on_reveal_done():
 
 func _on_rescue_done():
 	await ScreenFade.fade_out(1.5)
-	GameManager.set_flag("mafuyu_reveal_done", true)
 	GameManager.set_flag("honami_rescue_done", true)
 	GameManager.store_map_state(NEXT_SCENE, Vector2.ZERO)
 	get_tree().change_scene_to_file(NEXT_SCENE)

@@ -5,7 +5,7 @@ func on_stage_start():
 	map.set_player("Ichika")
 
 	if GameManager.get_flag("post_street_trained_once"):
-		_cutscene_active = true
+		lock_scene()
 		_play_honami_invasion()
 
 func handle_npc_interaction(npc_name: String):
@@ -29,9 +29,6 @@ func _show_training_menu():
 	)
 
 func _play_honami_invasion():
-	# Phát âm thanh báo động (Chưa có hàm play_sound nên tạm tắt)
-	# AudioManager.play_sound("res://Assets/Audio/SFX/alert.wav")
-
 	# Spawn Honami ở cửa chính
 	map.spawn_dummy("Honami", Vector2(24, 21), Color(0.5, 0.35, 0.25))
 
@@ -44,4 +41,4 @@ func _play_honami_invasion():
 	)
 
 func get_quest_text() -> String:
-	return "MỤC TIÊU: Nói chuyện với Mafuyu để luyện tập (Unlock: Mafuyu, Mizuki)."
+	return "MỤC TIÊU: Nói chuyện với Mafuyu để luyện tập."

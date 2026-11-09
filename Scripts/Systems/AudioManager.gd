@@ -38,6 +38,8 @@ func _ready():
 
 # Mỗi lần đổi bài tăng số này; coroutine làm mờ cũ thấy số đã đổi thì bỏ cuộc (xem play_music)
 var _play_id: int = 0
+# Bài nhạc đã nạp theo tên (xem play_music)
+var _streams: Dictionary = {}
 
 func play_music(track_name: String, fade_duration: float = 1.0):
 	"""
@@ -55,9 +57,13 @@ func play_music(track_name: String, fade_duration: float = 1.0):
 		push_error("Music track not found: " + track_name)
 		return
 	
-	var new_stream = load(MUSIC_DIR + TRACKS[track_name])
-	if not new_stream:
-		return
+	# Giữ lại các bài đã nạp: mp3 vài MB, đổi bài ở mỗi map/trận mà nạp lại từ đĩa sẽ giật
+	var new_stream = _streams.get(track_name)
+	if new_stream == null:
+		new_stream = load(MUSIC_DIR + TRACKS[track_name])
+		if not new_stream:
+			return
+		_streams[track_name] = new_stream
 		
 	_current_track = track_name
 	_play_id += 1

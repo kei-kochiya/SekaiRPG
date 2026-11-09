@@ -94,3 +94,9 @@ func test_item_effects():
 	for id in GameManager.DEFAULT_INVENTORY:
 		assert_true(ItemCatalog.ITEMS.has(id), "starting item %s exists in the catalog" % id)
 	e.free()
+
+# Hai bảng quái (tên hiển thị -> lớp ở EntityFactory, id kỹ thuật -> lớp ở BattleInitializer) từng được chép riêng và dễ lệch nhau
+func test_entity_factory_monsters_are_known_to_the_battle_initializer():
+	var known: Array = BattleInitializer.enemy_classes.values()
+	for monster_name in EntityFactory.MONSTERS:
+		assert_true(EntityFactory.MONSTERS[monster_name] in known, "%s có trong BattleInitializer.enemy_classes" % monster_name)

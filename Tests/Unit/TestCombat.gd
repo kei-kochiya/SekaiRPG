@@ -17,6 +17,7 @@ func test_damage_calculator_raw():
 	defender.defense = 9999
 	var min_dmg = DamageCalculator.calculate_damage(attacker, defender, 1.0)
 	assert_gt(min_dmg, 0, "Damage satisfies minimum threshold even against huge defense")
+	assert_lt(min_dmg, dmg, "Sàn chip damage thấp hơn đòn bình thường")
 
 func test_damage_calculator_type_chart():
 	var ichika = Ichika.new()

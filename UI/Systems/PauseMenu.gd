@@ -121,6 +121,7 @@ func _close_guide():
 
 # Không đụng tới trạng thái pause: từ StartMenu chỉ cần vẽ bảng Options lên trên
 func show_options(from_main_menu: bool = false):
+	_remember_focus()
 	_reset_views()
 	_panel.visible = false
 	visible = true
@@ -141,6 +142,7 @@ func _close_options():
 		visible = false
 		get_tree().paused = false
 		_reset_views()
+		_restore_focus()
 	else:
 		_show_main_panel(_btn_options)
 
@@ -325,12 +327,27 @@ func toggle():
 	"""
 	if not visible and not _can_pause():
 		return
+	if not visible:
+		_remember_focus()
 	visible = !visible
 	get_tree().paused = visible
 	_reset_views()
 	if visible:
 		_refresh_save_buttons()
 		UITheme.focus_later(_btn_resume)
+	else:
+		_restore_focus()
+
+# Điều khiển đang giữ focus trước khi menu mở (nút Cài đặt ở tiêu đề, menu lệnh của trận...): trả lại khi đóng để phím mũi tên/tay cầm không chết
+var _prev_focus: Control
+
+func _remember_focus() -> void:
+	_prev_focus = get_viewport().gui_get_focus_owner()
+
+func _restore_focus() -> void:
+	if is_instance_valid(_prev_focus) and _prev_focus.is_visible_in_tree():
+		UITheme.focus_later(_prev_focus)
+	_prev_focus = null
 
 func _on_resume():
 	toggle()
@@ -366,5 +383,6 @@ func _on_quit():
 	visible = false
 	get_tree().paused = false
 	_reset_views()
+	DialogueManager.reset()
 	get_tree().change_scene_to_file(MapPaths.START_MENU)
 

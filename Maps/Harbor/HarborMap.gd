@@ -9,7 +9,6 @@ Người chơi (Ichika + Ena) có 2 lựa chọn tiếp cận:
 Sau khi Boss thua, chuyển sang AlleywayMap.
 """
 
-const TILE_SIZE = 32
 
 func _ready():
 	AudioManager.play_music("map")
@@ -33,11 +32,10 @@ func _build_map():
 	MapUtils.fill_floor(self, 0, 0, 80, 18)
 	
 	# 2. Water (Bottom half)
-	_fill_rect("water_body.png", 0, 19, 80, 30, true)
+	MapUtils.fill_tiles(self, "water_body.png", 0, 20, 80, 30, true)
 	
-	# 3. Water Edge
-	for x in range(0, 81):
-		_place_tile("upper_horizontal_water.png", Vector2(x, 19), true)
+	# 3. Water Edge (hàng 19, đè lên mép nước)
+	MapUtils.fill_tiles(self, "upper_horizontal_water.png", 0, 19, 80, 19, true)
 	
 	# 4. Decor
 	# Some crates (chests) and barrels (not sure if barrel exists, use grave as placeholder for barrel?)
@@ -52,11 +50,6 @@ func _build_map():
 	# Some trees near the top edge
 	for i in range(10):
 		_place_tile("tree.png", Vector2(i * 8, 2), true)
-
-func _fill_rect(tile: String, x1, y1, x2, y2, collision: bool):
-	for x in range(x1, x2 + 1):
-		for y in range(y1, y2 + 1):
-			_place_tile(tile, Vector2(x, y), collision)
 
 func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
 	MapUtils.place_tile(self, file, grid_pos, has_collision)
@@ -105,14 +98,15 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 	
 	zone.interacted.connect(func():
 		GameManager.harbor_route = route
+		var player_pos: Vector2 = get_node("OverworldPlayer").global_position
 		# Boss được tính là trận đấu kịch bản (Scripted)
 		if route == "boss" or GameManager.harbor_wave > 3:
-			GameManager.is_scripted_battle = true
-			GameManager.scripted_battle_id = "harbor_boss"
+			GameManager.start_scripted_battle("harbor_boss", MapPaths.HARBOR, player_pos)
+			return
 		
-		GameManager.store_map_state(MapPaths.HARBOR, get_node("OverworldPlayer").global_position)
+		GameManager.store_map_state(MapPaths.HARBOR, player_pos)
 		# Lần đầu chạm trán lính gác ở cổng (chương 4): đoạn súng nổ ở cổng phát một lần, rồi mới vào trận
-		if route != "boss" and GameManager.harbor_wave <= 1 and not GameManager.get_flag("harbor_gate_firefight_done"):
+		if GameManager.harbor_wave <= 1 and not GameManager.get_flag("harbor_gate_firefight_done"):
 			GameManager.set_flag("harbor_gate_firefight_done", true)
 			DialogueManager.play_dialogue(DialogueLoader.get_lines("harbor_gate_firefight"), func():
 				GameManager.trigger_battle()
@@ -125,7 +119,6 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 
 func _spawn_player():
 	var p = OverworldPlayer.new()
-	p.name = "OverworldPlayer"
 	if GameManager.last_player_position == Vector2.ZERO:
 		p.position = Vector2(100, 350)
 	else:

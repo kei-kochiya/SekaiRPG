@@ -25,6 +25,7 @@ func on_stage_start():
 	if GameManager.get_flag("mizuki_vs_mafuyu_done") and not GameManager.get_flag("mizuki_report_done"):
 		map.set_player("Mizuki")
 		
+		lock_scene()
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("base_mizuki_report_p2"), func():
 			GameManager.set_flag("mizuki_report_done", true)
 			await GameManager.change_map(MapPaths.BASE, 1.5)
@@ -71,6 +72,7 @@ func _handle_mizuki_interactions(npc_name: String):
 func _handle_normal_interactions(npc_name: String):
 	if npc_name == "Mafuyu" and not GameManager.get_flag("mafuyu_honami_talked"):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("mafuyu_honami_info"), func():
+			lock_scene() # khoá trước khi đặt cờ + fade: lưu game giữa chừng sẽ bỏ lỡ cảnh hẻm
 			GameManager.set_flag("mafuyu_honami_talked", true)
 			await GameManager.change_map(MapPaths.ALLEYWAY, 1.5)
 		)

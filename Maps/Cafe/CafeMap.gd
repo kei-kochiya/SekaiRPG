@@ -14,19 +14,13 @@ func _ready():
 	AudioManager.play_music("map")
 	
 	# Draw background (outside walls)
-	var bg = ColorRect.new()
-	bg.size = Vector2(2000, 2000)
-	bg.color = Color(0.1, 0.05, 0.05)
-	add_child(bg)
+	MapUtils.add_backdrop(self, Color(0.1, 0.05, 0.05))
 	
 	# Build the Cafe room
 	_build_cafe()
 	
 	# Add a Camera to center the view
-	var cam = Camera2D.new()
-	cam.position = Vector2(15 * TILE_SIZE, 10 * TILE_SIZE)
-	cam.zoom = Vector2(1.5, 1.5)
-	add_child(cam)
+	MapUtils.add_fixed_camera(self)
 	
 	await ScreenFade.fade_in(1.0)
 	_run_logic()

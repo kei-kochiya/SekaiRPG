@@ -203,10 +203,22 @@ func show_defeat():
 		defeat_msg = "KẾT THÚC MÔ PHỎNG"
 	elif GameManager.is_training_mode:
 		defeat_msg = "HOÀN THÀNH HUẤN LUYỆN"
+	elif GameManager.is_scripted_battle:
+		defeat_msg = _scripted_defeat_text(GameManager.scripted_battle_id)
 	else:
 		defeat_msg = "THẤT BẠI
 Đang rút lui về Safehouse..."
 	_show_result(defeat_msg, UITheme.DANGER_TEXT)
+
+# Trận kịch bản: chỉ một số trận mới bắt về Safehouse (xem ScriptedBattleOutcomes); còn lại đánh lại tại chỗ hoặc câu chuyện đi tiếp
+func _scripted_defeat_text(battle_id: String) -> String:
+	if ScriptedBattleOutcomes.retreats_to_base(battle_id, false):
+		return "THẤT BẠI\nĐang rút lui về Safehouse..."
+	if battle_id == "harbor_boss":
+		return "THẤT BẠI\nĐang quay lại Bến Cảng..."
+	if ScriptedBattleOutcomes.continues_after_loss(battle_id):
+		return "KẾT THÚC TRẬN ĐẤU"
+	return "THẤT BẠI\nHãy thử lại trận này..."
 
 func _show_result(text: String, color: Color):
 	var banner = _create_banner(text, color, UITheme.FS_TITLE)

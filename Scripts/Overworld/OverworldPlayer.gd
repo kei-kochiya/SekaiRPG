@@ -19,6 +19,14 @@ const SPEED = 250.0
 const ANIM_FRAME_TIME = 0.16
 const SPRITE_ROOT = "res://Assets/Sprites/"
 
+# Tên node cố định: InteractableZone và GameManager.can_save_now tìm người chơi theo tên này
+func _init() -> void:
+	name = "OverworldPlayer"
+
+# false khi map kín tường có camera cố định (ngôi nhà Honami): camera bám theo người chơi sẽ giành quyền hiển thị và bỏ qua khung hình đã dàn sẵn.
+# Map hở (phố có lối ra ở viền) phải để true, kẻo người chơi đi ra ngoài khung hình.
+var follow_camera: bool = true
+
 # Màu sắc đại diện cho nhân vật (Tự động map sang Sprite tương ứng)
 var character_color: Color = Color(0.29, 0.62, 0.62):
 	set(c):
@@ -78,9 +86,10 @@ func _ready():
 	shape.shape = rect
 	add_child(shape)
 	
-	var camera = Camera2D.new()
-	add_child(camera)
-	camera.make_current()
+	if follow_camera:
+		var camera = Camera2D.new()
+		add_child(camera)
+		camera.make_current()
 	
 	if GameManager.last_player_position != Vector2.ZERO:
 		global_position = GameManager.last_player_position

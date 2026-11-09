@@ -28,7 +28,7 @@ func _init():
 	skills = [
 		{"name": "Tuyệt Âm Phân Rã", "method": "resonance", "cooldown_turns": 2, "target": "enemy", "details": "Gây sát thương vật lý mạnh.\nTỷ lệ: 150% ATK."},
 		{"name": "Giọng Ca Vô Thanh", "method": "soundless_voice", "cooldown_turns": 3, "target": "enemy", "details": "Gây sát thương và Làm choáng (Stun) trong 1 lượt.\nTỷ lệ: 100% ATK."},
-		{"name": "Final Requiem", "method": "salvation_song", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương diện rộng xuyên thấu (Pure DMG) và Làm choáng 2 lượt.\nTỷ lệ: 350% ATK."},
+		{"name": "Final Requiem", "method": "salvation_song", "initial_cooldown": 5, "once_per_battle": true, "target": "enemy", "details": "Sát thương cực lớn lên một mục tiêu và Làm choáng 2 lượt.\nTỷ lệ: 350% ATK."},
 	]
 
 # ── Kỹ Năng Kích Hoạt ──────────────────────────────────────────────────────

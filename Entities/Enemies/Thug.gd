@@ -6,7 +6,7 @@ Tóm tắt: Định nghĩa lớp kẻ địch Thug (Giang Hồ).
 
 Chức năng chính:
 - Khởi tạo chỉ số trung bình, xuất hiện trong các sự kiện đường phố.
-- Thực thi kỹ năng [Chém Ngang]: Tấn công vật lý kèm xác suất gây Chảy Máu (Bleed).
+- Thực thi kỹ năng [Chém Ngang]: Tấn công vật lý, luôn kèm Chảy Máu (Bleed) 2 lượt.
 """
 
 # ── Khởi Tạo ───────────────────────────────────────────────────────────────
@@ -35,7 +35,7 @@ func slash_attack(target: Entity):
 	var dmg = DamageCalculator.calculate_damage(self, target)
 	target.take_damage(dmg)
 	
-	# Xác suất gây Bleed nhẹ (tận dụng hệ thống status nếu có)
+	# Luôn gây Bleed nhẹ (2 lượt)
 	if target.has_method("add_status"):
 		target.add_status({"type": "Bleed", "duration": 2})
 

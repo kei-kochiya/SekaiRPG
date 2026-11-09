@@ -18,18 +18,12 @@ func _ready():
 	AudioManager.play_music("map")
 	
 	# Draw background
-	var bg = ColorRect.new()
-	bg.size = Vector2(2000, 2000)
-	bg.color = Color(0.1, 0.1, 0.1)
-	add_child(bg)
+	MapUtils.add_backdrop(self, Color(0.1, 0.1, 0.1))
 	
 	_build_house()
 	
 	# Camera
-	var cam = Camera2D.new()
-	cam.position = Vector2(15 * TILE_SIZE, 10 * TILE_SIZE)
-	cam.zoom = Vector2(1.5, 1.5)
-	add_child(cam)
+	MapUtils.add_fixed_camera(self)
 	
 	var lighting = CanvasModulate.new()
 	lighting.color = Color(0.9, 0.95, 1.0)
@@ -109,7 +103,7 @@ func _build_house():
 	
 	# Spawn Player
 	var player = OverworldPlayer.new()
-	player.name = "OverworldPlayer"
+	player.follow_camera = false # giữ camera cố định căn giữa căn phòng
 	
 	if GameManager.last_player_position != Vector2.ZERO:
 		player.position = GameManager.last_player_position
@@ -129,14 +123,7 @@ func _place_indoor_asset(file: String, grid_pos: Vector2, _has_collision: bool, 
 	add_child(sprite)
 	
 	if _has_collision:
-		var body = StaticBody2D.new()
-		body.position = tile_pos
-		var col = CollisionShape2D.new()
-		var shape = RectangleShape2D.new()
-		shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-		col.shape = shape
-		body.add_child(col)
-		add_child(body)
+		MapUtils.add_block(self, grid_pos)
 
 func _run_logic():
 	if _is_arc2():
@@ -185,9 +172,7 @@ func _show_training_menu():
 	
 	GameManager.begin_training([mapping[idx]])
 	
-	await ScreenFade.fade_out(1.0)
-	GameManager.store_map_state(HOUSE_SCENE, Vector2.ZERO)
-	get_tree().change_scene_to_file(TRAINING_SCENE)
+	await _fade_to_training()
 
 # ── Hồi kết 2: Dạ Khúc Cuối ───────────────────────────────────────────────────
 # Chạy khi honami_rescue_done && !game_completed: menu của Honami (luyện tập / nâng cấp / đối đầu).
@@ -256,10 +241,8 @@ func _show_arc2_training_menu():
 	_freeze_player()
 	GameManager.begin_training(groups[idx])
 	
-	await ScreenFade.fade_out(1.0)
 	# Luyện tập xong BaseMap sẽ tự đưa người chơi về lại ngôi nhà này (xem BaseMap._arc2_redirect_target)
-	GameManager.store_map_state(HOUSE_SCENE, Vector2.ZERO)
-	get_tree().change_scene_to_file(TRAINING_SCENE)
+	await _fade_to_training()
 
 func _open_arc2_upgrade():
 	var p_list: Array[Entity] = []
@@ -281,3 +264,13 @@ func _go_to_final():
 	GameManager.set_flag("final_confront_started", true)
 	GameManager.store_map_state(BASE_SCENE, Vector2.ZERO)
 	get_tree().change_scene_to_file(BASE_SCENE)
+
+# Fade-out rồi sang phòng tập, nhớ quay về ngôi nhà này sau đó. Bỏ qua nếu người chơi đã thoát về menu trong lúc fade.
+func _fade_to_training() -> void:
+	var scene := get_tree().current_scene
+	await ScreenFade.fade_out(1.0)
+	if get_tree().current_scene != scene:
+		GameManager.end_training()
+		return
+	GameManager.store_map_state(HOUSE_SCENE, Vector2.ZERO)
+	get_tree().change_scene_to_file(TRAINING_SCENE)

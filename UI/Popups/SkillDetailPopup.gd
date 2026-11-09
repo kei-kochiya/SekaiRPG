@@ -112,6 +112,7 @@ func _open():
 		_prev_focus = get_viewport().gui_get_focus_owner()
 	visible = true
 	_modal.enter()
+	UITheme.trap_focus(_close_btn)
 	UITheme.focus_later(_close_btn)
 
 func _close():

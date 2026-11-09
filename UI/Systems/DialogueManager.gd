@@ -49,7 +49,11 @@ func play_dialogue(lines: Array, on_complete: Callable = Callable()) -> void:
 		on_complete (Callable): Hàm callback chạy sau khi hội thoại kết thúc.
 	Returns: Không có
 	"""
-	if active or lines.is_empty(): 
+	if active or _in_choice or lines.is_empty():
+		# Callback vẫn chạy để luồng cốt truyện không kẹt. Mảng rỗng là chủ ý (chỉ chạy callback; khóa thiếu đã được DialogueLoader.get_lines
+		# báo); còn bị chặn vì đang có hội thoại/lựa chọn khác thì phải báo, trước đây mất thoại như vậy rất khó dò
+		if not lines.is_empty():
+			GameLogger.warn("Dialogue", "play_dialogue bị bỏ qua: đang có hội thoại/lựa chọn khác")
 		if on_complete.is_valid(): on_complete.call()
 		return
 	
@@ -61,6 +65,19 @@ func play_dialogue(lines: Array, on_complete: Callable = Callable()) -> void:
 	_ui.clear()
 	GameManager.start_dialogue()
 	_show_current_line()
+
+# Đóng sạch hội thoại/lựa chọn đang mở mà KHÔNG chạy callback (thoát về menu giữa chừng, nạp game...): khỏi để hộp thoại mồ côi
+# đè lên màn hình kế tiếp rồi chạy callback của cảnh cũ.
+func reset() -> void:
+	active = false
+	_in_choice = false
+	_callback = Callable()
+	current_dialogue = []
+	index = 0
+	visible = false
+	if _ui:
+		_ui.clear()
+	GameManager.end_dialogue()
 
 signal _async_line_done
 

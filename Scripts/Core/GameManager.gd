@@ -132,8 +132,9 @@ func _on_autosave_timer_timeout():
 	if autosave_enabled and _can_autosave():
 		auto_save()
 
-# Các scene không phải Overworld: không lưu và không tạm dừng bằng ESC ở đây
-const MENU_SCENES := ["StartMenu", "SandboxMenu", "SaveLoadMenu"]
+# Scene gốc không phải màn chơi: không lưu, không tạm dừng bằng ESC, không hiện phím ảo. Tên node gốc của cảnh trận là BATTLE_SCENE_NAME.
+const MENU_SCENES := ["StartMenu", "SandboxMenu", "EndingCard"]
+const BATTLE_SCENE_NAME := "BattleRoot"
 
 func _can_autosave() -> bool:
 	return not is_in_dialogue and can_save_now()
@@ -144,7 +145,7 @@ func can_save_now() -> bool:
 	if is_sandbox or is_scripted_battle or is_training_mode or HoloSimManager.is_sim_active:
 		return false
 	var cur_scene = get_tree().current_scene
-	if cur_scene == null or cur_scene.name == "BattleRoot" or cur_scene.name in MENU_SCENES:
+	if cur_scene == null or cur_scene.name == BATTLE_SCENE_NAME or cur_scene.name in MENU_SCENES:
 		return false
 	var player = cur_scene.find_child("OverworldPlayer", true, false)
 	return player != null and player.is_physics_processing()
@@ -338,6 +339,7 @@ func clear_transient_state():
 	is_tutorial = false
 	if HoloSimManager:
 		HoloSimManager.is_sim_active = false
+	DialogueManager.reset() # hội thoại/lựa chọn đang mở của lượt chơi trước (thoát về menu giữa cảnh) không được sang phiên mới
 
 # Bắt đầu một phiên luyện tập (dùng bộ đếm training_wave riêng, không đụng warehouse_wave của cốt truyện)
 func begin_training(participants: Array):
@@ -370,6 +372,8 @@ func grant_training_exp() -> void:
 # Kết quả trận do _handle_scripted_battle_finish xử lý (xem ScriptedBattleOutcomes).
 # Chạy trên autoload nên sống lâu hơn map: nếu scene đã đổi trong lúc fade (thoát về menu/tải game) thì hủy trận.
 func start_scripted_battle(id: String, return_map: String, player_pos: Vector2 = Vector2.ZERO, fade: float = 0.0) -> void:
+	if _in_menu_scene():
+		return
 	var scene := get_tree().current_scene
 	is_scripted_battle = true
 	scripted_battle_id = id
@@ -382,9 +386,16 @@ func start_scripted_battle(id: String, return_map: String, player_pos: Vector2 =
 			return
 	trigger_battle()
 
+# Người chơi vừa thoát về menu: lời gọi đến muộn từ timer/coroutine của map cũ phải bỏ qua, không kéo menu sang map đó
+func _in_menu_scene() -> bool:
+	var scene := get_tree().current_scene
+	return scene != null and scene.name in MENU_SCENES
+
 # Sang một map khác: fade-out, ghi nhớ map đích rồi đổi scene. Chạy trên autoload nên không chết theo map đang bị đóng;
 # nếu scene đã đổi trong lúc fade (người chơi tải game/thoát về menu) thì bỏ qua, không kéo scene mới đi chỗ khác.
 func change_map(path: String, fade: float = 1.0, player_pos: Vector2 = Vector2.ZERO) -> void:
+	if _in_menu_scene():
+		return
 	var scene := get_tree().current_scene
 	if fade > 0.0:
 		await ScreenFade.fade_out(fade)
@@ -454,13 +465,7 @@ func finish_battle(victory: bool, count: int = 1):
 		# Thua trận nhiệm vụ: về căn cứ, mở lại luyện tập cho người chơi cày thêm rồi quay lại
 		reset_training_progress()
 			
-	if story.get_flag("harbor_boss_defeated") and current_map_file == MapPaths.HARBOR:
-		await get_tree().create_timer(1.5, false).timeout 
-		await ScreenFade.fade_out(0.8)
-		last_player_position = Vector2.ZERO
-		get_tree().change_scene_to_file(MapPaths.ALLEYWAY)
-	else:
-		get_tree().change_scene_to_file(current_map_file)
+	get_tree().change_scene_to_file(current_map_file)
 
 const TRAINING_DONE_FLAGS = [
 	"training_ichika_done", "training_kanade_done", "training_ena_done",
@@ -495,10 +500,11 @@ func _handle_scripted_battle_finish(victory: bool):
 		is_scripted_battle = false
 		scripted_battle_id = ""
 		if victory:
+			var scene := get_tree().current_scene
 			await get_tree().create_timer(1.5, false).timeout
-			await ScreenFade.fade_out(0.8)
-			last_player_position = Vector2.ZERO
-			get_tree().change_scene_to_file(MapPaths.ALLEYWAY)
+			if get_tree().current_scene != scene:
+				return # người chơi đã thoát về menu trong lúc chờ
+			await change_map(MapPaths.ALLEYWAY, 0.8)
 		else:
 			get_tree().change_scene_to_file(MapPaths.HARBOR)
 		return
@@ -516,7 +522,7 @@ func _apply_victory_rewards(count: int):
 		# Luyện tập dùng bộ đếm riêng, không làm tiến trình Nhà kho của cốt truyện
 		story.training_wave += 1
 		grant_training_exp()
-	elif current_map_file.contains("Warehouse"):
+	elif current_map_file == MapPaths.WAREHOUSE:
 		story.warehouse_wave += 1
 	if current_map_file == MapPaths.HARBOR:
 		# Trận Boss Bến Cảng luôn là trận kịch bản (xử lý ở _handle_scripted_battle_finish) nên ở đây chỉ đếm wave lính gác

@@ -13,7 +13,7 @@ const TILE_SIZE = 32
 func _ready():
 	AudioManager.play_music("map")
 	
-	# Reset bộ đếm nếu đây là lần đầu vào Warehouse để không bị ảnh hưởng bởi Prologue
+	# Vào wave 1: bỏ số kẻ địch đã hạ từ trận khác (mở màn, luyện tập) để không lẫn vào tiến trình Nhà kho
 	if GameManager.warehouse_wave == 1 and GameManager.enemies_defeated > 0:
 		GameManager.reset_mission_stats()
 	
@@ -41,9 +41,9 @@ func _ready():
 		var intro = DialogueLoader.get_lines("warehouse_wave1_intro")
 		var start = DialogueLoader.get_lines("warehouse_wave1_start")
 		DialogueManager.play_dialogue(intro + start)
-	elif GameManager.warehouse_wave == 3 and (GameManager.enemies_defeated % 5 == 0):
+	elif GameManager.warehouse_wave == 3:
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave3_start"))
-	elif GameManager.warehouse_wave == 5 and (GameManager.enemies_defeated % 5 == 0):
+	elif GameManager.warehouse_wave == 5:
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("warehouse_wave5_start"))
 
 func _return_to_base_with_fade():
@@ -51,7 +51,6 @@ func _return_to_base_with_fade():
 
 func _spawn_player():
 	var p = OverworldPlayer.new()
-	p.name = "OverworldPlayer"
 	if GameManager.last_player_position == Vector2.ZERO:
 		p.position = Vector2(10 * TILE_SIZE, 18 * TILE_SIZE)
 	else:

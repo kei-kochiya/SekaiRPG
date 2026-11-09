@@ -5,17 +5,11 @@ const TILE_SIZE = 32
 func _ready():
 	AudioManager.play_music("battle")
 	
-	var bg = ColorRect.new()
-	bg.size = Vector2(2000, 2000)
-	bg.color = Color(0.05, 0.05, 0.05)
-	add_child(bg)
+	MapUtils.add_backdrop(self, Color(0.05, 0.05, 0.05))
 	
 	_build_highway()
 	
-	var cam = Camera2D.new()
-	cam.position = Vector2(15 * TILE_SIZE, 10 * TILE_SIZE)
-	cam.zoom = Vector2(1.5, 1.5)
-	add_child(cam)
+	MapUtils.add_fixed_camera(self)
 	
 	var lighting = CanvasModulate.new()
 	lighting.color = Color(0.5, 0.5, 0.6)

@@ -52,7 +52,7 @@ func on_stage_start():
 	
 	# Đặt người chơi (Ichika) cạnh giường ban đầu nếu chưa xem cutscene
 	if not GameManager.get_flag("post_harbor_morning_done"):
-		_cutscene_active = true
+		lock_scene()
 		map.place_player(Vector2(6, 6))
 		
 	if not GameManager.get_flag("post_harbor_morning_done"):
@@ -123,7 +123,7 @@ func _simulate_food_run():
 	await ScreenFade.fade_in(1.0)
 	
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("return_home"), func():
-		_cutscene_active = false
+		unlock_scene()
 		map._refresh_quest_label()
 	)
 

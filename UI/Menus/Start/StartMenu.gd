@@ -11,6 +11,9 @@ const MENU_WIDTH = 320
 var _error_label: Label
 
 func _ready():
+	# Mọi đường về màn hình tiêu đề (thoát từ menu tạm dừng, thắng/thua, kết thúc game) đều dọn trạng thái tạm của lượt chơi trước:
+	# nếu không, cờ Holo-Sim/luyện tập còn sót làm trận Sandbox kế tiếp biến thành trận khác
+	GameManager.clear_transient_state()
 	AudioManager.play_music("main_menu")
 	_build()
 	ScreenFade.fade_in(1.0)

@@ -89,6 +89,7 @@ func show_entities(p_team: Array, e_team: Array):
 		_prev_focus = get_viewport().gui_get_focus_owner()
 	visible = true
 	_modal.enter()
+	UITheme.trap_focus(_close_btn)
 	UITheme.focus_later(_close_btn)
 
 # ── Bảng theo phe ──────────────────────────────────────────────────────────

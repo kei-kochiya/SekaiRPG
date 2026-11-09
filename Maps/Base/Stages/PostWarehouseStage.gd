@@ -31,10 +31,10 @@ func on_stage_start():
 
 func _do_morning_transition(lighting: CanvasModulate):
 	await ScreenFade.fade_out(1.0)
-	# Khoảng đen 1 giây: ScreenFade không còn bận nhưng cảnh chưa xong, nên khóa tương tác bằng chính khoảng đợi này
-	GameManager.start_dialogue()
-	await map.get_tree().create_timer(1.0).timeout
-	GameManager.end_dialogue()
+	# Khoảng đen 1 giây: ScreenFade không còn bận nhưng cảnh chưa xong, nên khóa cảnh (người chơi + NPC) trong lúc đợi
+	lock_scene()
+	await map.get_tree().create_timer(1.0, false).timeout
+	unlock_scene()
 	
 	AudioManager.play_music("base")
 	
@@ -51,16 +51,13 @@ func _do_morning_transition(lighting: CanvasModulate):
 
 func handle_npc_interaction(npc_name: String):
 	if npc_name == "Kanade":
-		_show_upgrade_ui()
+		open_upgrade_ui()
 	elif npc_name == "Mafuyu":
 		_handle_training_dialogue()
 	elif npc_name == "Ena":
 		_handle_harbor_mission()
 	else:
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("npc_hello_" + npc_name.to_lower()))
-
-func _show_upgrade_ui():
-	open_upgrade_ui()
 
 func _handle_training_dialogue():
 	if not GameManager.talked_to_mafuyu_training:

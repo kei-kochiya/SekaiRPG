@@ -11,7 +11,6 @@ Chứa 2 phase:
 var has_triggered_outro: bool = false
 
 const TILE_SIZE = 32 # 8x8 tiles scaled 4x
-const ASSET_ROOT = "res://Assets/kenney_micro-roguelike/Tiles/"
 
 func _ready():
 	AudioManager.play_music("map")
@@ -88,7 +87,6 @@ func _place_tile(file: String, grid_pos: Vector2, has_collision: bool):
 # ─────────────────────────────────────────────
 func _setup_phase_0():
 	var player = OverworldPlayer.new()
-	player.name = "OverworldPlayer"
 	# Positioned inside the warehouse
 	player.position = Vector2(12 * TILE_SIZE, 10 * TILE_SIZE)
 	add_child(player)
@@ -103,6 +101,12 @@ func _setup_phase_0():
 
 # Đoạn mở đầu bị bắt cóc, xong thì vào trận hướng dẫn đầu tiên
 func _play_phase_0_intro():
+	# Thua trận hướng dẫn thì vào lại thẳng trận, không phát lại cả đoạn mở đầu dài
+	if GameManager.get_flag("last_scripted_loss") == "prologue":
+		await get_tree().create_timer(1.0, false).timeout
+		GameManager.is_tutorial = true
+		GameManager.start_scripted_battle("prologue", MapPaths.PROLOGUE)
+		return
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("prologue_phase0"), func():
 		GameManager.is_tutorial = true
 		GameManager.start_scripted_battle("prologue", MapPaths.PROLOGUE)
@@ -114,7 +118,6 @@ func _play_phase_0_intro():
 func _setup_phase_1():
 	GameManager.last_player_position = Vector2.ZERO
 	var player = OverworldPlayer.new()
-	player.name = "OverworldPlayer"
 	# Mafuyu starts outside facing up towards warehouse
 	player.position = Vector2(12 * TILE_SIZE, 19 * TILE_SIZE)
 	player.character_color = Color(0.4, 0.3, 0.5)
@@ -187,7 +190,7 @@ func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, line
 
 func _transition_to_safehouse() -> void:
 	await ScreenFade.fade_out(0.6)
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.0, false).timeout
 	GameManager.last_player_position = Vector2.ZERO
 	GameManager.store_map_state(MapPaths.BASE, Vector2.ZERO)
 	get_tree().change_scene_to_file(MapPaths.BASE)

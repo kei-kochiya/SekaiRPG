@@ -35,6 +35,13 @@ const WIN_FLAG := {
 # (không đánh lại ngay tại chỗ). Tiến độ nhiệm vụ nằm trong cờ (ops_*_done) nên Mafuyu cho tiếp tục đúng chỗ.
 const RETREAT_ON_LOSS := ["ops_kanade", "ops_ena", "ops_ichika", "ops_honami", "pm_boss"]
 
+# Các trận cờ "xong" được ghi dù thắng hay thua (map đi tiếp theo cờ đó chứ không phát lại): thua cũng là câu chuyện tiếp diễn
+const CONTINUES_ON_LOSS := ["ena_vs_mizuki", "ena_vs_thugs", "mizuki_vs_mafuyu", "street_survival"]
+
+# Thua trận này thì câu chuyện vẫn đi tiếp (kết cục cố định hoặc cờ "xong" ghi dù thua), không rút lui cũng không đánh lại
+static func continues_after_loss(id: String) -> bool:
+	return FATED.has(id) or id in CONTINUES_ON_LOSS
+
 # Thua trận kịch bản (hoặc trận có kết cục cố định) thì hồi đầy máu để lần sau không bắt đầu với đồng đội đã gục
 static func heals_party(id: String, victory: bool) -> bool:
 	return not victory or FATED.has(id)
@@ -69,10 +76,8 @@ static func apply(story: StoryState, id: String, victory: bool) -> void:
 			# Chỉ tính xong khi thắng; thua thì StreetMap phát lại đoạn mở đầu để đánh lại
 			if victory:
 				story.set_flag("street_skirmish_done", true)
-				story.set_flag("street_skirmish_won", true)
 		"street_survival":
 			story.set_flag("street_survival_done", true)
-			story.set_flag("street_survival_won", victory)
 		"training_trial":
 			# Thua bài kiểm tra: FinaleStage cho chuẩn bị thêm (luyện tập/nâng cấp) thay vì ép đánh lại ngay
 			story.set_flag("training_trial_failed", not victory)

@@ -49,6 +49,7 @@ func test_damage_high_defense_minimum_floor():
 	# Case 3: Minimum damage floor guarantee
 	var dmg = DamageCalculator.calculate_damage(attacker, defender, 1.0)
 	assert_gt(dmg, 0, "Attacker still deals minimum non-zero chip damage against impenetrable defense")
+	assert_eq(dmg, int(attacker.atk * 0.05), "Sàn sát thương đúng 5% ATK (không phải 1 hay mức tùy ý)")
 
 func test_damage_critical_hit():
 	var attacker = Ichika.new()

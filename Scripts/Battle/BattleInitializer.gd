@@ -115,25 +115,21 @@ static func _build_battle() -> Dictionary:
 	var current_map = GameManager.current_map_file
 	var battle_key = ""
 	
+	# Trận Boss Bến Cảng và trận mở màn luôn là trận kịch bản (đăng ký ở _setup_scripted_battle): ở đây chỉ còn lính gác và Nhà kho
 	if current_map == MapPaths.HARBOR:
-		if GameManager.harbor_route == "boss" or GameManager.harbor_wave > 3:
-			battle_key = "harbor_boss"
-		else:
-			battle_key = "harbor_guards"
+		battle_key = "harbor_guards"
 	elif current_map == MapPaths.WAREHOUSE:
 		battle_key = "warehouse"
-	elif GameManager.prologue_phase == 0:
-		battle_key = "prologue"
 	
 	if mission_battles.has(battle_key):
-		return _setup_mission_battle(mission_battles[battle_key], battle_key)
+		return _setup_mission_battle(mission_battles[battle_key])
 	
 	print("[BattleInitializer] Cảnh báo: Không tìm thấy cấu hình trận đấu cho bản đồ ", current_map)
 	return {"player_team": [], "enemy_team": [], "scenario": DefaultScenario.new()}
 
 # ── Logic Thiết Lập Đội Hình ───────────────────────────────────────────────
 
-static func _setup_mission_battle(cfg: Dictionary, battle_key: String = "") -> Dictionary:
+static func _setup_mission_battle(cfg: Dictionary) -> Dictionary:
 	"""
 	Khởi tạo trận đấu dựa trên cấu hình nhiệm vụ.
 	"""
@@ -156,16 +152,10 @@ static func _setup_mission_battle(cfg: Dictionary, battle_key: String = "") -> D
 		var min_hp = int(p.max_hp * 0.5)
 		if p.current_hp < min_hp: p.current_hp = min_hp
 
-	var scenario = DefaultScenario.new()
-	if battle_key == "harbor_boss":
-		scenario = HarborBossScenario.new()
-	elif battle_key == "prologue":
-		scenario = PrologueScenario.new()
-
 	return {
 		"player_team": p_team,
 		"enemy_team": enemies,
-		"scenario": scenario
+		"scenario": DefaultScenario.new()
 	}
 
 # Đặt tên riêng cho các kẻ địch trong trận kịch bản (thẻ chiến đấu hiện tên thay vì tên loại quái).

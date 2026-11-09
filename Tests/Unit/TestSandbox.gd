@@ -84,3 +84,18 @@ func test_sandbox_enemy_limit():
 	var menu_script = load("res://UI/Menus/Sandbox/SandboxMenu.gd")
 	assert_eq(menu_script.ENEMY_LIMIT, 5, "Sandbox allows at most 5 enemies")
 	assert_eq(menu_script.PLAYER_LIMIT, 4, "Sandbox allows at most 4 player characters")
+	# Giới hạn phải được áp dụng thật, không chỉ khai báo hằng số
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	var menu: Node = load(MapPaths.SANDBOX_MENU).instantiate()
+	root.add_child(menu)
+	for i in 8:
+		menu._on_enemy_added("Lính Cảng")
+	assert_eq(menu.selected_enemies.size(), 5, "Thêm quá 5 kẻ địch thì bị từ chối")
+	for member in ["Ichika", "Kanade", "Ena", "Mizuki", "Mafuyu"]:
+		var box := CheckBox.new()
+		menu._on_player_toggled(true, member, box)
+		box.free()
+	assert_eq(menu.selected_players.size(), 4, "Chọn quá 4 nhân vật phe ta thì bị từ chối")
+	root.remove_child(menu)
+	menu.free()
+	GameManager.reset_game()
