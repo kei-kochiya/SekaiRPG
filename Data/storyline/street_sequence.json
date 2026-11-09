@@ -2,31 +2,56 @@
   "street_followed": [
     {
       "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Mizuki, có kẻ bám đuôi mình kìa."
+    },
+    {
+      "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Ichika, khoan đã... Cô có ngửi thấy mùi gì lạ không?"
+      "color": "#d8a4cc",
+      "text": "Tinh mắt phết đấy lính mới, tớ cũng đang tính báo cho cậu biết đây."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Không chỉ có một hai tên tép riu đâu. Tụi mình lọt vào vòng vây từ lúc rẽ qua ngã tư ban nãy rồi."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Mùi khói súng... và cả tiếng bước chân phía sau nữa chị!"
+      "text": "Mà sao tụi nó biết mình bám theo chứ?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Chậc, bị bám đuôi rồi. Đám này không giống lính gác bình thường, chúng có hàng nóng đấy."
+      "color": "#d8a4cc",
+      "text": "Chắc tại cái loa phát thanh nhà mình hồi chiều đấy. Hết lầm bầm đòi xiên chết tụi nó lại gào ầm lên chửi sếp. Điếc mới không nghe thấy."
+    },
+    {
+      "type": "narrator",
+      "text": "Mizuki đạp phanh, dừng chiếc xe giữa ngã tư. Mấy chiếc xe xanh từ trong bóng tối ập tới chắn kín bốn phía, kèm theo tiếng bước chân dồn dập."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Tụi nó đang lùa mình đấy. Nhưng có đi theo tụi nó mới tóm gọn được cả ổ chứ. Lâu lắm rồi mới được xả láng tay chân!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Là bọn chúng! Chị Mizuki, chuẩn bị chiến đấu thôi!"
+      "text": "Là bọn chúng! Mizuki, chuẩn bị chiến đấu thôi!"
     }
   ],
   "street_surrounded": [
@@ -34,15 +59,15 @@
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Phù... xử lý xong ba tên đó rồi. Nhưng... cô nhìn quanh đi kìa!"
+      "color": "#d8a4cc",
+      "text": "Phù... xử lý xong ba tên đó rồi. Nhưng... cậu nhìn quanh đi kìa!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Từ ngã tư... bọn chúng đang ùa ra kìa! Đông quá, chị làm sao bây giờ!"
+      "text": "Từ khắp các ngã... bọn chúng đang ùa ra kìa! Đông quá, Mizuki, làm sao bây giờ!"
     },
     {
       "type": "narrator",
@@ -52,29 +77,54 @@
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Chết tiệt! Tín hiệu bị nhiễu hoàn toàn rồi, tôi không thể liên lạc với Mafuyu!"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ichika",
-      "color": "#4a9e9e",
-      "text": "Tay em... Áp lực quá lớn, em không thể tập trung để dùng kỹ năng được nữa chị ơi!"
+      "color": "#d8a4cc",
+      "text": "Thôi chết, đông thế này thì đánh đấm gì nữa, đầu hàng luôn cho lẹ... Đùa thôi, chúng đâu có cho mình đầu hàng."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Tôi cũng vậy, kỹ năng bị khóa rồi! Chỉ còn cách đánh tay đôi thôi!"
+      "color": "#d8a4cc",
+      "text": "Chết tiệt! Bộ đàm chết ngắc rồi, tớ không liên lạc được với sếp!"
+    },
+    {
+      "type": "narrator",
+      "text": "Ngón tay Mizuki lặng lẽ gạt tắt chiếc bông tai bộ đàm."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Em không lùi bước đâu! Cùng chiến đấu nào chị!"
+      "text": "Tay tớ... cứng đờ rồi... Mizuki, tớ không rút nổi kiếm nữa!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Chúng ép sát quá, tớ cũng chẳng có chỗ mà ném xúc xắc! Chỉ còn cách đánh tay đôi thôi!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ichika, làm gì đó đi chứ... Không là tớ giết cậu trước đấy."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Kẻ nào yếu thì tự khắc bị loại bỏ... Mình không được yếu nữa...)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Tớ không lùi bước đâu! Cùng chiến đấu nào, Mizuki!"
     }
   ],
   "street_aftermath": [
@@ -87,28 +137,186 @@
     },
     {
       "type": "narrator",
-      "text": "Khói súng dần tan. Hơn chục tên lính ngã gục dưới mũi kiếm vô tình của Mafuyu."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ichika",
-      "color": "#4a9e9e",
-      "text": "*Thở dốc* Chị Mafuyu... May quá, chị đến cứu tụi em..."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "May quá... cô đến kịp lúc... Chậm chút nữa là đi đời rồi."
+      "text": "Khói súng dần tan. Mafuyu kéo lại găng tay, lặng lẽ bước qua đám lính nằm la liệt dưới lưỡi dao của cô. Quần áo và gương mặt cô không dính lấy một vệt đỏ."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Lần sau đừng tự ý dấn sâu vào khu vực nguy hiểm nữa. Để tôi xem tình trạng của hai người đã."
+      "text": "Đông hơn tôi tưởng đấy."
+    },
+    {
+      "type": "narrator",
+      "text": "Hai chân Ichika khuỵu xuống, cơ bắp không còn nghe lời nữa. Mizuki cũng gục bên cạnh, quệt máu trên khóe miệng."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Thở dốc)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Sếp... may quá... sếp đến cứu tụi em..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Làm tốt lắm. Nhóc còn sống thì cũng là phép màu rồi đấy."
+    },
+    {
+      "type": "narrator",
+      "text": "Mafuyu quay sang Mizuki, đôi mắt tối sầm lại."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô có nhiều thứ phải giải thích cho tôi đấy, Mizuki. Cô tự ý ngắt kết nối bộ đàm nhỉ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Dạ... đâu phải tớ! Chắc do dưới này sóng yếu bị nhiễu đó sếp!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Sóng yếu à? Lạ thật. Tín hiệu định vị của hai người vẫn báo về đều đấy thôi. Không nhờ nó thì giờ này tôi đang đi nhặt xác hai người rồi."
+    }
+  ],
+  "street_car_ride": [
+    {
+      "type": "narrator",
+      "text": "Trên đường tới khu phố Tây. Khác với chiếc xe thể thao toàn súng và màu vẽ của Ena, xe của Mizuki tràn ngập móc khóa và đồ mini lung tung."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Vừa lái vừa rút từ ngăn xe ra một thanh kẹo cao su)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Nhai chút đi lính mới, nhìn mặt cậu căng thẳng thế."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Cảm ơn cậu."
+    },
+    {
+      "type": "narrator",
+      "text": "Ichika nhận lấy thanh kẹo, bỏ vào miệng nhai chóp chép. Rồi cô chuyển sự chú ý sang viên xúc xắc trên tay Mizuki."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Đồ nghề của cậu trông lạ thật đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Hàng độc quyền tự chế đấy nhé. Bên trong tích hợp đủ thứ đồ chơi từ dao độc, dây carbon siết cổ cho tới đạn siêu thanh với lưới điện."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Lúc thảy ra là biến hình ngẫu nhiên theo từng mặt số, dính cái nào thì quẩy cái đó thôi. Đánh nhau mà không có chút yếu tố may rủi thì chán chết."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Đúng là tổ chức quái thai, chả có ai bình thường cả...)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Mizuki này... hồi trước sếp Mafuyu lập Nightcord cùng với bốn người nữa cơ mà. Bọn họ... chết như thế nào vậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "À, chuyện đó hả, cũng thú vị phết ấy. Hôm trước sếp có nhắc tới việc Ena xiên chết một tên của tổ chức rồi được nhặt về thay thế đó. Gã đó là một trong năm thành viên sáng lập."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Lúc Ena vừa vào thì đụng ngay ông anh trai ruột của gã cũng nằm trong nhóm kia. Ông anh nổi điên vác súng đi săn Ena, đòi mạng đền mạng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Hai bên xô xát um sùm, rồi ông anh đó cũng bị con bợm nhậu nhà mình cho một viên đạn giữa trán."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Còn hai người nữa thì sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Vụ này tớ không rành lắm, vì xảy ra trước khi tớ vào. Nhưng nghe Kanade kể thì có một gã siêu hèn. Kanade đi nhiệm vụ chung với gã, ngứa mắt quá nên dùng từ trường bóp nát sọ gã luôn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Tên cuối cùng thì dám bán đứng thông tin tổ chức cho bọn Yakuza. Lúc đó tớ cứ tưởng toi cả lũ rồi cơ. May mà chặt đầu hắn kịp."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Thế còn... sếp Mafuyu thì sao? Sếp không can thiệp vào những vụ đó à?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Sếp à... Sếp chỉ đứng nhìn thôi. Trong mắt Mafuyu, kẻ nào yếu đi hoặc không còn giá trị thì tự khắc sẽ bị loại bỏ."
     }
   ]
 }

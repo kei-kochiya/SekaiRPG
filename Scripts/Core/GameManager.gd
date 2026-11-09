@@ -480,6 +480,7 @@ const FATED_BATTLES = {
 	"mizuki_vs_ena_forced": "ena_killed",
 	"mizuki_vs_kanade": "mizuki_killed",
 	"ichika_vs_kanade_slow": "kanade_killed",
+	"honami_spar": "honami_spar_done", # buổi thử phản xạ không thể thắng; cờ ghi dù kết quả ra sao
 }
 
 # Các trận chỉ ghi cờ khi thắng; thua thì map phát lại để đánh lại.
@@ -488,11 +489,12 @@ const WIN_FLAG_BATTLES = {
 	"bounty_2": "bounty_2_done",
 	"bounty_3": "bounty_3_done",
 	"final_mafuyu": "final_mafuyu_defeated",
+	"training_trial": "training_trial_won",
 }
 
 # Các trận cốt truyện khó của màn Tác chiến/Thủ Tướng: thua thì về căn cứ trước nhiệm vụ để luyện tập thêm (không đánh lại ngay tại chỗ).
 # Tiến độ nhiệm vụ nằm trong cờ (ops_*_done) nên Mafuyu cho tiếp tục đúng chỗ.
-const RETREAT_ON_LOSS = ["ops_kanade", "ops_ichika", "ops_honami", "pm_boss"]
+const RETREAT_ON_LOSS = ["ops_kanade", "ops_ena", "ops_ichika", "ops_honami", "pm_boss"]
 
 const TRAINING_DONE_FLAGS = [
 	"training_ichika_done", "training_kanade_done", "training_ena_done",
@@ -557,6 +559,11 @@ func _handle_scripted_battle_finish(victory: bool):
 		story.set_flag("street_survival_won", victory)
 	elif scripted_battle_id == "ops_kanade":
 		if victory: story.set_flag("ops_kanade_done", true)
+	elif scripted_battle_id == "ops_ena":
+		if victory: story.set_flag("ops_ena_done", true)
+	elif scripted_battle_id == "training_trial":
+		# Thua bài kiểm tra: FinaleStage cho chuẩn bị thêm (luyện tập/nâng cấp) thay vì ép đánh lại ngay
+		story.set_flag("training_trial_failed", not victory)
 	elif scripted_battle_id == "ops_ichika":
 		if victory: story.set_flag("ops_ichika_done", true)
 	elif scripted_battle_id == "ops_honami":

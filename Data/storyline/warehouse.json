@@ -5,14 +5,75 @@
       "text": "Khu vực Kho hàng - Đội Ichika & Kanade"
     },
     {
+      "type": "narrator",
+      "text": "Chiếc mô tô phân khối lớn dừng lại cách khu nhà kho chừng năm mươi mét. Hai người nấp sau dãy thùng container để bàn bạc chiến thuật."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "[Bộ đàm] Mục tiêu lần này là một đường dây buôn lậu vũ khí. Bên trên yêu cầu là phải giết hết. Ngoài ra, hạn chế làm mất hoặc hỏng vũ khí để tiện thu hồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Còn vũ khí của chúng thì mình tính sao hả chị? Nếu giết người thì kiểu gì cũng phải làm hỏng vài cái mà?"
+    },
+    {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Bắt đầu dọn dẹp thôi. Có 25 tên, liệu mà bám sát tôi đấy, cô bé."
+      "text": "Đơn giản thôi, chị giật hết đồ của chúng ra trước rồi mới ra tay, mà lũ này cũng toàn xài đồ kim loại, nên chắc sẽ dễ thôi. Nhóc cứ theo sau chị nhé."
+    },
+    {
+      "type": "narrator",
+      "text": "Ichika ngẫm nghĩ gì đó, rồi bất ngờ lao ra khỏi chỗ nấp, suýt nữa thì chạy thẳng vào trong. Kanade hơi ngẩn ra, đưa tay túm nhẹ vạt áo khoác, kéo cô nhóc lùi lại."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Này, đã bảo là đi sau chị mà, sao tự dưng lại vội thế?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em xin lỗi... nhưng nếu cứ mãi đi sau lưng chị, em sợ mình sẽ chẳng làm được gì cả. Em muốn... ít nhất mình cũng phải giúp được gì đó."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Ngốc thật, không cần phải gồng mình thế đâu. Nhưng nếu nhóc đã muốn vậy thì nhớ phối hợp với chị nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ vâng. Em hứa sẽ nghe lời chị."
     }
   ],
   "warehouse_wave1_start": [
+    {
+      "type": "narrator",
+      "text": "Kanade nhắm mắt, dùng từ trường quét qua toàn bộ khu nhà kho."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nghe kỹ này. Có một tên gác cửa cầm rìu, ba tên bên trái có súng trường tự động, hai tên nấp sau cần cẩu giấu dao găm trong ống quần. Còn lại rải rác ở chỗ dễ thấy. Tổng cộng hai mươi lăm mục tiêu."
+    },
     {
       "type": "dialogue",
       "speaker": "left",
@@ -25,10 +86,84 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Được. Đừng để lọt tên nào."
+      "text": "Được rồi, bắt đầu tiệc đêm nay thôi. Đừng để lọt tên nào."
+    },
+    {
+      "type": "narrator",
+      "text": "Kanade vươn tay về phía đám đông bên dưới, tạo ra một trường lực từ cực mạnh, gom toàn bộ vũ khí của chúng rồi nhẹ nhàng đưa tất cả vào một thùng container kế bên."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Gã Trùm",
+      "color": "#888888",
+      "text": "Cái quái gì thế!"
+    },
+    {
+      "type": "narrator",
+      "text": "Hết súng, hết dao, đám đàn em đành vác cả thùng hàng lên mà ném."
     }
   ],
   "warehouse_wave3_start": [
+    {
+      "type": "narrator",
+      "text": "Hơi thở của Kanade đã gấp hơn, nhưng cô vẫn quay sang Ichika."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Giờ thử cách khác xem. Chị vừa truyền từ trường vào kiếm của nhóc rồi. Nhóc chỉ việc vung tay ném nó đi, nhắm vào bọn chúng. Kiếm sẽ tự quay về, nếu khó quá thì chị sẽ hỗ trợ."
+    },
+    {
+      "type": "narrator",
+      "text": "Ánh mắt Kanade hiền dịu nhưng đầy áp lực: để xem con bé có dám chủ động ra tay không. Ichika run rẩy nắm chặt chuôi kiếm, do dự mất mấy giây, rồi nhớ lại lời mình đã nói."
+    },
+    {
+      "type": "narrator",
+      "text": "Cô cắn chặt môi, dậm chân lấy đà, vung tay ném mạnh thanh katana về phía đám đông."
+    },
+    {
+      "type": "narrator",
+      "text": "Dưới sự điều khiển của Kanade, thanh kiếm xoay tít như một lưỡi cưa máy khổng lồ, chém đứt phăng cánh tay gã trùm, rồi bị bẻ hướng, xuyên qua lồng ngực ba tên đàn em phía sau."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Bắt lấy!"
+    },
+    {
+      "type": "narrator",
+      "text": "Thanh kiếm bay ngược trở lại. Ichika giơ tay chụp lấy chuôi, suýt nữa thì hụt. Lưỡi kiếm dính đầy máu tươi, chảy từng giọt xuống mũi giày. Nhìn bãi chiến trường trước mắt, Ichika lấy tay bịt chặt miệng vì buồn nôn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Em có sao không Ichika?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em... em không sao... Em làm tiếp được..."
+    },
+    {
+      "type": "narrator",
+      "text": "Gã trùm cụt tay gào lên thảm thiết, lết thục mạng về phía những dãy container cuối bến."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Gã Trùm",
+      "color": "#888888",
+      "text": "Mẹ kiếp, cút hết ra bọc hậu cho tao!"
+    },
     {
       "type": "dialogue",
       "speaker": "right",
@@ -50,7 +185,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Vãn bớt rồi. Đừng có gục trước tôi đấy, Ichika."
+      "text": "Vãn bớt rồi. Nhưng mặt nhóc tái mét kìa. Cố được thì cố, không thì cứ lùi lại để chị lo."
     },
     {
       "type": "dialogue",
@@ -66,82 +201,147 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Sót một con chuột nhắt. Để tôi nạy miệng nó xem sao."
+      "text": "Còn sót lại một con chuột nhắt kìa. Để chị nạy miệng nó xem sao."
     },
     {
       "type": "narrator",
-      "text": "..."
+      "text": "Kanade rút một cây đinh thép dài từ thùng gỗ bên cạnh, dùng từ trường bắn nó xuyên thủng bắp chân gã trùm cụt tay đang lết đi, hất hắn ngã sấp mặt xuống nền xi măng."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Khai. Tổ chức của mày ở đâu. Tôi không có hứng nghe chó sủa đâu."
+      "text": "Nào nào, làm gì mà vội vàng thế. Đứng lại cho tôi hỏi chuyện đã."
+    },
+    {
+      "type": "narrator",
+      "text": "Cô chậm rãi bước tới, dẫm mạnh gót giày lên vết thương nát bét."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Khai ra toàn bộ mạng lưới của ông đi. Tôi không đủ kiên nhẫn đứng nghe tiếng heo chọc tiết đâu."
     },
     {
       "type": "dialogue",
       "speaker": "left",
-      "name": "Tên kia",
+      "name": "Gã Trùm",
       "color": "#888888",
-      "text": "Tao khai... tao khai hết! Hàng này do băng Yakuza khu Tây tuồn về... bến đỗ tiếp theo là cảng số bốn..."
+      "text": "Được rồi! Tao nói! Tao nói! Đám còn lại, ngày mai, bến cảng số bốn..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nhanh lên nào."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Gã Trùm",
+      "color": "#888888",
+      "text": "A a a! Hết rồi! Đó là tất cả những gì tao biết..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Đây là Kanade. Sếp nghe rõ chứ?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "[Bộ đàm] Thông tin thế là đủ."
+      "text": "[Bộ đàm] Rõ lắm Kanade, cảm ơn cô. Thông tin thế là đủ."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Tôi đã báo quân đội đến dọn dẹp và thu hồi đống vũ khí đó. Tổ chức sẽ được chia phần. Xong việc rồi, hai cô rút về đi."
+      "text": "[Bộ đàm] Mấy tên bỏ chạy thì tôi sẽ nhờ quân đội xử lý. Họ cũng sẽ đến dọn dẹp và thu hồi đống vũ khí đó, tổ chức sẽ được chia phần. Xong việc rồi, hai người mau về căn cứ đi."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Đã rõ."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Kanade",
-      "color": "#ccccdd",
-      "text": "Rút thôi, Ichika."
+      "text": "Tuân lệnh."
     },
     {
       "type": "narrator",
-      "text": "Ichika lảo đảo bước ra khỏi kho hàng."
+      "text": "Ichika đã leo xuống đất từ lúc nào, đứng cách đó vài bước, gương mặt tái nhợt, mất hẳn sức sống."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Đã từng có kẻ gọi tôi là thiên thần."
+      "text": "Nhóc ra xe chờ trước đi. Chị ở lại dọn nốt vài thứ vụn vặt rồi ra ngay."
     },
     {
       "type": "dialogue",
-      "speaker": "right",
-      "name": "Kanade",
-      "color": "#ccccdd",
-      "text": "Đáng tiếc... phần thiên thần ấy chết từ lâu rồi."
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ... vậy em ra trước ạ."
     },
     {
       "type": "narrator",
-      "text": "Bằng năng lực từ trường, Kanade búng nhẹ ngón tay. Một cây đinh sắt phóng thẳng, xuyên thủng sọ tên lính đang run rẩy."
+      "text": "Ichika khẽ gật đầu, lảo đảo bước đi. Đợi cho đến khi bóng dáng cô khuất hẳn, nụ cười trên môi Kanade tắt ngấm. Cô cúi xuống, thì thầm vào tai kẻ đang quằn quại dưới chân."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Chết thanh thản."
+      "text": "Tôi từng là một thiên thần đấy chứ... nhưng thiên thần trong tôi đã sa ngã từ lâu rồi."
+    },
+    {
+      "type": "narrator",
+      "text": "Kanade rút cây đinh ra khỏi bắp chân gã, rồi dùng từ trường bắn nó xuyên qua sọ hắn. Máu bắn lên vấy bẩn cả áo khoác của cô."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Xem như đây là chúc phúc từ thiên thần này đi. Đó là điều tốt nhất tôi có thể làm cho ông rồi."
+    },
+    {
+      "type": "narrator",
+      "text": "Kanade cởi chiếc áo khoác dính máu vứt lại, xoay người rời khỏi hiện trường. Ở chỗ chiếc mô tô, Ichika đang đứng tựa vào thân xe, hai bàn tay vô thức đan vào nhau, mặt trắng bệch và hơi thở vẫn chưa hết run rẩy."
+    },
+    {
+      "type": "narrator",
+      "text": "Kanade thò tay vào túi quần, lấy ra một viên kẹo ngậm dâu tây, mở bọc rồi đút vào miệng Ichika."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Ngậm viên kẹo này cho đỡ đắng miệng đi. Giết người lúc nào cũng khó nuốt cả. Hôm nay nhóc làm tốt lắm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em... em cảm ơn chị Kanade."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Không cần khách sáo. Hồi còn dạy mẫu giáo, đứa nào khóc chị cũng dúi cho một viên. Thói quen thôi mà. Lên xe đi nhóc."
     }
   ]
 }

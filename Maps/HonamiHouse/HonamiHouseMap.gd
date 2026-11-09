@@ -149,7 +149,24 @@ func _run_logic():
 	elif not GameManager.get_flag("honami_house_intro_done"):
 		DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_house_intro"), func():
 			GameManager.set_flag("honami_house_intro_done", true)
+			_start_spar()
 		)
+	elif not GameManager.get_flag("honami_spar_done") and not GameManager.get_flag("ops_intro_done"):
+		_start_spar() # tải save giữa chừng: buổi thử phản xạ chưa xong thì làm lại từ đầu
+	elif not GameManager.get_flag("honami_spar_post_done"):
+		GameManager.set_flag("honami_spar_post_done", true)
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_spar_post"))
+
+# Buổi thử phản xạ (chương 11): Honami chỉ đỡ đòn, Ichika không thể thắng; xong quay lại đây phát honami_spar_post
+func _start_spar():
+	_busy = true
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("honami_spar_pre"), func():
+		GameManager.is_scripted_battle = true
+		GameManager.scripted_battle_id = "honami_spar"
+		GameManager.store_map_state(HOUSE_SCENE, Vector2.ZERO)
+		await ScreenFade.fade_out(1.0)
+		GameManager.trigger_battle()
+	)
 
 func _on_npc_interacted(npc_name: String):
 	if npc_name != "Honami" or _busy:

@@ -236,9 +236,15 @@ func _run_logic():
 			_trigger_survival_battle()
 		)
 	else:
-		# Lần đầu đến đường phố
-		DialogueManager.play_dialogue(DialogueLoader.get_lines("street_followed"), func():
-			_trigger_skirmish_battle()
+		# Lần đầu đến đường phố: trên xe của Mizuki (street_car_ride), rồi mới phát hiện bị bám đuôi
+		var car_lines: Array = []
+		if not GameManager.get_flag("street_car_ride_done"):
+			car_lines = DialogueLoader.get_lines("street_car_ride")
+			GameManager.set_flag("street_car_ride_done", true)
+		DialogueManager.play_dialogue(car_lines, func():
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("street_followed"), func():
+				_trigger_skirmish_battle()
+			)
 		)
 
 func _trigger_skirmish_battle():

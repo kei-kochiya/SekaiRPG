@@ -37,6 +37,13 @@ static var enemy_classes = {
 const FINAL_BOSS_FLOOR_LEVEL = 25
 const FINAL_BOSS_MIRROR = {"max_hp": 1.3, "atk": 1.0, "defense": 1.0, "res": 1.0, "spd": 0.85}
 
+# Các trận mới của cốt truyện (đưa từ truyện vào): cố ý đặt khó, hằng số dưới đây là núm vặn để chỉnh.
+# - Bài kiểm tra Khóa huấn luyện: Ena/Kanade đối thủ là bản sao đồng đội (kể cả điểm nâng cấp) nhân hệ số này.
+const TRAINING_TRIAL_MIRROR = {"max_hp": 1.0, "atk": 0.72, "defense": 1.0, "res": 1.0, "spd": 0.8}
+# - Ena hộ tống đoàn xe: cấp của đợt khủng bố đầu (đợt hai +ConvoyWavesScenario.WAVE_TWO_LEVEL_BONUS).
+const OPS_ENA_LEVEL = 22
+const OPS_ENA_COUNT = ConvoyWavesScenario.WAVE_SIZE
+
 static var mission_battles: Dictionary = {}
 
 # ── Dữ Liệu Tệp ────────────────────────────────────────────────────────────
@@ -262,6 +269,19 @@ static func _setup_training_battle() -> Dictionary:
 	
 	return {"player_team": player_team, "enemy_team": enemies, "scenario": DefaultScenario.new()}
 
+# Bản sao của một thành viên (cùng cấp, chép cả điểm nâng cấp) để làm đối thủ trong trận kịch bản.
+# `factors` nhân thêm lên từng chỉ số (độ khó); thiếu thành viên thật thì dựng bản cấp 25.
+static func _mirror_party_member(p_name: String, factors: Dictionary = {}) -> Entity:
+	var clone: Entity = character_classes[p_name].new()
+	var source: Entity = GameManager.get_party_member(p_name)
+	LevelManager.set_initial_level(clone, source.level if source else 25)
+	if source:
+		_mirror_upgrades(clone, source)
+	for stat in factors:
+		clone.set(stat, int(clone.get(stat) * factors[stat]))
+	clone.current_hp = clone.max_hp
+	return clone
+
 static func build_final_mafuyu() -> Entity:
 	"""
 	Mafuyu ở trận cuối: sao chép chỉ số (kể cả mọi điểm nâng cấp) của Mafuyu đồng đội nhân hệ số FINAL_BOSS_MIRROR.
@@ -429,6 +449,27 @@ static func _setup_scripted_battle(battle_id: String) -> Dictionary:
 				"player_team": [GameManager.get_party_member("Ichika"), GameManager.get_party_member("Honami")],
 				"enemy_team": [build_final_mafuyu()],
 				"scenario": DefaultScenario.new()
+			},
+		"training_trial": func():
+			# Khóa huấn luyện sinh tử, ngày thứ bảy: Ichika một mình trước Ena và Kanade
+			return {
+				"player_team": [GameManager.get_party_member("Ichika")],
+				"enemy_team": [_mirror_party_member("Ena", TRAINING_TRIAL_MIRROR), _mirror_party_member("Kanade", TRAINING_TRIAL_MIRROR)],
+				"scenario": TrainingTrialScenario.new()
+			},
+		"ops_ena": func():
+			# Tác chiến cầu vịnh Tokyo: Ena hộ tống đoàn xe chở bom, hai đợt khủng bố
+			return {
+				"player_team": [GameManager.get_party_member("Ena")],
+				"enemy_team": _create_enemies("terrorist", OPS_ENA_COUNT, OPS_ENA_LEVEL),
+				"scenario": ConvoyWavesScenario.new()
+			},
+		"honami_spar": func():
+			# Buổi thử phản xạ ở phòng khám: Honami chỉ đỡ đòn
+			return {
+				"player_team": [GameManager.get_party_member("Ichika")],
+				"enemy_team": [_mirror_party_member("Honami")],
+				"scenario": SparringScenario.new()
 			},
 		"street_skirmish": func():
 			return {

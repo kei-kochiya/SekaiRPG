@@ -13,6 +13,8 @@ const TRAINEES := ["Ichika", "Honami"]
 
 var _cutscene_active: bool = false
 var _talked_this_visit: bool = false
+# true khi đây là lượt ghé Base thứ hai trở đi (đoạn mở đầu đã xem từ trước): lúc đó Honami mới rủ đi quán bar
+var _visit_after_intro: bool = false
 
 func get_npc_positions() -> Dictionary:
 	return {
@@ -27,6 +29,7 @@ func get_bgm_track() -> String:
 	return "base"
 
 func on_stage_start():
+	_visit_after_intro = GameManager.get_flag("epilogue_intro_done")
 	GameManager.set_flag("mizuki_control_phase", false)
 	GameManager.set_flag("ena_control_phase", false)
 
@@ -46,6 +49,15 @@ func on_stage_start():
 func handle_npc_interaction(npc_name: String):
 	if _cutscene_active or npc_name != "Honami": return
 
+	# Lượt ghé thứ hai trở đi: lời rủ đi quán bar (chương 17) thay cho đoạn trò chuyện đầu lượt
+	if not _talked_this_visit and _visit_after_intro and not GameManager.get_flag("epilogue_bar_invite_done"):
+		_talked_this_visit = true
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("epilogue_bar_invite"), func():
+			GameManager.set_flag("epilogue_bar_invite_done", true)
+			_show_honami_menu()
+		)
+		return
+
 	# Lần nói chuyện đầu trong lượt ghé Base là đoạn chính, các lần sau chỉ là lời hỏi han ngắn
 	var key := "epilogue_honami_idle" if _talked_this_visit else "epilogue_honami_talk"
 	_talked_this_visit = true
@@ -54,12 +66,44 @@ func handle_npc_interaction(npc_name: String):
 	)
 
 func _show_honami_menu():
-	DialogueManager.show_choice(["[Luyện tập]", "[Nâng cấp]", "[Hủy]"])
+	var opts: Array = ["[Luyện tập]", "[Nâng cấp]"]
+	var bar_idx := -1
+	if GameManager.get_flag("epilogue_bar_invite_done") and not GameManager.get_flag("epilogue_bar_done"):
+		bar_idx = opts.size()
+		opts.append("[Đi quán bar]")
+	opts.append("[Hủy]")
+	DialogueManager.show_choice(opts)
 	var idx: int = await DialogueManager.choice_made
 	if idx == 0:
 		_show_training_menu()
 	elif idx == 1:
 		_open_upgrade()
+	elif bar_idx >= 0 and idx == bar_idx:
+		_go_to_bar()
+
+# Cảnh quán bar (chương 17): Shiho đánh bass, hạ bốn tên côn đồ rồi Ichika mời cô vào Nightcord.
+# Phát ngay tại Base: màn hình tối đi, một lớp nền ấm che lên bản đồ làm "quán", hết cảnh thì trả lại Base.
+# Truyện dừng ở lời mời nên không có phần trả lời; cờ epilogue_bar_done chỉ để cảnh không phát lại.
+func _go_to_bar():
+	_cutscene_active = true
+	map.freeze_player()
+	await ScreenFade.fade_out(1.0)
+	var venue := CanvasLayer.new()
+	venue.layer = 4
+	var tint := ColorRect.new()
+	tint.color = Color(0.1, 0.07, 0.04)
+	tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	venue.add_child(tint)
+	map.add_child(venue)
+	await ScreenFade.fade_in(1.0)
+	DialogueManager.play_dialogue(DialogueLoader.get_lines("epilogue_bar_shiho"), func():
+		await ScreenFade.fade_out(1.0)
+		venue.queue_free()
+		GameManager.set_flag("epilogue_bar_done", true)
+		await ScreenFade.fade_in(1.0)
+		map.unfreeze_player()
+		_cutscene_active = false
+	)
 
 func _open_upgrade():
 	var p_list: Array[Entity] = []

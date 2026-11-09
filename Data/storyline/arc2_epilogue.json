@@ -6,7 +6,7 @@
     },
     {
       "type": "narrator",
-      "text": "(Ichika đi qua từng căn phòng, mở từng cánh cửa như để chắc rằng chúng thật sự trống.)"
+      "text": "(Ichika đi qua từng căn phòng, mở từng cánh cửa như để chắc rằng chúng thật sự trống. Honami đi theo sau, ôm một chồng thùng các-tông và cuộn băng keo.)"
     },
     {
       "type": "dialogue",
@@ -34,7 +34,7 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Cô có thể đặt thay."
+      "text": "Em có thể đặt thay."
     },
     {
       "type": "dialogue",
@@ -48,7 +48,53 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Không ai đang giục cô. Căn cứ này quen với việc phải chờ rồi."
+      "text": "Không ai đang giục em. Căn cứ này quen với việc phải chờ rồi."
+    },
+    {
+      "type": "narrator",
+      "text": "(Hai người cất đồ của từng người vào thùng, dán băng keo, xếp vào nhà kho dựng tạm sau căn cứ. Đến chiếc thùng của Kanade, tay Ichika khựng lại.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Phần của Kanade, em tính sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em giữ lại. Vì dù có là ác quỷ, chị ấy cũng từng là một thiên thần."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Honami... còn sếp Mafuyu thì sao ạ? Hôm đó chị đưa sếp đi đâu?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Về nghĩa trang gần nhà chị rồi. Nằm cạnh Ena. Mizuki với Kanade cũng ở đó. Chị không tách ai ra cả."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "...Cảm ơn chị. Khi nào mọi chuyện yên hơn, em muốn ra thăm mọi người."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ừ. Hôm nào em đi, chị chở."
     },
     {
       "type": "narrator",
@@ -59,7 +105,7 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Cần luyện tập hay chỉnh lại kỹ năng thì cứ nói với tôi. Căn cứ có thể vắng, nhưng tay nghề thì chưa mất."
+      "text": "Cần luyện tập hay chỉnh lại kỹ năng thì cứ nói với chị. Căn cứ có thể vắng, nhưng tay nghề thì chưa mất."
     }
   ],
   "epilogue_honami_talk": [
@@ -68,28 +114,28 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Ở đây tôi làm được hai việc: luyện tập cùng cô, và chỉnh lại kỹ năng cho cô."
+      "text": "Ở đây chị làm được hai việc: luyện tập cùng em, và chỉnh lại kỹ năng cho em."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Không giới hạn, không ai đếm. Cô muốn đến lúc nào cũng được."
+      "text": "Không giới hạn, không ai đếm. Em muốn đến lúc nào cũng được."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Còn nếu chỉ muốn đứng nhìn trần nhà, tôi cũng không phàn nàn. Bệnh nhân hồi phục theo nhịp của riêng họ."
+      "text": "Còn nếu chỉ muốn nằm nhìn trần nhà thì chị cũng không phàn nàn. Bệnh nhân hồi phục theo nhịp của riêng họ."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Vậy, hôm nay cô muốn gì?"
+      "text": "Vậy, hôm nay sếp nhỏ muốn gì?"
     }
   ],
   "epilogue_honami_idle": [
@@ -98,21 +144,21 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Căn cứ yên tĩnh thật. Tôi vẫn chưa quen với việc nghe được tiếng kim đồng hồ."
+      "text": "Căn cứ yên tĩnh thật. Chị vẫn chưa quen với việc nghe được tiếng kim đồng hồ."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Cứ thong thả. Tôi hết giục ai rồi."
+      "text": "Cứ thong thả, sếp nhỏ. Chị hết giục ai rồi."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Nếu một ngày nào đó căn cứ này có tiếng đàn, tôi sẽ không phàn nàn đâu. Tôi chỉ nói vậy thôi."
+      "text": "Nếu một ngày nào đó căn cứ này có tiếng đàn, chị sẽ không phàn nàn đâu. Chị chỉ nói vậy thôi."
     },
     {
       "type": "dialogue",
@@ -126,7 +172,211 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Tôi đang kiểm kê băng gạc. Thói quen nghề nghiệp thôi, cô không cần bận tâm."
+      "text": "Đưa tay đây xem nào... Hết run rồi. Lớp chai mới chồng lên lớp chai cũ. Tiến bộ đấy, sếp nhỏ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chị đang kiểm kê băng gạc. Thói quen nghề nghiệp thôi, em không cần bận tâm."
+    }
+  ],
+  "epilogue_bar_invite": [
+    {
+      "type": "narrator",
+      "text": "(Vài tuần sau. Honami dán miếng băng cuối cùng lên cánh tay Ichika, vừa làm vừa bấm điện thoại như thường lệ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Honami này, chắc chị làm việc trong thế giới ngầm lâu lắm rồi nhỉ. Năm nay chị bao nhiêu tuổi thế?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chị á? Tháng Mười này là mười sáu, sếp nhỏ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Hả...? Chị bằng tuổi em á?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Phì cười) Thì sao nào? Bằng tuổi không được làm bác sĩ à? Thế có muốn đổi cách xưng hô không?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Tại chị ngầu với chín chắn quá... Thôi, từ nay em vẫn gọi là chị nhé!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Sao cũng được, chị đâu cấm em được."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "*Xoa rối mái tóc xanh của Ichika*"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Này, chị làm gì vậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Fufu, trông em dễ chọc quá nên chị thử chút ấy mà. Xin lỗi sếp nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "À, em muốn khám phá khu của chị không? Nghe nói gần phòng khám có quán bar mới mở. Họ mời cả một bassist chuyên nghiệp đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Đi chứ ạ. Lâu lắm rồi em chưa xem ai biểu diễn. Tối mai nhé?"
+    }
+  ],
+  "epilogue_bar_shiho": [
+    {
+      "type": "narrator",
+      "text": "(Tối hôm sau. Một quán bar nhỏ gần phòng khám của Honami, ánh đèn vàng đục. Sân khấu chỉ là vài bục gỗ cao hơn sàn một chút.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cho tôi một ly Martini, và một cam ép cho em này nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Người pha chế",
+      "color": "#888888",
+      "text": "Có ngay đây thưa quý khách. Mà trùng hợp thật đó, hôm qua cũng có một nhóm vào gọi y hệt."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Vậy sao ạ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Người pha chế",
+      "color": "#888888",
+      "text": "Một người trong nhóm là bassist hôm nay lên biểu diễn đó. A, lên rồi kìa."
+    },
+    {
+      "type": "narrator",
+      "text": "(Tiếng bass bắt đầu vang lên nhẹ nhàng. Trên bục là một cô gái trạc tuổi Ichika, tóc xám tro ngắn, mắt xanh lục, cây đàn bass cùng một màu với mắt. Honami nhấp từng ngụm Martini, thưởng thức.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Người này chơi hay phết. Lập được ban nhạc với cô ta chắc sẽ tốt lắm."
+    },
+    {
+      "type": "narrator",
+      "text": "(Cả quán đang im lặng lắng nghe thì mấy tên côn đồ xông vào.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Côn đồ",
+      "color": "#888888",
+      "text": "Thứ nhạc rác rưởi gì thế này?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Shiho",
+      "color": "#7fb08a",
+      "text": "Lũ cặn bã chúng mày, không có quyền phán xét âm nhạc của tao."
+    },
+    {
+      "type": "narrator",
+      "text": "(Cô gạt một công tắc trên thân đàn rồi chơi tiếp. Gần cuối bài, cô gảy mạnh dây. Một luồng sóng âm bắn ra từ cây đàn, hất ngã một trong bốn tên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Côn đồ",
+      "color": "#888888",
+      "text": "Con ranh này dám... Tụi tao phải băm nhỏ mày ra mới được!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Ba tên còn lại lao lên với nắm đấm và dao. Shiho chẳng buồn để ý, chỉ nhẹ nhàng lách người theo giai điệu bass để né từng cú. Đến những nốt cuối cùng, cô dùng chân vặn ampli lên mức tối đa, quét một lần cả bốn dây.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Luồng sóng âm quét qua, ba tên văng khỏi bục, nằm la liệt. Tên xui xẻo đứng sát ampli nhất hứng trọn dư chấn và không bao giờ đứng dậy nữa.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Shiho",
+      "color": "#7fb08a",
+      "text": "Cảm ơn mọi người đã lắng nghe."
+    },
+    {
+      "type": "narrator",
+      "text": "(Shiho cúi chào khán giả rồi rút về phía nhà sau. Ichika đặt ly nước xuống, lặng lẽ đi theo.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Shiho",
+      "color": "#7fb08a",
+      "text": "(Chĩa cây bass vào Ichika) Cô là ai?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Khoanh tay, dựa vào khung cửa) Tôi là Hoshino Ichika."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Cô có món đồ chơi trông hay thế nhỉ? Có hứng thú với chuyện tham gia vào Nightcord không?"
     }
   ]
 }

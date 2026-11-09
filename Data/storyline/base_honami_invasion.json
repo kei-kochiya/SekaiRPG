@@ -2,113 +2,156 @@
   "base_honami_invasion": [
     {
       "type": "narrator",
-      "text": "(Tít... tít... tít... ALARM! Toàn bộ hệ thống an ninh của căn cứ Nightcord đồng loạt rít lên inh ỏi.)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ena",
-      "color": "#b86028",
-      "text": "Cái quái gì thế?! Kẻ thù tấn công à?!"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mizuki",
-      "color": "#d8a4cc",
-      "text": "Hệ thống báo động đỏ bị kích hoạt từ mọi hướng! Nhưng camera không thấy ai cả... Khoan đã, cửa chính!"
+      "text": "(Phòng khách căn cứ Nightcord. Ichika thiếp đi trên đùi Mafuyu, người quấn đầy băng tạm, còn Ena và Kanade ngồi sát bên, thỉnh thoảng lại khẽ vuốt tóc cô bé. Hiếm khi nơi này yên bình đến thế.)"
     },
     {
       "type": "narrator",
-      "text": "(Cánh cửa thép chống đạn từ từ mở ra. Một bóng người với chiếc áo khoác blouse trắng bước vào một cách thong thả như đang đi dạo trong công viên.)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Hệ thống an ninh của các cô có vẻ nhạy quá nhỉ? Tôi chỉ vô tình gạt trúng cái tia laser ở hàng rào ngoài kia thôi mà."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Ena",
-      "color": "#b86028",
-      "text": "Ngươi là ả bác sĩ hôm bữa ở Bến cảng! Ranh con, dám vác mặt tới tận hang ổ của Nightcord cơ à?!"
+      "text": "CẠCH! (Ổ khóa điện tử của cửa chính bật mở.)"
     },
     {
       "type": "action",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Ena rút ngay khẩu súng, lên nòng. Mizuki cũng thủ sẵn vài con dao găm trên tay, ánh mắt sắc lạnh.)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Mafuyu",
-      "color": "#665588",
-      "text": "Dừng tay lại, Ena, Mizuki."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Mafuyu",
-      "color": "#665588",
-      "text": "Cô đến đây làm gì, Mochizuki Honami? Tôi nhớ là đã nói ghế ở Nightcord vẫn còn trống cho một bác sĩ giỏi như cô. Lần này cô đổi ý rồi sao?"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Ồ không, tôi không quan tâm lắm đến cái ghế đẫm máu đó của cô đâu, thủ lĩnh Mafuyu."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Tôi qua đây vì muốn mang cô bé kia về chơi một chút thôi."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ichika",
-      "color": "#4a9e9e",
-      "text": "Dạ? Ý chị là em sao?"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Mafuyu",
-      "color": "#665588",
-      "text": "..."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Phải, chính là em đó. Chân em sao rồi, đã đỡ đau hơn chưa? Ở trong cái hầm ngột ngạt này không tốt cho việc hồi phục đâu. Đi với tôi nào."
-    },
-    {
-      "type": "narrator",
-      "text": "(Honami bước tới, không thèm để mắt đến họng súng của Ena, thản nhiên nắm lấy tay Ichika rồi kéo đi.)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ichika",
-      "color": "#4a9e9e",
-      "text": "Ơ... ơ kìa! Chị Honami, đợi đã, em còn chưa xin phép chị Mafuyu..."
+      "text": "*Vồ lấy khẩu súng ngắn trên bàn, chĩa thẳng ra cửa*"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Mafuyu! Cô cứ để ả ta ngang ngược thế sao?!"
+      "text": "Kẻ nào?!"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "*Đặt ly mì xuống, giơ sẵn bàn tay lên*"
+    },
+    {
+      "type": "narrator",
+      "text": "(Cánh cửa từ từ mở ra. Một bóng người mặc áo blouse trắng, xách chiếc vali y tế bằng hợp kim, thong thả bước vào như đang đi dạo trong công viên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ây dà, vũ khí đầy đủ thế này thì dọa chết khách mất."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Khóa ở đây hơi lỏng lẻo đấy nhé. Tôi gõ nhẹ hai cái là nó tự bung rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Ló đầu ra từ bếp) Camera ngoài cửa không ghi được hình nào luôn... Khóa điện tử đời mới nhất mà bị mở nhẹ như khui lon nước ngọt vậy sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Ngón tay vẫn đặt trên cò súng) Sao mày lần ra được chỗ này?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ở Tokyo này, cái gì cũng mua được bằng tiền, quý cô ạ. Kể cả địa chỉ nhà các cô. Hôm trước tôi còn gọi taxi chở con bé về tận cổng đấy thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Bác sĩ Mochizuki? Chỗ này không tiếp người ngoài."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Tôi biết chứ. Và nếu sếp lớn định hỏi lại chuyện cái ghế bác sĩ của Nightcord thì câu trả lời vẫn như mọi lần thôi. Hôm nay tôi chỉ đến thăm bệnh nhân."
+    },
+    {
+      "type": "narrator",
+      "text": "(Honami thản nhiên bước qua sát khí của Mafuyu, ánh mắt chỉ dừng lại trên cô bé đang nằm trên đùi sếp lớn.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Nhìn con bé kìa. Rách cơ vai, trật khớp, có vẻ còn gãy vài cái xương sườn nữa. Mấy người sơ cứu kiểu này không sợ con bé đột quỵ rồi lăn ra chết à?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ý cô là sao?"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu nhẹ nhàng đặt Ichika xuống ghế rồi đứng dậy. Honami đi lướt qua cô, cúi người luồn tay qua lưng và đùi Ichika, bế cô bé lên nhẹ tênh như bế một đứa trẻ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ý trên mặt chữ đấy, sếp lớn. Tôi nhận con bé làm bệnh nhân từ cái đêm ở khu phố Tây rồi. Xin phép mượn về phòng khám chữa trị, xong tôi gửi trả. Được không?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Này này... mày tính cướp người công khai ngay trước mặt sếp đấy à?"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "*Hạ tay xuống, khẽ liếc sang Mafuyu chờ lệnh*"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Mơ màng mở mắt) Chị Honami...? Khoan đã, em còn chưa xin phép sếp..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Nhìn những vết thương trên người Ichika, im lặng một lúc) Nếu con bé có mệnh hệ gì, cái phòng khám của cô sẽ thành tro bụi đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Sếp cứ yên tâm. Tôi lấy cái tên Mochizuki ra mà cam kết với sếp."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Sếp! Cứ để ả vác người đi như thế sao?!"
     },
     {
       "type": "dialogue",
@@ -119,7 +162,7 @@
     },
     {
       "type": "narrator",
-      "text": "(Và thế là, trước sự ngỡ ngàng của tất cả mọi người, Ichika bị Honami kéo tuột ra khỏi cửa chính của Nightcord...)"
+      "text": "(Honami nhoẻn miệng cười, bế Ichika ra khỏi căn cứ mà không thèm ngoái đầu nhìn lại. Cánh cửa khép lại sau lưng cô, bỏ cả bọn đứng sững trong căn phòng khách im lặng.)"
     }
   ]
 }

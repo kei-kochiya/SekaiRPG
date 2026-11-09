@@ -1,64 +1,185 @@
 {
   "pm_plot_reveal": [
     {
-      "speaker": "right",
-      "text": "Mọi người nghe đây. Gã Thủ tướng đang lên kế hoạch trừ khử tôi và Nightcord.",
       "type": "dialogue",
-      "name": "Mafuyu"
-    },
-    {
-      "speaker": "right",
-      "text": "Hắn thuê chúng ta làm vệ sĩ để dễ bề đào tẩu, đồng thời mượn tay bọn khủng bố để giết chúng ta.",
-      "type": "dialogue",
-      "name": "Mafuyu"
-    },
-    {
-      "speaker": "right",
-      "text": "Một kế hoạch khá bẩn thỉu. Cô định làm gì, Mafuyu?",
-      "type": "dialogue",
-      "name": "Kanade"
-    },
-    {
-      "speaker": "right",
-      "text": "Tôi sẽ thuận nước đẩy thuyền. Cứ để hắn nghĩ rằng mọi việc đang theo đúng kế hoạch.",
-      "type": "dialogue",
-      "name": "Mafuyu"
-    },
-    {
       "speaker": "left",
-      "text": "Chị Mafuyu, như vậy có quá nguy hiểm không? Em lo lắm...",
-      "type": "dialogue",
-      "name": "Ichika"
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Hàng của sếp đây ạ. Chị Honami giúp em lôi nó ra từ dưới nắp capo một chiếc xe lật."
     },
     {
+      "type": "narrator",
+      "text": "(Mafuyu vươn tay lấy chiếc USB bám bụi, chợt khựng lại khi thấy mấy miếng băng được dán tỉ mỉ và chuẩn xác trên người Ichika. Rồi cô cắm nó vào máy tính bảng. Màn hình tối sầm, khởi động lại thì toàn bộ dữ liệu đã bị mã hóa.)"
+    },
+    {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "Không sao. Tôi biết mình đang làm gì.",
-      "type": "dialogue",
-      "name": "Mafuyu"
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Virus à? Không sao, cái này bên mình xử lý được."
     },
     {
+      "type": "narrator",
+      "text": "(Hơn nửa tiếng sau, máy tính bảng sáng lại bình thường. Một tấm bản đồ vịnh Tokyo hiện lên với hàng chục chấm đỏ. Mafuyu đánh dấu lại từng chấm, rồi dừng tay trước một thư mục ẩn.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Thú vị đây. Kế hoạch ám sát đối thủ chính trị của Thủ tướng, giao dịch phi pháp với bọn khủng bố... và cả kế hoạch trừ khử Nightcord."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu cầm điện thoại bước ra sân, bấm số của cấp trên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Xin chào ngài Thứ trưởng. Tôi là Mafuyu, thủ lĩnh của Nightcord. Phiền ngài xem qua bản báo cáo tôi vừa gửi."
+    },
+    {
+      "type": "dialogue",
       "speaker": "left",
-      "text": "(Điện thoại reo) Mafuyu, là tôi đây. Cô có nghe rõ không?",
-      "type": "dialogue",
-      "name": "Honami"
+      "name": "Thứ trưởng",
+      "color": "#aaaacc",
+      "text": "(Im lặng một lúc, chỉ nghe tiếng nhấp chuột mở file) ...Thú vị đấy. Thế cô đã có kế hoạch gì chưa?"
     },
     {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "Honami à? Mọi chuyện thế nào rồi?",
-      "type": "dialogue",
-      "name": "Mafuyu"
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tôi định chỉ cho người gỡ bom rồi sơ tán thôi, nhưng vậy thì chán lắm. Sáng mai, Nightcord chúng tôi sẽ thay các ngài khiến gã này từ chức. Các ngài chỉ cần xử lý hiện trường và truyền thông."
     },
     {
+      "type": "dialogue",
       "speaker": "left",
-      "text": "Tôi đã sắp xếp xong. Chúng ta sẽ làm theo thỏa thuận ngầm. Cô hãy cẩn thận.",
-      "type": "dialogue",
-      "name": "Honami"
+      "name": "Thứ trưởng",
+      "color": "#aaaacc",
+      "text": "Còn gì nữa không?"
     },
     {
-      "speaker": "right",
-      "text": "Tôi hiểu rồi. Trò chơi này, kẻ cười cuối cùng sẽ là tôi.",
       "type": "dialogue",
-      "name": "Mafuyu"
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Phiền các ngài cử người đi tháo giúp chúng tôi chỗ bom C4 tôi đã đánh dấu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Thứ trưởng",
+      "color": "#aaaacc",
+      "text": "Được. Nhưng nếu thất bại thì sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Đột nhiên lên giọng) Ngài cứ yên tâm. Nightcord không thể nào thua được."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Thứ trưởng",
+      "color": "#aaaacc",
+      "text": "Tôi hiểu rồi. Trăm sự nhờ cô."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu quay vào căn cứ, gõ nhẹ ngón tay lên bàn rồi gọi cả đội tập trung.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Mọi người nghe đây. Gã Thủ tướng đang lên kế hoạch trừ khử tôi và Nightcord."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Hắn thuê chúng ta làm vệ sĩ để dễ bề đào tẩu, đồng thời mượn tay bọn khủng bố để giết chúng ta."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Húp nốt ly mì) Một kế hoạch khá bẩn thỉu. Sếp định làm gì?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tôi sẽ thuận nước đẩy thuyền. Cứ để hắn nghĩ rằng mọi việc đang đi đúng kế hoạch của hắn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Tùy sếp thôi. Miễn là có đứa để tôi xiên."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Khoản hóa trang với lái xe cứ để tớ lo~ Tớ chỉ mượn thân phận tài xế riêng của lão một buổi sáng thôi mà."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Sếp, như vậy có quá nguy hiểm không ạ? Em lo lắm..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Không sao đâu, nhóc. Tôi biết mình đang làm gì."
+    },
+    {
+      "type": "narrator",
+      "text": "(Điện thoại của Mafuyu rung lên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Qua điện thoại) Sếp lớn, là tôi đây. Nghe rõ không?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Bác sĩ Mochizuki? Mọi chuyện thế nào rồi?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Tôi đã sắp xếp xong. Chúng ta sẽ làm theo thỏa thuận ngầm. Sếp cẩn thận nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Bóc một viên kẹo chua bỏ vào miệng) Tôi hiểu rồi. Trò chơi này, kẻ cười cuối cùng sẽ là tôi."
     }
   ]
 }

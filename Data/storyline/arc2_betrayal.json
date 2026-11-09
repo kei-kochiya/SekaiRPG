@@ -2,7 +2,7 @@
   "kanade_confront_pre": [
     {
       "type": "narrator",
-      "text": "(Sân sau nhà kho. Vài thùng phuy rỉ sét, một chiếc xe máy cũ, và Kanade đứng giữa khoảng trống ấy, tay cầm một cốc mì ly, dường như đã chờ từ rất lâu.)"
+      "text": "(Sân sau nhà kho. Vài thùng phuy rỉ sét, một chiếc xe máy cũ, và Kanade đứng giữa khoảng trống ấy, tay cầm một cốc mì ly còn nghi ngút khói, dường như đã chờ từ rất lâu.)"
     },
     {
       "type": "dialogue",
@@ -23,28 +23,28 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Đặc vụ nằm vùng của Cảnh sát Quốc tế. Phải. Đừng hỏi lần hai, Ichika, trả lời lần hai khó hơn lần một."
+      "text": "Phải, Ichika. Chị là đặc vụ nằm vùng của Cảnh sát Quốc tế. Đừng hỏi lần hai, trả lời lần hai khó hơn lần một."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Cô ở lại đây. Không chạy."
+      "text": "Cớm chìm... Mày dám lừa tất cả bọn tao. Đứng yên đó, không được chạy."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Chạy thì mệt. Mà tôi cũng hết chỗ để chạy rồi."
+      "text": "Chạy thì mệt. Mà tôi cũng hết chỗ để chạy rồi. Chuyến trực thăng đón tôi, tôi đã bảo họ hủy."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "(Đặt cốc mì lên thùng phuy) Chuyện giáo viên mầm non là thật. Vụ sập giàn giáo cũng thật. Một tuần sau có người đến gõ cửa, đưa tôi xem đoạn băng quay cảnh tôi uốn cong mấy thanh sắt."
+      "text": "(Đặt cốc mì lên thùng phuy) Chuyện giáo viên mầm non là thật. Vụ sập giàn giáo cũng thật. Mafuyu đưa tôi về đây, một tuần sau có người gõ cửa, đưa tôi xem đoạn băng quay cảnh tôi uốn cong mấy thanh sắt."
     },
     {
       "type": "dialogue",
@@ -58,14 +58,14 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Nhưng chị sống chung với bọn em... chị pha mì, chị dọn phòng cho em..."
+      "text": "Nhưng chị sống chung với bọn em... chị pha mì, chị cho em mượn áo khoác..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Mì ở đây thật sự ngon. Tôi không nói dối chuyện đó."
+      "text": "Mì ở đây thật sự ngon. Chị không nói dối chuyện đó."
     },
     {
       "type": "dialogue",
@@ -86,7 +86,7 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Cô báo cho họ vụ của Ena sao?"
+      "text": "Mày bán đứng Ena cho bọn nó, phải không?"
     },
     {
       "type": "dialogue",
@@ -107,18 +107,18 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Không ai muốn chuyện này. Cô, tôi, cả Ichika. Nhưng đêm nay chỉ có một trong hai chúng ta rời khỏi cái sân này."
+      "text": "Các người không nên đến đây. Tôi không muốn phải giết thêm ai nữa. Không ai muốn chuyện này, cô, tôi, cả Ichika. Nhưng đêm nay chỉ có một trong hai chúng ta rời khỏi cái sân này."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Ichika, lùi lại."
+      "text": "Câm mồm! Ichika, lùi lại."
     },
     {
       "type": "narrator",
-      "text": "(Mizuki rút dao. Ichika muốn bước lên, nhưng đôi chân cô như bị đóng đinh xuống nền.)"
+      "text": "(Mizuki tung viên xúc xắc lên không rồi chụp lại, nó đã biến thành sợi dây carbon mảnh như tóc. Ichika muốn bước lên, nhưng đôi chân cô như bị đóng đinh xuống nền.)"
     }
   ],
   "ichika_freeze_line": [
@@ -127,52 +127,67 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "(Cử động đi... làm ơn cử động đi... Chân em không nghe lời nữa...)"
+      "text": "(Cử động đi... làm ơn cử động đi... Chân mình không nghe lời nữa...)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Đứng yên đó, Ichika. Việc này để tôi."
+      "text": "Đứng yên đó, Ichika. Việc này để tớ lo."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "(Khẽ) Đúng. Cô cứ đứng yên đi."
+      "text": "Lùi lại đi, Ichika. Chị không muốn ra tay với em."
     }
   ],
   "mizuki_dies": [
     {
       "type": "narrator",
-      "text": "(Nhát cuối cùng của Kanade không phát ra tiếng. Chỉ có con dao găm của chính Mizuki, bị uốn ngược khỏi tay cô, bay trở lại và dừng ở một nơi rất gần tim.)"
-    },
-    {
-      "type": "narrator",
-      "text": "(Ichika không dám nhìn xem đó là đâu.)"
+      "text": "(Kanade nhấc bổng Mizuki bằng từ trường rồi đập mạnh vào tường. RẮC. Mizuki hộc máu, nhưng đôi mắt vẫn bám chặt lấy Kanade.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Ái chà... bay ngược về... chơi ăn gian nhé..."
+      "text": "Cô... dám..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Xin lỗi."
+      "text": "Chính cô đã ép tôi phải đi đến nước này."
+    },
+    {
+      "type": "narrator",
+      "text": "(Kanade nhắm mắt lại. Một giọt nước mắt lăn dài trên má. Một thanh sắt từ đống phế liệu bay vào tay cô.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(PHẬP!)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mizuki trố mắt nhìn vệt máu loang ra trước ngực. Tay cô bấu chặt lấy vai Kanade, run lên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Xin lỗi cô. Thực sự xin lỗi..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Đừng... cô nói nghe không hợp chút nào."
+      "text": "Đừng... cậu nói nghe không hợp chút nào."
     },
     {
       "type": "narrator",
@@ -183,14 +198,14 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Mặt một... không có đồ chơi nào cho mặt một. Đến cuối cùng... vẫn đen."
+      "text": "Mặt một... xui thật. Tớ nói rồi mà... đánh nhau mà không có chút may rủi thì chán chết..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Lần đầu tiên... tôi chẳng còn mặt nạ nào để đeo. Hahaha... Ena nói đúng rồi."
+      "text": "Lần đầu tiên... tớ chẳng còn mặt nạ nào để đeo. Hahaha... Ena nói đúng rồi."
     },
     {
       "type": "dialogue",
@@ -204,18 +219,22 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Mizuki...!"
+      "text": "Mizuki...!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Đừng học theo tôi. Cười suốt thì... đến lúc cần khóc lại quên mất cách."
+      "text": "Đừng học theo tớ. Cười suốt thì... đến lúc cần khóc lại quên mất cách."
     },
     {
       "type": "narrator",
       "text": "(Nụ cười vẫn ở nguyên trên mặt Mizuki, như thể chẳng ai nói cho nó biết đã đến lúc phải dừng.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Ichika chết lặng. Lại thêm một người nữa chết ngay trước mặt cô.)"
     }
   ],
   "kanade_slow_pre": [
@@ -228,25 +247,41 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Đến lượt cô, Ichika. Tôi không muốn thế. Nhưng cô mà sống thì cô sẽ không để tôi đi."
+      "text": "Lùi lại đi, Ichika. Chị không muốn ra tay với em."
     },
     {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ichika",
-      "color": "#4a9e9e",
-      "text": "Chị Kanade, em... em không muốn..."
+      "type": "narrator",
+      "text": "(Nhưng Ichika chẳng còn nghe thấy gì nữa. Trước mặt cô bây giờ chỉ còn là kẻ thù. Kẻ thù thì cần phải loại bỏ.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Cô bé lao lên. Không kỹ thuật, không tính toán, chỉ một nhát chém thẳng vào cổ Kanade. Kanade không né. Cô nhắm mắt lại.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Tôi biết."
+      "text": "Biến mất khỏi đây đi, Ichika."
     },
     {
       "type": "narrator",
-      "text": "(Những cây đinh sắt trên nền sân rung lên, ngoi khỏi mặt đất, mũi chĩa về phía Ichika. Kanade giơ tay.)"
+      "text": "(Thanh katana khựng lại giữa không trung, như vừa chém vào một bức tường vô hình, rồi tự xoay ngược. Mũi kiếm quay về phía cổ họng chính chủ nhân nó. Ốc vít và mảnh sắt vụn dưới sân rung lên lanh canh, rồi lơ lửng.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mũi kiếm chạm vào cổ cô bé. Một giọt máu ứa ra. Ở một góc rất sâu trong đầu Ichika, có thứ gì đó lặng lẽ mở mắt: nó nghe tiếng sắt rung, nghe giọng nói khẽ khàng kia, và ghi lại hết.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Mở mắt, nhìn giọt máu trên cổ Ichika, từ trường chùng xuống một nhịp) ...Chị đã bảo lùi lại rồi mà."
+    },
+    {
+      "type": "narrator",
+      "text": "(Một nhịp là đủ. Ichika giật thanh kiếm ra khỏi lực hút, lăn người ra xa. Những cây đinh sắt ngoi khỏi mặt sân, mũi chĩa về phía cô. Kanade giơ tay.)"
     },
     {
       "type": "narrator",
@@ -274,14 +309,14 @@
   "kanade_death": [
     {
       "type": "narrator",
-      "text": "(Lưỡi dao của Ichika đi qua giữa hai cây đinh còn lơ lửng, đến nơi trước khi chúng kịp rơi. Kanade đứng yên một thoáng, như chưa hiểu chuyện gì vừa xảy ra.)"
+      "text": "(Lưỡi dao của Ichika đi qua giữa hai cây đinh còn lơ lửng, đến nơi trước khi chúng kịp rơi. Kanade đứng yên một thoáng, nhìn xuống vết chém chạy ngang người mình, như chưa hiểu chuyện gì vừa xảy ra.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "...Nhanh quá. Tôi không nhìn kịp."
+      "text": "...Nhanh quá. Chị không nhìn kịp."
     },
     {
       "type": "dialogue",
@@ -295,21 +330,21 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "(Khuỵu xuống) Đừng đỡ tôi. Không đáng đâu."
+      "text": "(Khuỵu xuống, ho ra máu) Đừng đỡ chị. Không đáng đâu."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Ly mì... trên thùng phuy. Ăn đi, trước khi nguội. Nó thật sự... ngon mà."
+      "text": "Ly mì... trên thùng phuy. Ăn đi em, trước khi nguội. Nó thật sự... ngon mà."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Đã từng có kẻ gọi tôi là thiên thần. Tôi không phải. Nhưng hôm đó... đám nhóc vẫn sống. Thế là đủ."
+      "text": "Chị từng là một thiên thần đấy... nhưng nó sa ngã từ lâu rồi. Dù vậy, hôm đó đám nhóc vẫn sống. Thế là đủ."
     },
     {
       "type": "narrator",
@@ -320,7 +355,7 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "(Em ở lại một mình rồi... Giữa hai người nằm đó và một cốc mì còn ấm...)"
+      "text": "(Mình ở lại một mình rồi... Giữa hai người nằm đó và một cốc mì còn ấm...)"
     }
   ],
   "reveal_mafuyu": [
@@ -340,14 +375,14 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Mafuyu... chị Kanade... chị Mizuki... cả chị Ena nữa... Họ..."
+      "text": "Sếp... chị Kanade... Mizuki... cả chị Ena nữa... Họ..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Tôi biết. Cô làm tốt."
+      "text": "Tôi biết. Nhóc làm tốt."
     },
     {
       "type": "dialogue",
@@ -361,28 +396,28 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ngồi xuống đi. Có chuyện tôi nên nói với cô trước khi cô tự đoán."
+      "text": "Ngồi xuống đi. Có chuyện tôi nên nói với nhóc trước khi nhóc tự đoán."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Tôi từng nói, chính phủ chỉ định tôi và bốn kẻ khác thành lập Nightcord. Những người đó chết sạch rồi."
+      "text": "Ngày đầu nhóc đến, tôi nói Bộ trưởng chọn tôi cùng bốn kẻ khác lập ra Nightcord, và bốn người đó chết sạch rồi."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị nói... họ chết trong nhiệm vụ."
+      "text": "Mizuki kể... họ chết dưới tay Ena, chị Kanade, cả Mizuki. Còn sếp thì... chỉ đứng nhìn."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Tôi nói họ đã chết. Tôi chưa nói ai làm điều đó."
+      "text": "Phải. Tôi chỉ đứng nhìn."
     },
     {
       "type": "narrator",
@@ -393,14 +428,14 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Là tôi. Nhóm đầu tiên, từng người một. Rồi những người tôi gây dựng lại sau đó: Ena, Mizuki, Kanade."
+      "text": "Tay họ bóp cò, nhưng ai chọn để họ đứng cạnh nhau? Ai chọn lúc không đưa tay ra? Là tôi. Nhóm đầu tiên, từng người một. Rồi những người tôi gây dựng lại sau đó: Ena, Mizuki, Kanade."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Nhưng... chị Ena bị cảnh sát bắt... chị Kanade là nằm vùng... đâu phải do chị..."
+      "text": "Nhưng... chị Ena bị cảnh sát bắt... chị Kanade là nằm vùng... đâu phải do sếp..."
     },
     {
       "type": "dialogue",
@@ -442,28 +477,42 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Phải. Cô là người cuối cùng."
+      "text": "Phải. Nhóc là người cuối cùng."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "(Giọng nhỏ lại) Chị sẽ giết em sao?"
+      "text": "(Giọng nhỏ lại) Sếp sẽ giết em sao?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Tôi thích cô, Ichika. Cô vụng về, cô run, nhưng cô luôn nghĩ đến người khác trước khi nghĩ cho mình. Ít người như vậy sống lâu trong nghề này. Nên chưa phải hôm nay."
+      "text": "Tôi thích nhóc, Ichika. Nhóc vụng về, nhóc run, nhưng nhóc luôn nghĩ đến người khác trước khi nghĩ cho mình. Ít người như vậy sống lâu trong nghề này. Nên chưa phải hôm nay."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ở lại. Ăn, ngủ, nghĩ. Khi tôi quay lại, cô nên biết mình muốn làm gì với cái mạng này."
+      "text": "(Nắm cổ tay dính máu của Ichika, nâng lên cho cô bé nhìn) Ena chết rồi. Mizuki chết rồi. Kanade thì đã quay lưng phản bội nhóc. Giờ thì ai sẽ bảo vệ nhóc đây?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Cô bé không đáp được. Cổ họng nghẹn lại.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ở lại. Ăn, ngủ, nghĩ. Khi tôi quay lại, nhóc nên biết mình muốn làm gì với cái mạng này. Nếu tôi về mà thấy có gì kỳ lạ, nhóc biết hậu quả rồi đấy."
     },
     {
       "type": "narrator",
@@ -483,11 +532,18 @@
       "text": "(Tít... tít... tít... Đèn đỏ trong căn cứ đồng loạt chớp lên, còi báo động xé toạc sự im lặng.)"
     },
     {
+      "type": "action",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "*Tách.*"
+    },
+    {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "(Bước vào qua cửa sau, vẫn thong thả như đang đi dạo) Đừng đứng đó, Ichika. Chúng ta có chưa đầy ba phút."
+      "text": "(Bước vào qua cửa sau, tay xách chiếc vali y tế, vẫn thong thả như đang đi dạo) Đừng đứng đó, nhóc. Chúng ta có chưa đầy ba phút."
     },
     {
       "type": "dialogue",
@@ -501,21 +557,21 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Lần trước tôi gạt trúng một tia laser mà cả căn cứ la làng. Lần này tôi chạm vào ba tia mà nó vẫn yên. Hoặc là hệ thống hỏng, hoặc là có ai đó muốn tôi đến."
+      "text": "Lần trước chị gạt trúng một tia laser mà cả căn cứ la làng. Lần này chị chạm vào ba tia mà nó vẫn im re, chỉ mỗi cái khóa là kêu. Hoặc là hệ thống hỏng, hoặc là có ai đó muốn chị đến."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Mafuyu... chị ấy nói em là người cuối cùng. Chị ấy nói chính chị ấy..."
+      "text": "Sếp Mafuyu... sếp nói em là người cuối cùng. Sếp nói chính sếp..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Tôi biết. Cô kể lại ở nhà tôi, khi vết thương của cô đã được băng bó. Đi thôi."
+      "text": "Chị đoán được rồi. Em kể lại ở nhà chị, khi vết thương đã được băng bó. Đi thôi."
     },
     {
       "type": "dialogue",
@@ -529,7 +585,7 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "(Dừng lại, nhìn thẳng vào mắt cô) Ichika. Tôi là bác sĩ. Việc đầu tiên của bác sĩ là đưa người bệnh ra khỏi đám cháy, rồi mới hỏi cháy do ai."
+      "text": "(Dừng lại, nhìn thẳng vào mắt cô bé) Nhóc. Chị là bác sĩ. Việc đầu tiên của bác sĩ là đưa người bệnh ra khỏi đám cháy, rồi mới hỏi cháy do ai."
     },
     {
       "type": "narrator",

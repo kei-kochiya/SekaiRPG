@@ -1,52 +1,176 @@
 {
   "pm_boss_aftermath": [
     {
-      "speaker": "right",
-      "text": "Khốn kiếp... Các người dám chống lại ta? Ta là Thủ tướng!",
-      "type": "dialogue",
-      "name": "PM"
+      "type": "narrator",
+      "text": "(Thủ tướng gục bên chiếc limousine đang bốc khói đen, hai tay vẫn cố bò đi trên bãi cỏ công viên ven biển.)"
     },
     {
-      "speaker": "right",
-      "text": "Một kẻ cặn bã như ngươi không xứng đáng sống thêm một giây nào nữa.",
       "type": "dialogue",
-      "name": "Mafuyu"
+      "speaker": "right",
+      "name": "Thủ Tướng",
+      "color": "#9a8c7a",
+      "text": "Bọn chó săn Nightcord rác rưởi! Tao bỏ cả núi tiền ra thuê chúng mày bảo vệ tao cơ mà!"
     },
     {
-      "speaker": "right",
-      "text": "Cô... cô định làm gì?! Dừng lại!",
       "type": "dialogue",
-      "name": "PM"
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Điềm nhiên phủi bụi trên áo) Dịch vụ bảo vệ kết thúc từ lúc ngài chĩa súng vào đầu tôi rồi."
     },
     {
-      "speaker": "right",
-      "text": "Kết thúc thôi.",
       "type": "dialogue",
-      "name": "Mafuyu"
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Lột phăng lớp mặt nạ tài xế, mái tóc hồng xõa xuống vai) Tiền của ngài hôi lắm. Có cho thì tụi tôi cũng không dám dùng đâu."
     },
     {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Giật lấy khẩu súng của gã, chĩa vào đầu hắn) Kết thúc rồi. Chẳng có phép màu nào nhỉ? Thật đáng tiếc."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Thủ Tướng",
+      "color": "#9a8c7a",
+      "text": "Mày... mày dám—"
+    },
+    {
+      "type": "narrator",
+      "text": "ĐOÀNG! (Viên đạn xuyên thẳng qua sọ, máu bắn tung tóe ra phía sau.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu điềm nhiên vứt khẩu súng xuống cỏ, rồi bấm số gọi cấp trên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Ngài Thủ tướng vừa 'nộp đơn từ chức' rồi, thưa ngài Thứ trưởng. Phiền bên quân đội cử đội dọn vệ sinh xuống làm việc giúp tôi."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "*Cúp máy, bóc một viên kẹo chua bỏ vào miệng*"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Sếp chơi lớn vãi chưởng! Tông nát bét con xe triệu đô thế kia thì lấy cái gì chở tụi này về?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Đá đá vào cái bụng phệ của cái xác) Nhìn lão lúc giãy đành đạch mắc cười chết đi được!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Mà này Mizuki, ban nãy tao còn tưởng mày tông chết tao thật đấy!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ây da, tớ chỉ làm theo đúng kế hoạch thôi mà, a ha ha..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Kế hoạch nào? Kế hoạch là phanh lại cách năm mươi mét cơ mà. Mizuki tự ý ép sát tới mười mét đấy, Ena."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Túm cổ áo Mizuki) Hả?! Mày muốn tao thành bánh tráng dưới bánh xe hả con kia?!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Á á! Thả tớ ra! Mafuyu đúng là ác ôn mà!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu chỉ phì cười, cảm nhận vị chua của viên kẹo dần tan ra trong miệng.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Đúng lúc đó, có tiếng bước chân vội vã từ xa. Ichika ôm chặt thanh katana, thở không ra hơi, chạy tới điểm hẹn.)"
+    },
+    {
+      "type": "dialogue",
       "speaker": "left",
-      "text": "(Âm thanh của lưỡi kiếm xé gió, đầu của gã Thủ tướng lăn lông lốc trên đất)",
-      "type": "dialogue",
-      "name": "System"
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Sếp... em... em đến rồi ạ..."
     },
     {
-      "speaker": "left",
-      "text": "(Chạy tới) Chị Mafuyu! Em... em đến rồi...",
       "type": "dialogue",
-      "name": "Ichika"
-    },
-    {
-      "speaker": "left",
-      "text": "(Sững sờ nhìn cảnh tượng máu me) Chị... chị vừa làm gì vậy...?",
-      "type": "dialogue",
-      "name": "Ichika"
-    },
-    {
       "speaker": "right",
-      "text": "Chỉ là dọn rác thôi. Cô không cần bận tâm.",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Thong thả xoay người lại) Lịch trình bị đẩy lên sớm đột xuất nên mọi chuyện xong xuôi cả rồi, Ichika."
+    },
+    {
       "type": "dialogue",
-      "name": "Mafuyu"
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ... không sao ạ..."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ichika chợt ngó thấy cái xác của Thủ tướng nằm trên cỏ, óc với máu văng tứ tung. Cô bất giác bụm miệng vì buồn nôn.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Xoa đầu Ichika) Hey yo, chào cậu nhé. Cậu mà đến sớm một chút là thấy cận cảnh Mafuyu bắn bay óc gã khốn nạn này rồi. Nhìn nó đẹp gì đâu á!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Ichika đứng hình, mặt tái mét, không còn một giọt máu. Những người từng dịu dàng chăm sóc cô từng li từng tí giờ đang cười đùa bên xác một người vừa bị chính họ giết.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Liệu một ngày nào đó, những tiền bối máu lạnh này cũng sẽ giết mình như vậy không...)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Ichika khuỵu xuống, nôn mửa ngay tại chỗ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Này Ichika... cậu sao thế...?"
     }
   ]
 }

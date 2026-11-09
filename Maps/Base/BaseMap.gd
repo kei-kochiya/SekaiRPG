@@ -163,6 +163,11 @@ func freeze_player() -> void:
 	if player:
 		player.set_physics_process(false)
 
+func unfreeze_player() -> void:
+	var player := get_node_or_null("OverworldPlayer")
+	if player:
+		player.set_physics_process(true)
+
 # ── Map Construction (Dùng chung cho mọi Stage) ───────────────────────────────
 
 func _build_map():

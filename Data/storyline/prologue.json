@@ -5,26 +5,76 @@
       "text": "Ichika cũng chỉ là cô gái bình thường như bao người khác."
     },
     {
-      "type": "narrator",
-      "text": "Vốn là một cô gái với cuộc sống bình yên, dành phần lớn thời gian bên cây đàn và những giai điệu của riêng mình. Mọi thứ cứ thế trôi đi êm đềm, cho đến một ngày..."
-    },
-    {
-      "type": "narrator",
-      "text": "Định mệnh ép cô phải bước vào con đường sinh tử..."
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mẹ Ichika",
+      "color": "#a08c8c",
+      "text": "Con nhìn kỹ nhé, gọt táo thực ra cũng là cả một nghệ thuật đấy."
     },
     {
       "type": "dialogue",
       "speaker": "right",
-      "name": "Tên Đầu Sỏ",
-      "color": "#cc3322",
-      "text": "Chà, con ranh này trông cũng được đấy. Bọn tao vui vẻ một chút rồi cắt cổ gửi xác về cho ông bà bô mày khóc tang nhé?"
+      "name": "Mẹ Ichika",
+      "color": "#a08c8c",
+      "text": "Nhìn tay mẹ này, mũi dao phải luôn ở ngay ranh giới giữa lớp vỏ với phần thịt. Con cứ gọt liền một dải, thật nhanh, thật mỏng, và tuyệt đối không được đứt đoạn. Thế mới đẹp."
+    },
+    {
+      "type": "narrator",
+      "text": "Trong ký ức tuổi thơ của Ichika, thế giới chỉ xoay quanh những buổi tập guitar đến mỏi cả tay, và bài học kỳ lạ về việc lột sạch vỏ táo."
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mẹ Ichika",
+      "color": "#a08c8c",
+      "text": "Ichika! Trưa rồi đấy, dậy mau cho mẹ nhờ, cái con bé này! Mẹ đang dở tay ướp thịt, phiền con chạy ra siêu thị góc phố mua chai nước tương nhãn vàng lẹ lên nhé, không là trưa nay cả nhà nhịn đấy."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Đừng... Đừng chạm vào em!"
+      "text": "(Lại là nước tương. Nhà mình định uống nước tương thay nước lọc hay sao...)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mẹ Ichika",
+      "color": "#a08c8c",
+      "text": "Cẩn thận nhé con gái. Đi ra đầu phố thôi thì chắc không cần vệ sĩ đâu nhỉ?"
+    },
+    {
+      "type": "narrator",
+      "text": "Ichika gãi đầu cười trừ, xỏ vội đôi sneaker rồi lết ra đường, trên người vẫn là bộ đồng phục từ hôm qua chưa kịp thay. Trời gần trưa, mặt trời không tha cho bất kỳ ai."
+    },
+    {
+      "type": "narrator",
+      "text": "Cô rẽ vào một con hẻm vắng để đi tắt, thì một bóng đen áp sát từ phía sau, cánh tay kẹp chặt lấy cổ cô."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Tên Đầu Sỏ",
+      "color": "#cc3322",
+      "text": "Ngoan ngoãn im lặng thì sẽ không đau đâu nhóc con."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Xoay người, bẻ gãy khớp tay hắn... Khoan đã. Phía sau còn đồng bọn của hắn.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Tên Đầu Sỏ",
+      "color": "#cc3322",
+      "text": "Mày mà dám hé răng kêu một tiếng là tao đâm lòi họng ngay tại chỗ. Muốn giữ cái khuôn mặt xinh đẹp này thì khôn hồn mà bước theo bọn tao, nghe rõ chưa hả?"
     },
     {
       "type": "action",
@@ -34,25 +84,252 @@
       "text": "*Chát*"
     },
     {
+      "type": "narrator",
+      "text": "Gã ghì chặt vai cô, lôi lên thùng một chiếc xe tải đang nổ máy chờ sẵn. Dây thừng gai siết quanh cổ tay. Ichika cắn chặt môi, cố ghi nhớ từng đặc điểm của bọn bắt cóc để tự trấn an mình."
+    },
+    {
       "type": "dialogue",
       "speaker": "right",
       "name": "Tên Đầu Sỏ",
       "color": "#cc3322",
-      "text": "Thế nào? Tỉnh chưa? Giờ thì ngoan ngoãn nghe lời chưa hả con ranh?"
+      "text": "Giờ thì gọi cho lão già Hoshino mà hét giá đi. Nhà giàu như thế, chẳng lẽ lại tiếc vài đồng bạc lẻ cứu con gái?"
+    },
+    {
+      "type": "narrator",
+      "text": "Ở phía bên kia thành phố, tại dinh thự nhà Hoshino."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Khốn kiếp! Cái lũ cặn bã này dám đụng đến cả người nhà tao!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Bà Hoshino",
+      "color": "#a08c8c",
+      "text": "Chúng đòi tận hai mươi tỷ yên, lại còn đòi trước tám giờ tối! Hay là mình báo cảnh sát đi anh, lạy trời cho con mình không làm sao!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Em thôi ngay đi! Báo cảnh sát để bọn chúng xé xác con bé ra hả? Trả tiền xong bọn chúng cũng chẳng thả con đâu, loại này anh gặp nhiều rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Anh có cách xử lý bọn này sạch sẽ hơn đám cảnh sát nhiều."
+    },
+    {
+      "type": "narrator",
+      "text": "Ông bước nhanh về phía bức tranh treo trong phòng làm việc, lật nhẹ góc tranh, tìm một nút bấm nhỏ rồi nhấn mạnh. Cạch! Ngăn chứa bí mật bật mở, bên trong là một chiếc điện thoại vệ tinh cổ lỗ sĩ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Chỉ còn cách này thôi. Bọn mày sẽ phải trả giá."
+    },
+    {
+      "type": "narrator",
+      "text": "Tút... tút..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chào ngài Hoshino, lâu rồi chưa nghe giọng ngài. Chúng tôi có thể giúp gì được cho ngài?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Tôi cần cô cử người giỏi nhất đến vị trí này ngay lập tức. Bọn chúng bắt cóc con gái tôi rồi... Tiền bạc không thành vấn đề, xin cô... bằng mọi giá phải đưa con bé an toàn trở về."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Đầu ngón tay Mafuyu khẽ miết qua con dao găm quân dụng đặt trên bàn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Được thôi. Ngài có bao nhiêu tiền?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Hai mươi tỷ yên."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "... Rất hân hạnh được làm việc với ngài. Tôi sẽ cử người giỏi nhất đi ngay."
+    },
+    {
+      "type": "narrator",
+      "text": "Phía sau lưng cô, Mizuki thoăn thoắt gõ phím, lần theo tín hiệu cuộc gọi đòi tiền chuộc để dò ra vị trí bọn bắt cóc."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ơ hay sếp, vụ cỏn con thế này cứ để tớ với Ena xử lý là xong trong một nốt nhạc rồi, sếp ra mặt làm gì cho nhọc thân."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đúng đấy, dạo này tôi đang ngứa ngáy chân tay lắm rồi. Cho tôi đi nã vài phát súng vào đầu lũ khốn đó để xả bớt bực bội xem nào."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Là hai mươi tỷ đấy. Lão Hoshino đã dùng nó để mua sự an toàn tuyệt đối cho con gái mình. Hai cô có dám chắc mình sẽ có trách nhiệm với số tiền đó không?"
+    },
+    {
+      "type": "narrator",
+      "text": "Ena và Mizuki cứng họng. Mafuyu gài con dao găm vào bên hông, liếc qua hai người một cái rồi đi lướt qua Ena."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Lũ chúng nó còn chẳng kịp biết mình chết như thế nào đâu."
+    },
+    {
+      "type": "narrator",
+      "text": "..."
+    },
+    {
+      "type": "narrator",
+      "text": "Trong nhà kho bỏ hoang, đã quá giờ hẹn hơn một tiếng đồng hồ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Tên Đầu Sỏ",
+      "color": "#cc3322",
+      "text": "Khốn kiếp, quá giờ hẹn cả tiếng đồng hồ rồi mà lão già kia vẫn im lìm, không thấy nôn ra một xu nào là sao hả!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Gã Gầy",
+      "color": "#888888",
+      "text": "Đại ca, khéo lão già báo cảnh sát rồi cũng nên. Em thấy lo quá, hay là mình chuồn trước cho lành?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Tên Đầu Sỏ",
+      "color": "#cc3322",
+      "text": "Báo thì tao cho con ranh này chầu diêm vương luôn chứ sợ gì! Tao đã bảo là đừng có đùa với tao rồi mà!"
+    },
+    {
+      "type": "narrator",
+      "text": "Hắn giật mạnh mái tóc dài của Ichika, ép cô nhìn thẳng vào gương mặt xấu xí của hắn. Dù rất đau, cô vẫn không hé răng nửa lời. Đôi mắt cô đảo quanh, rồi dừng lại ở thanh katana nằm trên sàn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Tên Đầu Sỏ",
+      "color": "#cc3322",
+      "text": "Lão già nhà mày ngoan cố thật đấy cô em, tao hết kiên nhẫn rồi. Trông cũng ngon nghẻ phết, hay là tụi tao xơi trước rồi cắt cổ gửi xác về cho bố mẹ mày khóc tang một thể?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Đừng hòng chạm cái bàn tay bẩn thỉu của ông vào người tôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Tên Đầu Sỏ",
+      "color": "#cc3322",
+      "text": "Ranh con cứng đầu, để tao xem lát nữa mày có quỳ xuống van xin tao không!"
+    },
+    {
+      "type": "narrator",
+      "text": "Hắn vừa buông cô ra để quay sang nói chuyện với tên đàn em thì..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Bây giờ, hoặc không bao giờ.)"
+    },
+    {
+      "type": "narrator",
+      "text": "Ichika hít sâu một hơi, gập ngược bàn tay phải vào trong rồi dồn lực bẻ trật khớp ngón cái."
     },
     {
       "type": "action",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "(Đau quá... Đầu mình...)"
+      "text": "*RẮC*"
+    },
+    {
+      "type": "narrator",
+      "text": "Cô cắn răng nén cơn đau, trượt bàn tay qua khe hẹp của vòng dây thừng, chống xuống sàn bật dậy rồi tống thẳng một cú đá vào hạ bộ gã cầm dao. Con dao văng khỏi tay hắn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Tên Đầu Sỏ",
+      "color": "#cc3322",
+      "text": "Cái đéo-"
+    },
+    {
+      "type": "narrator",
+      "text": "Gã ngã quỵ, hai tay ôm chặt lấy háng. Ichika lao vút đi, nhặt thanh katana trên sàn, chĩa mũi kiếm về phía bọn bắt cóc. Ngón cái của cô vẫn còn lệch khớp, nhưng đôi mắt đã mất đi ánh sáng."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "(Tay mình run quá... Không, không thể chết ở đây được... Ai đó... làm ơn...)"
+      "text": "Đừng... đừng lại đây mà..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Gã Gầy",
+      "color": "#888888",
+      "text": "Tránh ra, để tao bắn nát sọ nó!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Là vậy sao? Các người chán sống rồi..."
     }
   ],
   "prologue_phase1_intro": [
@@ -61,39 +338,86 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Tôi đến nơi rồi. Xác nhận có ba mục tiêu."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mafuyu",
-      "color": "#665588",
-      "text": "Chưa rõ tình trạng con tin. Chuẩn bị đột nhập."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mafuyu",
-      "color": "#665588",
-      "text": "Con tin trong tầm mắt. Không có vết thương chí mạng, chỉ xây xát nhẹ. Tuy nhiên..."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mafuyu",
-      "color": "#665588",
-      "text": "Ông Hoshino, tôi sẽ đưa con gái ông đi. Coi như thù lao cho vụ này nhé."
+      "text": "Đây là Mafuyu. Tôi đã đến trước cửa nhà kho. Từ chỗ tôi không nghe thấy tiếng động. Tình trạng con tin hiện tại là không xác định được."
     },
     {
       "type": "narrator",
-      "text": "..."
+      "text": "Cô khẽ đẩy cửa, nhìn quanh. Đập vào mắt cô là ba cái xác nằm trên sàn, máu bắn tung tóe, và cả ba đều không còn nguyên vẹn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Con bé sao rồi? Bọn khốn đó có làm con gái tôi bị thương chỗ nào không!"
+    },
+    {
+      "type": "narrator",
+      "text": "Ở góc tường, Ichika ngồi bệt dưới đất, hai tay ôm chặt thanh katana, vẫn đang thở dốc và run rẩy lẩm bẩm gì đó nghe không rõ."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Rất vui được hợp tác với ông, ngài Hoshino."
+      "text": "Cô bé còn sống. Theo tôi thấy thì không có vết thương sâu, chắc chỉ xây xát nhẹ. Nhưng mà..."
+    },
+    {
+      "type": "narrator",
+      "text": "Sếp lớn liếc qua vết chém ngọt lịm nơi cổ cái xác gần nhất, và đống da tay bị lột ra vứt trên sàn."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Này ông Hoshino, tôi mượn con gái ông nhé. Tiền hợp đồng hôm nay không cần trả."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Cô đang nói cái quái gì vậy? Chắc chắn là không-"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Con gái ông vừa tự tay đâm xuyên tim một tên, chém bay đầu một tên và lột da một tên đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tôi không biết tại sao con bé làm được như vậy, nhưng nếu suy nghĩ của tôi là đúng thì sớm muộn gì con bé cũng bị các tổ chức khác săn lùng thôi, thưa ông Hoshino."
+    },
+    {
+      "type": "narrator",
+      "text": "Đầu dây bên kia bỗng im bặt."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Sao nào? Để chúng tôi giúp con bé kiểm soát thứ sức mạnh đó, hay để mặc nó giết thêm vài mạng nữa?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ông Hoshino",
+      "color": "#8c7b6b",
+      "text": "Thôi được rồi... Phải đảm bảo là con bé sống tốt đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Giao dịch thành công. Cảm ơn sự hợp tác của ngài. Tôi lấy danh dự của mình để đảm bảo sự an toàn của con bé."
     }
   ],
   "prologue_phase1_recruit": [
@@ -102,42 +426,100 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Máu... Sao lại nhiều máu thế này... Mấy người đó... chết hết rồi sao...?"
+      "text": "Mẹ ơi... Con đã gọt được táo rồi này... Mẹ thấy con có giỏi không...?"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Mafuyu ngồi xổm xuống ngang tầm mắt cô bé, lấy chiếc khăn tay trắng từ ngực áo, nhẹ nhàng lau vệt máu khô trên gò má Ichika."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Kỹ năng không tồi. Phản xạ tốt đấy."
+      "text": "Không sao đâu cô bé. Mọi chuyện đã qua rồi."
     },
     {
-      "type": "dialogue",
+      "type": "narrator",
+      "text": "Mafuyu để ý thấy ngón tay cái của Ichika lệch hẳn khỏi khớp, và dây thừng vương vãi ngay phía sau. Bẻ khớp để thoát khỏi dây trói sao? Đúng là liều lĩnh."
+    },
+    {
+      "type": "action",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Đứng lên. Rời khỏi đây trước khi cảnh sát đến."
+      "text": "Mafuyu cầm lấy bàn tay Ichika, nắm ngón cái rồi nắn mạnh về lại đúng vị trí. Rắc."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị... chị là ai? Chị định đưa em đi đâu...?"
+      "text": "A..."
+    },
+    {
+      "type": "narrator",
+      "text": "Đôi mắt trống rỗng của Ichika dần lấy lại tiêu cự. Cô ngơ ngác nhìn quanh, nhìn sang người phụ nữ đang nắm tay mình, rồi bật khóc."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Máu... Sao lại nhiều máu thế này... Mấy người đó... chết hết rồi sao...? Em... đã làm gì thế này..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Người dọn rác do bố cô thuê. Dù sao thì giờ cũng không cần nữa."
+      "text": "Nhóc làm tốt lắm. Kỹ năng điêu luyện đấy, có điều là tâm lý của nhóc thì chưa theo kịp thôi."
+    },
+    {
+      "type": "narrator",
+      "text": "Mafuyu khẽ xoa đầu Ichika rồi kéo cô đứng thẳng dậy. Việc của mình đã xong, giờ chỉ cần giao lại hiện trường cho quân đội."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Đi thôi. Về chỗ của tôi."
+      "text": "Xin chào, tôi là Asahina. Phiền các ngài đến xử lý giúp tôi một vụ án mạng nhé."
+    },
+    {
+      "type": "narrator",
+      "text": "Cô báo thêm vị trí, ném luôn chiếc điện thoại dùng một lần vào vũng máu, rồi rút ra một bình xịt phân hủy dấu vết sinh học, xịt lên quần áo Ichika và cả thanh katana trong tay cô bé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Xong rồi đấy. Giờ thì đi thôi. Rời khỏi đây trước khi họ đến."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Nhưng mà... chị là ai? Chúng ta đi đâu chứ...? Còn gia đình của em thì sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tôi là người mà bố nhóc thuê đến cứu nhóc, nhưng có vẻ nhóc đã tự xử được rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chúng ta sẽ về nhà mới của nhóc. Bố nhóc đã đồng ý rồi, còn mẹ nhóc thì nhóc có thể liên lạc sau. Đi thôi."
     }
   ]
 }

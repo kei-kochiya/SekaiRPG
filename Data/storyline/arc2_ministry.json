@@ -9,21 +9,21 @@
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "...Nè. Câu lúc nãy của tôi hơi quá, phải không?"
+      "text": "...Nè. Câu lúc nãy của tớ hơi quá, phải không?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Hơi."
+      "text": "Hơi. Cô vừa gọi một người cầm cọ xiên người là con chó tha đồ."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Em đi tìm chị Ena."
+      "text": "Em đi tìm chị Ena ạ."
     },
     {
       "type": "dialogue",
@@ -44,7 +44,7 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Cô ta đi đâu, đi bao lâu, tự cô ta chọn. Ai đuổi theo bây giờ chỉ khiến cô ta điên thêm. Tôi nói ở yên."
+      "text": "Cô ta đi đâu, đi bao lâu, tự cô ta chọn. Nhóc đuổi theo bây giờ chỉ khiến cô ta điên thêm. Tôi nói ở yên."
     },
     {
       "type": "narrator",
@@ -55,7 +55,7 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "...Vâng ạ."
+      "text": "...Dạ vâng ạ."
     }
   ]
 }

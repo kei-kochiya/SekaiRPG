@@ -2,81 +2,169 @@
   "honami_house_intro": [
     {
       "type": "narrator",
-      "text": "(Một phòng khám nhỏ gọn, sạch sẽ, nồng nặc mùi thuốc sát trùng. Vài người dân nghèo đang ngồi đợi ở băng ghế ngoài hành lang.)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Ngồi tạm lên giường bệnh đi. Tôi đi lấy cho cô ly nước."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ichika",
-      "color": "#4a9e9e",
-      "text": "Dạ... em cảm ơn chị Honami. Chỗ này là nhà của chị sao?"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Cứ coi là vậy đi. Nửa là phòng khám, nửa là chỗ ngủ. Tôi không cần không gian sống quá rộng lớn làm gì."
+      "text": "(Phòng khám tư nhân của Honami: nhỏ, trắng, nồng mùi cồn sát trùng, nằm sâu trong khu ổ chuột. Nắng lọt qua vài ô cửa sổ. Ngoài hành lang, sáu bảy người dân nghèo đang ngồi đợi trên băng ghế.)"
     },
     {
       "type": "narrator",
-      "text": "(Một người đàn ông khắc khổ bước vào, cúi rạp người cảm ơn Honami, dúi vào tay cô vài đồng tiền lẻ rồi rời đi. Honami chỉ mỉm cười nhận lấy và cất vào hộp y tế.)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ichika",
-      "color": "#4a9e9e",
-      "text": "Chị làm bác sĩ từ thiện ạ? Nhưng ban nãy... em nghe chị Ena nói chị là một bác sĩ ngầm, chỉ làm việc vì tiền..."
+      "text": "(Honami đặt Ichika lên giường bệnh, khâu tạm mấy vết rách rồi quấn nốt cuộn băng gạc cuối cùng. Mùi cồn và cảm giác nhói ở các vết thương khiến Ichika tỉnh hẳn.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Cô bé con, ở cái thành phố thối nát này, muốn làm người tốt thì trước tiên phải có tiền, và phải biết cách tự bảo vệ mình."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Bọn băng đảng sẵn sàng trả hàng đống tiền để mua mạng sống. Tôi lấy tiền của bọn chúng để mua thuốc men cho những người thực sự cần. Đơn giản vậy thôi."
+      "text": "Tỉnh rồi à nhóc? Nằm yên đó đi, đừng có nhúc nhích kẻo đứt mấy mũi khâu tạm của chị."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Ra là vậy... Chị Honami tuyệt vời quá! Chị ngầu thật đấy!"
+      "text": "Dạ... em cảm ơn chị Honami. Chỗ này là nhà của chị ạ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cứ coi là vậy đi. Nửa là phòng khám, nửa là chỗ ngủ. Chị đâu cần không gian sống rộng làm gì."
     },
     {
       "type": "action",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "(Bật cười nhẹ)"
+      "text": "*Đưa cho Ichika một cốc nước ấm và một viên kẹo*"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Ngây thơ thế này mà sống được cùng với lũ quái vật Nightcord kia... cô cũng là một hiện tượng lạ đấy, Ichika."
+      "text": "Chị còn mấy ca khám chưa xong. Vết thương của em phải xử lý kỹ hơn, ráng chờ chị tới tối nhé."
+    },
+    {
+      "type": "narrator",
+      "text": "(Trong phòng chờ có một bà cụ lưng còng đang ôm đầu gối vì thấp khớp, kế bên là cậu bé chừng bảy tuổi với bàn chân vừa đạp phải đinh sắt.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Bây giờ cô có thể nghỉ ngơi tự do. Hoặc nếu muốn khởi động gân cốt để chuẩn bị cho lần ra ngoài tiếp theo, tôi có thể chỉ cho cô vài đường cơ bản. Dù sao thì Nightcord cũng chỉ dạy cô giết người, không dạy cô cách sống sót đâu."
+      "text": "Mời người tiếp theo ạ."
+    },
+    {
+      "type": "narrator",
+      "text": "(Thấy bà cụ cố chống tay đứng dậy, Honami chạy vội ra, cõng bà vào trong rồi kiên nhẫn xoa bóp từng khớp xương. Lát sau bà cụ bước ra với túi thuốc, loay hoay lấy ví.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Bà vẫn uống thuốc đều đúng không ạ? Hai ba tháng nữa là đỡ hẳn thôi. Dạ không sao đâu ạ, chỗ cháu khám miễn phí. Bà cứ để tiền mua chút đồ cho bà đi ạ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Ngồi xổm xuống trước cậu bé) Nào, vào đây với chị. Hôm nay mình phải tiêm một mũi đấy."
+    },
+    {
+      "type": "narrator",
+      "text": "(Thấy kim tiêm, cậu bé tái mét mặt, không nói nổi câu nào. Honami chỉ dịu dàng nhét vào tay cậu một viên kẹo. Cậu chưa kịp bóc vỏ thì mũi tiêm đã xong, vết thương dưới chân cũng đã được rửa sạch và băng lại.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Xong rồi đấy. Bóc kẹo ra thì bỏ vỏ vào thùng rác ngoài kia giúp chị nhé. Phiền em ở đây thêm ba mươi phút để chị theo dõi rồi hẵng về."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ngồi ở góc phòng, Ichika nhìn mà thán phục. Người vừa bẻ khóa căn cứ Nightcord chỉ bằng hai cái gõ nhẹ lại đang kiên nhẫn chữa từng vết thương nhỏ cho những người nghèo khổ thế này sao...)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Sự tử tế của chị ấy giống như một đốm lửa ấm áp lạ kỳ giữa thế giới ngầm này.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Khi bệnh nhân cuối cùng ra về thì trời đã sập tối. Honami khóa cửa, thay găng tay rồi hướng về căn phòng nhỏ kế bên.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Giờ tới lượt ca nặng nhất ngày hôm nay. Vào bàn phẫu thuật đi, tiểu thư lính mới. Dù gì cũng là người của Nightcord, khỏi gây mê nhé."
+    },
+    {
+      "type": "narrator",
+      "text": "(Cồn lau qua từng vết cắt khiến Ichika giật nảy người nhưng cô vẫn cắn răng chịu. Honami gắp từng mảnh sắt vụn ra, khâu lại, nắn khớp tay rồi quấn đai cố định quanh mạn sườn. Cơn đau dịu hẳn.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mười phút sau, Honami mang ra một ấm trà nóng cùng chút bánh táo còn dư từ sáng. Bánh đã nguội và hơi mềm vì để lâu, nhưng vẫn ngon.)"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "*Vừa nhấp trà vừa bấm điện thoại nhắn tin với ai đó*"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Chị Honami này... Vậy chị lấy đâu ra tiền để duy trì nơi này ạ? Khám miễn phí mà thuốc men thì đâu có rẻ."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "*Tắt điện thoại, ghé sát mặt về phía Ichika, nở một nụ cười ma mị*"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Em thực sự muốn biết sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "À... dạ không ạ!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Không sao. Sau này chắc em cũng sẽ biết thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Kỹ năng và phản xạ của chị đỉnh thế ạ. Sao chị không đi làm sát thủ luôn? Em nghĩ nếu chị nhận nhiệm vụ kiếm tiền, đến sếp Mafuyu cũng phải kiêng nể chị vài phần."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Em đánh giá chị cao quá rồi đấy. Mà ai nói với em là chị không làm sát thủ chứ?"
     }
   ],
   "honami_training_offer": [
@@ -85,7 +173,7 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Sao nào? Cảm thấy gân cốt rệu rã rồi à? Có muốn ra bãi phế liệu phía sau phòng khám tập luyện một chút không?"
+      "text": "Sao nào nhóc, gân cốt rệu rã rồi à? Căn phòng trống dưới nhà chị cho mượn đấy. Chỉ khâu sinh học loại tốt nhất, vận động nhẹ không bục được đâu mà sợ."
     }
   ]
 }

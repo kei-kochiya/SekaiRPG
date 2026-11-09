@@ -22,6 +22,23 @@ func _run_logic():
 	if not GameManager.get_flag("ops_kanade_done"):
 		_setup_scene("Kanade", "Hẻm tối", Color(0.2, 0.2, 0.25))
 		_briefing_then_battle("ops_kanade")
+	elif not GameManager.get_flag("ops_ena_done"):
+		# Khu D: Ena hộ tống đoàn xe chở bom trên cầu gần Vịnh Tokyo (chương 9); lời dẫn phát một lần
+		_setup_scene("Ena", "Cầu vịnh Tokyo", Color(0.12, 0.14, 0.24))
+		if GameManager.get_flag("ops_ena_intro_done"):
+			_start_battle_after_pause("ops_ena")
+		else:
+			DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_ena_pre"), func():
+				GameManager.set_flag("ops_ena_intro_done", true)
+				_start_battle("ops_ena")
+			)
+	elif not GameManager.get_flag("ops_ena_post_done"):
+		GameManager.set_flag("ops_ena_post_done", true)
+		_setup_scene("Ena", "Cầu vịnh Tokyo", Color(0.12, 0.14, 0.24))
+		DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_ena_post"), func():
+			# Nạp lại map để _setup_scene của khu kế tiếp chạy trên map trống (xem ghi chú ở _setup_scene)
+			get_tree().reload_current_scene()
+		)
 	elif not GameManager.get_flag("ops_ichika_done"):
 		_setup_scene("Ichika", "Đường phố", Color(0.15, 0.2, 0.2))
 		_briefing_then_battle("ops_ichika")
@@ -34,11 +51,14 @@ func _run_logic():
 		GameManager.store_map_state("res://Maps/Highway/HighwayMap.tscn", Vector2.ZERO)
 		get_tree().change_scene_to_file("res://Maps/Highway/HighwayMap.tscn")
 
+func _start_battle_after_pause(battle_key: String):
+	await get_tree().create_timer(1.0).timeout
+	_start_battle(battle_key)
+
 # ops_intro chỉ phát một lần (lần đầu vào map); các trận sau và khi đánh lại sau khi thua thì vào thẳng trận sau một nhịp chờ
 func _briefing_then_battle(battle_key: String):
 	if GameManager.get_flag("ops_intro_done"):
-		await get_tree().create_timer(1.0).timeout
-		_start_battle(battle_key)
+		_start_battle_after_pause(battle_key)
 		return
 	DialogueManager.play_dialogue(DialogueLoader.get_lines("ops_intro"), func():
 		GameManager.set_flag("ops_intro_done", true)

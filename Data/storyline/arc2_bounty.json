@@ -2,25 +2,40 @@
   "bounty_intro": [
     {
       "type": "narrator",
-      "text": "(Hẻm sau chợ đêm. Ena ngồi trên một thùng bia rỗng, nhìn chằm chằm khẩu súng bạc trên đùi như thể nó vừa xúc phạm cô.)"
+      "text": "(Hẻm sau chợ đêm. Ena ngồi trên một thùng bia rỗng, khẩu súng bạc nằm trên đùi, tay kia cầm nửa chiếc bánh ngọt mua ở cửa hàng tiện lợi đầu ngõ.)"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Con dao Mafuyu nhặt về... Dao thì không có tiếng nói, ai chỉ đâu chém đó. Hừ.)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ena",
-      "color": "#b86028",
-      "text": "(Được thôi. Vậy để xem một con dao tự đi kiếm việc làm thì thành ra cái gì.)"
+      "text": "(Con dao Mafuyu nhặt về... Dao thì không có tiếng nói, ai chỉ đâu chém đó. Cái mỏ con nhỏ đó lúc nào cũng thích chọc điên người khác. Hừ.)"
     },
     {
       "type": "narrator",
-      "text": "(Cô rút điện thoại, bấm một số cũ đã không gọi từ hồi mới vào Nightcord.)"
+      "text": "(Cô cắn thêm một miếng bánh, định bụng nhai cho hả giận. Rồi khựng lại.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Ủa? Bánh này ngon thế? Hôm sau phải mua thêm mới được.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Cạnh thùng bia, trên bức tường loang ố, có một tờ lệnh treo thưởng dán xộc xệch, bên dưới in một số điện thoại.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Thời buổi này vẫn còn người dán lệnh treo thưởng công khai thế này à? Thôi kệ. Kiếm chác chút đỉnh chắc cũng chả sao."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ena xé tờ giấy, rút điện thoại, bấm một số cũ đã không gọi từ hồi mới vào Nightcord.)"
     },
     {
       "type": "dialogue",
@@ -48,7 +63,7 @@
       "speaker": "right",
       "name": "Người môi giới",
       "color": "#888888",
-      "text": "Cái thứ ba là chủ kho ở bến Đông. Hàng gì thì tôi không rõ, nhưng tiền thưởng gấp ba hai cái kia."
+      "text": "Cái thứ ba là một gã mafia giàu sụ, chủ kho ở bến Đông. Hàng gì thì tôi không rõ, nhưng tiền thưởng gấp ba hai cái kia."
     },
     {
       "type": "dialogue",
@@ -73,7 +88,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Chọn hay không chọn, từ giờ là tùy tôi. Bắt đầu thôi.)"
+      "text": "(Chọn hay không chọn, từ giờ là tùy bà đây. Bắt đầu thôi.)"
     }
   ],
   "bounty_1_pre": [
@@ -93,28 +108,35 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Vay thì không. Tôi đến thu nợ thay mấy nhà bị ông bán mất mái nhà."
+      "text": "Vay thì không. Bà đây đến thu nợ thay mấy nhà bị ông bán mất mái nhà."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Chủ Nợ",
       "color": "#888888",
-      "text": "Lũ ăn mày đó không trả nổi thì chịu thôi! Bọn bay đâu, tiễn cô này ra ngoài cho tao!"
+      "text": "Lũ ăn mày đó không trả nổi thì chịu thôi! Bọn bay đâu, tiễn con nhỏ này ra ngoài cho tao!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Tiễn à? Hay đấy. Tôi đang cần chỗ để xả."
+      "text": "Tiễn à? Hay đấy. Bà đây đang cần chỗ để xả."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Một. Cái tên này do tôi chọn, không ai chỉ tay.)"
+      "text": "Xác định mục tiêu... Chết đi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Một. Cái tên này do mình chọn, không ai chỉ tay.)"
     }
   ],
   "bounty_1_post": [
@@ -138,7 +160,25 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Mấy nhà đó khỏi phải trả nữa. Đi tiếp, còn hai."
+      "text": "Mấy nhà đó khỏi phải trả nữa."
+    },
+    {
+      "type": "narrator",
+      "text": "(Trước khi đi, Ena nâng khẩu súng bạc lên ngắm thử vào bóng đèn đầu ngõ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Quái lạ, sao cứ lệch lệch thế nhỉ... Thôi kệ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đi tiếp, còn hai."
     }
   ],
   "bounty_2_pre": [
@@ -169,20 +209,42 @@
     },
     {
       "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Nghệ thuật là phải có hồn, mà hồn của mày thì đem bán cho bọn buôn tranh mất rồi."
+    },
+    {
+      "type": "dialogue",
       "speaker": "right",
       "name": "Họa Sĩ Giả",
       "color": "#888888",
       "text": "Cô... cô là ai? Bảo vệ đâu! Bảo vệ!"
     },
     {
+      "type": "narrator",
+      "text": "(Ena rút cây cọ cán thép bên hông, xoay tít một vòng trên đầu ngón tay.)"
+    },
+    {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Tôi là người đến trả công cho những họa sĩ ông ăn cắp nét cọ. Cầm cọ lên đi. Chết thì cũng nên chết với tay đẹp."
+      "text": "Bà đây đến trả công cho mấy họa sĩ bị mày ăn cắp nét cọ. Cầm cọ lên đi. Chết thì cũng nên chết với cái tay cho ra hồn."
     }
   ],
   "bounty_2_post": [
+    {
+      "type": "narrator",
+      "text": "(Ena chấm đầu cọ mềm vào vũng đỏ trên sàn, quệt một đường lên tấm toan nhái gần nhất, như chấm câu cho cuộc đời gã.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Màu sắc hôm nay tươi đấy."
+    },
     {
       "type": "narrator",
       "text": "(Giữa đống tranh nhái có một bức duy nhất không ký tên: nét cọ vụng, màu bẩn, nhưng là thật. Của một họa sĩ vô danh nào đó, bị gã nhốt trong góc cho đến khi đủ nét để nhái.)"
@@ -237,7 +299,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ông đang chờ tôi?"
+      "text": "Mày đang chờ tao?"
     },
     {
       "type": "dialogue",
@@ -251,7 +313,11 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Tôi không đến để nói chuyện. Đứng lên, hoặc tôi bắn khi ông còn ngồi."
+      "text": "Tao không đến để nói chuyện. Đứng lên, hoặc tao bắn khi mày còn ngồi."
+    },
+    {
+      "type": "narrator",
+      "text": "(Báng khẩu súng bạc nặng lệch hẳn về một bên trong tay cô, như thể có ai đã nhét thêm thứ gì vào đó. Cô gạt ý nghĩ ấy đi.)"
     },
     {
       "type": "dialogue",
@@ -282,6 +348,13 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
+      "text": "(Cái cảm giác này... từ lúc rời chợ cá tới giờ cứ như có ai bám đuôi mình.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
       "text": "(Bước chân. Không phải một người. Hai mươi? Ba mươi? Bước đều, rất khẽ, đang áp vào từ ba cánh cửa.)"
     },
     {
@@ -293,7 +366,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "...Hợp đồng gấp ba tiền thưởng. Sao tôi không ngửi ra ngay từ đầu."
+      "text": "...Hợp đồng gấp ba tiền thưởng. Sao mình không ngửi ra ngay từ đầu."
     }
   ],
   "bounty_ambush_mid": [
@@ -309,7 +382,14 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Cảnh sát Quốc tế...? Từ bao giờ bọn bay biết cả tên tôi?!"
+      "text": "Cảnh sát Quốc tế...? Từ bao giờ bọn mày biết cả tên bà đây?!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Tên cô nằm trong hồ sơ từ lâu, Shinonome. Nghe nói cô vừa to tiếng với đồng bọn rồi đập cửa bỏ đi một mình. Cảm ơn vì đã tự bước vào."
     },
     {
       "type": "dialogue",
@@ -327,17 +407,10 @@
     },
     {
       "type": "dialogue",
-      "speaker": "right",
-      "name": "Đại úy Cảnh sát",
-      "color": "#aa4444",
-      "text": "Tên cô nằm trong hồ sơ từ lâu, Shinonome. Chúng tôi chỉ chờ cô tự bước vào."
-    },
-    {
-      "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ai chỉ điểm?! Ai bán tôi?!"
+      "text": "Ai chỉ điểm?! Ai bán tao?!"
     },
     {
       "type": "dialogue",
@@ -364,7 +437,7 @@
       "speaker": "right",
       "name": "Đại úy Cảnh sát",
       "color": "#aa4444",
-      "text": "Còng tay. Kiểm tra hai bên ống quần, cô ta hay giấu dao. Gọi xe."
+      "text": "Còng tay. Tịch thu cây cọ thép ở thắt lưng, thứ đó xiên chết người như chơi. Kiểm tra hai bên ống quần. Gọi xe."
     },
     {
       "type": "narrator",
@@ -375,14 +448,14 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Hồi bị treo ngược trên trần nhà còn đỡ hơn thế này. Ít ra lúc đó có người chờ để cắt dây.)"
+      "text": "(Hồi bị Mafuyu xách cổ về còn đỡ hơn thế này. Ít ra lúc đó còn có người chìa tay ra.)"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "(Không biết tối nay có ai đếm đầu người trên bàn ăn không. Mizuki chắc đang cười. Mafuyu chắc đang nói 'tôi đã bảo rồi'.)"
+      "text": "(Không biết tối nay có ai đếm đầu người trên bàn ăn không. Mizuki chắc đang cười. Kanade chắc đang húp mì. Mafuyu chắc đang nói 'tôi đã bảo rồi'.)"
     },
     {
       "type": "dialogue",
@@ -390,6 +463,17 @@
       "name": "Ena",
       "color": "#b86028",
       "text": "(Bức tranh dở trên giá... vẫn chưa có tên...)"
+    },
+    {
+      "type": "narrator",
+      "text": "(XẸT! Một luồng điện chích thẳng vào gáy. Cả nền kho xoay vòng, rồi cơ thể cô mềm nhũn đi.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đại úy Cảnh sát",
+      "color": "#aa4444",
+      "text": "Ngủ một giấc thật ngon đi, con chó săn ngoan ngoãn của Nightcord."
     },
     {
       "type": "narrator",

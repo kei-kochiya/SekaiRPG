@@ -5,76 +5,146 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Làm tốt lắm. Nghỉ ngơi đi."
+      "text": "Hai cô làm tốt lắm. Bây giờ thì nghỉ ngơi đi nhé."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Trong căn cứ còn phòng trống kế bên phòng tôi đấy. Để tôi dọn cho cô một góc."
+      "text": "Trong căn cứ còn phòng trống đấy, ngay cạnh phòng chị. Để chị dọn dẹp giúp em nhé. Ít nhất thì em cũng cần một chỗ tử tế để chợp mắt sau nhiệm vụ ban nãy."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "D-dạ, em cảm ơn chị Kanade ạ."
+      "text": "Dạ không cần đâu ạ! Để em tự làm... à không, ý em là... em cảm ơn chị nhiều lắm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cứ để cô ấy giúp đi. Nếu không làm gì đó cho nhóc, đêm nay Kanade sẽ lại thức trắng để tự dằn vặt mình vì không bảo vệ tốt cho đàn em đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Làm phiền chị quá, chị Kanade."
+    },
+    {
+      "type": "narrator",
+      "text": "Hóa ra căn phòng trống vẫn luôn được Kanade sắp xếp ngăn nắp. Cô chỉ phụ Ichika lau bụi trên giường và mở cửa sổ cho thoáng."
+    },
+    {
+      "type": "narrator",
+      "text": "Sau khi dọn xong, Ichika đứng chăm chú nhìn cây guitar acoustic ở góc phòng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nhóc cũng có hứng với guitar à?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Hồi nhỏ em tập suốt... Em nhớ mẹ em hay ngồi bên cạnh gọt táo, vừa nghe em đàn..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Thế em có muốn hát thử một bài không? Dùng âm nhạc để gột rửa bớt mùi máu tanh trong đầu trước khi ngủ nhé."
+    },
+    {
+      "type": "narrator",
+      "text": "Ichika phủi bụi cây đàn rồi gảy thử. Kanade nhắm mắt, khẽ cất giọng hòa theo. Một tiếng đàn, hai giọng hát, đan xen vào nhau tạo nên một khoảng lặng bình yên hiếm hoi."
+    },
+    {
+      "type": "narrator",
+      "text": "Đêm cứ thế trôi qua trong tiếng nhạc êm đềm."
     }
   ],
   "post_warehouse_morning": [
     {
       "type": "narrator",
-      "text": "Sáng hôm sau"
+      "text": "Chiều hôm sau."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Đỉnh vãi! Báng súng sợi carbon nguyên khối cơ đấy! Bọn quân đội lần này chơi lớn thật!"
+      "text": "Trời ơi, cái báng súng bằng sợi carbon này trông đã thật! Bọn quân đội lần này chơi lớn thật đấy!"
+    },
+    {
+      "type": "narrator",
+      "text": "Lâu lắm rồi Nightcord mới nhặt được lô hàng chất lượng thế này. Ena thử tì cằm lên báng súng, nheo một mắt ngắm nghía qua ống ngắm chuyên dụng."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Khoan... cái gì kẹt dưới đáy thùng đây?"
+      "text": "Duyệt nhé. Tiếc là tôi đây không quen dùng súng trường."
+    },
+    {
+      "type": "narrator",
+      "text": "Ena quẳng cây súng bắn tỉa qua một bên cho Mizuki đem cất, rồi tiếp tục lục lọi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Khoan đã, cái gì kẹt dưới đáy thùng thế này?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Trời đất ơi! Lục mạ bạc! Desert Eagle phiên bản giới hạn!!"
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Mizuki nhăn mặt bịt kín hai bên tai, tiện chân đá một thùng trái cây về phía Ena."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Mizuki",
-      "color": "#da99cc",
-      "text": "..."
+      "color": "#d8a4cc",
+      "text": "Điếc hết cả tai rồi bà nội, làm như chưa thấy súng bao giờ ấy."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Á á á! Lục bạc nguyên khối! Bản giới hạn luôn này!!"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Mizuki",
-      "color": "#da99cc",
-      "text": "Điếc hết cả tai, làm như chưa thấy súng bao giờ không bằng."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Ena",
-      "color": "#b86028",
-      "text": "Cô thì biết cái quái gì về nghệ thuật cơ khí mà nói!"
+      "text": "Im đi, mày thì biết cái quái gì về nghệ thuật cơ khí!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ồn ào quá, Ena."
+      "text": "Ồn ào quá đấy Ena."
+    },
+    {
+      "type": "narrator",
+      "text": "Mafuyu không ngẩng đầu lên, mắt vẫn lướt qua mấy dòng ghi chú từ nhiệm vụ hôm qua."
     }
   ],
   "harbor_mission_assignment": [
@@ -83,74 +153,60 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Theo thông tin mới nhất, bãi đáp tiếp theo của bọn buôn lậu là cảng số 4. Quanh quẩn gần đây thôi."
+      "text": "Khai thác được thông tin rồi, bãi đáp tiếp theo của bọn buôn lậu là cảng số bốn. Chỗ đó cũng quanh quẩn gần đây thôi."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ena, cô ra đó thám thính đi."
+      "text": "Ena, cô ra đó thám thính chút đi."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Rõ! Tôi cũng đang ngứa tay muốn test thử em cưng này xem lực giật ra sao."
+      "text": "Tuân lệnh sếp! Đang ngứa tay muốn test thử em cưng này xem lực giật thế nào đây."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ena xoay tít khẩu lục bạc trên ngón trỏ, khóa chốt an toàn rồi giắt gọn vào bên hông."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Dắt Ichika theo cùng. Và cất khẩu súng đó đi. Tôi nhấn mạnh là 'thám thính'."
+      "text": "Dắt Ichika theo cùng. Có gì cho con bé làm quen chút với súng đạn đi. Với lại, tôi bảo cô thám thính chứ không phải quậy banh chỗ đó lên đâu nhé."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Hả? Lại bắt tôi làm bảo mẫu cho lính mới à? Và ý cô là sao khi bảo tôi cất súng??"
+      "text": "Hả? Lại phải làm bảo mẫu cho lính mới à?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "D-dạ... em sao ạ?"
+      "text": "D-dạ... em ạ?"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Nhìn cái mặt nghệt ra kìa. Làm ơn đừng có ngáng chân tôi lúc làm nhiệm vụ đấy."
+      "text": "Nhìn cái mặt nghệt ra kìa. Nhanh cái chân lên nhóc, tôi không có kiên nhẫn chờ cô nôn mửa giữa đường đâu."
     },
     {
       "type": "narrator",
-      "text": "(Vừa càu nhàu, Ena vừa ném cho Ichika chai nước và thỏi lương khô.)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ena",
-      "color": "#b86028",
-      "text": "Ăn đi cho tỉnh người. Lát nữa mà nôn ra băng ghế sau của tôi là tôi đập nát sọ cô đấy."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Ichika",
-      "color": "#4a9e9e",
-      "text": "(Run rẩy cầm thỏi lương khô... Chị Ena đáng sợ quá... nhưng có vẻ chị ấy không ghét mình...)"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Ena",
-      "color": "#b86028",
-      "text": "..."
+      "text": "Ngủ một mạch tới chiều mà vẫn chưa tỉnh hẳn, đã phải đi tiếp rồi. Ichika chỉ biết ôm lấy thanh katana rồi lầm lũi đi theo."
     },
     {
       "type": "dialogue",
@@ -180,21 +236,21 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Sau ngày hôm qua, chắc cô cũng nhận ra bản thân còn quá nhiều thiếu sót."
+      "text": "Sau chuyện đêm qua, chắc em cũng nhận ra bản thân còn quá nhiều thiếu sót."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Nếu muốn mạnh lên, cứ đến tìm tôi."
+      "text": "Nếu muốn mạnh lên, cứ đến tìm chị."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Giờ tôi phải luyện tập thêm."
+      "text": "Giờ chị phải luyện tập thêm."
     },
     {
       "type": "dialogue",
@@ -208,7 +264,7 @@
       "speaker": "right",
       "name": "Kanade",
       "color": "#ccccdd",
-      "text": "Ừ. Có gì cô cứ sang hỏi Mafuyu."
+      "text": "Ừ. Dùng từ trường quá sức là thở không ra hơi đấy. Có gì em cứ sang hỏi Mafuyu."
     }
   ],
   "mafuyu_training_intro": [
@@ -217,14 +273,14 @@
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Mafuyu, không biết là... em có thể tập thêm được không ạ?"
+      "text": "Sếp, không biết là... em có thể tập thêm được không ạ?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Được. Tôi sẽ vứt vài kẻ ngáng đường cho cô tập tay."
+      "text": "Được. Kỹ năng thì có, tâm lý thì phải rèn thêm. Tôi sẽ vứt vài kẻ ngáng đường cho nhóc tập tay."
     },
     {
       "type": "dialogue",

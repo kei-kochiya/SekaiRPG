@@ -1,34 +1,64 @@
 {
   "ops_intro": [
     {
-      "speaker": "left",
-      "text": "Báo cáo Cơ quan Phòng vệ. Chúng em đã sẵn sàng nhận lệnh.",
-      "type": "dialogue",
-      "name": "Ichika"
+      "type": "narrator",
+      "text": "(Sáu giờ sáng. Trên bàn chỉ huy của Cơ quan Phòng vệ, bản đồ vịnh Tokyo chi chít hàng chục chấm đỏ, mỗi chấm là một khối C4 do Mafuyu đánh dấu.)"
     },
     {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Báo cáo Cơ quan Phòng vệ. Chúng em đã sẵn sàng nhận lệnh ạ."
+    },
+    {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "Tốt lắm. Kanade, Ichika, Honami, ba cô sẽ được phân công tiêu diệt khủng bố ở 3 khu vực khác nhau.",
-      "type": "dialogue",
-      "name": "Commander"
+      "name": "Chỉ huy Phòng vệ",
+      "color": "#8899aa",
+      "text": "Tốt. Đội gỡ bom của chúng tôi sẽ lo phần C4 theo bản đồ của Nightcord. Việc của các cô là quét sạch khủng bố bám theo họ. Kanade, Ena, Ichika, Honami, mỗi người một khu vực."
     },
     {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "Tôi nhận nhiệm vụ ở Khu A. Tôi đi đây.",
-      "type": "dialogue",
-      "name": "Kanade"
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Qua bộ đàm) Theo kế hoạch, bốn cô quét sạch địch ở khu của mình. Ena đi theo đội gỡ bom ở cây cầu gần vịnh. Được chứ?"
     },
     {
-      "speaker": "left",
-      "text": "Tôi sẽ phụ trách Khu B. Mọi người cẩn thận nhé.",
       "type": "dialogue",
-      "name": "Honami"
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Khu A là của tôi. Hy vọng lần này có gì hay cho tôi chơi. Tôi đi đây."
     },
     {
-      "speaker": "left",
-      "text": "Em sẽ dọn dẹp Khu C. Chị Kanade, chị Honami, bảo trọng!",
       "type": "dialogue",
-      "name": "Ichika"
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Khu D, cây cầu bên vịnh. Tôi đi theo xe gỡ bom, bọn bám đuôi cứ để đó tôi lo."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Khu B cứ để tôi. Nhớ giữ lại mạng nhé, bác sĩ làm thêm ngoài giờ là tính phí đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ, em dọn Khu C ạ. Chị Kanade, chị Ena, chị Honami, bảo trọng!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Qua bộ đàm) Tốt. Tôi ngắt bộ đàm đây. Chúc các cô may mắn."
     }
   ]
 }

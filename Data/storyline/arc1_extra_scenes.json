@@ -1,0 +1,669 @@
+{
+  "training_week_intro": [
+    {
+      "type": "narrator",
+      "text": "(Cả ngày hôm đó, Ichika nằm lì trong phòng, không ăn nổi thứ gì. Mùi máu tanh và bộ óc nát bét của lão Thủ tướng cứ quẩn quanh trong đầu cô.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Đạp tung cửa phòng lúc gần nửa đêm) Dậy. Cả bọn đi ăn thịt nướng. Không đi thì nhịn đói tới sáng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em không đói đâu chị..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Giật phăng tấm chăn, xách cổ áo lôi ra cửa) Tôi có hỏi đâu."
+    },
+    {
+      "type": "narrator",
+      "text": "(Quá nửa đêm, quán lẩu và thịt nướng chỉ còn mỗi Nightcord. Mizuki gọi ba đĩa Wagyu với hai phần nấm kim châm. Ichika co chân ở góc ghế, đôi tay vẫn run, không gắp nổi cọng rau nào.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Rút chiếc khăn lạnh, áp lên má Ichika) Nào nào. Lau mặt cho tỉnh táo chút đi. Húp ít nước lẩu ấm cho đỡ xót ruột, không ai ép cậu ăn thịt đâu mà sợ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nhóc sao thế, mặt mũi vẫn xanh lét thế kia. Nhóc đang sợ phải không? Đúng là... nhóc hiền quá đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nếu không chịu nổi nữa, ngày mai nhóc cứ việc rời đi. Sếp sẽ không làm khó một đứa trẻ muốn quay lại cuộc sống bình thường đâu."
+    },
+    {
+      "type": "narrator",
+      "text": "(Rời đi sao? Quay lại những ngày đi học, mua nước tương cho mẹ và đánh guitar? Ichika khẽ run lên. Nhưng rồi cô nhớ lại họng súng dí vào đầu, nhớ cảnh trơ mắt nhìn đồng đội bị đánh, nhớ bao lần mình làm phiền mọi người vì sự nhút nhát.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em... em cũng muốn bỏ đi lắm... Nhưng em biết, nếu cứ yếu đuối thế này mà ở lại, em sẽ liên lụy đến mọi người mất..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Nước mắt chảy dài trên má) Em không muốn chạy trốn nữa. Xin các chị... làm ơn... giúp em mạnh lên với..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Nhóc bướng bỉnh thật đấy. Hệt như Ena lúc mới gia nhập vậy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Suýt sặc nước lẩu) Này này, tự dưng lôi tao vào làm bia đỡ đạn là sao đấy hả bà nội?"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu ngồi đối diện chỉ lặng lẽ quan sát Ichika, nhấp ngụm trà đá. Ánh mắt cô thoáng hiện vẻ hứng thú.)"
+    }
+  ],
+  "training_week_drills": [
+    {
+      "type": "narrator",
+      "text": "(Ăn xong, cả hội về lại căn cứ. Mafuyu đi chợp mắt trước, còn Kanade dẫn Ichika lên sân thượng, đẩy cánh cửa sắt. Gió đêm ùa vào, Tokyo trải dài dưới chân họ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Búng tay, những chiếc nắp chai kim loại bay lơ lửng quanh cô) Thể lực của chị từng rất tệ, chạy nước rút một đoạn là đứt hơi. Nên ra đòn phải dứt khoát, không được có động tác thừa. Nào, thử cho chị xem."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "*Bắn những chiếc nắp chai về phía Ichika*"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Chém loạn xạ vào không khí) Đường bay của chúng khó đoán quá chị ơi!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Tập trung vào đi nhóc. Giữ cơ thể bình tĩnh, không cần để mắt tới mọi thứ. Trên chiến trường hỗn loạn, người thắng là kẻ biết rõ mục tiêu của mình."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ichika hít một hơi thật sâu, ánh mắt dần thu hẹp. Cô khóa chặt mục tiêu, hạ thấp trọng tâm, chẻ đôi chiếc nắp thiếc mỏng tang rồi bật thẳng về phía Kanade, mũi kiếm nhắm vào tim chị.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Hất mũi kiếm đi bằng từ trường) Hửm? Làm tốt lắm. Không nhắm vào mục tiêu di chuyển mà lại nhắm vào chị, người đang điều khiển chúng."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Xoa đầu Ichika, đút cho cô bé một viên kẹo) Phần thưởng của em đây. Hãy tiếp tục cố gắng nhé."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Đá bật cánh cửa lên sân thượng) Tập kiểu dưỡng sinh thế này thì ra đường chém được ai hả con ranh con! Để sáng mai chị đây chỉ em cách đánh đấm cho ra trò."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Sao giờ cô còn thức? Hay nhậu say quá ngủ lăn lóc, giờ mới dậy?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Giẫm mạnh lên chân Kanade) Này, mày nói gì đấy? Tao có lòng nên mới lên đây giúp lính mới nhé!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Sáng hôm sau, Ichika kiếm chút bánh mì bỏ bụng rồi lên sân thượng ngắm bình minh. Ena đã chờ sẵn. Cây cọ vẽ rút khỏi hông, mũi cọ nhắm thẳng vào cổ cô. Hai món vũ khí va nhau, hai tay Ichika tê rần.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Lủi vào một góc khuất) Phản xạ chậm thế? Tao mà dùng hết lực thì mày đứng đó chờ chết à!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Run rẩy nắm chặt kiếm, ngó qua ngó lại) Chị Ena ơi, chị đâu rồi..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Dùng tất cả giác quan của nhóc đi! Chậm một giây là nát sọ đấy. (Đoàng!)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Cơ thể Ichika tự cúi rạp xuống trước cả khi cô kịp nghĩ. Viên đạn rít qua đỉnh đầu. Thôi rồi, lần này mà chậm chút nữa thì ai cứu được mình đây...)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Ném xuống một quả bom khói) Khá khen cho sự tiến bộ. Đánh trúng chị đi rồi chị sẽ cho nhóc nghỉ."
+    },
+    {
+      "type": "narrator",
+      "text": "(Khói trắng phủ kín sân thượng, tiếng súng nổ liên tục, một viên xẹt qua má Ichika. Cô vẫn gượng dậy, dõi theo tia lửa lóe ra từ họng súng, tiến lại rồi vung kiếm vào bóng đen trong khói, suýt chẻ đôi Ena.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Rút vội cây cọ chặn kiếm, đá vào hông cô bé) Này, nhóc làm gì đấy! Nguy hiểm quá. Lần sau chú ý hơn giùm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Dúi vào tay Ichika một hộp giấy) Phần thưởng cho sự cố gắng. Bánh tart táo vừa ra lò của tiệm góc phố. Ăn liền đi cho nóng. Và lần sau nhớ nhắm cây súng mà chém. Chém vào người chị nữa là chị giết nhóc luôn đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Cắn một miếng bánh, nụ cười xua tan vẻ mệt mỏi) A, mặt trời lên kìa..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đẹp nhỉ? Giá mà chị có thể thấy bình minh nhiều hơn..."
+    },
+    {
+      "type": "narrator",
+      "text": "(Một tuần trôi qua. Mỗi ngày hơn tám tiếng luyện tập cùng Ena rồi Kanade. Ichika hôm nào cũng suýt gục, đầu tóc bết bát, nhưng vẫn nắm chặt thanh kiếm.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Nếu thành công, mình sẽ sống...)"
+    }
+  ],
+  "training_trial_pre": [
+    {
+      "type": "narrator",
+      "text": "(Chiều ngày thứ bảy của khóa huấn luyện. Trên sân thượng, Ena và Kanade đứng đối diện Ichika. Mafuyu đứng cạnh cánh cửa sắt, trong tay là một chiếc chuông đồng nhỏ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Bài kiểm tra. Ena và Kanade sẽ phối hợp tấn công nhóc. Nhóc cầm cự đến khi chuông rung, hoặc chặn cả hai người họ lại thì cũng đạt."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Hai cô ấy sẽ không nương tay. Tôi cũng sẽ không cứu nhóc đâu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em sẵn sàng rồi. Hai chị làm đi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Mạnh mồm đấy. Được thôi, lên nào Kanade!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Ba cây đinh sắt bật khỏi tay áo, lơ lửng quanh cô) Em né đinh thì Ena chém, em đỡ Ena thì đinh xuyên người. Nghĩ cho kỹ đi, nhóc."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Bắt đầu."
+    }
+  ],
+  "training_trial_bark_1": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Đứng đực ra đó à, nhóc? Tao chém thật đấy, né cho khéo vào!"
+    }
+  ],
+  "training_trial_bark_2": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Qua nửa chặng rồi, nhóc. Giữ cơ thể bình tĩnh, đừng nhìn mọi thứ, chỉ cần nhìn kẻ đang điều khiển chúng."
+    }
+  ],
+  "training_trial_bark_3": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Sắp tới giờ rồi, nhóc. Hay nhóc định nằm đó chờ Diêm Vương tới đón?"
+    }
+  ],
+  "training_trial_retry": [
+    {
+      "type": "narrator",
+      "text": "(Một đêm nghỉ ngắn, vài lớp băng mới, rồi Ichika lại đứng trước hai người họ trên sân thượng.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chưa đạt. Thêm một ngày nữa."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Đầu óc nhóc chỉ được đến thế thôi sao? Lần này đừng chỉ biết né."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ... em xin thử lại ạ."
+    }
+  ],
+  "training_trial_post": [
+    {
+      "type": "narrator",
+      "text": "(Mọi thứ khựng lại. Ichika vẫn còn đứng, mũi kiếm run bần bật, mồ hôi nhỏ thành giọt xuống nền xi măng sân thượng.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Khẽ nhấc tay, giữ thanh katana khựng giữa không trung, rồi búng nhẹ vào trán Ichika) Dừng. Phản xạ tốt, tư duy chiến đấu ổn hơn rồi đấy. Không còn run nữa."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Ngồi xuống nhấp ngụm nước) Đạt rồi đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Đạt... rồi ạ? (Tay run đến mức suýt đánh rơi cả kiếm)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Vuốt mồ hôi, cắm lại cây cọ vào hông) Nhóc bây giờ mạnh tay phết rồi đấy. Đừng có mừng sớm, tao còn chưa dùng hết sức đâu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Đút cho Ichika một viên kẹo) Phần thưởng của em đây. Ngọt chứ?"
+    },
+    {
+      "type": "narrator",
+      "text": "(Vị ngọt của viên kẹo tan dần trong miệng. Ichika thở dốc, rồi khẽ mỉm cười.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Từ tốn bước ra, liếc qua hai người kia rồi nhìn thẳng vào mắt Ichika) Khóa huấn luyện cơ bản dừng ở đây được rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ủa, sếp tính cho nhóc này tốt nghiệp sớm luôn à?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Cởi áo khoác ném vào mặt Ena) Không phải. Hai cô lui về nghỉ ngơi đi, phần còn lại cứ để tôi lo. Ba ngày tới tôi sẽ cho nhóc thấy địa ngục thật sự."
+    },
+    {
+      "type": "narrator",
+      "text": "(Câu nói khiến Ichika lạnh hết cả sống lưng, nhưng cô chỉ biết gật đầu, đi theo Mafuyu ra khu nhà kho cũ.)"
+    }
+  ],
+  "training_welcome": [
+    {
+      "type": "narrator",
+      "text": "(Ba ngày ba đêm sau đó, trong khu nhà kho cũ, Mafuyu một mình cho Ichika thấy địa ngục thật sự. Đêm cuối, Ichika nát bươm vẫn chống kiếm đứng dậy, lao lên nhanh đến mức chỉ còn thấy dư ảnh.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(KENG! Khi mọi thứ lặng đi, Ichika đã ở sau lưng Mafuyu rồi đổ gục vì kiệt sức. Vài ngọn tóc tím đậm của sếp lớn khẽ rơi xuống sàn.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Đang ăn bỏng ngô ở một góc, há hốc mồm) Đến tụi mình còn chưa chạm được vào sếp, vậy mà con bé còn cắt được cả tóc của bả. Đáng sợ thật."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "Tôi nghĩ chúng ta nên chuồn lẹ."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Này, chờ tao đã chứ!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu bế Ichika về căn cứ sơ cứu. Khi cô bé tỉnh lại, đã nằm gọn trên đùi sếp lớn, mái tóc và gương mặt được vuốt ve rất khẽ.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chúc mừng nhóc."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chào mừng Hoshino Ichika, thành viên thứ năm của Nightcord."
+    },
+    {
+      "type": "narrator",
+      "text": "(Cái chạm của Mafuyu khiến Ichika vừa run rẩy lại vừa ấm áp. Cô mặc cho sếp vuốt ve mình và lại thiếp đi.)"
+    }
+  ],
+  "ops_ena_pre": [
+    {
+      "type": "narrator",
+      "text": "(Sáu giờ ba mươi. Cây cầu bắc qua vịnh Tokyo. Ena ngồi trong chiếc xe đi đầu đoàn gỡ bom, phía sau là một đội xe khủng bố bám sát, họng súng thò ra ngoài cửa kính.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Qua bộ đàm) Ena, đội gỡ bom mà không tới được điểm hẹn thì cả kế hoạch hỏng. Phải quét sạch bọn bám đuôi. Được chứ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Nhắm bắn liên tiếp vào đội xe phía sau) Biết rồi mà, ồn ào quá."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Đội trưởng gỡ bom",
+      "color": "#889988",
+      "text": "Còn năm cây số nữa là đến điểm gỡ bom. Cứ bị bám đuôi thế này thì không dừng xe được."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Hết cách rồi. Cứ đi tiếp đi, đừng lo cho tôi."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "*Mở cửa, lao ra khỏi chiếc xe đang chạy, lăn mấy vòng trên mặt đường rồi bật dậy*"
+    },
+    {
+      "type": "narrator",
+      "text": "(Đội xe khủng bố phía sau buộc phải phanh gấp. Bốn tên xách súng nhảy xuống khép vòng vây quanh Ena, bốn tên nữa vẫn đang gầm máy lao tới. Tám khẩu súng, và chỉ có một mình cô.)"
+    }
+  ],
+  "ops_ena_mid": [
+    {
+      "type": "narrator",
+      "text": "(Bốn tên đầu đã nằm lại trên mặt đường, nhưng tiếng phanh gấp lại vang lên. Bốn tên còn lại nhảy xuống, súng đã lên nòng, chĩa thẳng vào Ena.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Còn một nửa nữa à? Lại đây, tao vẽ nốt cho đủ bộ."
+    }
+  ],
+  "ops_ena_post": [
+    {
+      "type": "narrator",
+      "text": "(Đợi bốn tên cuối lại đủ gần, Ena rút cây cọ, xoay người vẽ một đường điêu luyện qua cả bọn đang bao vây. Tám cái xác nằm la liệt, ngực tên nào cũng có một vệt đỏ chạy ngang.)"
+    },
+    {
+      "type": "narrator",
+      "text": "(Cô cũng không quên vẽ lại chính mình lên mặt đường bằng chính máu của những tên đó.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Qua bộ đàm) Chắc là bên tôi xong rồi đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Qua bộ đàm) Tốt rồi. Gặp tôi ở đoạn trước cầu Cầu Vồng nhé."
+    }
+  ],
+  "honami_spar_pre": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Nào, đứng dậy đi, ra đây thử vài đường với chị là tự khắc có câu trả lời ngay."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ? Nhưng vết thương của em..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Thong thả lấy chiếc vali hợp kim của mình) Chị khâu bằng chỉ sinh học loại tốt nhất rồi, vận động nhẹ không bục được đâu mà sợ."
+    },
+    {
+      "type": "narrator",
+      "text": "(Honami dẫn Ichika xuống một căn phòng trống bên dưới phòng khám. Ichika nắm chặt thanh katana, tinh thần chiến đấu bỗng trỗi dậy.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Chiêu này đã cứu mình bao lần rồi. Không lẽ lại không làm gì được chị ấy?)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chiêu nào em tự tin nhất thì tung ra đi. Chị chỉ phòng thủ thôi, nên đừng nương tay."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ichika hít một hơi thật sâu, hơi cúi người xuống, từ từ rút kiếm.)"
+    }
+  ],
+  "honami_spar_bark": [
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Giơ chiếc vali lên đỡ, nhẹ tênh) Chỉ có thế thôi sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chị còn chưa tấn công đâu đấy, nhóc."
+    }
+  ],
+  "honami_spar_post": [
+    {
+      "type": "narrator",
+      "text": "(Hai ngón tay Honami ấn nhẹ vào nách và mạn sườn Ichika. Cô bé nằm sấp trên sàn, không đau chút nào nhưng cả người tê dại, không tài nào đứng dậy nổi.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "(Từ từ rút tay lại) Thế nào? Đã hiểu rõ rồi đúng không? Đấy là chị chưa tấn công lại đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Sao... sao chị làm được như thế..."
+    },
+    {
+      "type": "narrator",
+      "text": "(Honami đỡ Ichika ngồi dậy, xoa bóp hai bả vai, nhặt thanh katana lên lau sạch rồi trả lại cho cô bé.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Cứu người nhiều rồi thì biết rõ cơ thể con người yếu ở đâu. Muốn giết thì dễ hơn cứu cả trăm lần."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Em có bản năng, nhưng chưa có kỹ thuật. Đường kiếm của em nhanh, nhưng chị đọc được nó từ lúc em hạ trọng tâm."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chị thích nhìn người ta lành lặn bước ra khỏi cánh cửa kia hơn là biến họ thành những đống thịt vụn. Với lại, chị cũng không muốn làm công cụ kiếm tiền của ai cả."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Nightcord chỉ dạy em giết người, không dạy em cách sống sót đâu. Muốn học thì cứ xuống căn phòng này, chị cho mượn bất cứ lúc nào."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Dạ... em cảm ơn chị Honami ạ."
+    }
+  ]
+}

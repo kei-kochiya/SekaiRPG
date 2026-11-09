@@ -2,49 +2,84 @@
   "honami_options_intro": [
     {
       "type": "narrator",
-      "text": "(Phòng khám của Honami. Mùi thuốc sát trùng quen thuộc. Ichika ngồi trên giường bệnh, cuộn trong tấm chăn mỏng, nhìn Honami thắt nốt đường băng cuối cùng.)"
+      "text": "(Phòng khám Mochizuki, gần trưa. Mùi thuốc sát trùng quyện với mùi cháo nóng từ bếp. Ichika ngồi trên giường bệnh, vai quấn băng dày, mu bàn tay còn dán miếng băng cố định kim truyền.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Xong. Vết thương ngoài da thì tôi lo được. Những cái còn lại, chỉ cô tự lo được."
+      "text": "Phù, xong hết rồi. Cơ vai khâu lại ổn cả, coi chừng đứt chỉ. Vết thương ngoài da thì chị lo được. Còn những cái khác... chỉ em tự lo được thôi, nhóc ạ."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Honami... em đã giết chị Kanade. Em còn không nhớ mình đã ra tay thế nào..."
+      "text": "Chị Honami này... Em có phải là quái vật không? Em đã giết chị Kanade. Em còn không nhớ mình đã ra tay thế nào..."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "*Cốc!*"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Cô còn sống. Tôi biết đó chưa phải lời an ủi, nhưng với một bác sĩ, đó là điều quan trọng nhất."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Giờ nghe tôi nói, vì sắp tới sẽ không còn nhiều thời gian cho những buổi nói chuyện thế này. Mafuyu sẽ quay lại. Thấy giường trống, cô ta sẽ đi tìm. Không phải để tha."
+      "text": "Bớt nghĩ linh tinh đi. Em còn sống, và với một bác sĩ thì đó là điều quan trọng nhất. Giờ này mà chị còn đứng được thì em chưa chết được đâu."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Em... em phải làm gì ạ?"
+      "text": "Nhưng sếp bảo em làm tốt. Sếp còn bảo sếp thích em... Em chẳng hiểu gì cả."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Cô có hai lựa chọn. Một: ở lại đây, luyện tập với tôi, đủ lâu để đứng ngang hàng với cô ta. Hai: đi ngay bây giờ, đối đầu với Mafuyu."
+      "text": "Em chỉ đang bị Mafuyu thao túng thôi. Cô ta cô lập em, nhắc lại cảm giác tội lỗi để em tự ghê tởm chính mình, để em chỉ còn biết dựa vào cô ta."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Em bị... thao túng ạ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Đồng đội của em ngã xuống cũng là muốn em sống tiếp thôi. Nếu Mizuki hay Ena thấy em thế này, chắc họ buồn lắm. Em cũng không muốn họ thấy mình chỉ là một món đồ để Mafuyu sở hữu, đúng không?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Siết ngón tay) ...Vậy bây giờ em nên làm gì ạ?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Tự em phải kết thúc nó thôi, Ichika ạ. Mafuyu sẽ quay lại. Thấy giường trống, cô ta sẽ đi tìm. Và không phải để tha."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Em có hai lựa chọn. Một: ở lại đây, luyện tập với chị, đủ lâu để đứng ngang hàng với cô ta. Hai: đi ngay bây giờ, đối đầu với Mafuyu."
     },
     {
       "type": "dialogue",
@@ -58,28 +93,42 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Nói thẳng nhé: khó. Mafuyu mạnh hơn cô, mạnh hơn tôi, và đòn của cô ta khắc chế cả hai ta. Tôi đã thấy cô ta chẻ đôi chiếc vali hợp kim của tôi như chẻ giấy."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Còn một điều nữa. Suốt thời gian qua, Nightcord dồn rất nhiều vào cô ta: trang bị, điểm kỹ năng, cả thói quen dựa dẫm. Mỗi thứ cô và đồng đội đã rót vào cô ta, hôm nay cô ta sẽ trả lại đủ. Bằng lưỡi dao."
+      "text": "Nói thẳng nhé: khó. Mafuyu có một kỹ năng là đọc trước chuyển động của đối thủ. Trước khi em kịp ra đòn, cô ta đã biết nhắm vào đâu rồi."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Vậy... em mạnh lên cho chị ấy bao nhiêu, chị ấy mạnh lên với em bấy nhiêu...?"
+      "text": "(Cắn môi) Đọc trước cả cử động của cơ thể sao... Vậy làm sao đánh trúng một người như thế được ạ?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Chính xác. Nên đừng vội. Luyện tập ở đây không có giới hạn. Tôi sẽ luyện với cô bao lâu cũng được, sáng, chiều, cả đêm. Khi nào cô thấy đủ, hãy nói."
+      "text": "Muốn đường đường chính chính thắng thì chịu. Cô ta mạnh hơn em, mạnh hơn chị, và đòn của cô ta khắc chế cả hai ta. Chị đã thấy cô ta chẻ đôi chiếc vali hợp kim của chị như chẻ giấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Còn một điều nữa. Suốt thời gian qua, Nightcord dồn rất nhiều vào cô ta: trang bị, điểm kỹ năng, cả thói quen dựa dẫm. Mỗi thứ đã rót vào cô ta, hôm nay cô ta sẽ trả lại đủ. Bằng lưỡi dao."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Vậy... những gì tụi em dồn cho sếp, giờ sếp dùng hết lên tụi em sao...?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Chính xác. Nên đừng vội. Luyện tập ở đây không có giới hạn. Chị luyện với em bao lâu cũng được, sáng, chiều, cả đêm. Khi nào thấy đủ, hãy nói."
     },
     {
       "type": "dialogue",
@@ -93,14 +142,18 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Tôi đã bỏ qua một điều sai trái, chỉ vì nó không liên quan đến tôi. Lần này thì không."
+      "text": "Chị từng làm ngơ trước một điều sai trái, chỉ vì nó không liên quan đến chị. Lần này thì không. Em ra đòn, chị đứng cạnh."
+    },
+    {
+      "type": "narrator",
+      "text": "(Honami múc một muỗng cháo, thổi nguội rồi đưa tới miệng Ichika. Cô bé ngoan ngoãn há miệng, mắt vẫn thỉnh thoảng liếc về phía cửa.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Giờ thì ăn chỗ cháo này đi. Cháo nguội thì mất ngon, mà bệnh nhân thì không được phép mất sức."
+      "text": "Ăn đi. Cháo nguội thì mất ngon, mà bệnh nhân thì không được phép mất sức."
     }
   ],
   "honami_menu_prompt": [
@@ -109,7 +162,7 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Cô muốn làm gì, Ichika? Luyện tập, nâng cấp, hay đi đối đầu Mafuyu, tôi đều theo cô."
+      "text": "Sao nào, nhóc? Luyện tập, nâng cấp hay đi đối đầu Mafuyu, chị đều theo em."
     }
   ],
   "honami_training_offer_arc2": [
@@ -118,14 +171,14 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Bãi phế liệu phía sau vẫn còn đó. Lần này không có hạn mức nào cả, cô muốn tập đến bao giờ cũng được."
+      "text": "Tầng hầm với bãi phế liệu phía sau vẫn còn đó. Lần này không có hạn mức nào cả, em muốn tập đến bao giờ cũng được."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Tôi sẽ đứng đối diện cô cả ngày nếu cần. Cô chỉ việc nói khi nào mệt."
+      "text": "Chị đứng đối diện em cả ngày nếu cần. Chậm thì chị bảo chậm, dễ đoán thì chị bảo dễ đoán. Em chỉ việc nói khi nào mệt."
     },
     {
       "type": "dialogue",
@@ -141,20 +194,20 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Điểm kỹ năng của cô vẫn còn đó. Tiêu đi. Nằm trong túi thì nó chẳng cứu được ai."
+      "text": "Điểm kỹ năng của em vẫn còn đó. Tiêu đi. Nằm trong túi thì nó chẳng cứu được ai."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Tôi cũng nhận một phần, để lúc đứng cạnh cô, tôi không làm cô vướng chân."
+      "text": "Chị cũng nhận một phần, để lúc đứng cạnh em, chị không làm em vướng chân. Còn lại thì phụ thuộc vào em đấy, nhóc."
     }
   ],
   "final_mafuyu_pre": [
     {
       "type": "narrator",
-      "text": "(Căn cứ Nightcord. Lần đầu tiên không có cốc mì nào trên bàn. Mafuyu ngồi ở đầu bàn, con dao đặt ngang đầu gối, như thể đã biết họ đến từ lúc họ rời khỏi phòng khám.)"
+      "text": "(Căn cứ Nightcord. Lần đầu tiên không có cốc mì nào trên bàn, chỉ còn năm bộ đũa xếp ngay ngắn. Mafuyu ngồi ở đầu bàn, con dao găm đặt ngang đầu gối, như thể đã biết họ đến từ lúc họ rời khỏi phòng khám.)"
     },
     {
       "type": "dialogue",
@@ -179,10 +232,24 @@
     },
     {
       "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Chào nhóc. Giải thích sao về chuyện tự ý bỏ căn cứ đây?"
+    },
+    {
+      "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Mafuyu... tại sao? Tại sao lại là họ? Chị Ena, chị Mizuki, chị Kanade... họ đã đi theo chị."
+      "text": "Chuyện đó không quan trọng. Sếp cho em một nơi để gọi là nhà, cho em những người mà em xem như gia đình."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Để rồi sếp thẳng tay phá hủy nó. Tại sao? Tại sao lại là họ? Chị Ena, chị Mizuki, chị Kanade... họ đã đi theo sếp."
     },
     {
       "type": "dialogue",
@@ -196,7 +263,7 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Chính phủ buộc tôi vào một sợi xích từ khi tôi còn trẻ hơn cô bây giờ. Họ gọi đó là nhiệm vụ. Tôi gọi đó là sợi xích."
+      "text": "Chính phủ buộc tôi vào một sợi xích từ khi tôi còn trẻ hơn nhóc bây giờ. Họ gọi đó là nhiệm vụ. Tôi gọi đó là sợi xích."
     },
     {
       "type": "dialogue",
@@ -238,18 +305,29 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Cô là đầu dây cuối cùng. Tôi đã cho cô thời gian, và cô chọn đứng ở đây."
+      "text": "Nhóc là đầu dây cuối cùng. Tôi đã cho nhóc thời gian, và nhóc chọn đứng ở đây."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Một giọt nước mắt lăn xuống má) Cảm ơn sếp... Thật lòng thì... em cũng muốn ở bên sếp lắm."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu khựng lại, rất ngắn, rồi ánh mắt trở về vẻ vô hồn quen thuộc.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Không cần hận tôi. Tôi cũng không xin cô tha thứ."
+      "text": "Chuyện đã qua rồi. Tôi chỉ làm những gì tôi thấy cần thiết thôi. Không cần hận tôi, tôi cũng không xin nhóc tha thứ."
     },
     {
       "type": "narrator",
-      "text": "(Mafuyu đứng dậy. Lưỡi dao hạ xuống chéo thân. Căn phòng bỗng lạnh đi một bậc.)"
+      "text": "(Mafuyu đứng dậy, kéo lại đôi găng tay. Lưỡi dao hạ xuống chéo thân. Căn phòng bỗng lạnh đi một bậc.)"
     },
     {
       "type": "dialogue",
@@ -264,19 +342,54 @@
       "name": "Mafuyu",
       "color": "#665588",
       "text": "Tôi chưa bao giờ đùa."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tôi cứu nhóc khỏi nhà kho đó không phải để nhóc quay lại cắn tôi. Còn nhớ ba giây tôi cho nhóc hồi đó không, cô bé?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Rút kiếm) Em nhớ. Ba giây trước khi cái đầu em rơi xuống."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Vậy thì cố mà giữ nó đấy."
     }
   ],
   "final_mafuyu_lose": [
     {
       "type": "narrator",
-      "text": "(Đòn cuối của Mafuyu đẩy Ichika ngã xuống sàn. Chỉ cần thêm một tấc nữa là không còn gì để nói.)"
+      "text": "(Đòn cuối của Mafuyu quật Ichika ngã xuống sàn. Một mũi giày đè lên ngực cô, lưỡi dao dừng lại đúng một tấc trên cổ. Chỉ cần thêm một tấc nữa là không còn gì để nói.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Vẫn yếu đuối vô dụng như ngày nào nhỉ? Nhóc làm tôi thất vọng quá đấy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Ho ra máu, bấu tay xuống nền gạch) Em... em chưa..."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Đủ rồi. Rút."
+      "text": "Đủ rồi. Dừng lại đi, Mafuyu! Ichika, rút."
     },
     {
       "type": "narrator",
@@ -287,45 +400,45 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Quay về mà luyện. Tôi vẫn ở đây."
+      "text": "Quay về mà luyện, cô bé. Tôi vẫn ở đây."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "(Thì thầm, khi đã ra ngoài) Đừng nản. Giờ chúng ta biết cô ta nặng tay đến mức nào rồi. Chỉ cần chuẩn bị."
+      "text": "(Thì thầm, khi đã ra ngoài) Đừng nản, nhóc. Cô ta đọc được cả những gì em chưa kịp nghĩ, nhưng giờ mình biết cô ta nặng tay đến mức nào. Về chị khâu lại vai cho em, rồi chuẩn bị tiếp."
     }
   ],
   "final_mafuyu_post": [
     {
       "type": "narrator",
-      "text": "(Hai nhát cuối chạm tới cùng lúc. Con dao rơi khỏi tay Mafuyu, vang lên một tiếng khô khốc trên nền gạch.)"
+      "text": "(Hai nhát cuối chạm tới cùng lúc. Con dao găm rơi khỏi tay Mafuyu, vang lên một tiếng khô khốc trên nền gạch.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "...Ra vậy. Cuối cùng cũng có người cắt được sợi xích."
+      "text": "Sao lại... có thể... (Khẽ cười) Ra vậy. Cuối cùng cũng có người cắt được sợi xích."
     },
     {
       "type": "narrator",
-      "text": "(Mafuyu khuỵu xuống, tựa lưng vào chân bàn ăn. Ichika bước đến, tay vẫn run, nhưng không buông vũ khí.)"
+      "text": "(Mafuyu khuỵu xuống, tựa lưng vào chân bàn ăn. Ichika buông kiếm, quỳ xuống đỡ lấy thân hình đang đổ sụp ấy, tay vẫn run. Nước mắt cô rơi xuống má Mafuyu.)"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Mafuyu..."
+      "text": "Sếp... Em xin lỗi... Em thực sự xin lỗi..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Đừng xin lỗi. Tôi không muốn nghe. Cô giỏi lắm. Giỏi hơn tôi từng tưởng."
+      "text": "Đừng xin lỗi. Tôi không muốn nghe. Nhóc giỏi lắm. Giỏi hơn tôi từng tưởng. Nhát dao đẹp đấy."
     },
     {
       "type": "dialogue",
@@ -346,14 +459,32 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Hồi đó tôi bảo cô liệu mà sống cho có ích, tôi không chứa chấp phế vật. Cô đã làm đúng như vậy."
+      "text": "Hồi đó tôi bảo nhóc liệu mà sống cho có ích, tôi không chứa chấp phế vật. Nhóc đã làm đúng như vậy."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Từ giờ... tôi giao lại Nightcord cho nhóc. Đừng để nó thành sợi xích của ai nữa."
+    },
+    {
+      "type": "narrator",
+      "text": "(Mafuyu dùng chút sức lực cuối cùng, đưa tay chạm lên má Ichika, quệt một vệt máu dài rồi để bàn tay rơi xuống.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Nhớ đấy... Cố mà... nhớ vệt máu này."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "(Mắt nhòe đi) Em không tha thứ cho chị được. Em cũng không biết chị có xứng đáng được tha thứ không. Nhưng em hiểu rồi."
+      "text": "(Mắt nhòe đi) Em không tha thứ cho sếp được. Em cũng không biết sếp có xứng đáng được tha thứ không. Nhưng em hiểu rồi."
     },
     {
       "type": "dialogue",
@@ -376,6 +507,13 @@
     {
       "type": "dialogue",
       "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "Sếp...? Sếp Mafuyu...?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
       "name": "Honami",
       "color": "#ffaa88",
       "text": "...Cô ta đi rồi."
@@ -391,7 +529,7 @@
   "ending_honami_offer": [
     {
       "type": "narrator",
-      "text": "(Rạng sáng. Căn cứ Nightcord lặng đến mức nghe được tiếng nước nhỏ giọt từ một chiếc vòi nào đó. Ichika ngồi bệt trước bàn ăn, Honami đứng cạnh cửa sổ.)"
+      "text": "(Rạng sáng. Căn cứ Nightcord lặng đến mức nghe được tiếng nước nhỏ giọt từ một chiếc vòi nào đó. Ichika ngồi bệt trước bàn ăn, vệt máu trên má đã khô; Honami đứng cạnh cửa sổ.)"
     },
     {
       "type": "narrator",
@@ -402,14 +540,14 @@
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Bộ trưởng sẽ hỏi chuyện gì đã xảy ra với con chó săn của ông ta. Rồi ông ta sẽ cử người mới đến lấy lại chiếc xích."
+      "text": "Bộ trưởng sẽ hỏi chuyện gì đã xảy ra với con chó săn của ông ta. Rồi ông ta sẽ cử người mới đến lấy lại sợi xích."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chúng ta... không trả lời sao?"
+      "text": "Chúng ta... không trả lời sao ạ?"
     },
     {
       "type": "dialogue",
@@ -419,46 +557,97 @@
       "text": "Cứ để chuông reo. Ông ta sắp là Thủ tướng, nhưng chưa phải Thượng đế."
     },
     {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Honami",
-      "color": "#ffaa88",
-      "text": "Ichika. Nightcord từng mời tôi vào làm bác sĩ. Tôi bơ hết mọi lá thư."
+      "type": "narrator",
+      "text": "(Honami lục chiếc vali y tế, lấy ra một miếng bánh táo bọc giấy bạc, hơi móp một góc, rồi dúi vào tay Ichika.)"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Nếu cô dựng lại một Nightcord khác, không sợi xích, không Bộ trưởng, không ai bị bỏ lại... tôi xin nhận chiếc ghế đó."
+      "text": "Chào sếp nhỏ nhé. Ăn đi cho có năng lượng. Bệnh nhân nhịn từ hôm qua là chị không chịu đâu."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Chị Honami... chị thật sự muốn sao? Cái nghề này nguy hiểm, và còn có những người sẽ đến tìm chúng ta..."
+      "text": "(Cắn một miếng nhỏ) Sếp nhỏ ạ...? Mà em đâu phải cấp trên của chị."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Tôi là bác sĩ ngầm của thành phố này, Ichika. Nguy hiểm là địa chỉ nhà tôi rồi."
+      "text": "Ai cũng gọi Mafuyu là sếp lớn. Giờ cô ta đi rồi, nên em là sếp nhỏ. Không được sao?"
+    },
+    {
+      "type": "narrator",
+      "text": "(Miếng bánh táo ngọt dịu. Ichika chợt nhớ những dải vỏ táo mẹ gọt không hề đứt, từ rất lâu rồi.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Ichika. Nightcord từng mời chị vào làm bác sĩ. Chị bơ hết mọi lá thư."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Nếu em dựng lại một Nightcord khác, không sợi xích, không Bộ trưởng, không ai bị bỏ lại... chị xin nhận chiếc ghế đó. Với tư cách hậu cần, lo phần y tế cho nhóm."
+    },
+    {
+      "type": "narrator",
+      "text": "(Honami đứng thẳng người, cúi đầu thật thấp. Lần đầu tiên Ichika thấy cô nghiêm túc đến thế.)"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "(Cười, lần đầu tiên sau nhiều ngày) Vâng. Em đồng ý. Nhưng lần này... em là người chỉ huy sao?"
+      "text": "Chị đừng cúi đầu... Chị thật sự muốn sao? Em tưởng chị không thích bị người khác sai bảo. Cái nghề này nguy hiểm, và còn có những người sẽ đến tìm chúng ta..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Honami",
       "color": "#ffaa88",
-      "text": "Cô chỉ huy. Tôi lo sức khỏe cho cô. Phân công như vậy là hợp lý."
+      "text": "(Ngẩng lên, nhìn thẳng vào mắt cô) Chị là bác sĩ ngầm của thành phố này, Ichika. Nguy hiểm là địa chỉ nhà chị rồi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Với lại, chị tin sếp nhỏ sẽ không bắt chị làm điều chị không muốn đâu. Đúng không?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Quay mặt đi, hơi đỏ má, rồi bật cười, lần đầu tiên sau nhiều ngày) Vâng. Em đồng ý. Nhưng lần này... em là người chỉ huy thật sao?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Honami",
+      "color": "#ffaa88",
+      "text": "Em chỉ huy. Chị lo sức khỏe cho em. Phân công như vậy là hợp lý."
+    },
+    {
+      "type": "narrator",
+      "text": "(Ichika với lấy hộp nhỏ cạnh chiếc máy tính bảng của Mafuyu còn nằm trên bàn. Bên trong là một huy hiệu Nightcord chưa ai đeo. Cô đặt nó vào lòng bàn tay Honami.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ichika",
+      "color": "#4a9e9e",
+      "text": "(Đặt tay lên ngực) Chào mừng chị gia nhập Nightcord."
     },
     {
       "type": "narrator",
@@ -476,11 +665,15 @@
     },
     {
       "type": "narrator",
-      "text": "Những chiếc ghế quanh bàn ăn vẫn còn đó. Người ngồi trên chúng thì không."
+      "text": "Những chiếc ghế quanh bàn ăn vẫn còn đó. Người ngồi trên chúng thì không: một Ena cọc cằn, một Mizuki nhí nhảnh, một Kanade nhẹ nhàng mà đã sa ngã."
     },
     {
       "type": "narrator",
       "text": "Còn Hoshino Ichika, cô gái từng chỉ biết đến cây đàn và những giai điệu của riêng mình, bước vào căn cứ trống, bật lại từng chiếc đèn."
+    },
+    {
+      "type": "narrator",
+      "text": "Cô nói với căn phòng: \"Cảm ơn mọi người. Em hứa sẽ giữ gìn nơi này thật cẩn thận.\""
     },
     {
       "type": "narrator",

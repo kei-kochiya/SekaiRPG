@@ -1,70 +1,122 @@
 {
   "pm_car_ride": [
     {
-      "speaker": "right",
-      "text": "(Ngồi ở ghế lái) Hôm nay ngài muốn đi đâu, thưa Thủ tướng?",
-      "type": "dialogue",
-      "name": "Mizuki"
+      "type": "narrator",
+      "text": "(Sáu giờ ba mươi. Chiếc limousine lao đi trên cao tốc ven vịnh Tokyo. Mizuki trong lốt tài xế riêng của Thủ tướng ngồi sau vô lăng, khoang sau là Thủ tướng và Mafuyu.)"
     },
     {
-      "speaker": "right",
-      "text": "Cứ đi theo lộ trình cũ. Và cô Mafuyu, làm tốt nhiệm vụ bảo vệ tôi đấy.",
       "type": "dialogue",
-      "name": "PM"
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Giả giọng tài xế, ngồi ở ghế lái) Thưa Thủ tướng, hôm nay ngài muốn đi lộ trình nào ạ?"
     },
     {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Thủ Tướng",
+      "color": "#9a8c7a",
+      "text": "Cứ đi theo lộ trình cũ. Cô Mafuyu, tôi đã trả hàng đống tiền để Bộ Quốc phòng cử các người bảo vệ tôi! Đám sát thủ bám đuôi ngoài kia giải quyết đến đâu rồi hả?"
+    },
+    {
+      "type": "dialogue",
       "speaker": "left",
-      "text": "Tôi biết nhiệm vụ của mình. Hắn ta sẽ không thể đụng đến một sợi tóc của ngài.",
-      "type": "dialogue",
-      "name": "Mafuyu"
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Ngồi vắt chéo chân, thong thả nhìn ra cửa sổ) Ngài cứ yên tâm. Toàn đội Nightcord đã vào vị trí từ lâu rồi."
     },
     {
+      "type": "narrator",
+      "text": "(Mafuyu liếc nhẹ về phía ghế lái, chạm ngay ánh mắt đang cười khẩy của Mizuki trong gương chiếu hậu. Khóe môi cô khẽ nhếch.)"
+    },
+    {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "(Qua bộ đàm) Mafuyu, không xong rồi! Ichika đã bị bắt!",
-      "type": "dialogue",
-      "name": "Kanade"
+      "name": "Kanade",
+      "color": "#ccccdd",
+      "text": "(Qua bộ đàm) Sếp, có chuyện rồi. Khu C vừa báo về: Ichika bị bắt."
     },
     {
+      "type": "dialogue",
       "speaker": "left",
-      "text": "Cái gì? Tại sao lại bất cẩn như vậy?",
-      "type": "dialogue",
-      "name": "Mafuyu"
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cái gì? Con nhóc đó... sao lại bất cẩn đến thế?"
     },
     {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "(Cười khẩy) Chà, có vẻ như đồng đội của cô đang gặp rắc rối rồi, Mafuyu.",
-      "type": "dialogue",
-      "name": "PM"
+      "name": "Thủ Tướng",
+      "color": "#9a8c7a",
+      "text": "(Cười khẩy) Chà, có vẻ đồng đội của cô đang gặp rắc rối rồi nhỉ, cô Mafuyu."
     },
     {
+      "type": "dialogue",
       "speaker": "right",
-      "text": "(Rút súng chĩa vào Mafuyu) Nhưng cô nên lo cho bản thân mình trước đi. Kế hoạch của tôi hoàn hảo chứ?",
-      "type": "dialogue",
-      "name": "PM"
+      "name": "Thủ Tướng",
+      "color": "#9a8c7a",
+      "text": "(Rút súng lục, gí vào đầu Mafuyu) Nhưng cô nên lo cho cái đầu mình trước đi. Kế hoạch của tao hoàn hảo chứ hả?"
     },
     {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Thủ Tướng",
+      "color": "#9a8c7a",
+      "text": "Tụi Nightcord tụi mày định làm phản đúng không? Giao cái USB đó ra đây trước khi tao bắn nát sọ mày!"
+    },
+    {
+      "type": "dialogue",
       "speaker": "left",
-      "text": "Ngươi nghĩ ta không biết gì sao?",
-      "type": "dialogue",
-      "name": "Mafuyu"
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Dửng dưng nhìn nòng súng đang gí sát đầu mình) Ngài tưởng tôi không biết gì sao?"
     },
     {
+      "type": "narrator",
+      "text": "(Ngay lúc đó, Ena xuất hiện, đứng chắn giữa làn đường.)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Nhếch mép, giọng đều đều) Phía trước có người chắn đường. Tôi nhắc lại, phía trước có người chắn đường."
+    },
+    {
+      "type": "dialogue",
       "speaker": "left",
-      "text": "(Chặn đầu xe) Đứng lại! (Đoàng! Đoàng!)",
-      "type": "dialogue",
-      "name": "Ena"
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Tài xế, đâm chết nó luôn đi."
     },
     {
-      "speaker": "right",
-      "text": "Chà, tới lúc trổ tài rồi! Bám chặt vào nhé!",
       "type": "dialogue",
-      "name": "Mizuki"
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Tuân lệnh sếp lớn! Chà, tới lúc trổ tài rồi! Bám chắc vào nhé!"
     },
     {
-      "speaker": "right",
-      "text": "Cái quái gì vậy?! Lốp xe bị bắn thủng rồi!",
+      "type": "narrator",
+      "text": "(Chiếc limousine tăng tốc lao thẳng về phía Ena. Cách cô chưa đầy mười mét, Mizuki vẫn không chịu nhả chân ga.)"
+    },
+    {
       "type": "dialogue",
-      "name": "PM"
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Chặn đầu xe, nhả liền hai phát vào bánh trước) Đứng lại, lão béo! (Đoàng! Đoàng!)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Thủ Tướng",
+      "color": "#9a8c7a",
+      "text": "Cái quái gì vậy?! Lốp xe bị bắn thủng rồi! Thằng tài xế kia, mày làm cái quái gì thế hả?!"
+    },
+    {
+      "type": "narrator",
+      "text": "(Chiếc xe mất lái, xé toạc hàng rào chắn, lao khỏi cao tốc rồi rơi xuống bãi cỏ công viên ven biển bên dưới.)"
     }
   ]
 }

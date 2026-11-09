@@ -5,21 +5,53 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ngồi ru rú ở đây mãi sắp mốc người rồi. Mấy cô không thấy ngột ngạt à?"
+      "text": "Chán chết đi được. Ngồi ru rú ở đây mãi sắp mốc cả người rồi..."
     },
     {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mafuyu",
-      "color": "#665588",
-      "text": "Nếu rảnh thì đi lau súng hoặc xuống phòng tập đi."
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Vặn vẹo cái cổ, tay xoa xoa cái gáy còn ê ẩm)"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Xin kiếu. Tôi ra ngoài hóng gió đây."
+      "text": "Mày đợi đấy con nhãi... tao sẽ vặt cổ mày... Cả cái bà sếp điên kia nữa..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Cô vừa nói gì cơ, Ena-chan?"
+    },
+    {
+      "type": "narrator",
+      "text": "Mafuyu bỗng xuất hiện sau lưng Ena với nụ cười tươi hơn bình thường. Mặt Ena không còn giọt máu."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Dạ... đâu có! Em khen sếp dạo này da đẹp quá, con bé lính mới thì lanh lẹ dễ thương!"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Trong này bí bức quá, em ra ngoài hít khí trời tí đây!"
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "(Vớ đại cái áo khoác trên sào mặc vào)"
     }
   ],
   "ena_talk_ichika": [
@@ -28,7 +60,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Nhìn cái gì? Ra chỗ khác đi, đừng làm vướng chân tôi."
+      "text": "Nhìn cái gì hả con ranh? Đừng tưởng tao quên vụ sáng nay. Cút ra chỗ khác đi, đồ mít ướt."
     }
   ],
   "talk_kanade_post_ena": [
@@ -37,7 +69,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Này Kanade, xem có món nào mới không. Tôi đang ngứa tay lắm rồi."
+      "text": "Này Kanade, có món đồ chơi nào mới không? Tớ đang ngứa tay lắm rồi."
     }
   ],
   "talk_mafuyu_post_ena": [
@@ -46,7 +78,7 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Sao? Muốn so găng không? Tới luôn đi, còn đỡ chán hơn phải nhìn cái bản mặt lạnh tanh của cô."
+      "text": "Sếp... em... em chỉ muốn hỏi xem có chỗ nào để tập luyện thôi! Không có ý gì khác đâu, thật đấy!"
     }
   ],
   "ena_invite_mizuki": [
@@ -55,148 +87,226 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Này Mizuki, ở đây chán quá. Đi làm ly cà phê không?"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mizuki",
-      "color": "#d8a4cc",
-      "text": "Chà chà, Ena nay chủ động rủ tôi đi chơi cơ đấy? Triển thôi!"
-    }
-  ],
-  "cafe_p1": [
-    {
-      "type": "narrator",
-      "text": "Tại một quán cà phê vắng vẻ..."
+      "text": "Đi lẹ Mizuki, đứng đây ngạt chết mất! Đi uống với tao!"
     },
     {
       "type": "action",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Chủ quán, cho thêm năm chai bia lạnh với hai đĩa sụn gà rang muối đi!"
+      "text": "(Túm cổ áo Mizuki kéo thẳng ra cửa chính)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Oái, Ena này, đừng mạnh tay như thế chứ... Mà cậu chủ động rủ tớ đi nhậu cơ đấy? Triển thôi!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ức... tức điên lên được... cái bà sếp đáng ghét... dám treo ngược tôi lên trần nhà..."
-    },
+      "text": "Nhiều lời quá. Đi mau không là chết người bây giờ đấy."
+    }
+  ],
+  "cafe_p1": [
     {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mizuki",
-      "color": "#d8a4cc",
-      "text": "Trời đất ơi, nhỏ tiếng lại giùm tôi cái đi cô."
-    },
-    {
-      "type": "dialogue",
-      "speaker": "right",
-      "name": "Mizuki",
-      "color": "#d8a4cc",
-      "text": "Sát thủ hàng đầu của Nightcord mà nát rượu thế này thì hỏng bét hình tượng mất. Người ta nhìn vào lại tưởng cô thất tình đấy."
+      "type": "narrator",
+      "text": "Chiều hôm đó, cái gọi là ra ngoài hít khí trời của Ena rốt cuộc lại dừng ở một quán nhậu bình dân cách căn cứ vài dãy phố. Mới hơn một tiếng, vỏ chai đã xếp kín nửa mặt bàn."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Kệ tôi... tôi phải uống cho trôi cục tức này... sếp cái gì mà... thiên vị con nhóc lính mới..."
+      "text": "Chú ơi, cho cháu thêm năm chai bia siêu lạnh với hai đĩa sụn gà rang muối với!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Này Ena, cô say quá rồi đấy."
+      "text": "Trời đất quỷ thần ơi, tém tém lại giùm tớ cái đi bà nội."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "*Lụm luôn ly bia trên tay Ena*"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Khoan đã... cô nghe thấy gì không?"
+      "text": "Sát thủ hàng đầu của Nightcord mà nốc rượu xỉn quắc cần câu thế này thì hỏng bét hình tượng. Người ta nhìn vào lại tưởng mấy con bợm nhậu thất tình."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Kệ tao... tao phải uống cho trôi cục tức này... sếp cái gì mà... thiên vị con nhãi ranh đó..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ai biểu hồi sáng cậu vô cớ đạp con bé rớt giường làm chi, sếp phạt vậy là còn nhẹ rồi đấy nhé!"
+    },
+    {
+      "type": "narrator",
+      "text": "Đang gắp sụn gà, Mizuki chợt nghe thấy tiếng thì thầm phát ra từ bàn đằng sau."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Giang Hồ A",
       "color": "#888888",
-      "text": "Lô C4 tuần sau tuồn qua ngả vịnh Tokyo chắc chắn chưa?"
+      "text": "Số C4 tuồn qua vịnh Tokyo xử lý xong hết chưa?"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Giang Hồ B",
       "color": "#888888",
-      "text": "Dọn dẹp sạch sẽ rồi. Chỉ việc ốp đống đồ chơi đó vào gầm xe của mấy gã nghị sĩ trong buổi họp ngày mười lăm thôi."
+      "text": "Vào vị trí hết rồi đấy. Tụi mình chỉ việc lắp đống đồ đó vào gầm xe của mấy lão nghị sĩ trong buổi họp quốc hội ngày mười lăm thôi."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Giang Hồ B",
+      "color": "#888888",
+      "text": "Lật đổ được cái chính phủ này thì tổ chức của chúng ta sẽ làm trùm cái đất Nhật Bản, tha hồ mà hốt bạc."
     },
     {
       "type": "action",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "*Mizuki lén bật bộ đàm mini ẩn dưới cổ áo*"
-    },
-    {
-      "type": "dialogue",
-      "speaker": "left",
-      "name": "Giang Hồ B",
-      "color": "#888888",
-      "text": "Lật đổ được cái đám mục nát đó, tổ chức của chúng ta sẽ làm trùm cái đất này, tha hồ hốt bạc."
+      "text": "*Nheo mắt, lén bấm nút bộ đàm trên bông tai*"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "(Thì thầm) Nghe rõ cả chứ Mafuyu? Hình như chúng ta vớ được mẻ cá lớn rồi này."
+      "text": "(Thì thầm) Mizuki đây. Sếp nghe rõ không ạ?"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "(Qua bộ đàm) Cứ để chúng nói tiếp. Xác nhận vị trí mục tiêu và tuyệt đối không được manh động."
+      "text": "(Qua bộ đàm) Rõ. Cứ để bộ đàm mở."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Bọn khốn... dám nổ tung chỗ này à... tao xiên chết mẹ tụi mày..."
+    },
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "*Lảo đảo vịn mép bàn đứng dậy, tay mò xuống khẩu súng lục bạc bên thắt lưng*"
     },
     {
       "type": "dialogue",
       "speaker": "right",
-      "name": "Ena",
-      "color": "#b86028",
-      "text": "Bọn khốn... dám tính nổ tung chỗ này à... tôi phải cho chúng một trận..."
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ngồi im đi cái con bợm nhậu này!"
     },
     {
       "type": "action",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "*Đè vai Ena xuống*"
+      "text": "*Bật dậy đè vai Ena xuống, bịt chặt miệng cô lại*"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Cô điên à! Chúng có hàng nóng đấy, nghe lệnh đi!"
-    }
-  ],
-  "cafe_choice_fight_mizuki": [
+      "text": "(Thì thầm) Chuyện là vậy đó sếp. Bọn kia tính đánh bom hết đại biểu quốc hội."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Qua bộ đàm) Được rồi. Phiền hai cô ở lại thêm để xác định vị trí sào huyệt của chúng. Tuyệt đối không được manh động."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "(Qua bộ đàm, kèm tiếng gõ phím lách cách) Hai người bám theo chúng ngay cho tôi."
+    },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Ưm... thả tôi ra... tôi phải dần cho chúng một trận..."
+      "text": "Bám cái đéo... bà sếp ác ma máu lạnh kia... tao thèm vào mà nghe lệnh mày..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Ena, cô say quá rồi đấy! Tôi buộc phải mạnh tay thôi!"
+      "text": "Trời đất ơi cái loa phát thanh này, bớt gáy lại giùm cái!"
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "*Nhét quả dưa chuột trên đĩa vào miệng Ena*"
+    },
+    {
+      "type": "narrator",
+      "text": "Mizuki liếc vội sang bàn bên. Ba gã ngồi đó đã ngừng thì thầm, đang nhìn chằm chằm về phía hai cô gái."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Cậu điên à! Bọn kia có hàng nóng đấy, nghe lệnh sếp đi!"
+    }
+  ],
+  "cafe_choice_fight_mizuki": [
+    {
+      "type": "action",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "*Nhổ quả dưa chuột, giãy lên, vung tay đấm lung tung vào người Mizuki*"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "left",
+      "name": "Ena",
+      "color": "#b86028",
+      "text": "Ưm... thả tao ra... tao phải đâm nát sọ tụi nó..."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Ngồi im đi con bợm nhậu! Say thế này thì tớ buộc phải mạnh tay thôi!"
     }
   ],
   "cafe_choice_fight_thugs": [
@@ -212,14 +322,14 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Tránh ra! Mấy tên ranh này... một mình tôi lo đủ!"
+      "text": "Xê ra! Mấy thằng ranh này, một mình tao xiên hết!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Chết tiệt! Mafuyu, kế hoạch hỏng rồi!"
+      "text": "Chết tiệt! Sếp ơi, kế hoạch toang rồi!"
     }
   ],
   "cafe_mizuki_lost": [
@@ -228,28 +338,32 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Á... đau... cô dám đánh tôi à..."
+      "text": "Á... đau... mày dám đánh tao hả Mizuki..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Xin lỗi nhé Ena. Lát nữa tôi đền cho cô ly trà sữa."
+      "text": "Xin lỗi nhé Ena. Lát nữa tớ đền cho cậu ly trà sữa, được chưa?"
+    },
+    {
+      "type": "narrator",
+      "text": "Hai gã ở bàn bên thấy hai cô gái ẩu đả ầm ĩ liền sợ lộ chuyện, vội vã bỏ dở bữa nhậu chuồn mất. Mizuki tranh thủ búng hai con chip định vị kiêm nghe lén dính vào áo hai tên đó."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "(Qua bộ đàm) Bọn chúng rút hết rồi. Tôi đã khống chế được tên bợm nhậu này, giờ tôi sẽ đưa cô ấy về."
+      "text": "(Qua bộ đàm) Bọn chúng rút hết rồi. Tớ đã khống chế được con bợm nhậu này, giờ tớ sẽ đưa cậu ấy về."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "(Qua bộ đàm) Vác cái xác say xỉn đó về đây."
+      "text": "(Qua bộ đàm) Vác cái xác say xỉn đó về đây cho tôi."
     }
   ],
   "cafe_mizuki_won": [
@@ -258,14 +372,14 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Haha! Cô yếu quá Mizuki ạ! Cản sao nổi tôi!"
+      "text": "Haha! Mày yếu quá Mizuki ạ! Cản sao nổi tao!"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "(Qua bộ đàm) Mafuyu, mau phái người đến hỗ trợ tôi đi!"
+      "text": "(Qua bộ đàm) Sếp ơi, con bợm nhậu này hóa bò điên rồi! Mau phái người đến hỗ trợ tớ với!"
     }
   ],
   "cafe_thugs_lost": [
@@ -292,28 +406,28 @@
     },
     {
       "type": "narrator",
-      "text": "Mizuki vội vàng đứng ra giải vây trước khi mọi chuyện đi quá xa."
+      "text": "Mizuki vội vàng lao ra giải vây trước khi mọi chuyện đi quá xa."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Hức... cô can thiệp trễ quá đấy Mizuki..."
+      "text": "Hức... cậu can thiệp trễ quá đấy Mizuki..."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "(Qua bộ đàm) Gắn máy theo dõi và thiết bị nghe lén vào người chúng đi Mizuki."
+      "text": "(Qua bộ đàm) Gắn máy theo dõi và thiết bị nghe lén vào người chúng đi, Mizuki."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
       "color": "#d8a4cc",
-      "text": "Chết tiệt! Sao cô không nói sớm..."
+      "text": "Chết tiệt! Sao sếp không nói sớm..."
     }
   ],
   "cafe_thugs_won": [
@@ -322,14 +436,14 @@
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Haha! Mấy tên ranh con...! Tôi chấp hết...!!!"
+      "text": "Haha! Mấy tên ranh con...! Tao chấp hết...!!!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ena",
       "color": "#b86028",
-      "text": "Mafuyu... cô thấy tôi làm tốt không?! Cần gì phải... rình rập cho mất công!"
+      "text": "Sếp... sếp thấy chưa?! Em làm tốt không hả?! Cần gì phải... rình rập cho mất công!"
     },
     {
       "type": "dialogue",
@@ -350,7 +464,7 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "(Qua bộ đàm) Trói chúng lại. Xong việc thì về căn cứ. Tôi sẽ tính sổ với cô sau."
+      "text": "(Qua bộ đàm) Trói chúng lại. Xong việc thì về căn cứ. Tôi sẽ tính sổ với cô sau, Ena-chan."
     }
   ]
 }

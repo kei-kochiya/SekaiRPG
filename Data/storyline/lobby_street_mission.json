@@ -5,49 +5,63 @@
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Ichika, Mizuki. Hai cô qua đây một lát."
+      "text": "Ichika, Mizuki. Hai người qua đây một lát."
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Dạ, có lệnh gì mới sao chị Mafuyu?"
+      "text": "Dạ, có lệnh gì mới sao sếp?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Ái chà, sếp gọi có chuyện gì đây? Lại có con mồi mới cho bọn tôi hả?"
+      "color": "#d8a4cc",
+      "text": "Ái chà, sếp gọi cả hai đứa tụi tớ luôn, lại có kèo thơm gì đây?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Đúng. Nguồn tin tình báo cho biết có một nhóm vũ trang lạ mặt đang tụ tập ở khu phố mua sắm phía Tây."
+      "text": "Từ mấy gã ở quán nhậu, tôi lần ra một nhóm vũ trang lạ mặt đang tụ tập ở khu phố mua sắm phía Tây. Có vẻ chúng chính là đám tuồn C4 qua vịnh Tokyo."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mafuyu",
       "color": "#665588",
-      "text": "Trang bị của chúng rất hạng nặng, giống bọn khủng bố. Tôi cần hai cô đến đó do thám và đánh giá mức độ rủi ro."
+      "text": "Trang bị của chúng rất hạng nặng, giống bọn khủng bố. Tôi cần hai người đến đó thám thính và đánh giá mức độ rủi ro. Chỉ thám thính, tuyệt đối không được manh động."
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mafuyu",
+      "color": "#665588",
+      "text": "Mizuki. Bộ đàm phải để mở suốt, nghe rõ chưa?"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Dạ rõ, tớ biết rồi mà sếp~"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Vâng, em rõ rồi. Em và chị Mizuki sẽ đi ngay."
+      "text": "Vâng, em rõ rồi ạ. Em và chị Mizuki sẽ đi ngay."
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Rõ rồi sếp! Nào, đi dạo phố thôi Ichika~"
+      "color": "#d8a4cc",
+      "text": "Rõ rồi sếp! Nào, đi dạo phố thôi lính mới~"
     }
   ],
   "lobby_street_mission_ready_mizuki": [
@@ -55,28 +69,42 @@
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Ichika! Cô chuẩn bị đồ đạc xong chưa? Xong xuôi thì mình vút luôn nhé!"
+      "color": "#d8a4cc",
+      "text": "Lính mới, chuẩn bị đồ nghề xong chưa? Xong xuôi thì mình vút luôn nhé!"
     },
     {
       "type": "dialogue",
       "speaker": "left",
       "name": "Ichika",
       "color": "#4a9e9e",
-      "text": "Em sẵn sàng rồi, đi thôi chị Mizuki!"
+      "text": "Em sẵn sàng rồi. Mình lấy xe ở đâu thế chị Mizuki... à không, Mizuki?"
     },
     {
       "type": "dialogue",
       "speaker": "right",
       "name": "Mizuki",
-      "color": "#e0a0c0",
-      "text": "Okela! Cửa chính thẳng tiến đến Khu phố Tây nào!"
+      "color": "#d8a4cc",
+      "text": "Đã bảo là cứ gọi bình thường cho thoải mái mà, ở đây không ai câu nệ tuổi tác đâu."
+    },
+    {
+      "type": "action",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "(Xoay xoay chìa khóa xe trên đầu ngón tay)"
+    },
+    {
+      "type": "dialogue",
+      "speaker": "right",
+      "name": "Mizuki",
+      "color": "#d8a4cc",
+      "text": "Xe riêng của tớ. Nào, cửa chính thẳng tiến đến khu phố Tây thôi!"
     }
   ],
   "lobby_street_mission_not_ready": [
     {
       "type": "narrator",
-      "text": "Bạn cần nói chuyện với Mizuki để xác nhận sẵn sàng lên đường thám thính trước khi ra ngoài."
+      "text": "Mizuki vẫn đang xoay chìa khóa xe chờ ở góc phòng. Nên nói chuyện với cô ấy để xác nhận sẵn sàng thám thính trước khi ra ngoài."
     }
   ]
 }
