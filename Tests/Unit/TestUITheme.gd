@@ -5,6 +5,7 @@ Tóm tắt: Bảo vệ design token của UITheme (tương phản chữ/nền, t
 """
 
 const MIN_CONTRAST = 4.5
+const MIN_NON_TEXT_CONTRAST = 3.0
 
 func _luminance(c: Color) -> float:
 	var f = func(v: float) -> float: return v / 12.92 if v <= 0.03928 else pow((v + 0.055) / 1.055, 2.4)
@@ -29,6 +30,27 @@ func test_text_contrast_on_surfaces():
 func test_button_text_contrast():
 	assert_gt(_contrast(UITheme.TEXT_ON_ACCENT, UITheme.ACCENT), MIN_CONTRAST, "Primary button text readable")
 	assert_gt(_contrast(UITheme.TEXT, UITheme.DANGER), MIN_CONTRAST - 0.001, "Danger button text readable")
+
+# Ô nhập, công tắc, ô tích, thanh trượt: viền/rãnh là phần tử không phải chữ nên cần >= 3:1 (WCAG 1.4.11)
+func test_control_edges_meet_non_text_contrast():
+	var surfaces = {"INK_900": UITheme.INK_900, "INK_800": UITheme.INK_800, "INK_700": UITheme.INK_700}
+	for s_name in surfaces:
+		assert_gt(_contrast(UITheme.CONTROL_EDGE, surfaces[s_name]), MIN_NON_TEXT_CONTRAST - 0.001, "CONTROL_EDGE on %s" % s_name)
+	# Núm công tắc (tắt) phải tách khỏi rãnh CONTROL_EDGE
+	assert_gt(_contrast(UITheme.TEXT, UITheme.CONTROL_EDGE), MIN_NON_TEXT_CONTRAST, "Switch knob stands out from the off track")
+
+# Tuỳ chọn "Giảm rung màn hình": rung và hit-stop không được chạy khi bật
+func test_reduce_motion_disables_shake_and_hitstop():
+	var shaker := ScreenShake.new()
+	GameManager.reduce_motion = true
+	shaker.shake(8.0, 0.3)
+	assert_eq(shaker.shake_timer, 0.0, "shake() does nothing with reduce_motion on")
+	shaker.hitstop(0.1)
+	assert_eq(Engine.time_scale, 1.0, "hitstop() leaves time_scale alone with reduce_motion on")
+	GameManager.reduce_motion = false
+	shaker.shake(8.0, 0.3)
+	assert_gt(shaker.shake_timer, 0.0, "shake() runs again with reduce_motion off")
+	shaker.free()
 
 func test_element_colors_cover_type_chart():
 	for element in TypeChart.chart:

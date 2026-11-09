@@ -16,6 +16,9 @@ const INK_800 := Color("161c24") # panel
 const INK_700 := Color("1f2731") # control / vùng lõm
 const INK_600 := Color("2c3744") # viền
 const INK_500 := Color("455364") # viền nhấn / disabled
+# Viền của ô nhập, công tắc, ô tích và rãnh thanh trượt: phần tử không phải chữ cần >= 3:1 so với nền (WCAG 1.4.11).
+# INK_600 chỉ 1.4:1 và INK_500 chỉ 2.2:1 trên INK_800, nên dùng riêng một bậc sáng hơn.
+const CONTROL_EDGE := Color("6b7888")
 
 # ── Màu: chữ ───────────────────────────────────────────────────────────────
 const TEXT := Color("eef1f5")
@@ -281,7 +284,7 @@ static func switch_icon(on: bool, disabled: bool = false) -> ImageTexture:
 	var h := 24
 	var img := Image.create(w, h, false, Image.FORMAT_RGBA8)
 	var r := h / 2.0
-	var track := ACCENT if on else INK_500
+	var track := ACCENT if on else CONTROL_EDGE
 	var knob := TEXT_ON_ACCENT if on else TEXT
 	if disabled:
 		track = INK_600
@@ -300,7 +303,7 @@ static func checkbox_icon(checked: bool, disabled: bool = false) -> ImageTexture
 	var n := 22
 	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
 	var fill := ACCENT if checked else INK_900
-	var border := ACCENT if checked else INK_500
+	var border := ACCENT if checked else CONTROL_EDGE
 	if disabled:
 		fill = INK_800
 		border = INK_600
@@ -365,7 +368,7 @@ static func make_theme() -> Theme:
 	t.set_color("font_color", "ProgressBar", TEXT)
 
 	# Input
-	var field := box(INK_900, INK_600, RADIUS_SM, SP_3, SP_2)
+	var field := box(INK_900, CONTROL_EDGE, RADIUS_SM, SP_3, SP_2)
 	var field_focus := box(INK_900, ACCENT, RADIUS_SM, SP_3, SP_2, 2)
 	t.set_stylebox("normal", "LineEdit", field)
 	t.set_stylebox("focus", "LineEdit", field_focus)
@@ -392,7 +395,7 @@ static func make_theme() -> Theme:
 	t.set_icon("unchecked_disabled", "CheckBox", checkbox_icon(false, true))
 
 	# Slider
-	t.set_stylebox("slider", "HSlider", box(INK_900, INK_600, RADIUS_SM, 0, 3))
+	t.set_stylebox("slider", "HSlider", box(INK_900, CONTROL_EDGE, RADIUS_SM, 0, 3))
 	t.set_stylebox("grabber_area", "HSlider", box(ACCENT, Color.TRANSPARENT, RADIUS_SM, 0, 3))
 	t.set_stylebox("grabber_area_highlight", "HSlider", box(ACCENT_HOVER, Color.TRANSPARENT, RADIUS_SM, 0, 3))
 

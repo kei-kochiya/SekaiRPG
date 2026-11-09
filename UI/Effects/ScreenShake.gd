@@ -38,6 +38,8 @@ func shake(intensity: float = 5.0, duration: float = 0.2):
 		duration (float): Thời gian rung (giây).
 	Returns: Không có
 	"""
+	if GameManager.reduce_motion:
+		return
 	shake_intensity = intensity
 	shake_timer = duration
 	set_process(true)
@@ -50,6 +52,8 @@ func hitstop(duration: float = 0.1):
 		duration (float): Thời gian dừng (giây thực tế).
 	Returns: Không có
 	"""
+	if GameManager.reduce_motion:
+		return
 	Engine.time_scale = 0.05
 	await get_tree().create_timer(duration, true, false, true).timeout
 	Engine.time_scale = 1.0

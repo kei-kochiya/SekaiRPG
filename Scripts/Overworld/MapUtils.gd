@@ -58,6 +58,17 @@ static func create_character_sprite(c_name: String, direction: String = "down") 
 	sprite.position = Vector2(0, -16)
 	return sprite
 
+# Nhãn trong thế giới (tên NPC, tên khu, bảng hiệu): chữ >= FS_CAPTION, viền tối để đọc được trên mọi nền.
+# Màu tối (Mafuyu, PrimeMinister...) được làm sáng lên vì viền INK_900 sẽ nuốt mất chữ tối.
+# Nhãn được căn giữa quanh gốc node cha, mép trên cách gốc `y` px (âm = phía trên).
+static func make_world_label(text: String, color: Color = UITheme.TEXT, y: float = -52.0) -> Label:
+	var fg := color if color.get_luminance() >= 0.4 else color.lightened(0.55)
+	var lbl := UITheme.make_label(text, UITheme.FS_CAPTION, fg)
+	lbl.add_theme_color_override("font_outline_color", UITheme.INK_900)
+	lbl.add_theme_constant_override("outline_size", 4)
+	lbl.position = Vector2(-lbl.get_minimum_size().x / 2.0, y)
+	return lbl
+
 static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2, color: Color):
 	var root = Node2D.new()
 	root.position = grid_pos * TILE_SIZE
@@ -79,12 +90,8 @@ static func create_dummy_char(parent: Node2D, p_name: String, grid_pos: Vector2,
 			vis.color = color
 			root.add_child(vis)
 	
-	var lbl = UITheme.make_label(p_name, UITheme.FS_CAPTION, color)
-	lbl.add_theme_color_override("font_outline_color", UITheme.INK_900)
-	lbl.add_theme_constant_override("outline_size", 4)
-	lbl.position = Vector2(-lbl.get_minimum_size().x / 2.0, -48)
-	root.add_child(lbl)
-	
+	root.add_child(make_world_label(p_name, color))
+
 	parent.add_child(root)
 
 static func create_visual_npc(parent: Node2D, npc_name: String, pos: Vector2, color: Color):

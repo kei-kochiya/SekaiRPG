@@ -260,9 +260,6 @@ func _npc(p_name: String, grid_pos: Vector2, color: Color, sprite_file: String =
 		sp.position = Vector2(0, -16)
 		node.add_child(sp)
 		node.move_child(sp, 0)
-	for c in node.get_children():
-		if c is Label and color.get_luminance() < 0.4:
-			c.add_theme_color_override("font_color", color.lightened(0.55)) # nhãn tối (Mafuyu) khó đọc trên nền đêm
 	if not _npcs.has(p_name):
 		_npcs[p_name] = node
 	return node

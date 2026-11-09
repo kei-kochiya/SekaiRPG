@@ -180,9 +180,10 @@ func _build_map():
 	_place_tile("door_1.png", Vector2(24, 20), false)
 	
 	_add_room_label("Khu Nghỉ Ngơi", Vector2(24, 4))
-	_add_room_label("Phòng Mafuyu", Vector2(11, 12))
-	_add_room_label("Sảnh Chính", Vector2(24, 12))
-	_add_room_label("Phòng Ăn", Vector2(37, 12))
+	# Ba phòng dưới: để bảng tên ở hàng sát tường dưới (hàng 19) vì NPC luôn đứng ở hàng 11-17, tên không bị sprite đè
+	_add_room_label("Phòng Mafuyu", Vector2(11, 19))
+	_add_room_label("Sảnh Chính", Vector2(24, 19))
+	_add_room_label("Phòng Ăn", Vector2(37, 19))
 	
 	_place_indoor_assets()
 
@@ -233,12 +234,7 @@ func _create_npc(npc_name: String, pos: Vector2, color: Color):
 		vis.color = color
 		root.add_child(vis)
 	
-	var lbl = Label.new()
-	lbl.text = npc_name
-	lbl.add_theme_color_override("font_color", color)
-	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.position = Vector2(-20, -42)
-	root.add_child(lbl)
+	root.add_child(MapUtils.make_world_label(npc_name, color))
 	
 	var zone = InteractableZone.new()
 	zone.prompt_text = "Nói chuyện với " + npc_name
@@ -348,12 +344,7 @@ func _spawn_shop_and_sim():
 		shop_vis.position = Vector2(0, -10)
 	shop_root.add_child(shop_vis)
 	
-	var shop_lbl = Label.new()
-	shop_lbl.text = "Cửa Hàng (Shop)"
-	shop_lbl.add_theme_font_size_override("font_size", 9)
-	shop_lbl.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
-	shop_lbl.position = Vector2(-36, -34)
-	shop_root.add_child(shop_lbl)
+	shop_root.add_child(MapUtils.make_world_label("Cửa Hàng", UITheme.ACCENT, -48.0))
 	
 	var shop_zone = InteractableZone.new()
 	shop_zone.prompt_text = "Mở Cửa Hàng (Shop)"
@@ -379,12 +370,7 @@ func _spawn_shop_and_sim():
 	sim_vis.color = Color(0.2, 0.8, 1.0)
 	sim_root.add_child(sim_vis)
 	
-	var sim_lbl = Label.new()
-	sim_lbl.text = "Holo-Sim (Leo Tháp)"
-	sim_lbl.add_theme_font_size_override("font_size", 9)
-	sim_lbl.add_theme_color_override("font_color", Color(0.3, 0.9, 1.0))
-	sim_lbl.position = Vector2(-46, -42)
-	sim_root.add_child(sim_lbl)
+	sim_root.add_child(MapUtils.make_world_label("Holo-Sim (Leo Tháp)", UITheme.BREAK, -48.0))
 	
 	var sim_zone = InteractableZone.new()
 	sim_zone.prompt_text = "Máy Mô Phỏng Holo-Sim"
@@ -472,9 +458,7 @@ func _remove_wall_at(grid_pos: Vector2):
 	_place_tile("floor.png", grid_pos, false)
 
 func _add_room_label(text: String, grid_pos: Vector2):
-	var lbl := Label.new()
-	lbl.text = text
-	lbl.add_theme_font_size_override("font_size", 12)
-	lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.4))
-	lbl.position = grid_pos * TILE_SIZE - Vector2(40, 0)
+	# Bảng tên khu: căn giữa theo ô, chữ xám xanh đặc (không mờ 40% như trước) để vẫn đọc được trên sàn tối
+	var lbl := MapUtils.make_world_label(text, UITheme.TEXT_MUTED, 0.0)
+	lbl.position += grid_pos * TILE_SIZE
 	add_child(lbl)

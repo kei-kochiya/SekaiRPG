@@ -61,6 +61,9 @@ var master_volume: float = 1.0:
 var skip_battle_unlocked: bool = false
 var skip_battle_enabled: bool = false
 
+# Tắt rung màn hình và dừng hình (hit-stop) khi đánh trúng; người chơi dễ say hoặc nhạy với chuyển động dùng tuỳ chọn này.
+var reduce_motion: bool = false
+
 # ── Kinh Tế & Túi Đồ (Economy & Inventory) ─────────────────────────────────
 const DEFAULT_CREDITS := 200
 const DEFAULT_INVENTORY := {

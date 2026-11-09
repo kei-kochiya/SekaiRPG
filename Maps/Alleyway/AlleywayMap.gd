@@ -82,11 +82,7 @@ func _spawn_honami():
 		vis.color = Color(0.5, 0.35, 0.25)
 		root.add_child(vis)
 	
-	var lbl = Label.new()
-	lbl.text = "Honami"
-	lbl.add_theme_font_size_override("font_size", 10)
-	lbl.position = Vector2(-20, -42)
-	root.add_child(lbl)
+	root.add_child(MapUtils.make_world_label("Honami"))
 	
 	_map_root.add_child(root)
 

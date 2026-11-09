@@ -176,6 +176,11 @@ func _build_options_vbox(from_main_menu: bool):
 	)
 	vbox.add_child(_option_row("Chiến đấu nhanh", check))
 
+	var check_motion = CheckButton.new()
+	check_motion.button_pressed = GameManager.reduce_motion
+	check_motion.toggled.connect(func(pressed): GameManager.reduce_motion = pressed)
+	vbox.add_child(_option_row("Giảm rung màn hình", check_motion))
+
 	var v_vol = VBoxContainer.new()
 	vbox.add_child(v_vol)
 	var lbl_vol = UITheme.make_label("Âm lượng tổng: %d%%" % int(GameManager.master_volume * 100), UITheme.FS_LABEL)

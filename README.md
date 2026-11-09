@@ -76,7 +76,7 @@ All styling comes from `UI/UITheme.gd`: colour tokens (tinted neutrals, one ambe
 godot --headless --path . --script res://Scripts/Editor/BuildTheme.gd
 ```
 
-Rules the screens follow: one primary action per screen, no text under 14 px, 48 px minimum touch targets, text contrast of at least 4.5:1 (checked by `TestUITheme`), visible hover/focus/disabled states.
+Rules the screens follow: one primary action per screen, no text under 14 px, 48 px minimum touch targets, text contrast of at least 4.5:1 and input/toggle edges of at least 3:1 (`UITheme.CONTROL_EDGE`; both checked by `TestUITheme`), visible hover/focus/disabled states. In-world labels (NPC names, room signs) go through `MapUtils.make_world_label`. Options → "Giảm rung màn hình" turns off screen shake and hit-stop.
 
 ## Editor tooling (MCP)
 
