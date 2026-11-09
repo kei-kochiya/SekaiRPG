@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_07_morning_cafe"
 quest_name = "Buổi sáng hỗn loạn & Sự kiện Quán Cafe"
-arc_name = "Character Arc (Ena & Mizuki)"
 description = "Sáng hôm sau, Ena bị trói phạt và được tha sau khi đồng ý cùng Mizuki đi giải trí ở Quán Cafe. Tại đây diễn ra vụ ẩu đả với côn đồ đường phố và màn đọ sức giữa Ena và Mizuki."
 linked_map_scene = "res://Maps/Cafe/CafeMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/PostHarborMorningStage.gd"

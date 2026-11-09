@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_12_bounty"
 quest_name = "Tiền Thưởng"
-arc_name = "Hồi Kết 2: Dạ Khúc Tàn"
 description = "Ena nhận các hợp đồng truy sát để xả giận. Hai mục tiêu đầu ngã xuống dưới tay cô, nhưng ở mục tiêu thứ ba, đội Cảnh sát Quốc tế ập vào phục kích."
 linked_map_scene = "res://Maps/Bounty/BountyMap.tscn"
 entry_stage_script = ""

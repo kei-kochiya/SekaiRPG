@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_06_post_harbor"
 quest_name = "Báo cáo Bến Cảng & Mizuki đối đầu Mafuyu"
-arc_name = "Safehouse Hub"
 description = "Sau trận Bến Cảng, Mizuki trở về Safehouse nộp báo cáo trinh sát và xảy ra màn so tài nội bộ với Mafuyu để kiểm tra thực lực."
 linked_map_scene = "res://Maps/Base/BaseMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/PostHarborStage.gd"

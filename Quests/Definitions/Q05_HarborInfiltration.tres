@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_05_harbor"
 quest_name = "Thâm nhập Bến Cảng & Boss Đội Trưởng"
-arc_name = "Mid-game (Nhiệm vụ chính)"
 description = "Ichika và Ena thâm nhập Bến cảng, vượt qua lính gác và đối đầu Đội Trưởng. Trận chiến 3 giai đoạn kịch tính với sự cứu viện của Mafuyu và Honami."
 linked_map_scene = "res://Maps/Harbor/HarborMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/PostWarehouseStage.gd"

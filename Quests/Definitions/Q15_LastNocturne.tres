@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_15_last_nocturne"
 quest_name = "Dạ Khúc Cuối"
-arc_name = "Hồi Kết 2: Dạ Khúc Tàn"
 description = "Honami đưa Ichika về nhà. Ichika chọn giữa luyện tập cùng Honami (không giới hạn) hoặc đối đầu Mafuyu, người mạnh đúng bằng những gì đã được dồn vào cô ta. Trận cuối: Ichika và Honami đấu Mafuyu."
 linked_map_scene = "res://Maps/HonamiHouse/HonamiHouseMap.tscn"
 entry_stage_script = ""

@@ -45,20 +45,6 @@ func _input(event):
 		get_viewport().set_input_as_handled()
 		_close()
 
-func display_skill(skill: Dictionary):
-	"""
-	Cập nhật nội dung và hiển thị bảng chi tiết kỹ năng.
-	"""
-	_reset("Chi tiết kỹ năng")
-
-	# Nội dung tên chiêu
-	_content_vbox.add_child(UITheme.make_label(skill["name"], UITheme.FS_HEADING, UITheme.ACCENT))
-
-	# Nội dung mô tả chi tiết (scaling, effects)
-	_content_vbox.add_child(_make_details(skill.get("details", "Không có thông tin chi tiết."), UITheme.FS_LABEL))
-
-	_open()
-
 func display_entity_skills(entity: Entity):
 	"""
 	Hiển thị toàn bộ danh sách kỹ năng của một thực thể.

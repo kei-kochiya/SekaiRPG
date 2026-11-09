@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_02_safehouse_intro"
 quest_name = "Căn cứ Nightcord & Nhận nhiệm vụ Nhà Kho"
-arc_name = "Safehouse Hub"
 description = "Ichika tỉnh lại tại căn cứ Safehouse, gặp gỡ và chào hỏi các thành viên Nightcord (Mafuyu, Ena, Kanade, Mizuki). Kanade giao nhiệm vụ đầu tiên: đi dọn dẹp nhà kho bỏ hoang đang bị quấy rối."
 linked_map_scene = "res://Maps/Base/BaseMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/IntroStage.gd"

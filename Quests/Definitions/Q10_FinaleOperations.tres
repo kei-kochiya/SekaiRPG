@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_10_finale"
 quest_name = "Chiến dịch Thủ Tướng & Trận chiến Xa Lộ"
-arc_name = "Finale Arc (Hồi kết)"
 description = "Nhóm thực hiện 4 nhánh tác chiến phối hợp tại Cơ quan Quốc phòng và cầu vịnh Tokyo (Kanade, Ena, Ichika, Honami), đuổi theo đoàn xe áp giải và bước vào trận tử chiến Boss cuối cùng với Thủ Tướng trên Xa lộ."
 linked_map_scene = "res://Maps/Highway/HighwayMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/HonamiHouseUnlockedStage.gd"

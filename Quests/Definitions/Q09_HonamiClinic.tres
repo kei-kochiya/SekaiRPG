@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_09_honami_clinic"
 quest_name = "Căn cứ bị đột kích & Phòng khám Honami"
-arc_name = "Safehouse Hub / Hub phụ"
 description = "Căn cứ Safehouse bị Honami đột nhập thăm dò. Sau khi đối thoại hòa giải, nhóm mở khóa phòng khám tư nhân của Honami (Hub thứ 2), mở khóa tập luyện cùng Honami và kết nối kế hoạch vạch trần âm mưu Thủ Tướng."
 linked_map_scene = "res://Maps/HonamiHouse/HonamiHouseMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/PostStreetStage.gd"

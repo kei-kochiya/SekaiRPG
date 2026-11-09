@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_08_street_ambush"
 quest_name = "Phục kích Ngã tư & Cuộc chiến Sinh tồn"
-arc_name = "Main Quest (Street Ambush)"
 description = "Nhóm nhận lệnh tuần tra Ngã tư đường phố, bị quân khủng bố phục kích bao vây. Trải qua trận giao tranh ban đầu và màn sinh tồn cứu viện cảm xúc của Mafuyu."
 linked_map_scene = "res://Maps/Street/StreetMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/PostCafeStreetMissionStage.gd"

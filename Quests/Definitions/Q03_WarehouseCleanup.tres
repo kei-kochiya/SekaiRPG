@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_03_warehouse"
 quest_name = "Dọn dẹp Nhà Kho Bỏ Hoang"
-arc_name = "Mid-game (Nhiệm vụ phụ)"
 description = "Đội hình Ichika và Kanade tiến vào Nhà kho cũ, vượt qua 5 đợt công nhân nổi loạn/quái vật để giải phóng khu vực."
 linked_map_scene = "res://Maps/Warehouse/WarehouseMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/IntroStage.gd"

@@ -6,7 +6,6 @@
 script = ExtResource("1_quest")
 quest_id = "quest_14_mole"
 quest_name = "Kẻ Nằm Vùng"
-arc_name = "Hồi Kết 2: Dạ Khúc Tàn"
 description = "Mafuyu phát hiện Kanade là đặc vụ cảnh sát cài vào Nightcord và ra lệnh cho Mizuki và Ichika hạ cô. Ichika chết lặng, Mizuki bị giết; khi Kanade sắp ra tay với Ichika, thời gian như chậm lại và Ảnh Sát kết liễu Kanade."
 linked_map_scene = "res://Maps/Interrogation/InterrogationMap.tscn"
 entry_stage_script = "res://Maps/Base/Stages/RevealStage.gd"
