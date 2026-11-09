@@ -17,6 +17,36 @@ const CHARACTER_COLORS := {
 	"Honami": Color(1.0, 0.67, 0.53),
 }
 
+# Vùng tương tác hình tròn / chữ nhật (chưa gắn vào cây: người gọi tự add_child và nối `interacted`); thay cho cụm
+# InteractableZone + CollisionShape2D + Shape2D chép ở BaseMap, Kho, Phòng tập, Prologue, Phố, Rương...
+static func circle_zone(radius: float, prompt: String = "", pos: Vector2 = Vector2.ZERO) -> InteractableZone:
+	var shape := CircleShape2D.new()
+	shape.radius = radius
+	return _zone_with_shape(shape, prompt, pos)
+
+static func rect_zone(size: Vector2, prompt: String = "", pos: Vector2 = Vector2.ZERO) -> InteractableZone:
+	var shape := RectangleShape2D.new()
+	shape.size = size
+	return _zone_with_shape(shape, prompt, pos)
+
+static func _zone_with_shape(shape: Shape2D, prompt: String, pos: Vector2) -> InteractableZone:
+	var zone := InteractableZone.new()
+	if prompt != "":
+		zone.prompt_text = prompt
+	zone.position = pos
+	var col := CollisionShape2D.new()
+	col.shape = shape
+	zone.add_child(col)
+	return zone
+
+# Người chơi xuất hiện ở `default_pos`; OverworldPlayer tự nạp GameManager.last_player_position (nếu có) khi vào cây nên map không cần tự chọn
+# giữa hai vị trí như trước. Thay cho cụm OverworldPlayer.new() + if/else vị trí ở Bến Cảng, Nhà kho, Phòng tập.
+static func spawn_player(parent: Node2D, default_pos: Vector2) -> OverworldPlayer:
+	var player := OverworldPlayer.new()
+	player.position = default_pos
+	parent.add_child(player)
+	return player
+
 # Vật cản vô hình một ô lưới (thân tĩnh 32x32); thay cho khối StaticBody2D + CollisionShape2D chép ở nhiều map
 static func add_block(parent: Node2D, grid_pos: Vector2) -> StaticBody2D:
 	var body := StaticBody2D.new()

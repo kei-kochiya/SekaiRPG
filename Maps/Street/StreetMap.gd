@@ -115,14 +115,7 @@ func _place_characters():
 		add_child(player)
 		
 		# Thêm 1 exit zone để về Base
-		var exit = InteractableZone.new()
-		exit.position = Vector2(15 * TILE_SIZE, 13 * TILE_SIZE)
-		exit.prompt_text = "Rời khỏi đường phố"
-		var col = CollisionShape2D.new()
-		var rect = RectangleShape2D.new()
-		rect.size = Vector2(96, 32)
-		col.shape = rect
-		exit.add_child(col)
+		var exit = MapUtils.rect_zone(Vector2(96, 32), "Rời khỏi đường phố", Vector2(15 * TILE_SIZE, 13 * TILE_SIZE))
 		exit.interacted.connect(func():
 			var idx: int = await DialogueManager.ask(["[Trở về Nightcord]", "[Hủy]"])
 			if idx == 0:

@@ -59,13 +59,7 @@ func _build_house():
 	add_child(door)
 	
 	# Tạo InteractableZone cho cửa
-	var zone = InteractableZone.new()
-	zone.position = Vector2(15 * TILE_SIZE, 15 * TILE_SIZE)
-	var col = CollisionShape2D.new()
-	var rect = RectangleShape2D.new()
-	rect.size = Vector2(32, 32)
-	col.shape = rect
-	zone.add_child(col)
+	var zone = MapUtils.rect_zone(Vector2(32, 32), "", Vector2(15 * TILE_SIZE, 15 * TILE_SIZE))
 	zone.interacted.connect(func():
 		if _is_arc2():
 			# Hồi kết 2: không còn đường về Nightcord cũ
@@ -88,13 +82,7 @@ func _build_house():
 	# Spawn NPCs
 	var honami_pos = Vector2(15, 8)
 	MapUtils.create_dummy_char(self, "Honami", honami_pos, Color(0.5, 0.35, 0.25))
-	var honami_zone = InteractableZone.new()
-	honami_zone.position = honami_pos * TILE_SIZE
-	var honami_col = CollisionShape2D.new()
-	var honami_rect = RectangleShape2D.new()
-	honami_rect.size = Vector2(32, 32)
-	honami_col.shape = honami_rect
-	honami_zone.add_child(honami_col)
+	var honami_zone = MapUtils.rect_zone(Vector2(32, 32), "", honami_pos * TILE_SIZE)
 	honami_zone.interacted.connect(func(): _on_npc_interacted("Honami"))
 	add_child(honami_zone)
 	

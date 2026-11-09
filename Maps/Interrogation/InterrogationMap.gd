@@ -460,14 +460,7 @@ func _disc(pos: Vector2, radius: float, color: Color) -> void:
 	add_child(d)
 
 func _zone(pos: Vector2, radius: float, prompt: String, action: Callable) -> InteractableZone:
-	var zone := InteractableZone.new()
-	zone.position = pos
-	zone.prompt_text = prompt
-	var col := CollisionShape2D.new()
-	var shape := CircleShape2D.new()
-	shape.radius = radius
-	col.shape = shape
-	zone.add_child(col)
+	var zone := MapUtils.circle_zone(radius, prompt, pos)
 	zone.interacted.connect(action)
 	add_child(zone)
 	return zone

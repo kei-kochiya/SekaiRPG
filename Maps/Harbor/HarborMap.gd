@@ -87,13 +87,7 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 	
 	root.add_child(MapUtils.make_world_label(label, UITheme.TEXT, -70.0))
 	
-	var zone = InteractableZone.new()
-	zone.prompt_text = "Nhấn ENTER để chiến đấu"
-	var col = CollisionShape2D.new()
-	var shape = CircleShape2D.new()
-	shape.radius = 60
-	col.shape = shape
-	zone.add_child(col)
+	var zone = MapUtils.circle_zone(60, "Nhấn ENTER để chiến đấu")
 	root.add_child(zone)
 	
 	zone.interacted.connect(func():
@@ -118,12 +112,7 @@ func _create_trigger(pos: Vector2, label: String, route: String):
 	add_child(root)
 
 func _spawn_player():
-	var p = OverworldPlayer.new()
-	if GameManager.last_player_position == Vector2.ZERO:
-		p.position = Vector2(100, 350)
-	else:
-		p.position = GameManager.last_player_position
-	add_child(p)
+	MapUtils.spawn_player(self, Vector2(100, 350))
 
 func _build_mission_hud():
 	var canvas = CanvasLayer.new()

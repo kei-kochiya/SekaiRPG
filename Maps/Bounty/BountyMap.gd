@@ -364,14 +364,7 @@ func _rect(pos: Vector2, size: Vector2, color: Color) -> ColorRect:
 	return r
 
 func _zone(pos: Vector2, size: Vector2, prompt: String, action: Callable) -> void:
-	var zone := InteractableZone.new()
-	zone.position = pos
-	zone.prompt_text = prompt
-	var col := CollisionShape2D.new()
-	var shape := RectangleShape2D.new()
-	shape.size = size
-	col.shape = shape
-	zone.add_child(col)
+	var zone := MapUtils.rect_zone(size, prompt, pos)
 	zone.interacted.connect(action)
 	add_child(zone)
 

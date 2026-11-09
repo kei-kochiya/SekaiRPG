@@ -168,12 +168,7 @@ func _create_recruitable_npc(_npc_name: String, pos: Vector2, color: Color, line
 	static_body.add_child(col)
 	root.add_child(static_body)
 
-	var zone = InteractableZone.new()
-	var zone_col = CollisionShape2D.new()
-	var zone_shape = CircleShape2D.new()
-	zone_shape.radius = 40
-	zone_col.shape = zone_shape
-	zone.add_child(zone_col)
+	var zone = MapUtils.circle_zone(40)
 	root.add_child(zone)
 
 	zone.interacted.connect(func():

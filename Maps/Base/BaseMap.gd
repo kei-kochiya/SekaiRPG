@@ -249,13 +249,7 @@ func _create_npc(npc_name: String, pos: Vector2, color: Color):
 	
 	root.add_child(MapUtils.make_world_label(npc_name, color))
 	
-	var zone = InteractableZone.new()
-	zone.prompt_text = "Nói chuyện với " + npc_name
-	var zc = CollisionShape2D.new()
-	var zs = CircleShape2D.new()
-	zs.radius = 40
-	zc.shape = zs
-	zone.add_child(zc)
+	var zone = MapUtils.circle_zone(40, "Nói chuyện với " + npc_name)
 	root.add_child(zone)
 	
 	zone.interacted.connect(func():
@@ -289,14 +283,7 @@ func _spawn_player():
 	add_child(player)
 
 func _spawn_transitions():
-	var exit = InteractableZone.new()
-	exit.prompt_text = "Rời khỏi nhà"
-	exit.position = Vector2(24 * TILE_SIZE, 21 * TILE_SIZE)
-	var ecol = CollisionShape2D.new()
-	var erect = RectangleShape2D.new()
-	erect.size = Vector2(64, 32)
-	ecol.shape = erect
-	exit.add_child(ecol)
+	var exit = MapUtils.rect_zone(Vector2(64, 32), "Rời khỏi nhà", Vector2(24 * TILE_SIZE, 21 * TILE_SIZE))
 	add_child(exit)
 	exit.interacted.connect(_on_exit_interacted)
 
@@ -368,13 +355,7 @@ func _build_terminal(grid_pos: Vector2, visual: Node, label_text: String, label_
 	root.add_child(visual)
 	root.add_child(MapUtils.make_world_label(label_text, label_color, -48.0))
 	
-	var zone = InteractableZone.new()
-	zone.prompt_text = prompt
-	var zone_col = CollisionShape2D.new()
-	var zone_shape = CircleShape2D.new()
-	zone_shape.radius = 38.0
-	zone_col.shape = zone_shape
-	zone.add_child(zone_col)
+	var zone = MapUtils.circle_zone(38.0, prompt)
 	zone.interacted.connect(on_interact)
 	root.add_child(zone)
 	add_child(root)

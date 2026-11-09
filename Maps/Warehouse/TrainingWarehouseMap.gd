@@ -40,13 +40,8 @@ func _ready():
 		_complete_training()
 
 func _spawn_player():
-	var player = OverworldPlayer.new()
 	# Start near the door of the big training warehouse
-	if GameManager.last_player_position == Vector2.ZERO:
-		player.position = Vector2(15 * TILE_SIZE, 18 * TILE_SIZE)
-	else:
-		player.position = GameManager.last_player_position
-	add_child(player)
+	MapUtils.spawn_player(self, Vector2(15 * TILE_SIZE, 18 * TILE_SIZE))
 
 func _spawn_enemy_wave():
 	# Random position inside the room (Internal range: x[5, 25], y[5, 15])
@@ -84,13 +79,7 @@ func _create_enemy_zone(pos: Vector2):
 	sprite.position = Vector2(0, -16)
 	root.add_child(sprite)
 	
-	var zone = InteractableZone.new()
-	zone.prompt_text = "Nhấn ENTER để bắt đầu lượt tập (Wave " + str(GameManager.training_wave) + ")"
-	var zcol = CollisionShape2D.new()
-	var zsha = CircleShape2D.new()
-	zsha.radius = 40
-	zcol.shape = zsha
-	zone.add_child(zcol)
+	var zone = MapUtils.circle_zone(40, "Nhấn ENTER để bắt đầu lượt tập (Wave " + str(GameManager.training_wave) + ")")
 	root.add_child(zone)
 	
 	zone.interacted.connect(func():

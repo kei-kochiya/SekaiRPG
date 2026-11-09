@@ -48,13 +48,7 @@ func _setup_collision():
 	add_child(body)
 
 func _setup_interactable():
-	_zone = InteractableZone.new()
-	_zone.prompt_text = "Mở rương"
-	var col = CollisionShape2D.new()
-	var circle = CircleShape2D.new()
-	circle.radius = 38.0
-	col.shape = circle
-	_zone.add_child(col)
+	_zone = MapUtils.circle_zone(38.0, "Mở rương")
 	_zone.interacted.connect(_on_interacted)
 	add_child(_zone)
 

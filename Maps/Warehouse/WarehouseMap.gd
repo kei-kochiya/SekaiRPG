@@ -50,12 +50,7 @@ func _return_to_base_with_fade():
 	await GameManager.change_map(MapPaths.BASE, 1.5)
 
 func _spawn_player():
-	var p = OverworldPlayer.new()
-	if GameManager.last_player_position == Vector2.ZERO:
-		p.position = Vector2(10 * TILE_SIZE, 18 * TILE_SIZE)
-	else:
-		p.position = GameManager.last_player_position
-	add_child(p)
+	MapUtils.spawn_player(self, Vector2(10 * TILE_SIZE, 18 * TILE_SIZE))
 
 func _spawn_current_wave():
 	var x_coord = (GameManager.warehouse_wave * 10)
@@ -72,13 +67,7 @@ func _create_enemy_zone(pos: Vector2):
 	sprite.position = Vector2(0, -16)
 	root.add_child(sprite)
 	
-	var zone = InteractableZone.new()
-	zone.prompt_text = "Nhấn ENTER để bắt đầu Wave " + str(GameManager.warehouse_wave)
-	var col = CollisionShape2D.new()
-	var shape = CircleShape2D.new()
-	shape.radius = 40
-	col.shape = shape
-	zone.add_child(col)
+	var zone = MapUtils.circle_zone(40, "Nhấn ENTER để bắt đầu Wave " + str(GameManager.warehouse_wave))
 	root.add_child(zone)
 	
 	zone.interacted.connect(func():

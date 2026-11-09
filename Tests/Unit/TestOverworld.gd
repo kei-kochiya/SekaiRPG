@@ -113,3 +113,28 @@ func test_blocks_and_tiled_rectangles_cover_the_expected_cells():
 	parent.free()
 	area.free()
 	floor_only.free()
+
+func test_zone_and_player_factories():
+	var parent := Node2D.new()
+	var round_zone := MapUtils.circle_zone(40, "Nói chuyện", Vector2(64, 96))
+	var box_zone := MapUtils.rect_zone(Vector2(64, 32), "", Vector2(5, 6))
+	parent.add_child(round_zone)
+	parent.add_child(box_zone)
+	assert_eq(round_zone.prompt_text, "Nói chuyện", "Gợi ý được đặt")
+	assert_eq(round_zone.position, Vector2(64, 96), "Vị trí được đặt")
+	assert_eq(((round_zone.get_child(0) as CollisionShape2D).shape as CircleShape2D).radius, 40.0, "Bán kính vùng tròn")
+	assert_eq(box_zone.prompt_text, "Press ENTER", "Không truyền gợi ý thì giữ gợi ý mặc định")
+	assert_eq(((box_zone.get_child(0) as CollisionShape2D).shape as RectangleShape2D).size, Vector2(64, 32), "Kích thước vùng chữ nhật")
+
+	GameManager.reset_game()
+	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
+	root.add_child(parent)
+	GameManager.last_player_position = Vector2.ZERO
+	var fresh := MapUtils.spawn_player(parent, Vector2(320, 576))
+	assert_eq(fresh.position, Vector2(320, 576), "Không có vị trí lưu: xuất hiện ở vị trí mặc định")
+	GameManager.last_player_position = Vector2(128, 160)
+	var resumed := MapUtils.spawn_player(parent, Vector2(320, 576))
+	assert_eq(resumed.global_position, Vector2(128, 160), "Có vị trí lưu (vào lại map sau trận): OverworldPlayer tự nạp lại")
+	root.remove_child(parent)
+	parent.free()
+	GameManager.reset_game()
