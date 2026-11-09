@@ -38,9 +38,7 @@ func _ready():
 func _build_map():
 	# 0. Large Ground Background
 	# Covers a wide area so it's not a black void
-	for x in range(-35, 35):
-		for y in range(-35, 35):
-			_place_tile("floor.png", Vector2(x, y), false)
+	MapUtils.fill_floor(self, -35, -35, 34, 34)
 
 	# 1. Warehouse Floor (Already covered by ground, but we can re-place or skip)
 	# Keeping this loop as reference for walls logic if needed.

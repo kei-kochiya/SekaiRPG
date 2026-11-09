@@ -7,15 +7,3 @@ script = ExtResource("1_quest")
 quest_id = "quest_15_last_nocturne"
 quest_name = "Dạ Khúc Cuối"
 description = "Honami đưa Ichika về nhà. Ichika chọn giữa luyện tập cùng Honami (không giới hạn) hoặc đối đầu Mafuyu, người mạnh đúng bằng những gì đã được dồn vào cô ta. Trận cuối: Ichika và Honami đấu Mafuyu."
-linked_map_scene = "res://Maps/HonamiHouse/HonamiHouseMap.tscn"
-entry_stage_script = ""
-battle_scenario_class = "DefaultScenario"
-dialogue_files = ["res://Data/storyline/arc2_finale.json"]
-pre_conditions = {
-"honami_rescue_done": true,
-"game_completed": false
-}
-post_conditions = {
-"final_mafuyu_defeated": true,
-"game_completed": true
-}

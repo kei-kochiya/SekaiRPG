@@ -26,9 +26,7 @@ func _ready():
 
 func _build_highway():
 	# Vẽ đường cao tốc
-	for x in range(0, 30):
-		for y in range(8, 14):
-			MapUtils.place_tile(self, "floor.png", Vector2(x, y))
+	MapUtils.fill_floor(self, 0, 8, 29, 13)
 	
 	# Spawn Xe (ghép 2 nửa sprite xe đỏ từ bộ Roads)
 	MapUtils.place_road_asset(self, "Red_Car_Facing_Left_1.png", Vector2(15, 11))

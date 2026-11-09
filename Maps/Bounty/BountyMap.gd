@@ -59,10 +59,8 @@ func _ready() -> void:
 
 func _build_district() -> void:
 	# Vỉa hè và mặt đường (đường chạy xuyên hai đầu map, hai đầu bị chặn vô hình)
-	for x in range(2, 38):
-		for y in range(2, 20):
-			if y < 10 or y > 12:
-				_tile("floor.png", Vector2(x, y))
+	MapUtils.fill_floor(self, 2, 2, 37, 9)
+	MapUtils.fill_floor(self, 2, 13, 37, 19)
 	for x in range(0, 40):
 		_road("Road_Edge_Horizontal_Up.png", Vector2(x, 10))
 		_road("Road_Plain.png", Vector2(x, 11))

@@ -71,9 +71,7 @@ func _create_dummy_char(p_name: String, grid_pos: Vector2, color: Color):
 	MapUtils.create_dummy_char(self, p_name, grid_pos, color)
 
 func _fill_floor(x1, y1, x2, y2):
-	for x in range(x1, x2 + 1):
-		for y in range(y1, y2 + 1):
-			_place_tile("floor.png", Vector2(x, y))
+	MapUtils.fill_floor(self, x1, y1, x2, y2)
 
 func _draw_room_walls(x1, y1, x2, y2):
 	for x in range(x1, x2 + 1):

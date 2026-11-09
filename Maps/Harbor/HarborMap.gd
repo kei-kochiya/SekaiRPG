@@ -30,7 +30,7 @@ func _play_intro():
 
 func _build_map():
 	# 1. Ground / Pier (Top half)
-	_fill_rect("floor.png", 0, 0, 80, 18, false)
+	MapUtils.fill_floor(self, 0, 0, 80, 18)
 	
 	# 2. Water (Bottom half)
 	_fill_rect("water_body.png", 0, 19, 80, 30, true)

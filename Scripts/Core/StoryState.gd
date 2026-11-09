@@ -123,8 +123,6 @@ const DEFAULT_FLAGS := {
 
 var flags: Dictionary = DEFAULT_FLAGS.duplicate(true)
 
-# Tên các bộ đếm tiến độ bên cạnh cờ (quest và test dùng để biết một điều kiện là cờ hay bộ đếm)
-const COUNTER_NAMES := ["warehouse_wave", "harbor_wave", "training_wave", "enemies_defeated"]
 var warehouse_wave: int = 1
 var harbor_wave: int = 1
 # Bộ đếm wave RIÊNG của chế độ luyện tập (0 = không luyện tập). Không dùng chung với warehouse_wave

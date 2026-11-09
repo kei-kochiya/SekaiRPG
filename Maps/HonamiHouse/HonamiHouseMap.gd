@@ -43,9 +43,7 @@ func _ready():
 
 func _build_house():
 	# Floor and Walls
-	for x in range(5, 25):
-		for y in range(4, 16):
-			MapUtils.place_tile(self, "floor.png", Vector2(x, y))
+	MapUtils.fill_floor(self, 5, 4, 24, 15)
 	
 	for x in range(5, 26):
 		MapUtils.place_tile(self, "horizontal_wall.png", Vector2(x, 4), true)

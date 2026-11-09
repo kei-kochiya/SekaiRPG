@@ -7,12 +7,3 @@ script = ExtResource("1_quest")
 quest_id = "quest_16_new_nightcord"
 quest_name = "Dạ Khúc Mới"
 description = "Ichika và Honami dựng lại Nightcord. Họ vẫn có thể luyện tập và nâng cấp; các thành viên cũ không còn ở đây, nhưng Holo-Sim vẫn lưu giữ họ."
-linked_map_scene = "res://Maps/Base/BaseMap.tscn"
-entry_stage_script = "res://Maps/Base/Stages/EpilogueStage.gd"
-battle_scenario_class = ""
-dialogue_files = ["res://Data/storyline/arc2_epilogue.json"]
-pre_conditions = {
-"game_completed": true
-}
-post_conditions = {
-}

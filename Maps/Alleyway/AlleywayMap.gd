@@ -35,9 +35,7 @@ func _ready():
 
 func _build_map():
 	# Fill a large background area to ensure everything is black/dark
-	for x in range(-15, 20):
-		for y in range(-10, 25):
-			_place_tile("floor.png", Vector2(x, y), false)
+	MapUtils.fill_floor(_map_root, -15, -10, 19, 24)
 			
 	# Walls
 	for y in range(1, 15):

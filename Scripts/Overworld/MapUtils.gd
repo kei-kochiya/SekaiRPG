@@ -34,11 +34,19 @@ static func place_tile(parent: Node2D, file: String, grid_pos: Vector2, has_coll
 		body.add_child(col)
 		parent.add_child(body)
 
-# Sàn phẳng phủ kín hình chữ nhật ô lưới [x1..x2] x [y1..y2] (không va chạm)
+# Sàn phẳng phủ kín hình chữ nhật ô lưới [x1..x2] x [y1..y2] (không va chạm). Chỉ MỘT Sprite2D lát gạch (texture_repeat) thay vì
+# mỗi ô một sprite: map lớn (Prologue 70x70, Bến Cảng, Nhà kho) từng dựng hàng nghìn node mỗi lần vào. Hình ảnh giống hệt ô-từng-ô.
 static func fill_floor(parent: Node2D, x1: int, y1: int, x2: int, y2: int):
-	for x in range(x1, x2 + 1):
-		for y in range(y1, y2 + 1):
-			place_tile(parent, "floor.png", Vector2(x, y))
+	var tex := load(ASSET_ROOT + "floor.png") as Texture2D
+	var sprite := Sprite2D.new()
+	sprite.texture = tex
+	sprite.scale = Vector2(4, 4)
+	sprite.centered = false
+	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	sprite.region_enabled = true
+	sprite.region_rect = Rect2(Vector2.ZERO, tex.get_size() * Vector2(x2 - x1 + 1, y2 - y1 + 1))
+	sprite.position = Vector2(x1, y1) * TILE_SIZE - Vector2(TILE_SIZE, TILE_SIZE) / 2.0 # ô (x, y) có tâm tại (x, y) * TILE_SIZE
+	parent.add_child(sprite)
 
 # Khung tường bao quanh hình chữ nhật ô lưới (có va chạm); thứ tự đặt giữ nguyên để thứ tự vẽ không đổi
 static func draw_room_walls(parent: Node2D, x1: int, y1: int, x2: int, y2: int):

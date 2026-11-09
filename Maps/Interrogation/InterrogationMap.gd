@@ -77,9 +77,7 @@ func _sync_police_wins() -> void:
 # ── Dựng phòng thẩm vấn và sân sau ─────────────────────────────────────────
 
 func _build_room() -> void:
-	for x in range(5, 28):
-		for y in range(4, 17):
-			_tile("floor.png", Vector2(x, y))
+	MapUtils.fill_floor(self, 5, 4, 27, 16)
 	_rect(CHAIR * TILE_SIZE + Vector2(-112, -112), Vector2(224, 224), Color(0.1, 0.11, 0.16, 0.6)) # vệt sàn quanh ghế
 	for i in range(7):
 		_rect(Vector2((13 + i) * TILE_SIZE + 4, 16 * TILE_SIZE - 6), Vector2(14, 8), Color(0.85, 0.7, 0.15, 0.7)) # vạch cảnh báo
@@ -123,9 +121,7 @@ func _build_room() -> void:
 
 # Sân sau: tường sau nhà kho với cổng sau, thùng phuy rỉ sét (có cốc mì ly), xe máy cũ, ánh trăng
 func _build_yard() -> void:
-	for x in range(5, 28):
-		for y in range(5, 17):
-			_tile("floor.png", Vector2(x, y))
+	MapUtils.fill_floor(self, 5, 5, 27, 16)
 	for g in [Vector2(5, 5), Vector2(27, 5), Vector2(5, 16), Vector2(27, 16), Vector2(5, 10), Vector2(27, 11)]:
 		_tile("tree.png", g, true)
 	_rect(Vector2(5 * TILE_SIZE - 16, 5 * TILE_SIZE - 16), Vector2(23 * TILE_SIZE, 12 * TILE_SIZE), Color(0.4, 0.41, 0.46, 0.45)) # ánh trăng phủ nền
