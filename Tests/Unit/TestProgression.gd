@@ -71,7 +71,7 @@ func test_training_win_grants_exp_to_the_real_character():
 
 # ── Đội hình gục sau trận ───────────────────────────────────────────────────
 
-func test_downed_members_start_story_battles_revived():
+func test_downed_members_start_story_battles_revived_but_sandbox_teams_are_left_alone():
 	var ena: Entity = GameManager.get_party_member("Ena")
 	ena.current_hp = 0
 	GameManager.is_scripted_battle = true
@@ -85,9 +85,10 @@ func test_downed_members_start_story_battles_revived():
 	BattleInitializer.setup_battle()
 	assert_eq(ena.current_hp, 10, "Chỉ người đã gục mới được hồi")
 
-func test_sandbox_and_training_teams_are_not_touched_by_revive():
+	# Sandbox dùng đội do người chơi dựng: giữ nguyên, kể cả người đang ở 0 HP
 	var fresh := Ichika.new()
 	fresh.current_hp = 0
+	GameManager.is_scripted_battle = false
 	GameManager.is_sandbox = true
 	GameManager.sandbox_player_team = [fresh]
 	GameManager.sandbox_enemy_team = [Guard.new()]
@@ -117,23 +118,11 @@ func test_battle_exit_clears_untargetable():
 func _saved_game_state(slot: String) -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(SaveManager.SAVES_DIR + slot + ".json"))
 
-func test_save_keeps_hp_and_the_holosim_record():
+# Save cũ chưa có HP/kỷ lục -> đầy máu và 0; HP lạc ngoài khoảng bị kẹp lại (vòng lưu/nạp đầy đủ: TestSaveAndUpgrade)
+func test_old_saves_without_hp_or_record_are_filled_in_and_clamped():
 	var slot := "unit_test_hp_slot"
-	var ichika: Entity = GameManager.get_party_member("Ichika")
-	ichika.current_hp = 7
-	GameManager.get_party_member("Kanade").current_hp = 0
-	HoloSimManager.high_score_floor = 6
 	assert_true(SaveManager.save_game(slot), "lưu slot thử nghiệm")
 	var data := _saved_game_state(slot)
-
-	ichika.current_hp = ichika.max_hp
-	HoloSimManager.high_score_floor = 0
-	SaveManager._commit_save_data(SaveManager._parse_save_data(data))
-	assert_eq(ichika.current_hp, 7, "HP được khôi phục từ save (nạp game không còn là hồi máu miễn phí)")
-	assert_eq(GameManager.get_party_member("Kanade").current_hp, 0, "Người gục vẫn gục sau khi nạp")
-	assert_eq(HoloSimManager.high_score_floor, 6, "Kỷ lục Holo-Sim được khôi phục")
-
-	# Save cũ chưa có HP -> đầy máu; HP lạc ngoài khoảng bị kẹp lại
 	var party: Dictionary = data["game_state"]["party"]
 	party["Ichika"].erase("hp")
 	party["Kanade"]["hp"] = 999999
@@ -145,11 +134,6 @@ func test_save_keeps_hp_and_the_holosim_record():
 	assert_eq(parsed["party"]["Mafuyu"]["hp"], 0, "hp âm bị kẹp về 0")
 	assert_eq(parsed["holosim_high_floor"], 0, "Save cũ thiếu kỷ lục -> 0")
 	SaveManager.delete_save(slot)
-
-func test_new_game_clears_the_holosim_record():
-	HoloSimManager.high_score_floor = 9
-	GameManager.reset_game()
-	assert_eq(HoloSimManager.high_score_floor, 0, "Chơi mới bắt đầu lại kỷ lục")
 
 func test_every_map_scene_has_a_save_slot_name():
 	for dir_name in DirAccess.get_directories_at("res://Maps"):
@@ -194,7 +178,7 @@ func test_ena_trigger_waits_for_open_choice_menus():
 	base.free()
 
 # Giai đoạn của PostHarborStage do cờ mafuyu_honami_talked quyết định (trước đây là harbor_wave > 5)
-func test_post_harbor_phase_follows_the_honami_talk_flag():
+func test_post_harbor_phase_follows_the_honami_talk_flag_and_each_scene_plays_once():
 	var base = load(BASE_SCENE).instantiate()
 	var stage = load("res://Maps/Base/Stages/PostHarborStage.gd").new()
 	base.add_child(stage)
@@ -211,6 +195,7 @@ func test_post_harbor_phase_follows_the_honami_talk_flag():
 	assert_true(DialogueManager.active, "Đã nói về Honami thì phát cảnh Mizuki ăn vặt")
 	_drain_dialogue()
 	assert_true(GameManager.get_flag("harbor_mizuki_snack_done"), "Cảnh ăn vặt đã xem")
+	assert_true(GameManager.get_flag("mizuki_control_phase"), "Cảnh ăn vặt chuyển sang điều khiển Mizuki")
 	stage.on_stage_start()
 	assert_false(DialogueManager.active, "Xem rồi thì không phát lại")
 	base.free()
@@ -222,19 +207,6 @@ func test_alleyway_monologue_follows_the_honami_talk_flag():
 	assert_eq(alley._dialogue_key(), "honami_alleyway_p2", "Đã nói chuyện: phần 2")
 	assert_true(DialogueLoader.get_lines("honami_alleyway").size() > 0 and DialogueLoader.get_lines("honami_alleyway_p2").size() > 0, "Cả hai đoạn hội thoại đều có")
 	alley.free()
-
-func test_mizuki_snack_scene_plays_only_once():
-	GameManager.set_flag("mafuyu_honami_talked", true)
-	var base = load(BASE_SCENE).instantiate()
-	var stage = load("res://Maps/Base/Stages/PostHarborStage.gd").new()
-	base.add_child(stage)
-	stage.setup(base)
-	assert_false(GameManager.get_flag("harbor_mizuki_snack_done"), "Chưa xem cảnh ăn vặt")
-	stage._play_mizuki_snack_sequence()
-	_drain_dialogue()
-	assert_true(GameManager.get_flag("harbor_mizuki_snack_done"), "Xem xong thì đánh dấu để vào lại căn cứ không phát lại")
-	assert_true(GameManager.get_flag("mizuki_control_phase"), "Chuyển sang điều khiển Mizuki")
-	base.free()
 
 # ── Thua màn Tác chiến / Thủ Tướng: về căn cứ để luyện tập thêm ──────────────
 
@@ -254,13 +226,6 @@ func test_losing_a_finale_fight_retreats_to_base_and_reopens_training():
 	assert_true(GameManager.get_flag("finale_retreated"), "Đánh dấu để căn cứ giải thích vì sao quay về")
 	for flag in GameManager.TRAINING_DONE_FLAGS:
 		assert_false(GameManager.get_flag(flag), "%s được mở lại để luyện tập thêm" % flag)
-
-func test_wave_mission_loss_also_reopens_training():
-	GameManager.set_flag("training_ichika_done", true)
-	GameManager.set_flag("training_kanade_done", true)
-	GameManager.reset_training_progress()
-	assert_false(GameManager.get_flag("training_ichika_done"), "Ichika tập lại được")
-	assert_false(GameManager.get_flag("training_kanade_done"), "Kanade tập lại được")
 
 func _finale_stage_base() -> Node:
 	GameManager.reset_game()

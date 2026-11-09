@@ -117,7 +117,9 @@ func test_reset_game_resets_economy_and_transient_state():
 	GameManager.opened_chests = ["unit_test_chest_reset"]
 	GameManager.is_training_mode = true
 	GameManager.is_scripted_battle = true
+	HoloSimManager.high_score_floor = 9
 	GameManager.reset_game()
+	assert_eq(HoloSimManager.high_score_floor, 0, "Chơi mới bắt đầu lại kỷ lục Holo-Sim")
 	assert_eq(GameManager.credits, GameManager.DEFAULT_CREDITS, "reset_game đặt lại credits")
 	assert_eq(GameManager.inventory, GameManager.DEFAULT_INVENTORY, "reset_game đặt lại inventory")
 	assert_eq(GameManager.opened_chests.size(), 0, "reset_game xóa opened_chests")

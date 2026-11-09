@@ -7,6 +7,19 @@ khoá cảnh/cửa ra, đặt người chơi, bảng màu nhân vật duy nhất
 
 const BASE_SCENE = "res://Maps/Base/BaseMap.tscn"
 
+# Dựng BaseMap như lúc vào căn cứ ở một giai đoạn cốt truyện (các cờ cho trước) và gắn vào cây; _drop_base gỡ ra rồi giải phóng
+func _spawn_base(flags: Array = []) -> Node:
+	GameManager.reset_game()
+	for flag in flags:
+		GameManager.set_flag(flag, true)
+	var base = load(BASE_SCENE).instantiate()
+	(Engine.get_main_loop() as SceneTree).current_scene.add_child(base) # _ready dựng map, NPC và người chơi; cảnh mở đầu chờ fade nên không chạy trong test
+	return base
+
+func _drop_base(base: Node) -> void:
+	base.get_parent().remove_child(base)
+	base.free()
+
 # Mở menu luyện tập, đọc nhãn các nút rồi chọn nút cuối ("Để sau."): trả về {"labels": [...], "started": kết quả offer_training}
 func _open_training_menu(stage: BaseMapStage, trainees: Array, hide_done: bool = false, alive_only: bool = false, group_label: String = "", before_start: Callable = Callable()) -> Dictionary:
 	var out := {"labels": [], "started": null}
@@ -51,16 +64,7 @@ func test_every_character_colour_resolves_to_its_own_sprite():
 
 # ── Cảnh tự chạy và cửa ra ─────────────────────────────────────────────────
 
-func test_npc_talk_is_ignored_while_a_cutscene_runs():
-	var stage := PostCafeStreetMissionStage.new()
-	stage._cutscene_active = true
-	stage.talk_to_npc("Ena")
-	assert_false(DialogueManager.active, "Đang cảnh tự chạy thì chạm NPC không mở hội thoại")
-	stage._cutscene_active = false
-	stage.talk_to_npc("Ena")
-	assert_true(DialogueManager.active, "Hết cảnh tự chạy thì NPC nói chuyện bình thường")
-	_drain_dialogue()
-	stage.free()
+# ── Cảnh tự chạy và cửa ra ─────────────────────────────────────────────────
 
 # Nối dây thật: vùng tương tác của NPC do BaseMap dựng phải đi qua talk_to_npc (nơi có chốt cảnh tự chạy)
 func test_npc_zone_routes_through_the_cutscene_guard():
@@ -116,14 +120,9 @@ const ALLOWED_ON_BLOCKED := {"post_harbor": ["Kanade"], "post_harbor_control": [
 
 # Không NPC nào đứng trong tường/đồ đạc, chắn ô cửa, hay có vùng nói chuyện chồng lên bệ cửa hàng/Holo-Sim
 func test_no_base_npc_stands_in_a_wall_a_doorway_or_on_a_terminal():
-	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
 	var problems: Array = []
 	for stage_name in STAGE_FLAGS:
-		GameManager.reset_game()
-		for flag in STAGE_FLAGS[stage_name]:
-			GameManager.set_flag(flag, true)
-		var base = load(BASE_SCENE).instantiate()
-		root.add_child(base) # _ready dựng map và NPC; cảnh mở đầu chờ fade nên không chạy trong test
+		var base = _spawn_base(STAGE_FLAGS[stage_name])
 		var blocked := {}
 		var npcs := {}
 		for c in base.get_children():
@@ -143,9 +142,7 @@ func test_no_base_npc_stands_in_a_wall_a_doorway_or_on_a_terminal():
 			for terminal in TERMINALS:
 				if npcs[npc].distance_to(terminal * base.TILE_SIZE) < 80.0:
 					problems.append("%s/%s chồng lên bệ %s" % [stage_name, npc, terminal])
-		root.remove_child(base)
-		base.free()
-	GameManager.reset_game()
+		_drop_base(base)
 	assert_eq(problems, [], "Bố cục NPC hợp lệ ở mọi Stage")
 
 # ── Sảnh dùng chung ────────────────────────────────────────────────────────
@@ -169,13 +166,15 @@ func test_lobby_stages_share_one_hall_layout():
 
 # ── Menu luyện tập ─────────────────────────────────────────────────────────
 
-func test_training_menu_hides_members_who_already_trained():
+func test_training_menu_hides_members_who_already_trained_only_when_asked():
 	GameManager.set_flag("training_ichika_done", true)
 	var stage := BaseMapStage.new()
 	var out := _open_training_menu(stage, ["Ichika", "Kanade"], true)
 	assert_eq(out["labels"], ["Kanade (5 Waves)", "Để sau."], "Ichika đã tập xong thì ẩn đi, giữ thứ tự còn lại")
 	assert_eq(out["started"], false, "Chọn \"Để sau.\" thì không vào luyện tập")
 	assert_false(GameManager.is_training_mode, "Chưa bắt đầu luyện tập")
+	out = _open_training_menu(stage, ["Ichika", "Kanade"])
+	assert_eq(out["labels"], ["Ichika (5 Waves)", "Kanade (5 Waves)", "Để sau."], "Không bật hide_done thì hiện đủ")
 	stage.free()
 
 func test_training_menu_cancel_does_not_run_the_before_start_hook():
@@ -184,13 +183,6 @@ func test_training_menu_cancel_does_not_run_the_before_start_hook():
 	var out := _open_training_menu(stage, ["Ichika"], false, false, "", func(): fired[0] += 1)
 	assert_eq(out["labels"], ["Ichika (5 Waves)", "Để sau."], "Một người thì không có mục cả nhóm")
 	assert_eq(fired[0], 0, "Chọn \"Để sau.\" thì không chạy before_start (cờ/khoá cảnh chỉ đặt khi thật sự vào luyện tập)")
-	stage.free()
-
-func test_training_menu_keeps_everyone_unless_asked_to_hide():
-	GameManager.set_flag("training_ichika_done", true)
-	var stage := BaseMapStage.new()
-	var out := _open_training_menu(stage, ["Ichika", "Kanade"])
-	assert_eq(out["labels"], ["Ichika (5 Waves)", "Kanade (5 Waves)", "Để sau."], "Không bật hide_done thì hiện đủ")
 	stage.free()
 
 func test_training_menu_skips_the_dead_and_offers_the_group_option():
@@ -237,7 +229,6 @@ func test_shop_and_holo_sim_terminals_are_built_in_order():
 # Cảnh tự chạy chỉ chặn NPC (_cutscene_active) mà không đóng băng người chơi từng cho phép bấm ENTER ở bệ Holo-Sim giữa lúc chờ,
 # rồi hội thoại của cảnh chen lên lựa chọn đang mở làm kẹt giao diện. lock_scene() đóng băng người chơi nên cả hai đều không xảy ra.
 func test_autoplaying_base_cutscenes_freeze_the_player():
-	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
 	var cases := {
 		"post_cafe": ["ena_cafe_done"],
 		"post_street_invasion": ["street_mission_fully_done", "post_street_trained_once"],
@@ -251,54 +242,35 @@ func test_autoplaying_base_cutscenes_freeze_the_player():
 		"finale": ["pm_boss_defeated"],
 	}
 	for case_name in cases:
-		GameManager.reset_game()
-		for flag in cases[case_name]:
-			GameManager.set_flag(flag, true)
-		var base = load(BASE_SCENE).instantiate()
-		root.add_child(base) # _ready dựng map/người chơi; on_stage_start chờ fade nên tự gọi bên dưới
+		var base = _spawn_base(cases[case_name]) # on_stage_start chờ fade nên tự gọi bên dưới
 		var player: Node = base.get_node("OverworldPlayer")
 		assert_true(player.is_physics_processing(), "%s: người chơi đi lại được trước cảnh" % case_name)
 		base.current_stage.on_stage_start()
 		assert_false(player.is_physics_processing(), "%s: cảnh tự chạy đóng băng người chơi" % case_name)
 		assert_true(base.current_stage._cutscene_active, "%s: và chặn NPC" % case_name)
 		DialogueManager.reset()
-		root.remove_child(base)
-		base.free()
+		_drop_base(base)
 
 # Bến Cảng chỉ mở sau khi Ena giao nhiệm vụ (cảnh harbor_arrival giả định cô ấy đã giao việc)
 func test_harbor_exit_needs_the_briefing_from_ena():
-	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
-	GameManager.reset_game()
-	GameManager.set_flag("harbor_mission_unlocked", true)
-	var base = load(BASE_SCENE).instantiate()
-	root.add_child(base)
+	var base = _spawn_base(["harbor_mission_unlocked"])
 	assert_eq(base.current_stage.get_script().resource_path.get_file(), "PostWarehouseStage.gd", "Đúng Stage sau Nhà kho")
 	base._on_exit_interacted()
 	assert_true(DialogueManager.active, "Chưa gặp Ena: chỉ có lời nhắc, không đi Bến Cảng")
 	assert_false(base._leaving, "Không bị kẹt ở trạng thái đang rời đi")
 	DialogueManager.reset()
-	root.remove_child(base)
-	base.free()
+	_drop_base(base)
 
 # BaseMap._spawn_player chạy trước on_stage_start: cờ điều khiển Mizuki còn bật từ cảnh trước thì người chơi hiện ra là Mizuki chồng lên NPC
 func test_morning_after_the_report_spawns_ichika_not_mizuki():
-	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
-	GameManager.reset_game()
-	GameManager.set_flag("mizuki_report_done", true)
-	GameManager.set_flag("mizuki_control_phase", true)
-	var base = load(BASE_SCENE).instantiate()
-	root.add_child(base)
+	var base = _spawn_base(["mizuki_report_done", "mizuki_control_phase"])
 	assert_eq((base.get_node("OverworldPlayer") as OverworldPlayer).character_name, "Ichika", "Người chơi là Ichika ngay từ lúc xuất hiện")
 	assert_false(GameManager.get_flag("mizuki_control_phase"), "Cờ điều khiển Mizuki đã được tắt trước khi dựng người chơi")
-	root.remove_child(base)
-	base.free()
+	_drop_base(base)
 
 # Cờ npcs_greeted phải được ghi bằng set_flag chứ không dựa vào mảng sống phía sau getter
 func test_greeting_an_intro_npc_is_recorded_in_the_story_flags():
-	var root: Node = (Engine.get_main_loop() as SceneTree).current_scene
-	GameManager.reset_game()
-	var base = load(BASE_SCENE).instantiate()
-	root.add_child(base)
+	var base = _spawn_base()
 	assert_eq(base.current_stage.get_script().resource_path.get_file(), "IntroStage.gd", "Đúng Stage mở đầu")
 	base.current_stage._quest_phase_interact("Kanade")
 	_drain_dialogue()
@@ -306,8 +278,7 @@ func test_greeting_an_intro_npc_is_recorded_in_the_story_flags():
 	base.current_stage._quest_phase_interact("Kanade")
 	_drain_dialogue()
 	assert_eq(GameManager.get_flag("npcs_greeted").count("Kanade"), 1, "Chào lần hai không ghi trùng")
-	root.remove_child(base)
-	base.free()
+	_drop_base(base)
 
 # Ai cũng đã tập xong thì nói một câu thay vì mở menu chỉ có nút "Để sau."
 func test_training_with_everyone_done_says_so_instead_of_opening_an_empty_menu():
@@ -346,4 +317,3 @@ func test_base_celebration_still_has_the_door_slam_line_the_finale_splits_on():
 	assert_eq(slam.size(), 1, "Đúng một dòng bắt đầu bằng RẦM!")
 	assert_gt(lines.find(slam[0]), 0, "Có thoại trước tiếng sập cửa")
 	assert_lt(lines.find(slam[0]), lines.size() - 1, "Có thoại sau tiếng sập cửa")
-

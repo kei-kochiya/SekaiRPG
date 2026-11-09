@@ -49,22 +49,12 @@ func test_reduce_motion_disables_shake_and_hitstop():
 	assert_gt(shaker.shake_timer, 0.0, "shake() runs again with reduce_motion off")
 	shaker.free()
 
-func test_element_colors_cover_type_chart():
+# Mọi hệ nguyên tố trong bảng khắc chế đều có màu, mọi trạng thái đều có biểu tượng nạp được
+func test_ui_tokens_cover_every_element_and_status():
 	for element in TypeChart.chart:
 		assert_true(UITheme.ELEMENT_COLORS.has(element), "Element color defined for " + element)
-
-func test_every_status_has_an_existing_icon():
 	for status_name in UITheme.STATUS_INFO:
 		assert_true(UITheme.status_icon(status_name) != null, "Status icon loads for " + status_name)
-
-func test_theme_builds_and_buttons_are_touch_sized():
-	var theme := UITheme.make_theme()
-	assert_true(theme.has_stylebox("normal", "Button"), "Theme styles Button")
-	assert_true(theme.has_stylebox("panel", "PanelContainer"), "Theme styles PanelContainer")
-	var btn := Button.new()
-	UITheme.style_button(btn)
-	assert_true(btn.custom_minimum_size.y >= UITheme.MIN_TOUCH, "Buttons meet the minimum touch height")
-	btn.free()
 
 # make_button dựng nút đã style và nối sẵn `pressed`
 func test_make_button_is_styled_and_connected():
@@ -138,4 +128,3 @@ func test_default_theme_tres_matches_make_theme():
 			assert_eq([a.content_margin_left, a.content_margin_top, a.content_margin_right, a.content_margin_bottom], [b.content_margin_left, b.content_margin_top, b.content_margin_right, b.content_margin_bottom], label + ": lề")
 			checked += 1
 	assert_gt(checked, 40, "Đã so đủ nhiều mục (chống kiểm tra rỗng)")
-

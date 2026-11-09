@@ -22,6 +22,8 @@ func test_a_full_save_and_load_restores_the_whole_game_state():
 	ichika.skill_points = 3
 	ichika.atk += 40
 	ichika.current_hp = 50
+	GameManager.get_party_member("Kanade").current_hp = 0
+	HoloSimManager.high_score_floor = 6
 	assert_true(SaveManager.save_game(SLOT), "lưu thành công")
 
 	# Làm hỏng mọi thứ rồi nạp lại: phải về đúng như lúc lưu
@@ -41,7 +43,9 @@ func test_a_full_save_and_load_restores_the_whole_game_state():
 	assert_eq(restored.current_exp, 35, "kinh nghiệm")
 	assert_eq(restored.skill_points, 3, "điểm kỹ năng")
 	assert_eq(restored.atk, ichika.atk, "chỉ số đã nâng")
-	assert_eq(restored.current_hp, 50, "máu hiện tại")
+	assert_eq(restored.current_hp, 50, "máu hiện tại (nạp game không còn là hồi máu miễn phí)")
+	assert_eq(GameManager.get_party_member("Kanade").current_hp, 0, "Người gục vẫn gục sau khi nạp")
+	assert_eq(HoloSimManager.high_score_floor, 6, "Kỷ lục Holo-Sim được khôi phục")
 	SaveManager.delete_save(SLOT)
 
 func test_saving_over_an_existing_slot_replaces_it():
