@@ -7,7 +7,7 @@ Chức năng chính:
 - Lưu trữ danh sách các câu thoại hiện tại và theo dõi tiến trình đọc (index).
 - Tiếp nhận dữ liệu cấu hình để hiển thị Menu lựa chọn (Choices).
 - Bắt và xử lý các sự kiện đầu vào (Click chuột, Touch màn hình, phím Enter/Space) để sang câu tiếp theo.
-- Kích hoạt tín hiệu `choice_made` và gọi hàm callback khi chuỗi hội thoại kết thúc.
+- Gọi hàm callback khi chuỗi hội thoại kết thúc; `ask`/`play_async` cho phép `await` kết quả lựa chọn/hội thoại.
 - Hoạt động độc lập với logic vẽ UI (được đảm nhiệm bởi DialogueUI).
 """
 
@@ -20,7 +20,6 @@ var active: bool = false
 var _in_choice: bool = false
 var _callback: Callable
 
-signal choice_made(index: int)
 # Phát sau mỗi chuỗi hội thoại kết thúc (sau callback). Dùng cho logic muốn chạy "khi người chơi vừa nói chuyện xong".
 signal dialogue_finished
 
@@ -72,6 +71,7 @@ func reset() -> void:
 	active = false
 	_in_choice = false
 	_callback = Callable()
+	_choice_waiter = null # coroutine đang chờ lựa chọn/hội thoại bị bỏ rơi hẳn, không bị đánh thức nhầm bởi phiên sau
 	current_dialogue = []
 	index = 0
 	visible = false
@@ -79,24 +79,33 @@ func reset() -> void:
 		_ui.clear()
 	GameManager.end_dialogue()
 
-signal _async_line_done
+# Người chờ dùng một lần: mỗi lời gọi ask/play_async await trên đối tượng riêng thay vì một tín hiệu dùng chung. Nếu reset() xảy ra
+# (thoát về menu giữa chừng) thì người chờ không bao giờ được báo, thay vì bị đánh thức bởi lựa chọn đầu tiên của phiên kế tiếp
+# rồi chạy tiếp mã của một cảnh đã đóng.
+class Waiter extends RefCounted:
+	signal done(value: int)
+
+var _choice_waiter: Waiter
 
 # Phát một đoạn hội thoại và chờ tới khi xong (dùng với await). Mảng rỗng (vd. khóa hội thoại thiếu) thì trả về ngay.
 func play_async(lines: Array) -> void:
 	if lines.is_empty():
 		return
+	var waiter := Waiter.new()
 	var state := {"done": false}
 	play_dialogue(lines, func():
 		state["done"] = true
-		_async_line_done.emit()
+		waiter.done.emit(0)
 	)
 	if not state["done"]: # play_dialogue có thể đã gọi callback ngay (đang có hội thoại khác): khi đó không chờ
-		await _async_line_done
+		await waiter.done
 
 # Hiện danh sách lựa chọn rồi chờ người chơi chọn: trả về chỉ số được chọn (dùng với await)
 func ask(options: Array) -> int:
+	var waiter := Waiter.new()
+	_choice_waiter = waiter
 	show_choice(options)
-	return await choice_made
+	return await waiter.done
 
 func show_choice(options: Array):
 	"""
@@ -147,7 +156,10 @@ func _on_choice_selected(idx: int):
 	if not active:
 		visible = false
 		GameManager.end_dialogue()
-	choice_made.emit(idx)
+	var waiter := _choice_waiter # lấy ra trước khi báo: người chờ có thể gọi ask() mới ngay trong lần chạy tiếp
+	_choice_waiter = null
+	if waiter:
+		waiter.done.emit(idx)
 
 # Kết thúc và đóng giao diện hội thoại
 func _finish():

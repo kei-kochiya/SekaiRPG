@@ -77,3 +77,43 @@ func test_menu_scene_list_matches_the_scenes_that_exist():
 		var node: Node = load(scene_path).instantiate()
 		assert_true(node.name in GameManager.MENU_SCENES, "Tên node gốc %s nằm trong danh sách menu" % scene_path.get_file())
 		node.free()
+
+# ask()/play_async() từng await trên tín hiệu dùng chung: sau reset() (thoát về menu giữa chừng) coroutine cũ bị đánh thức bởi lựa chọn đầu
+# tiên của phiên sau rồi chạy tiếp mã của cảnh đã đóng. Mỗi lời gọi giờ có người chờ riêng nên coroutine cũ bị bỏ rơi.
+func test_reset_abandons_pending_asks_instead_of_waking_them_later():
+	GameManager.reset_game()
+	var seen := [0, 0, 0]
+	var first := func():
+		await DialogueManager.ask(["a", "b"])
+		seen[0] += 1
+	first.call()
+	DialogueManager.reset()
+	var second := func():
+		var idx: int = await DialogueManager.ask(["c", "d"])
+		seen[1] = idx + 10
+	second.call()
+	DialogueManager._ui.choice_selected.emit(1)
+	assert_eq(seen[0], 0, "Coroutine của phiên đã reset không bị đánh thức bởi lựa chọn của phiên sau")
+	assert_eq(seen[1], 11, "Lời gọi hiện tại nhận đúng lựa chọn của mình")
+	var third := func():
+		await DialogueManager.play_async([_line()])
+		seen[2] += 1
+	third.call()
+	DialogueManager.reset()
+	DialogueManager.play_dialogue([_line()])
+	DialogueManager._advance_dialogue()
+	assert_eq(seen[2], 0, "play_async đã reset cũng không bị đánh thức bởi hội thoại sau")
+	GameManager.reset_game()
+
+# Hai lần ask() liên tiếp (lần sau gọi ngay trong lần chạy tiếp của lần trước) nhận đúng kết quả của từng lần
+func test_back_to_back_asks_each_get_their_own_answer():
+	GameManager.reset_game()
+	var got := []
+	var chain := func():
+		got.append(await DialogueManager.ask(["a", "b", "c"]))
+		got.append(await DialogueManager.ask(["x", "y"]))
+	chain.call()
+	DialogueManager._ui.choice_selected.emit(2)
+	DialogueManager._ui.choice_selected.emit(1)
+	assert_eq(got, [2, 1], "Mỗi lần hỏi nhận đúng lựa chọn của nó")
+	GameManager.reset_game()
